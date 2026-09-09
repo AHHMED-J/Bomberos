@@ -61,20 +61,40 @@ def cuerpo_de(archivo: Path) -> str:
     return encontrado.group(1).strip()
 
 
+def parrafos(textos, clase: str) -> str:
+    """Bloque de prosa que acompaña a una lámina, arriba o abajo de ella."""
+    if not textos:
+        return ""
+    cuerpo = "\n".join(f"          <p>{esc(t)}</p>" for t in textos)
+    return f'\n        <div class="{clase}">\n{cuerpo}\n        </div>'
+
+
+def fila_meta(clave: str, valor) -> str:
+    """Un dato de la cabecera; si trae varios valores, van en lista punteada."""
+    if isinstance(valor, list):
+        puntos = "".join(f"<li>{esc(v)}</li>" for v in valor)
+        valor = f'<ul class="meta-list">{puntos}</ul>'
+    else:
+        valor = esc(valor)
+    return f"      <div><dt>{esc(clave)}</dt><dd>{valor}</dd></div>"
+
+
 def figura(pantalla: dict) -> str:
     cuerpo = cuerpo_de(SITIO / "screens" / pantalla["archivo"])
+    rol = pantalla.get("rol")
+    etiqueta = f'\n            <span class="figure__rol">{esc(rol)}</span>' if rol else ""
     return f"""      <figure class="figure" id="{ancla(pantalla['figura'])}">
         <figcaption class="figure__caption">
           <p class="figure__line">
             <span class="figure__n">Figura {esc(pantalla['figura'])}</span>
-            <span class="figure__cov">{esc(pantalla['cubre'])}</span>
+            <span class="figure__cov">{esc(pantalla['cubre'])}</span>{etiqueta}
           </p>
           <h3>{esc(pantalla['nombre'])}</h3>
           <p class="figure__uses">{esc(pantalla['casos'])}</p>
-        </figcaption>
+        </figcaption>{parrafos(pantalla.get("intro"), "figure__prosa")}
         <div class="stage">
 {cuerpo}
-        </div>
+        </div>{parrafos(pantalla.get("nota"), "figure__prosa figure__prosa--pie")}
       </figure>"""
 
 
@@ -97,30 +117,27 @@ def seccion(datos: dict) -> str:
 def hoja(datos: dict) -> str:
     """El contenido de la hoja, igual en las dos versiones."""
     cab = datos["cabecera"]
-    meta = "\n".join(
-        f"      <div><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>" for k, v in cab["meta"]
-    )
+    meta = "\n".join(fila_meta(k, v) for k, v in cab["meta"])
     secciones = "\n\n".join(seccion(s) for s in datos["secciones"])
-    notas = "\n".join(
-        f"    <p><strong>{esc(t)}</strong> {esc(c)}</p>" for t, c in datos["notas"]
-    )
+    dek = f'\n    <p class="masthead__dek">{esc(cab["dek"])}</p>' if cab.get("dek") else ""
+    pie = ""
+    if datos.get("notas"):
+        notas = "\n".join(
+            f"    <p><strong>{esc(t)}</strong> {esc(c)}</p>" for t, c in datos["notas"]
+        )
+        pie = f'\n  <footer class="sheet-foot">\n{notas}\n  </footer>\n'
     return f"""<div class="sheet">
 
   <header class="masthead">
     <p class="masthead__eyebrow">{esc(cab['eyebrow'])}</p>
-    <h1>{esc(cab['titulo'])}</h1>
-    <p class="masthead__dek">{esc(cab['dek'])}</p>
+    <h1>{esc(cab['titulo'])}</h1>{dek}
     <dl class="masthead__meta">
 {meta}
     </dl>
   </header>
 
 {secciones}
-
-  <footer class="sheet-foot">
-{notas}
-  </footer>
-
+{pie}
 </div>"""
 
 

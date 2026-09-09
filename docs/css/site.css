@@ -102,6 +102,8 @@ body {
 .hero__meta > div { display: flex; flex-direction: column; gap: 5px; }
 .hero__meta dt { font: 400 10.5px/1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bd-muted); }
 .hero__meta dd { margin: 0; font-size: 14.5px; line-height: 1.45; }
+.meta-list { display: flex; flex-direction: column; gap: 4px; margin: 0; padding-left: 17px; }
+.meta-list li { line-height: 1.35; }
 
 .action {
   display: inline-flex;

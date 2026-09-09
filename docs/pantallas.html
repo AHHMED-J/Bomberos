@@ -37,10 +37,9 @@
   <header class="masthead">
     <p class="masthead__eyebrow">Avance de proyecto no. 1 · Mockup de baja fidelidad</p>
     <h1>Pantallas del parte digital</h1>
-    <p class="masthead__dek">Seis pantallas, una por cada caso de uso de la Tabla 5, más los estados alternos que el propio modelo exige. Aplicación web: el bombero la abre en el navegador del equipo, el jefe de turno y la Dirección en el suyo.</p>
     <dl class="masthead__meta">
       <div><dt>Sistema</dt><dd>Parte digital · Bomberos de Ensenada</dd></div>
-      <div><dt>Actores representados</dt><dd>Bombero operativo, jefe de turno, personal de la Dirección</dd></div>
+      <div><dt>Actores representados/roles</dt><dd><ul class="meta-list"><li>Bombero operativo</li><li>Jefe de turno</li><li>Personal de la Dirección</li></ul></dd></div>
       <div><dt>Cobertura</dt><dd>RF-01 a RF-10</dd></div>
       <div><dt>Fecha</dt><dd>08 de septiembre de 2026</dd></div>
     </dl>
@@ -59,6 +58,7 @@
           <p class="figure__line">
             <span class="figure__n">Figura 8.1</span>
             <span class="figure__cov">RF-01</span>
+            <span class="figure__rol">Los tres roles</span>
           </p>
           <h3>Acceso</h3>
           <p class="figure__uses">Iniciar sesión</p>
@@ -129,12 +129,17 @@
 
 </div>
         </div>
+        <div class="figure__prosa figure__prosa--pie">
+          <p>Hoy firmas el parte con pluma. Aquí, en lugar de pluma, cada bombero tiene un sello digital: un número secreto que se guarda dentro de su aparato y que físicamente no puede salir de ahí. No hay copia en el servidor ni en ninguna otra computadora. Cuando entras o firmas, ese sello estampa el documento, y el sistema comprueba que sólo tu sello pudo haberlo hecho.</p>
+          <p>La huella —o el PIN del aparato— es el candado de ese sello: le da permiso al aparato de usarlo. Se queda entre tú y tu aparato: no viaja a ningún lado, el sistema nunca la ve y en ningún momento se guarda. Por eso no hay usuario ni contraseña que memorizar, y tampoco hay una lista de contraseñas que alguien pueda robarse.</p>
+        </div>
       </figure>
       <figure class="figure" id="fig-8-2">
         <figcaption class="figure__caption">
           <p class="figure__line">
             <span class="figure__n">Figura 8.2</span>
             <span class="figure__cov">RF-02, RF-03, RF-06</span>
+            <span class="figure__rol">Bombero operativo</span>
           </p>
           <h3>Formulario del parte</h3>
           <p class="figure__uses">Crear un nuevo parte · Registrar la emergencia · Adjuntar evidencia</p>
@@ -359,6 +364,7 @@
           <p class="figure__line">
             <span class="figure__n">Figura 8.3</span>
             <span class="figure__cov">RF-04, RF-05</span>
+            <span class="figure__rol">Bombero operativo</span>
           </p>
           <h3>Croquis</h3>
           <p class="figure__uses">Generar croquis con IA</p>
@@ -532,6 +538,7 @@
           <p class="figure__line">
             <span class="figure__n">Figura 8.4</span>
             <span class="figure__cov">RF-07</span>
+            <span class="figure__rol">Bombero operativo</span>
           </p>
           <h3>Resumen y firma</h3>
           <p class="figure__uses">Firmar y enviar parte</p>
@@ -745,7 +752,7 @@
     <div class="act__head">
       <p class="act__kicker">Hallazgo al dibujar el mockup</p>
       <h2>Alta de credencial y equipos compartidos</h2>
-      <p class="act__lead">El caso de uso Iniciar sesión daba por hecho que la credencial ya existe. No puede: alguien tiene que dar fe de quién es cada bombero antes de la primera sesión, y en la computadora de la estación —que usa todo el turno— el PIN del equipo no distingue a nadie. De ahí salen estas dos pantallas y un caso de uso que el diagrama todavía no tiene: Registrar credencial, a cargo de la Dirección.</p>
+      <p class="act__lead">Estas dos pantallas no salen del diagrama: salieron de dibujarlo. Son lo que hace falta antes de la primera sesión, y lo que hace falta en la computadora que comparte todo el turno.</p>
       <div class="act__rfs"><span class="rf">RF-01</span></div>
     </div>
     <div class="figures">
@@ -754,10 +761,15 @@
           <p class="figure__line">
             <span class="figure__n">Figura 8.1a</span>
             <span class="figure__cov">RF-01</span>
+            <span class="figure__rol">Bombero operativo</span>
           </p>
           <h3>Alta de credencial</h3>
           <p class="figure__uses">Registrar credencial · caso de uso nuevo</p>
         </figcaption>
+        <div class="figure__prosa">
+          <p>Antes de la primera sesión, alguien tiene que dar fe de quién eres: el sistema no puede saberlo solo. La Dirección te da de alta con tu nombre y tu matrícula, y te entrega un código de un solo uso que caduca en 24 horas.</p>
+          <p>Al escribir ese código en el equipo, la pantalla te muestra a quién pertenece. Si los datos son tuyos, confirmas, y el aparato crea en ese momento tu sello. Ese es el único instante en que una persona —no el sistema— garantiza que el sello es tuyo. De ahí en adelante, cada parte que firmes queda ligado a tu matrícula.</p>
+        </div>
         <div class="stage">
 <div class="screen" id="registro-credencial">
 
@@ -860,10 +872,16 @@
           <p class="figure__line">
             <span class="figure__n">Figura 8.1b</span>
             <span class="figure__cov">RF-01</span>
+            <span class="figure__rol">Bombero operativo</span>
           </p>
           <h3>Acceso en equipo compartido</h3>
           <p class="figure__uses">Iniciar sesión · equipo de la estación</p>
         </figcaption>
+        <div class="figure__prosa">
+          <p>La computadora de la estación la usa todo el turno, así que su PIN no sirve para distinguir quién firma: lo sabe todo el mundo. Tu sello, en cambio, vive en tu teléfono. Eso obliga a que los dos aparatos se pongan de acuerdo, y para eso es el código QR.</p>
+          <p>La computadora muestra el código en pantalla y tú lo escaneas con la cámara de tu teléfono. Los dos aparatos se conectan y, antes de seguir, comprueban por Bluetooth que están en el mismo lugar: nadie puede entrar por ti desde su casa. Entonces tu teléfono te pide la huella, o su propio PIN si no tiene lector, estampa con tu sello y le manda a la computadora únicamente ese estampado. Tu huella no cruza a la computadora en ningún momento.</p>
+          <p>Si alguien prefiere no usar su teléfono personal, la llave física hace lo mismo: guarda el sello adentro, se inserta en el equipo y se toca con el dedo.</p>
+        </div>
         <div class="stage">
 <div class="screen" id="acceso-compartido">
 
@@ -1308,8 +1326,9 @@
           <p class="figure__line">
             <span class="figure__n">Figura 8.3b</span>
             <span class="figure__cov">RF-04, RNF-01</span>
+            <span class="figure__rol">Bombero operativo</span>
           </p>
-          <h3>El croquis no se pudo generar</h3>
+          <h3>Escenario donde el croquis no se pudo generar</h3>
           <p class="figure__uses">Generar croquis con IA · flujo alterno</p>
         </figcaption>
         <div class="stage">
@@ -1464,6 +1483,7 @@
           <p class="figure__line">
             <span class="figure__n">Figura 8.4b</span>
             <span class="figure__cov">RF-07</span>
+            <span class="figure__rol">Bombero operativo</span>
           </p>
           <h3>Confirmación de envío</h3>
           <p class="figure__uses">Firmar y enviar parte</p>
@@ -1552,6 +1572,7 @@
           <p class="figure__line">
             <span class="figure__n">Figura 8.5</span>
             <span class="figure__cov">RF-08</span>
+            <span class="figure__rol">Jefe de turno</span>
           </p>
           <h3>Bandeja del jefe de turno</h3>
           <p class="figure__uses">Revisar pendientes</p>
@@ -1726,9 +1747,10 @@
           <p class="figure__line">
             <span class="figure__n">Figura 8.5b</span>
             <span class="figure__cov">RF-09</span>
+            <span class="figure__rol">Jefe de turno</span>
           </p>
           <h3>Validar o devolver</h3>
-          <p class="figure__uses">Validar el parte · Devolver para corregir</p>
+          <p class="figure__uses">Validar el parte · Devolver para corregir — es la pantalla que aparece cuando el jefe de turno abre uno de los partes de su bandeja</p>
         </figcaption>
         <div class="stage">
 <div class="screen" id="bandeja-detalle">
@@ -2036,6 +2058,7 @@
           <p class="figure__line">
             <span class="figure__n">Figura 8.6</span>
             <span class="figure__cov">RF-10</span>
+            <span class="figure__rol">Personal de la Dirección</span>
           </p>
           <h3>Panel de la Dirección</h3>
           <p class="figure__uses">Consultar partes · Filtrar y buscar · Exportar reporte</p>
@@ -2260,9 +2283,10 @@
           <p class="figure__line">
             <span class="figure__n">Figura 8.6b</span>
             <span class="figure__cov">RF-10</span>
+            <span class="figure__rol">Personal de la Dirección</span>
           </p>
           <h3>Detalle del parte</h3>
-          <p class="figure__uses">Ver detalle del parte</p>
+          <p class="figure__uses">Ver detalle del parte — es la pantalla que aparece cuando alguien de la Dirección abre uno de los renglones del listado</p>
         </figcaption>
         <div class="stage">
 <div class="screen" id="panel-detalle">
@@ -2441,11 +2465,6 @@
       </figure>
     </div>
   </section>
-
-  <footer class="sheet-foot">
-    <p><strong>Por qué seis pantallas y no diez.</strong> La evidencia fotográfica vive dentro del formulario del parte y las tres acciones del jefe de turno dentro de una sola bandeja: agrupar así evita que el bombero navegue entre pantallas en medio de una emergencia, que es justo lo que busca impedir el RNF-02.</p>
-    <p><strong>Lo que estas pantallas todavía suponen.</strong> Provienen de los casos de uso del avance, que a su vez salen de supuestos con certeza media o baja: que el jefe de turno revisa el parte antes de archivarlo y que el llenado ocurre durante la emergencia. Las entrevistas deben confirmarlos, ajustarlos o descartarlos, y con ellos estas pantallas.</p>
-  </footer>
 
 </div>
 
