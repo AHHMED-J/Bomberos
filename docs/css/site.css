@@ -45,7 +45,7 @@ body {
   padding: 8px 12px;
   border-radius: 4px;
   font-size: 13.5px;
-  color: var(--bd-muted);
+  color: var(--bd-ink);
   text-decoration: none;
 }
 .sitenav__link:hover { color: var(--bd-ink); background: var(--bd-chip); }
