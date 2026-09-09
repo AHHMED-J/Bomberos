@@ -151,10 +151,17 @@
   padding: 15px 20px;
   border-bottom: 1px solid var(--wf-line-soft);
 }
-.parte-row[aria-current] { background: var(--wf-sunken); box-shadow: inset 3px 0 0 var(--wf-ink); }
+.parte-row[aria-current] { background: var(--wf-sunken); }
 .parte-row--muted { background: var(--wf-sunken); color: var(--wf-muted); }
 .parte-row--muted .parte-row__title { color: var(--wf-muted); }
-.parte-row__flag { width: 4px; border-radius: 2px; background: var(--wf-accent); flex-shrink: 0; }
+.parte-row__flag {
+  width: 8px;
+  height: 8px;
+  margin-top: 5px;
+  border-radius: 50%;
+  background: var(--wf-accent);
+  flex-shrink: 0;
+}
 .parte-row--muted .parte-row__flag { background: var(--wf-line); }
 .parte-row__main { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
 .parte-row__top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }

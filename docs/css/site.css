@@ -56,19 +56,37 @@ body {
 .site section { display: flex; flex-direction: column; gap: 22px; }
 
 .section-head { display: flex; flex-direction: column; gap: 8px; }
-.section-head p { margin: 0; font: 400 10.5px/1.2 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--bd-muted); }
-.section-head h2 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
+.section-head p {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font: 700 11px/1.2 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bd-muted);
+}
+.section-head p::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--bd-accent);
+  flex-shrink: 0;
+}
+.section-head h2 { margin: 0; font-family: var(--font-display); font-size: 30px; font-weight: 600; letter-spacing: 0; }
 
 /* --- Portada ---------------------------------------------------------------- */
 .hero { display: flex; flex-direction: column; gap: 26px; padding-top: 76px; }
-.hero__eyebrow { margin: 0; font: 400 11.5px/1.4 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--bd-accent); }
+.hero__eyebrow { margin: 0; font: 700 11.5px/1.4 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--bd-accent); }
 .hero h1 {
   margin: 0;
-  font-size: clamp(38px, 6vw, 68px);
-  font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-  max-width: 16ch;
+  font-family: var(--font-display);
+  font-size: clamp(46px, 7vw, 86px);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.005em;
+  max-width: 17ch;
   text-wrap: balance;
 }
 .hero__dek { margin: 0; font-size: 18px; line-height: 1.6; color: var(--bd-muted); max-width: 60ch; text-wrap: pretty; }
@@ -120,8 +138,8 @@ body {
   border-radius: 4px;
   background: var(--bd-panel);
 }
-.actor__role { font: 400 10.5px/1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bd-accent); }
-.actor h3 { margin: 0; font-size: 18px; font-weight: 600; }
+.actor__role { font: 700 10.5px/1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bd-accent); }
+.actor h3 { margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 600; }
 .actor p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
 .actor__rfs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
 
@@ -152,7 +170,7 @@ body {
 .thumb-card__line { display: flex; align-items: baseline; gap: 10px; }
 .thumb-card__n { font: 500 11px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-accent); }
 .thumb-card__cov { font: 400 11px/1.2 var(--font-mono); color: var(--bd-muted); }
-.thumb-card h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.thumb-card h3 { margin: 0; font-family: var(--font-display); font-size: 19px; font-weight: 600; }
 .thumb-card p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
 
 /* --- Tabla de requerimientos ----------------------------------------------------- */

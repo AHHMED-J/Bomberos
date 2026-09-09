@@ -37,8 +37,8 @@ body.preview {
 
 /* --- Tipografía de apoyo -------------------------------------------------- */
 .label {
-  font: 500 10.5px/1.2 var(--font-mono);
-  letter-spacing: 0.09em;
+  font: 700 11px/1.2 var(--font-mono);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--wf-muted, var(--bd-muted));
 }

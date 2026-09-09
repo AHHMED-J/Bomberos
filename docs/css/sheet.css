@@ -13,17 +13,18 @@
 .masthead { display: flex; flex-direction: column; gap: 22px; border-top: 2px solid var(--bd-ink); padding-top: 22px; }
 .masthead__eyebrow {
   margin: 0;
-  font: 400 11.5px/1.2 var(--font-mono);
+  font: 700 11.5px/1.2 var(--font-mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--bd-accent);
 }
 .masthead h1 {
   margin: 0;
-  font-size: clamp(30px, 4.4vw, 46px);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  font-family: var(--font-display);
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 1.0;
   max-width: 18ch;
   text-wrap: balance;
 }
@@ -48,8 +49,25 @@
 /* --- Bloque por actor -------------------------------------------------------- */
 .act { display: flex; flex-direction: column; gap: 28px; }
 .act__head { display: flex; flex-direction: column; gap: 9px; }
-.act__kicker { margin: 0; font: 400 10.5px/1.2 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--bd-muted); }
-.act__head h2 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
+.act__kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font: 700 11px/1.2 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bd-muted);
+}
+.act__kicker::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--bd-accent);
+  flex-shrink: 0;
+}
+.act__head h2 { margin: 0; font-family: var(--font-display); font-size: 30px; font-weight: 600; letter-spacing: 0; }
 .act__lead { margin: 0; font-size: 15px; line-height: 1.6; color: var(--bd-muted); max-width: 72ch; text-wrap: pretty; }
 .act__rfs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 
@@ -58,9 +76,9 @@
 .figure { display: flex; flex-direction: column; gap: 14px; margin: 0; }
 .figure__caption { display: flex; flex-direction: column; gap: 5px; max-width: 78ch; }
 .figure__line { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.figure__n { font: 500 11.5px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-accent); }
+.figure__n { font: 700 11.5px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-accent); }
 .figure__cov { font: 400 11.5px/1.2 var(--font-mono); color: var(--bd-muted); }
-.figure__caption h3 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -0.005em; }
+.figure__caption h3 { margin: 0; font-family: var(--font-display); font-size: 21px; font-weight: 600; }
 .figure__uses { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
 
 .stage {

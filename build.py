@@ -29,8 +29,9 @@ HOJAS = ["tokens.css", "base.css", "components.css", "app.css", "sheet.css", "si
 
 FUENTES = (
     "https://fonts.googleapis.com/css2"
-    "?family=IBM+Plex+Mono:wght@400;500;600"
-    "&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    "?family=Barlow:wght@400;500;600"
+    "&family=Barlow+Condensed:wght@600;700"
+    "&family=Courier+Prime:wght@400;700&display=swap"
 )
 
 ESCUDO = (

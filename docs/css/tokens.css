@@ -11,17 +11,20 @@
    ========================================================================== */
 
 :root {
-  --font-sans: 'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Barlow viene de la señalética vial de California; Courier Prime trae de
+     vuelta el formato mecanografiado que este sistema sustituye. */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+  --font-sans: 'Barlow', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'Courier Prime', 'Courier New', ui-monospace, monospace;
 
   /* Sitio — rojo de hidrante */
-  --bd-board: #8c3a30;
-  --bd-panel: #7d332a;
+  --bd-board: #6b342d;
+  --bd-panel: #5e2d27;
   --bd-ink: #fdf3ed;
-  --bd-muted: #ecc9bf;
-  --bd-hair: #a1544a;
-  --bd-chip: #6e2a22;
-  --bd-accent: #f0c9a2;
+  --bd-muted: #eccdc4;
+  --bd-hair: #8a504a;
+  --bd-chip: #532620;
+  --bd-accent: #f2cfab;
 }
 
 @media (prefers-color-scheme: dark) {
