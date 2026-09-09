@@ -10,3 +10,10 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Salida del build que no forma parte del sitio
+dist/
+
+# El documento se versiona una sola vez, en la copia que sirve el sitio:
+# docs/avance-proyecto-1.docx
+/Avances_Bomberos_corregido.docx

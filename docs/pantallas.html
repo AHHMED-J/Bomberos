@@ -1,0 +1,1899 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pantallas · Parte digital de los Bomberos de Ensenada</title>
+<meta name="description" content="Las diez pantallas de baja fidelidad del sistema de parte digital, una por caso de uso.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 66 74'><path d='M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z' fill='none' stroke='%23a8362b' stroke-width='7'/></svg>">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/sheet.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <a class="sitenav__brand" href="index.html">
+    <svg class="sitenav__mark" viewBox="0 0 66 74" aria-hidden="true">
+      <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+      <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+    </svg>
+    <span class="sitenav__name">Parte Digital</span>
+  </a>
+  <div class="sitenav__links">
+    <a class="sitenav__link" href="index.html">Proyecto</a>
+    <a class="sitenav__link" aria-current="page" href="pantallas.html">Pantallas</a>
+    <a class="sitenav__link" href="avance-proyecto-1.docx">Documento</a>
+    <a class="sitenav__link" href="https://github.com/AHHMED-J/Bomberos">Repositorio</a>
+  </div>
+</nav>
+
+<div class="sheet">
+
+  <header class="masthead">
+    <p class="masthead__eyebrow">Avance de proyecto no. 1 · Mockup de baja fidelidad</p>
+    <h1>Pantallas del parte digital</h1>
+    <p class="masthead__dek">Seis pantallas, una por cada caso de uso de la Tabla 5, más los estados alternos que el propio modelo exige. Aplicación web: el bombero la abre en el navegador del equipo, el jefe de turno y la Dirección en el suyo.</p>
+    <dl class="masthead__meta">
+      <div><dt>Sistema</dt><dd>Parte digital · Bomberos de Ensenada</dd></div>
+      <div><dt>Actores representados</dt><dd>Bombero operativo, jefe de turno, personal de la Dirección</dd></div>
+      <div><dt>Cobertura</dt><dd>RF-01 a RF-10</dd></div>
+      <div><dt>Fecha</dt><dd>08 de septiembre de 2026</dd></div>
+    </dl>
+  </header>
+
+  <section class="act">
+    <div class="act__head">
+      <p class="act__kicker">Actor principal</p>
+      <h2>Bombero operativo</h2>
+      <p class="act__lead">Captura el parte durante la emergencia, adjunta la evidencia y firma el envío con la credencial del propio equipo. Concentra casi todo el sistema porque es quien genera la información.</p>
+      <div class="act__rfs"><span class="rf">RF-01</span><span class="rf">RF-02</span><span class="rf">RF-03</span><span class="rf">RF-04</span><span class="rf">RF-05</span><span class="rf">RF-06</span><span class="rf">RF-07</span></div>
+    </div>
+    <div class="figures">
+      <figure class="figure" id="fig-8-1">
+        <figcaption class="figure__caption">
+          <p class="figure__line">
+            <span class="figure__n">Figura 8.1</span>
+            <span class="figure__cov">RF-01</span>
+          </p>
+          <h3>Acceso</h3>
+          <p class="figure__uses">Iniciar sesión</p>
+        </figcaption>
+        <div class="stage">
+<div class="screen" id="acceso">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="centered">
+
+    <div class="centered__head">
+      <svg class="crest" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 24c6 6 9 10 9 15a9 9 0 0 1-18 0c0-5 3-9 9-15Z"/>
+      </svg>
+      <p class="centered__title">Parte Digital</p>
+      <p class="centered__sub">Captura, firma y consulta de los partes de emergencia del H. Cuerpo de Bomberos de Ensenada.</p>
+    </div>
+
+    <section class="card centered__card">
+      <div class="card__head">
+        <span class="label">Acceso al sistema</span>
+        <span class="hint mono">Estación Central</span>
+      </div>
+      <div class="card__body">
+        <p class="text">Entra con la credencial que ya está registrada en este equipo.</p>
+        <button type="button" class="btn btn--primary btn--xl btn--block">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 4a8 8 0 0 0-8 8v3"/>
+            <path d="M20 15v-3a8 8 0 0 0-4-6.9"/>
+            <path d="M8 12a4 4 0 0 1 8 0v4"/>
+            <path d="M12 12v6"/>
+            <path d="M8 17v2"/>
+            <path d="M16 19v1"/>
+          </svg>
+          Usar huella o PIN del equipo
+        </button>
+        <p class="note note--flex">
+          <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+          <span>No hay usuario ni contraseña. La credencial no sale de este equipo y es la misma con la que después se firma el parte.</span>
+        </p>
+      </div>
+      <div class="card__foot">
+        <span class="label">Turno</span>
+        <span class="grow">08/09/2026 · matutino</span>
+        <span class="mono hint">Unidad 12</span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="pagefoot">
+    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+    ¿Problemas para entrar? Comunícate con la Dirección para volver a registrar el equipo.
+  </footer>
+
+</div>
+        </div>
+      </figure>
+      <figure class="figure" id="fig-8-2">
+        <figcaption class="figure__caption">
+          <p class="figure__line">
+            <span class="figure__n">Figura 8.2</span>
+            <span class="figure__cov">RF-02, RF-03, RF-06</span>
+          </p>
+          <h3>Formulario del parte</h3>
+          <p class="figure__uses">Crear un nuevo parte · Registrar la emergencia · Adjuntar evidencia</p>
+        </figcaption>
+        <div class="stage">
+<div class="screen" id="formulario">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Captura de parte</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">A. Jalife Burgueño</span>
+        <span class="identity__role">Bombero · Unidad 12</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="app">
+
+    <nav class="sidenav">
+      <p class="label sidenav__label">Menú</p>
+      <div class="sidenav__menu">
+        <a class="sidenav__item" aria-current="page" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg><span>Nuevo parte</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6L5 5Z"/></svg><span>Mis partes</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg><span>Consulta</span></a>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="pagehead">
+        <div class="pagehead__titles">
+          <h1 class="pagehead__title">Nuevo parte de emergencia</h1>
+          <p class="pagehead__sub mono">Folio local 2026-0147 · iniciado 14:35</p>
+        </div>
+        <div class="pagehead__actions">
+          <div class="steps">
+            <span class="step" aria-current="step"><span class="step__n">1</span>Datos</span>
+            <span class="steps__bar"></span>
+            <span class="step"><span class="step__n">2</span>Croquis</span>
+            <span class="steps__bar"></span>
+            <span class="step"><span class="step__n">3</span>Firma</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="banner banner--strip">
+        <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M5 12.5a11 11 0 0 1 4-2.5"/><path d="M1.5 8.8A16 16 0 0 1 8 5.4"/><path d="M15.5 10.2A11 11 0 0 1 19 12.5"/><path d="M14 5.6a16 16 0 0 1 8.5 3.2"/><path d="M8.8 16a6 6 0 0 1 6.4 0"/><path d="M12 20h.01"/></svg>
+        <span>Sin conexión. El parte se guarda en este equipo y se envía solo cuando vuelva la señal.</span>
+      </div>
+
+      <div class="content content--split">
+
+        <div class="stack">
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Datos de la emergencia</h2>
+              <span class="hint mono">RF-02</span>
+            </div>
+            <div class="card__body">
+              <div class="cols-4">
+                <div class="field span-2">
+                  <span class="label">Tipo de emergencia</span>
+                  <div class="control">
+                    <span class="control__value">Incendio estructural</span>
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                  </div>
+                </div>
+                <div class="field">
+                  <span class="label">Fecha</span>
+                  <div class="control">
+                    <span class="control__value mono">08/09/2026</span>
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                  </div>
+                </div>
+                <div class="field">
+                  <span class="label">Hora de llegada</span>
+                  <div class="control">
+                    <span class="control__value mono">14:35</span>
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <span class="label">Ubicación</span>
+                <div class="control">
+                  <span class="control__value">Av. Reforma 1245, Col. Obrera</span>
+                  <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                </div>
+                <div class="map">
+                  <svg class="map__grid" viewBox="0 0 800 132" preserveAspectRatio="none" aria-hidden="true">
+                    <path class="sk-street" d="M-10 92h820M240 -10v152M560 -10L470 142"/>
+                  </svg>
+                  <span class="map__pin">
+                    <svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/></svg>
+                    Punto tomado del GPS del equipo
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Unidades y personal en sitio</h2>
+              <span class="hint mono">RF-02</span>
+            </div>
+            <div class="card__body">
+              <div class="field">
+                <span class="label">Unidades que asistieron</span>
+                <div class="chips">
+                  <span class="chip chip--selected">Unidad 12<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                  <span class="chip chip--selected">Pipa 04<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                  <span class="chip chip--add"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Agregar unidad</span>
+                </div>
+              </div>
+              <div class="field">
+                <span class="label">Personal</span>
+                <div class="list">
+                  <div class="list__row">
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg>
+                    <span class="grow">Jalife Burgueño, Ahhmed</span>
+                    <span class="list__aside">Comandante</span>
+                    <svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                  </div>
+                  <div class="list__row">
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg>
+                    <span class="grow">Acevedo Carrillo, Verónica</span>
+                    <span class="list__aside">Bombero</span>
+                    <svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                  </div>
+                  <div class="list__row list__row--action">
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    <span class="grow">Agregar personal del turno</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="rail">
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Evidencia fotográfica</h2>
+              <span class="hint mono">2 fotos · RF-06</span>
+            </div>
+            <div class="card__body">
+              <div class="photos photos--3">
+                <div class="photo">
+                  <svg viewBox="0 0 100 108" preserveAspectRatio="none" aria-hidden="true"><path class="photo__cross" d="M0 0l100 108M100 0L0 108"/></svg>
+                </div>
+                <div class="photo">
+                  <svg viewBox="0 0 100 108" preserveAspectRatio="none" aria-hidden="true"><path class="photo__cross" d="M0 0l100 108M100 0L0 108"/></svg>
+                </div>
+                <div class="photo photo--add">
+                  <svg class="icon icon--lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.5h3.5L8 6h8l1.5 2.5H21V19H3V8.5Z"/><circle cx="12" cy="13" r="3.5"/></svg>
+                  Agregar
+                </div>
+              </div>
+              <p class="hint">Se toman desde la cámara del equipo o se arrastran a este recuadro.</p>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Estado del borrador</h2>
+              <span class="badge"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"/></svg>Guardado</span>
+            </div>
+            <div class="card__body">
+              <dl class="dl">
+                <dt>Guardado</dt><dd class="mono">14:52 · en este equipo</dd>
+                <dt>Envío</dt><dd>Pendiente de señal</dd>
+              </dl>
+              <p class="note note--flex">
+                <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+                <span>El parte existe desde que se abre esta pantalla. Perder la señal no pierde lo capturado.</span>
+              </p>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+      <div class="footbar">
+        <p class="hint">Cada campo se guarda al salir de él. No hace falta guardar a mano.</p>
+        <div class="footbar__actions">
+          <button type="button" class="btn btn--outline btn--lg">Guardar y salir</button>
+          <button type="button" class="btn btn--primary btn--lg">
+            Continuar al croquis
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+        </div>
+      </figure>
+      <figure class="figure" id="fig-8-3">
+        <figcaption class="figure__caption">
+          <p class="figure__line">
+            <span class="figure__n">Figura 8.3</span>
+            <span class="figure__cov">RF-04, RF-05</span>
+          </p>
+          <h3>Croquis</h3>
+          <p class="figure__uses">Generar croquis con IA</p>
+        </figcaption>
+        <div class="stage">
+<div class="screen" id="croquis">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Captura de parte</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">A. Jalife Burgueño</span>
+        <span class="identity__role">Bombero · Unidad 12</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="app">
+
+    <nav class="sidenav">
+      <p class="label sidenav__label">Menú</p>
+      <div class="sidenav__menu">
+        <a class="sidenav__item" aria-current="page" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg><span>Nuevo parte</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6L5 5Z"/></svg><span>Mis partes</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg><span>Consulta</span></a>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="pagehead">
+        <div class="pagehead__titles">
+          <h1 class="pagehead__title">Croquis de la escena</h1>
+          <p class="pagehead__sub mono">Folio local 2026-0147 · incendio estructural</p>
+        </div>
+        <div class="pagehead__actions">
+          <div class="steps">
+            <span class="step step--done"><span class="step__n"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"/></svg></span>Datos</span>
+            <span class="steps__bar"></span>
+            <span class="step" aria-current="step"><span class="step__n">2</span>Croquis</span>
+            <span class="steps__bar"></span>
+            <span class="step"><span class="step__n">3</span>Firma</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content content--wide-split">
+
+        <div class="stack">
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Describe la escena</h2>
+              <span class="hint mono">RF-04</span>
+            </div>
+            <div class="card__body">
+              <div class="field">
+                <div class="control control--area">
+                  Casa de dos plantas sobre la acera norte. El fuego salía por la ventana del segundo piso. La Unidad 12 se estacionó enfrente y se tomó agua del hidrante de la esquina.
+                </div>
+                <div class="field__foot">
+                  <span class="hint">Esta descripción también queda escrita en el parte.</span>
+                  <span class="hint mono">218/500</span>
+                </div>
+              </div>
+              <button type="button" class="btn btn--outline btn--lg btn--block">
+                <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.9 4.6L18.5 9.5 13.9 11.4 12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3Z"/><path d="M18.5 15.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1Z"/></svg>
+                Volver a generar el croquis
+              </button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Elementos del croquis</h2>
+              <span class="hint mono">4 · RF-05</span>
+            </div>
+            <div class="card__body">
+              <div class="chips">
+                <span class="chip">Inmueble<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                <span class="chip">Foco de fuego<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                <span class="chip">Unidad 12<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                <span class="chip">Hidrante<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                <span class="chip chip--add"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Agregar</span>
+              </div>
+              <p class="note">Se puede arrastrar cada elemento sobre el croquis, cambiarle el nombre o quitarlo antes de guardar.</p>
+            </div>
+          </section>
+
+        </div>
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Croquis generado</h2>
+            <div class="toolbar">
+              <button type="button" class="btn btn--sm"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg>Mover</button>
+              <button type="button" class="btn btn--sm"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L20 8l-4-4L4 16v4Z"/><path d="M14 6l4 4"/></svg>Editar</button>
+              <button type="button" class="btn btn--sm"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>Eliminar</button>
+            </div>
+          </div>
+          <div class="card__body">
+            <div class="sketch">
+              <svg viewBox="0 0 880 420" aria-label="Croquis esquemático de la escena">
+                <path class="sk-soft" d="M36 44h26M36 44v26"/>
+                <text class="sk-label sk-label--faint" x="36" y="34">N</text>
+
+                <path class="sk-street" d="M0 330h880M0 364h880"/>
+                <path class="sk-street" d="M20 347h44M100 347h44M180 347h44M260 347h44M340 347h44M420 347h44M500 347h44M580 347h44M660 347h44M740 347h44M820 347h44"/>
+                <text class="sk-label sk-label--faint" x="24" y="400">AV. REFORMA</text>
+
+                <rect class="sk-solid" x="120" y="96" width="270" height="234"/>
+                <path class="sk-solid" d="M120 96 255 46l135 50"/>
+                <rect class="sk-soft" x="152" y="128" width="62" height="50"/>
+                <rect class="sk-fire" x="292" y="128" width="62" height="50"/>
+                <rect class="sk-soft" x="232" y="258" width="56" height="72"/>
+                <text class="sk-label" x="150" y="316">INMUEBLE</text>
+
+                <path class="sk-fire" d="M323 100c14 12 21 20 21 28a21 21 0 0 1-42 0c0-8 7-16 21-28Z"/>
+                <text class="sk-label sk-label--fire" x="410" y="140">FUEGO · 2.º PISO</text>
+
+                <path class="sk-dashed" d="M680 300C600 250 500 210 400 196"/>
+
+                <rect class="sk-solid" x="470" y="286" width="210" height="62" rx="2"/>
+                <text class="sk-label sk-label--ink" x="486" y="324">UNIDAD 12</text>
+                <circle class="sk-solid" cx="508" cy="352" r="14"/>
+                <circle class="sk-solid" cx="642" cy="352" r="14"/>
+
+                <circle class="sk-solid" cx="790" cy="300" r="7"/>
+                <path class="sk-solid" d="M790 307v26M778 315h24"/>
+                <text class="sk-label" x="748" y="392">HIDRANTE</text>
+              </svg>
+            </div>
+            <p class="hint">Esquema sin escala. Sirve para ubicar el inmueble, el foco del fuego y la posición de las unidades.</p>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="footbar">
+        <p class="hint">El croquis es opcional: el parte se puede enviar sin él.</p>
+        <div class="footbar__actions">
+          <button type="button" class="btn btn--outline btn--lg">Omitir croquis</button>
+          <button type="button" class="btn btn--primary btn--lg">
+            Guardar y continuar
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+        </div>
+      </figure>
+      <figure class="figure" id="fig-8-4">
+        <figcaption class="figure__caption">
+          <p class="figure__line">
+            <span class="figure__n">Figura 8.4</span>
+            <span class="figure__cov">RF-07</span>
+          </p>
+          <h3>Resumen y firma</h3>
+          <p class="figure__uses">Firmar y enviar parte</p>
+        </figcaption>
+        <div class="stage">
+<div class="screen" id="resumen-firma">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Captura de parte</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">A. Jalife Burgueño</span>
+        <span class="identity__role">Bombero · Unidad 12</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="app">
+
+    <nav class="sidenav">
+      <p class="label sidenav__label">Menú</p>
+      <div class="sidenav__menu">
+        <a class="sidenav__item" aria-current="page" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg><span>Nuevo parte</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6L5 5Z"/></svg><span>Mis partes</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg><span>Consulta</span></a>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="pagehead">
+        <div class="pagehead__titles">
+          <h1 class="pagehead__title">Resumen y firma</h1>
+          <p class="pagehead__sub mono">Folio local 2026-0147 · último paso</p>
+        </div>
+        <div class="pagehead__actions">
+          <div class="steps">
+            <span class="step step--done"><span class="step__n"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"/></svg></span>Datos</span>
+            <span class="steps__bar"></span>
+            <span class="step step--done"><span class="step__n"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"/></svg></span>Croquis</span>
+            <span class="steps__bar"></span>
+            <span class="step" aria-current="step"><span class="step__n">3</span>Firma</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content content--split">
+
+        <div class="stack">
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Datos de la emergencia</h2>
+              <a class="card__link" href="#">Editar</a>
+            </div>
+            <div class="card__body">
+              <dl class="dl dl--stacked">
+                <div><dt>Tipo</dt><dd>Incendio estructural</dd></div>
+                <div><dt>Fecha y hora</dt><dd class="mono">08/09/2026 · 14:35</dd></div>
+                <div><dt>Ubicación</dt><dd>Av. Reforma 1245, Col. Obrera</dd></div>
+                <div><dt>Coordenadas</dt><dd class="mono">31.8667, −116.5964</dd></div>
+                <div><dt>Unidades</dt><dd>Unidad 12, Pipa 04</dd></div>
+                <div><dt>Personal en sitio</dt><dd>Jalife B. A., Acevedo C. V.</dd></div>
+              </dl>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Descripción de la escena</h2>
+              <a class="card__link" href="#">Editar</a>
+            </div>
+            <div class="card__body">
+              <p class="text">Casa de dos plantas sobre la acera norte. El fuego salía por la ventana del segundo piso. La Unidad 12 se estacionó enfrente y se tomó agua del hidrante de la esquina.</p>
+            </div>
+          </section>
+
+          <div class="cols-2">
+
+            <section class="card">
+              <div class="card__head">
+                <h2 class="card__title">Croquis</h2>
+                <a class="card__link" href="#">Editar</a>
+              </div>
+              <div class="card__body">
+                <div class="sketch">
+                  <svg viewBox="0 0 620 300" aria-label="Croquis esquemático de la escena">
+                    <path class="sk-street" d="M0 232h620M0 262h620"/>
+                    <path class="sk-street" d="M14 247h34M78 247h34M142 247h34M206 247h34M270 247h34M334 247h34M398 247h34M462 247h34M526 247h34"/>
+                    <rect class="sk-solid" x="80" y="60" width="180" height="172"/>
+                    <path class="sk-solid" d="M80 60 170 24l90 36"/>
+                    <rect class="sk-soft" x="100" y="84" width="42" height="34"/>
+                    <rect class="sk-fire" x="190" y="84" width="42" height="34"/>
+                    <rect class="sk-soft" x="156" y="190" width="34" height="42"/>
+                    <path class="sk-fire" d="M211 66c10 8 15 14 15 20a15 15 0 0 1-30 0c0-6 5-12 15-20Z"/>
+                    <text class="sk-label sk-label--fire" x="248" y="96">FUEGO</text>
+                    <path class="sk-dashed" d="M470 214C420 176 350 148 270 138"/>
+                    <rect class="sk-solid" x="330" y="204" width="140" height="44" rx="2"/>
+                    <text class="sk-label sk-label--ink" x="342" y="232">UNIDAD 12</text>
+                    <circle class="sk-solid" cx="356" cy="252" r="10"/>
+                    <circle class="sk-solid" cx="446" cy="252" r="10"/>
+                    <circle class="sk-solid" cx="548" cy="208" r="5"/>
+                    <path class="sk-solid" d="M548 213v18M540 219h16"/>
+                    <text class="sk-label" x="518" y="284">HIDRANTE</text>
+                  </svg>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="card__head">
+                <h2 class="card__title">Evidencia</h2>
+                <a class="card__link" href="#">Editar</a>
+              </div>
+              <div class="card__body">
+                <div class="photos photos--3">
+                  <div class="photo photo--sm"><svg viewBox="0 0 100 62" preserveAspectRatio="none" aria-hidden="true"><path class="photo__cross" d="M0 0l100 62M100 0L0 62"/></svg></div>
+                  <div class="photo photo--sm"><svg viewBox="0 0 100 62" preserveAspectRatio="none" aria-hidden="true"><path class="photo__cross" d="M0 0l100 62M100 0L0 62"/></svg></div>
+                </div>
+                <p class="hint">2 fotografías adjuntas al parte.</p>
+              </div>
+            </section>
+
+          </div>
+
+        </div>
+
+        <div class="rail">
+
+          <section class="card card--emphasis">
+            <div class="card__head">
+              <h2 class="card__title">Firma del parte</h2>
+              <span class="hint mono">RF-07</span>
+            </div>
+            <div class="card__body">
+              <div class="row">
+                <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+                <span class="identity">
+                  <span class="identity__name">Ahhmed Jalife Burgueño</span>
+                  <span class="identity__role">Matrícula 376285 · Comandante</span>
+                </span>
+              </div>
+              <p class="note">Al firmar, el parte queda asociado a este nombre y matrícula. Se usa la misma credencial del equipo con la que se inició sesión.</p>
+              <button type="button" class="btn btn--primary btn--xl btn--block">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 4a8 8 0 0 0-8 8v3"/>
+                  <path d="M20 15v-3a8 8 0 0 0-4-6.9"/>
+                  <path d="M8 12a4 4 0 0 1 8 0v4"/>
+                  <path d="M12 12v6"/>
+                  <path d="M8 17v2"/>
+                  <path d="M16 19v1"/>
+                </svg>
+                Firmar y enviar
+              </button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Qué pasa al enviar</h2>
+            </div>
+            <div class="card__body">
+              <ol class="timeline">
+                <li class="timeline__row">
+                  <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>
+                  <span class="grow">Llega a la bandeja del jefe de turno</span>
+                </li>
+                <li class="timeline__row">
+                  <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"/></svg>
+                  <span class="grow">Él lo valida o lo devuelve con una nota</span>
+                </li>
+                <li class="timeline__row">
+                  <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+                  <span class="grow">Validado, queda consultable por la Dirección</span>
+                </li>
+              </ol>
+              <p class="note note--flex">
+                <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+                <span>Sin señal, el parte firmado queda en cola y se envía solo al recuperar conexión.</span>
+              </p>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="act">
+    <div class="act__head">
+      <p class="act__kicker">Caminos alternos</p>
+      <h2>Estados que el modelo exige</h2>
+      <p class="act__lead">La Figura 6 del avance bifurca cuando el servicio de IA no responde: el parte se guarda igual y el croquis se agrega después o se dibuja a mano. La confirmación de envío cierra el caso de uso Firmar y enviar parte.</p>
+      <div class="act__rfs"><span class="rf">RF-04</span><span class="rf">RF-07</span><span class="rf">RNF-01</span></div>
+    </div>
+    <div class="figures">
+      <figure class="figure" id="fig-8-3b">
+        <figcaption class="figure__caption">
+          <p class="figure__line">
+            <span class="figure__n">Figura 8.3b</span>
+            <span class="figure__cov">RF-04, RNF-01</span>
+          </p>
+          <h3>El croquis no se pudo generar</h3>
+          <p class="figure__uses">Generar croquis con IA · flujo alterno</p>
+        </figcaption>
+        <div class="stage">
+<div class="screen" id="croquis-sin-respuesta">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Captura de parte</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">A. Jalife Burgueño</span>
+        <span class="identity__role">Bombero · Unidad 12</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="app">
+
+    <nav class="sidenav">
+      <p class="label sidenav__label">Menú</p>
+      <div class="sidenav__menu">
+        <a class="sidenav__item" aria-current="page" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg><span>Nuevo parte</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6L5 5Z"/></svg><span>Mis partes</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg><span>Consulta</span></a>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="pagehead">
+        <div class="pagehead__titles">
+          <h1 class="pagehead__title">Croquis de la escena</h1>
+          <p class="pagehead__sub mono">Folio local 2026-0147 · incendio estructural</p>
+        </div>
+        <div class="pagehead__actions">
+          <div class="steps">
+            <span class="step step--done"><span class="step__n"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"/></svg></span>Datos</span>
+            <span class="steps__bar"></span>
+            <span class="step" aria-current="step"><span class="step__n">2</span>Croquis</span>
+            <span class="steps__bar"></span>
+            <span class="step"><span class="step__n">3</span>Firma</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content content--wide-split">
+
+        <div class="stack">
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Describe la escena</h2>
+              <span class="hint mono">RF-04</span>
+            </div>
+            <div class="card__body">
+              <div class="field">
+                <div class="control control--area">
+                  Casa de dos plantas sobre la acera norte. El fuego salía por la ventana del segundo piso. La Unidad 12 se estacionó enfrente y se tomó agua del hidrante de la esquina.
+                </div>
+                <div class="field__foot">
+                  <span class="hint">Esta descripción también queda escrita en el parte.</span>
+                  <span class="hint mono">218/500</span>
+                </div>
+              </div>
+              <button type="button" class="btn btn--outline btn--lg btn--block">
+                <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.9 4.6L18.5 9.5 13.9 11.4 12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3Z"/><path d="M18.5 15.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1Z"/></svg>
+                Volver a generar el croquis
+              </button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Qué se puede hacer</h2>
+              <span class="hint mono">RNF-01</span>
+            </div>
+            <div class="card__body">
+              <div class="stack stack--sm">
+                <button type="button" class="btn btn--outline btn--lg btn--block btn--left">
+                  <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg>
+                  Reintentar la generación
+                </button>
+                <button type="button" class="btn btn--lg btn--block btn--left">
+                  <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L20 8l-4-4L4 16v4Z"/><path d="M14 6l4 4"/></svg>
+                  Dibujar el croquis a mano
+                </button>
+                <button type="button" class="btn btn--lg btn--block btn--left">
+                  <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  Agregarlo después, desde la estación
+                </button>
+              </div>
+              <p class="note">El parte no depende del croquis: se guarda, se firma y se envía igual.</p>
+            </div>
+          </section>
+
+        </div>
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Croquis generado</h2>
+            <span class="badge"><span class="status__dot"></span>Sin resultado</span>
+          </div>
+          <div class="card__body">
+            <div class="banner banner--error">
+              <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 22 20H2L12 3.5Z"/><path d="M12 10v4.5"/><path d="M12 17.5h.01"/></svg>
+              <div class="stack stack--sm">
+                <p class="banner__title">No se pudo generar el croquis</p>
+                <p class="banner__text">El servicio de IA no respondió. Lo capturado hasta aquí ya está guardado; el croquis puede reintentarse, dibujarse a mano o quedar fuera del parte.</p>
+              </div>
+            </div>
+            <div class="sketch sketch--empty">
+              <svg class="icon icon--xl" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-4 4 3 3-3 6 5"/><path d="M3 3l18 18"/></svg>
+              <span>Sin croquis por ahora</span>
+            </div>
+            <p class="hint">La descripción escrita se conserva, así que un reintento posterior parte del mismo texto.</p>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="footbar">
+        <p class="hint">Perder el croquis no detiene el parte: es la salida que prevé el flujo de la Figura 6.</p>
+        <div class="footbar__actions">
+          <button type="button" class="btn btn--outline btn--lg">Guardar borrador</button>
+          <button type="button" class="btn btn--primary btn--lg">
+            Seguir sin croquis
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+        </div>
+      </figure>
+      <figure class="figure" id="fig-8-4b">
+        <figcaption class="figure__caption">
+          <p class="figure__line">
+            <span class="figure__n">Figura 8.4b</span>
+            <span class="figure__cov">RF-07</span>
+          </p>
+          <h3>Confirmación de envío</h3>
+          <p class="figure__uses">Firmar y enviar parte</p>
+        </figcaption>
+        <div class="stage">
+<div class="screen" id="envio-confirmado">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Captura de parte</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">A. Jalife Burgueño</span>
+        <span class="identity__role">Bombero · Unidad 12</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="centered">
+
+    <div class="centered__head">
+      <span class="seal">
+        <svg class="icon icon--xl" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"/></svg>
+      </span>
+      <p class="centered__title">Parte enviado</p>
+      <p class="centered__sub">Quedó firmado con tu credencial y ya está en la bandeja del jefe de turno.</p>
+    </div>
+
+    <section class="card centered__card">
+      <div class="card__head">
+        <h2 class="card__title">Comprobante</h2>
+        <span class="status status--pending"><span class="status__dot"></span>En revisión</span>
+      </div>
+      <div class="card__body">
+        <dl class="dl">
+          <dt>Folio</dt><dd class="mono">PE-2026-0147</dd>
+          <dt>Enviado</dt><dd class="mono">08/09/2026 · 15:02</dd>
+          <dt>Firmado por</dt><dd>Jalife Burgueño, A. · matrícula 376285</dd>
+          <dt>Recibe</dt><dd>Jefe de turno, Estación Central</dd>
+        </dl>
+        <p class="note note--flex">
+          <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+          <span>Si el jefe de turno lo devuelve, aparecerá en <strong>Mis partes</strong> con la nota de corrección.</span>
+        </p>
+      </div>
+      <div class="card__foot">
+        <button type="button" class="btn btn--primary btn--grow">Capturar otro parte</button>
+        <button type="button" class="btn btn--outline btn--grow">Ver mis partes</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="pagefoot">
+    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>
+    Descargar una copia del parte en PDF
+  </footer>
+
+</div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="act">
+    <div class="act__head">
+      <p class="act__kicker">Actor principal</p>
+      <h2>Jefe de turno</h2>
+      <p class="act__lead">Control de calidad del parte. La lista y el detalle viven en una sola pantalla: se elige un parte a la izquierda y se decide a la derecha. La devolución con nota es el único punto del sistema donde un parte retrocede en el proceso.</p>
+      <div class="act__rfs"><span class="rf">RF-08</span><span class="rf">RF-09</span></div>
+    </div>
+    <div class="figures">
+      <figure class="figure" id="fig-8-5">
+        <figcaption class="figure__caption">
+          <p class="figure__line">
+            <span class="figure__n">Figura 8.5</span>
+            <span class="figure__cov">RF-08</span>
+          </p>
+          <h3>Bandeja del jefe de turno</h3>
+          <p class="figure__uses">Revisar pendientes</p>
+        </figcaption>
+        <div class="stage">
+<div class="screen" id="bandeja">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Revisión de partes</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">A. Cornejo Escobar</span>
+        <span class="identity__role">Jefe de turno · Estación Central</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="app">
+
+    <nav class="sidenav">
+      <p class="label sidenav__label">Menú</p>
+      <div class="sidenav__menu">
+        <a class="sidenav__item" aria-current="page" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6L5 5Z"/></svg><span>Bandeja del turno</span><span class="sidenav__count">3</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg><span>Nuevo parte</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg><span>Consulta</span></a>
+      </div>
+      <div class="sidenav__foot">
+        <p class="note">El histórico de partes ya validados de tu turno se consulta desde <strong>Consulta</strong>.</p>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="pagehead">
+        <div class="pagehead__titles">
+          <h1 class="pagehead__title">Partes del turno</h1>
+          <p class="pagehead__sub">Turno matutino · 08 de septiembre de 2026</p>
+        </div>
+        <div class="pagehead__actions">
+          <span class="badge"><span class="status__dot"></span>3 pendientes de revisión</span>
+          <button type="button" class="btn"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>Buscar</button>
+        </div>
+      </div>
+
+      <div class="panes">
+
+        <section class="master">
+          <div class="tabs">
+            <span class="tab" aria-current="page">Pendientes · 3</span>
+            <span class="tab">Devueltos · 1</span>
+            <span class="tab">Validados · 12</span>
+          </div>
+          <div class="parte-list">
+
+            <article class="parte-row">
+              <span class="parte-row__flag"></span>
+              <div class="parte-row__main">
+                <div class="parte-row__top">
+                  <h2 class="parte-row__title">Incendio estructural</h2>
+                  <span class="parte-row__folio">PE-2026-0147</span>
+                </div>
+                <p class="parte-row__place">Av. Reforma 1245, Col. Obrera</p>
+                <div class="parte-row__meta">
+                  <span>08/09 · 14:35</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Unidad 12</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Jalife B., A.</span>
+                </div>
+                <div class="chips">
+                  <span class="chip chip--meta"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.5h3.5L8 6h8l1.5 2.5H21V19H3V8.5Z"/><circle cx="12" cy="13" r="3"/></svg>2 fotos</span>
+                  <span class="chip chip--meta"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-4 4 3 3-3 6 5"/></svg>Croquis</span>
+                  <span class="chip chip--meta"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 0 0-8 8v3"/><path d="M20 15v-3a8 8 0 0 0-4-6.9"/><path d="M8 12a4 4 0 0 1 8 0v4"/><path d="M12 12v6"/></svg>Firmado</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="parte-row">
+              <span class="parte-row__flag"></span>
+              <div class="parte-row__main">
+                <div class="parte-row__top">
+                  <h2 class="parte-row__title">Rescate vehicular</h2>
+                  <span class="parte-row__folio">PE-2026-0146</span>
+                </div>
+                <p class="parte-row__place">Carretera Transpeninsular km 106</p>
+                <div class="parte-row__meta">
+                  <span>08/09 · 11:20</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Unidad 07</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Tamayo S., E.</span>
+                </div>
+                <div class="chips">
+                  <span class="chip chip--meta"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.5h3.5L8 6h8l1.5 2.5H21V19H3V8.5Z"/><circle cx="12" cy="13" r="3"/></svg>4 fotos</span>
+                  <span class="chip chip--meta chip--muted">Sin croquis</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="parte-row">
+              <span class="parte-row__flag"></span>
+              <div class="parte-row__main">
+                <div class="parte-row__top">
+                  <h2 class="parte-row__title">Fuga de gas</h2>
+                  <span class="parte-row__folio">PE-2026-0145</span>
+                </div>
+                <p class="parte-row__place">Calle Séptima 320, Zona Centro</p>
+                <div class="parte-row__meta">
+                  <span>08/09 · 09:05</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Unidad 12</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Rivera Ch., J.</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="parte-row parte-row--muted">
+              <span class="parte-row__flag"></span>
+              <div class="parte-row__main">
+                <div class="parte-row__top">
+                  <h2 class="parte-row__title">Incendio de pastizal</h2>
+                  <span class="parte-row__folio">PE-2026-0142</span>
+                </div>
+                <p class="parte-row__place">Ejido Chapultepec s/n</p>
+                <p class="parte-row__note">
+                  <svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-5"/></svg>
+                  Devuelto ayer: falta la hora de control del fuego.
+                </p>
+              </div>
+            </article>
+
+            <p class="parte-list__end">
+              <span class="status__dot"></span>
+              No hay más partes en este turno
+            </p>
+
+          </div>
+        </section>
+
+        <section class="detail">
+          <div class="detail__empty">
+            <svg class="icon icon--xl" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg>
+            <p class="text">Selecciona un parte de la lista para revisarlo</p>
+            <p class="hint">Al abrirlo aparecen los datos, el croquis y las fotos, con los botones de validar o devolver.</p>
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+        </div>
+      </figure>
+      <figure class="figure" id="fig-8-5b">
+        <figcaption class="figure__caption">
+          <p class="figure__line">
+            <span class="figure__n">Figura 8.5b</span>
+            <span class="figure__cov">RF-09</span>
+          </p>
+          <h3>Validar o devolver</h3>
+          <p class="figure__uses">Validar el parte · Devolver para corregir</p>
+        </figcaption>
+        <div class="stage">
+<div class="screen" id="bandeja-detalle">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Revisión de partes</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">A. Cornejo Escobar</span>
+        <span class="identity__role">Jefe de turno · Estación Central</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="app">
+
+    <nav class="sidenav">
+      <p class="label sidenav__label">Menú</p>
+      <div class="sidenav__menu">
+        <a class="sidenav__item" aria-current="page" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6L5 5Z"/></svg><span>Bandeja del turno</span><span class="sidenav__count">3</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg><span>Nuevo parte</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg><span>Consulta</span></a>
+      </div>
+      <div class="sidenav__foot">
+        <p class="note">El histórico de partes ya validados de tu turno se consulta desde <strong>Consulta</strong>.</p>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="pagehead">
+        <div class="pagehead__titles">
+          <h1 class="pagehead__title">Partes del turno</h1>
+          <p class="pagehead__sub">Turno matutino · 08 de septiembre de 2026</p>
+        </div>
+        <div class="pagehead__actions">
+          <span class="badge"><span class="status__dot"></span>3 pendientes de revisión</span>
+          <button type="button" class="btn"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>Buscar</button>
+        </div>
+      </div>
+
+      <div class="panes">
+
+        <section class="master">
+          <div class="tabs">
+            <span class="tab" aria-current="page">Pendientes · 3</span>
+            <span class="tab">Devueltos · 1</span>
+            <span class="tab">Validados · 12</span>
+          </div>
+          <div class="parte-list">
+
+            <article class="parte-row" aria-current="true">
+              <span class="parte-row__flag"></span>
+              <div class="parte-row__main">
+                <div class="parte-row__top">
+                  <h2 class="parte-row__title">Incendio estructural</h2>
+                  <span class="parte-row__folio">PE-2026-0147</span>
+                </div>
+                <p class="parte-row__place">Av. Reforma 1245, Col. Obrera</p>
+                <div class="parte-row__meta">
+                  <span>08/09 · 14:35</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Unidad 12</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Jalife B., A.</span>
+                </div>
+                <div class="chips">
+                  <span class="chip chip--meta"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.5h3.5L8 6h8l1.5 2.5H21V19H3V8.5Z"/><circle cx="12" cy="13" r="3"/></svg>2 fotos</span>
+                  <span class="chip chip--meta"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 16l5-4 4 3 3-3 6 5"/></svg>Croquis</span>
+                  <span class="chip chip--meta"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 0 0-8 8v3"/><path d="M20 15v-3a8 8 0 0 0-4-6.9"/><path d="M8 12a4 4 0 0 1 8 0v4"/><path d="M12 12v6"/></svg>Firmado</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="parte-row">
+              <span class="parte-row__flag"></span>
+              <div class="parte-row__main">
+                <div class="parte-row__top">
+                  <h2 class="parte-row__title">Rescate vehicular</h2>
+                  <span class="parte-row__folio">PE-2026-0146</span>
+                </div>
+                <p class="parte-row__place">Carretera Transpeninsular km 106</p>
+                <div class="parte-row__meta">
+                  <span>08/09 · 11:20</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Unidad 07</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Tamayo S., E.</span>
+                </div>
+                <div class="chips">
+                  <span class="chip chip--meta"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.5h3.5L8 6h8l1.5 2.5H21V19H3V8.5Z"/><circle cx="12" cy="13" r="3"/></svg>4 fotos</span>
+                  <span class="chip chip--meta chip--muted">Sin croquis</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="parte-row">
+              <span class="parte-row__flag"></span>
+              <div class="parte-row__main">
+                <div class="parte-row__top">
+                  <h2 class="parte-row__title">Fuga de gas</h2>
+                  <span class="parte-row__folio">PE-2026-0145</span>
+                </div>
+                <p class="parte-row__place">Calle Séptima 320, Zona Centro</p>
+                <div class="parte-row__meta">
+                  <span>08/09 · 09:05</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Unidad 12</span>
+                  <span class="parte-row__sep"></span>
+                  <span>Rivera Ch., J.</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="parte-row parte-row--muted">
+              <span class="parte-row__flag"></span>
+              <div class="parte-row__main">
+                <div class="parte-row__top">
+                  <h2 class="parte-row__title">Incendio de pastizal</h2>
+                  <span class="parte-row__folio">PE-2026-0142</span>
+                </div>
+                <p class="parte-row__place">Ejido Chapultepec s/n</p>
+                <p class="parte-row__note">
+                  <svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-5"/></svg>
+                  Devuelto ayer: falta la hora de control del fuego.
+                </p>
+              </div>
+            </article>
+
+            <p class="parte-list__end">
+              <span class="status__dot"></span>
+              No hay más partes en este turno
+            </p>
+
+          </div>
+        </section>
+
+        <section class="detail">
+
+          <div class="detail__head">
+            <div class="stack stack--sm">
+              <div class="row">
+                <h2 class="pagehead__title">Incendio estructural</h2>
+                <span class="badge status--pending"><span class="status__dot"></span>Pendiente de revisión</span>
+              </div>
+              <p class="pagehead__sub mono">PE-2026-0147 · firmado por Jalife Burgueño, A. a las 15:02</p>
+            </div>
+            <div class="pagehead__actions">
+              <button type="button" class="btn btn--sm"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V4h10v4"/><rect x="4" y="8" width="16" height="8" rx="1"/><path d="M7 16h10v4H7z"/></svg>Imprimir</button>
+            </div>
+          </div>
+
+          <div class="detail__body">
+
+            <div class="stack">
+
+              <section class="card">
+                <div class="card__head">
+                  <h3 class="card__title">Datos de la emergencia</h3>
+                </div>
+                <div class="card__body">
+                  <dl class="dl dl--stacked">
+                    <div><dt>Fecha y hora</dt><dd class="mono">08/09/2026 · 14:35</dd></div>
+                    <div><dt>Hora de control</dt><dd class="mono">15:48</dd></div>
+                    <div><dt>Ubicación</dt><dd>Av. Reforma 1245, Col. Obrera</dd></div>
+                    <div><dt>Unidades</dt><dd>Unidad 12, Pipa 04</dd></div>
+                    <div><dt>Personal en sitio</dt><dd>Jalife B. A., Acevedo C. V.</dd></div>
+                    <div><dt>Evidencia</dt><dd>2 fotografías</dd></div>
+                  </dl>
+                  <p class="text">Casa de dos plantas sobre la acera norte. El fuego salía por la ventana del segundo piso. La Unidad 12 se estacionó enfrente y se tomó agua del hidrante de la esquina.</p>
+                </div>
+              </section>
+
+              <section class="card">
+                <div class="card__head">
+                  <h3 class="card__title">Croquis de la escena</h3>
+                  <span class="hint">Generado y ajustado por el bombero</span>
+                </div>
+                <div class="card__body">
+                  <div class="sketch">
+                    <svg viewBox="0 0 620 300" aria-label="Croquis esquemático de la escena">
+                      <path class="sk-street" d="M0 232h620M0 262h620"/>
+                      <path class="sk-street" d="M14 247h34M78 247h34M142 247h34M206 247h34M270 247h34M334 247h34M398 247h34M462 247h34M526 247h34"/>
+                      <text class="sk-label sk-label--faint" x="16" y="286">AV. REFORMA</text>
+                      <rect class="sk-solid" x="80" y="60" width="180" height="172"/>
+                      <path class="sk-solid" d="M80 60 170 24l90 36"/>
+                      <rect class="sk-soft" x="100" y="84" width="42" height="34"/>
+                      <rect class="sk-fire" x="190" y="84" width="42" height="34"/>
+                      <rect class="sk-soft" x="156" y="190" width="34" height="42"/>
+                      <text class="sk-label" x="96" y="222">INMUEBLE</text>
+                      <path class="sk-fire" d="M211 66c10 8 15 14 15 20a15 15 0 0 1-30 0c0-6 5-12 15-20Z"/>
+                      <text class="sk-label sk-label--fire" x="248" y="96">FUEGO</text>
+                      <path class="sk-dashed" d="M470 214C420 176 350 148 270 138"/>
+                      <rect class="sk-solid" x="330" y="204" width="140" height="44" rx="2"/>
+                      <text class="sk-label sk-label--ink" x="342" y="232">UNIDAD 12</text>
+                      <circle class="sk-solid" cx="356" cy="252" r="10"/>
+                      <circle class="sk-solid" cx="446" cy="252" r="10"/>
+                      <circle class="sk-solid" cx="548" cy="208" r="5"/>
+                      <path class="sk-solid" d="M548 213v18M540 219h16"/>
+                      <text class="sk-label" x="512" y="284">HIDRANTE</text>
+                    </svg>
+                  </div>
+                </div>
+              </section>
+
+            </div>
+
+            <div class="stack">
+
+              <section class="card">
+                <div class="card__head">
+                  <h3 class="card__title">Evidencia</h3>
+                  <span class="hint mono">2</span>
+                </div>
+                <div class="card__body">
+                  <div class="photos photos--3">
+                    <div class="photo photo--sm"><svg viewBox="0 0 100 62" preserveAspectRatio="none" aria-hidden="true"><path class="photo__cross" d="M0 0l100 62M100 0L0 62"/></svg></div>
+                    <div class="photo photo--sm"><svg viewBox="0 0 100 62" preserveAspectRatio="none" aria-hidden="true"><path class="photo__cross" d="M0 0l100 62M100 0L0 62"/></svg></div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="card card--flat">
+                <div class="card__body">
+                  <span class="label">Nota de corrección</span>
+                  <p class="hint">Se escribe aquí lo que debe corregir el bombero. Sólo se pide al devolver el parte.</p>
+                  <div class="control control--area control--placeholder">Falta la hora de control del fuego…</div>
+                </div>
+              </section>
+
+              <section class="card">
+                <div class="card__head">
+                  <h3 class="card__title">Trazabilidad</h3>
+                </div>
+                <div class="card__body">
+                  <ol class="timeline">
+                    <li class="timeline__row">
+                      <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/></svg>
+                      <span class="grow">Capturado en sitio</span>
+                      <span class="timeline__when">14:35</span>
+                    </li>
+                    <li class="timeline__row">
+                      <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 0 0-8 8v3"/><path d="M20 15v-3a8 8 0 0 0-4-6.9"/><path d="M8 12a4 4 0 0 1 8 0v4"/><path d="M12 12v6"/></svg>
+                      <span class="grow">Firmado con la credencial del equipo</span>
+                      <span class="timeline__when">15:02</span>
+                    </li>
+                  </ol>
+                </div>
+              </section>
+
+            </div>
+
+          </div>
+
+          <div class="detail__foot">
+            <p class="hint">Al devolverlo, el parte regresa al bombero con la nota y sale de esta bandeja.</p>
+            <div class="footbar__actions">
+              <button type="button" class="btn btn--danger btn--lg">
+                <svg class="icon icon--sm icon--bold" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-5"/></svg>
+                Devolver con nota
+              </button>
+              <button type="button" class="btn btn--primary btn--lg">
+                <svg class="icon icon--sm icon--bold" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"/></svg>
+                Validar parte
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="act">
+    <div class="act__head">
+      <p class="act__kicker">Actor principal</p>
+      <h2>Personal de la Dirección</h2>
+      <p class="act__lead">Sólo consume información: es quien hoy recibe la papelería en físico. El jefe de turno entra a esta misma pantalla para consultar el histórico de partes ya validados de su turno.</p>
+      <div class="act__rfs"><span class="rf">RF-10</span></div>
+    </div>
+    <div class="figures">
+      <figure class="figure" id="fig-8-6">
+        <figcaption class="figure__caption">
+          <p class="figure__line">
+            <span class="figure__n">Figura 8.6</span>
+            <span class="figure__cov">RF-10</span>
+          </p>
+          <h3>Panel de la Dirección</h3>
+          <p class="figure__uses">Consultar partes · Filtrar y buscar · Exportar reporte</p>
+        </figcaption>
+        <div class="stage">
+<div class="screen" id="panel-direccion">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Dirección</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">V. Acevedo Carrillo</span>
+        <span class="identity__role">Personal de la Dirección</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="app">
+
+    <nav class="sidenav">
+      <p class="label sidenav__label">Menú</p>
+      <div class="sidenav__menu">
+        <a class="sidenav__item" aria-current="page" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg><span>Partes</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Estadísticas</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/><path d="M17 8h5M17 12h5"/></svg><span>Personal</span></a>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="pagehead">
+        <div class="pagehead__titles">
+          <h1 class="pagehead__title">Partes de emergencia</h1>
+          <p class="pagehead__sub">Consulta de los partes recibidos de las estaciones</p>
+        </div>
+        <div class="pagehead__actions">
+          <button type="button" class="btn"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/></svg>Exportar PDF</button>
+          <button type="button" class="btn btn--primary"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>Exportar CSV</button>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div class="field">
+          <span class="label">Desde</span>
+          <div class="control">
+            <span class="control__value mono">01/09/2026</span>
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label">Hasta</span>
+          <div class="control">
+            <span class="control__value mono">08/09/2026</span>
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          </div>
+        </div>
+        <div class="field field--md">
+          <span class="label">Tipo de emergencia</span>
+          <div class="control">
+            <span class="control__value">Todos</span>
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label">Unidad</span>
+          <div class="control">
+            <span class="control__value">Unidad 12</span>
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="field field--grow">
+          <span class="label">Buscar</span>
+          <div class="control control--placeholder">
+            <span class="control__value">Folio, ubicación o nombre del bombero</span>
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+          </div>
+        </div>
+        <button type="button" class="btn btn--primary">Filtrar</button>
+        <button type="button" class="btn btn--quiet">Limpiar</button>
+      </div>
+
+      <div class="content">
+
+        <div class="row row--between">
+          <p class="pagehead__sub"><strong>48</strong> partes encontrados · 01 al 08 de septiembre de 2026</p>
+          <p class="pagehead__sub">Ordenados por fecha, más reciente primero</p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <colgroup>
+              <col span="1" width="140">
+              <col span="1" width="150">
+              <col span="1" width="200">
+              <col span="1">
+              <col span="1" width="120">
+              <col span="1" width="160">
+              <col span="1" width="140">
+              <col span="1" width="44">
+            </colgroup>
+            <thead>
+              <tr>
+                <th scope="col">Folio</th>
+                <th scope="col">Fecha y hora</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Ubicación</th>
+                <th scope="col">Unidad</th>
+                <th scope="col">Elaboró</th>
+                <th scope="col">Estado</th>
+                <th scope="col"><span class="label">Ver</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">PE-2026-0147</td>
+                <td class="num">08/09 · 14:35</td>
+                <td>Incendio estructural</td>
+                <td>Av. Reforma 1245, Col. Obrera</td>
+                <td class="num">Unidad 12</td>
+                <td>Jalife B., A.</td>
+                <td><span class="status"><span class="status__dot"></span>Validado</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0146</td>
+                <td class="num">08/09 · 11:20</td>
+                <td>Rescate vehicular</td>
+                <td>Carretera Transpeninsular km 106</td>
+                <td class="num">Unidad 07</td>
+                <td>Tamayo S., E.</td>
+                <td><span class="status status--pending"><span class="status__dot"></span>En revisión</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0145</td>
+                <td class="num">08/09 · 09:05</td>
+                <td>Fuga de gas</td>
+                <td>Calle Séptima 320, Zona Centro</td>
+                <td class="num">Unidad 12</td>
+                <td>Rivera Ch., J.</td>
+                <td><span class="status"><span class="status__dot"></span>Validado</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0144</td>
+                <td class="num">07/09 · 22:48</td>
+                <td>Incendio vehicular</td>
+                <td>Blvd. Costero esq. Riveroll</td>
+                <td class="num">Unidad 03</td>
+                <td>Cornejo E., A.</td>
+                <td><span class="status"><span class="status__dot"></span>Validado</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0142</td>
+                <td class="num">07/09 · 16:12</td>
+                <td>Incendio de pastizal</td>
+                <td>Ejido Chapultepec s/n</td>
+                <td class="num">Unidad 12</td>
+                <td>Rivera Ch., J.</td>
+                <td><span class="status status--returned"><span class="status__dot"></span>Devuelto</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0141</td>
+                <td class="num">07/09 · 08:30</td>
+                <td>Servicio de auxilio</td>
+                <td>Calle Segunda 88, Zona Centro</td>
+                <td class="num">Unidad 07</td>
+                <td>Tamayo S., E.</td>
+                <td><span class="status"><span class="status__dot"></span>Validado</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0140</td>
+                <td class="num">06/09 · 19:04</td>
+                <td>Incendio estructural</td>
+                <td>Calle Novena 415, Col. Bustamante</td>
+                <td class="num">Unidad 12</td>
+                <td>Acevedo C., V.</td>
+                <td><span class="status"><span class="status__dot"></span>Validado</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pager">
+          <p class="hint">Mostrando 1–7 de 48</p>
+          <div class="pager__pages">
+            <span class="pager__page pager__page--off"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></span>
+            <span class="pager__page" aria-current="page">1</span>
+            <span class="pager__page">2</span>
+            <span class="pager__page">3</span>
+            <span class="pager__page"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+        </div>
+      </figure>
+      <figure class="figure" id="fig-8-6b">
+        <figcaption class="figure__caption">
+          <p class="figure__line">
+            <span class="figure__n">Figura 8.6b</span>
+            <span class="figure__cov">RF-10</span>
+          </p>
+          <h3>Detalle del parte</h3>
+          <p class="figure__uses">Ver detalle del parte</p>
+        </figcaption>
+        <div class="stage">
+<div class="screen" id="panel-detalle">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Dirección</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">V. Acevedo Carrillo</span>
+        <span class="identity__role">Personal de la Dirección</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="app">
+
+    <nav class="sidenav">
+      <p class="label sidenav__label">Menú</p>
+      <div class="sidenav__menu">
+        <a class="sidenav__item" aria-current="page" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg><span>Partes</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Estadísticas</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/><path d="M17 8h5M17 12h5"/></svg><span>Personal</span></a>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="pagehead">
+        <div class="pagehead__titles">
+          <p class="row">
+            <a class="card__link" href="#">
+              <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+              Volver al listado
+            </a>
+          </p>
+          <div class="row">
+            <h1 class="pagehead__title">Incendio estructural</h1>
+            <span class="badge"><span class="status__dot"></span>Validado</span>
+          </div>
+          <p class="pagehead__sub mono">PE-2026-0147 · Estación Central</p>
+        </div>
+        <div class="pagehead__actions">
+          <button type="button" class="btn"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V4h10v4"/><rect x="4" y="8" width="16" height="8" rx="1"/><path d="M7 16h10v4H7z"/></svg>Imprimir</button>
+          <button type="button" class="btn btn--primary"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>Exportar PDF</button>
+        </div>
+      </div>
+
+      <div class="content content--split">
+
+        <div class="stack">
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Datos de la emergencia</h2>
+            </div>
+            <div class="card__body">
+              <dl class="dl dl--stacked">
+                <div><dt>Fecha y hora</dt><dd class="mono">08/09/2026 · 14:35</dd></div>
+                <div><dt>Hora de control</dt><dd class="mono">15:48</dd></div>
+                <div><dt>Ubicación</dt><dd>Av. Reforma 1245, Col. Obrera</dd></div>
+                <div><dt>Coordenadas</dt><dd class="mono">31.8667, −116.5964</dd></div>
+                <div><dt>Unidades</dt><dd>Unidad 12, Pipa 04</dd></div>
+                <div><dt>Personal en sitio</dt><dd>Jalife B. A., Acevedo C. V.</dd></div>
+              </dl>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Descripción de la escena</h2>
+            </div>
+            <div class="card__body">
+              <p class="text">Casa de dos plantas sobre la acera norte. El fuego salía por la ventana del segundo piso. La Unidad 12 se estacionó enfrente y se tomó agua del hidrante de la esquina. No hubo personas lesionadas; se aseguró el inmueble y se entregó a Protección Civil a las 15:48.</p>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Trazabilidad</h2>
+              <span class="hint">Quién hizo qué, y cuándo</span>
+            </div>
+            <div class="card__body">
+              <ol class="timeline">
+                <li class="timeline__row">
+                  <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/></svg>
+                  <span class="grow">Capturado en sitio por <strong>Jalife Burgueño, A.</strong></span>
+                  <span class="timeline__when">08/09 · 14:35</span>
+                </li>
+                <li class="timeline__row">
+                  <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 0 0-8 8v3"/><path d="M20 15v-3a8 8 0 0 0-4-6.9"/><path d="M8 12a4 4 0 0 1 8 0v4"/><path d="M12 12v6"/></svg>
+                  <span class="grow">Firmado con la credencial del equipo · matrícula 376285</span>
+                  <span class="timeline__when">08/09 · 15:02</span>
+                </li>
+                <li class="timeline__row">
+                  <svg class="icon icon--md icon--bold" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"/></svg>
+                  <span class="grow">Validado por <strong>Cornejo Escobar, A.</strong> · jefe de turno</span>
+                  <span class="timeline__when">08/09 · 16:10</span>
+                </li>
+              </ol>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="rail">
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Croquis de la escena</h2>
+            </div>
+            <div class="card__body">
+              <div class="sketch">
+                <svg viewBox="0 0 620 300" aria-label="Croquis esquemático de la escena">
+                  <path class="sk-soft" d="M24 30h20M24 30v20"/>
+                  <text class="sk-label sk-label--faint" x="24" y="22">N</text>
+                  <path class="sk-street" d="M0 232h620M0 262h620"/>
+                  <path class="sk-street" d="M14 247h34M78 247h34M142 247h34M206 247h34M270 247h34M334 247h34M398 247h34M462 247h34M526 247h34"/>
+                  <text class="sk-label sk-label--faint" x="16" y="286">AV. REFORMA</text>
+                  <rect class="sk-solid" x="80" y="60" width="180" height="172"/>
+                  <path class="sk-solid" d="M80 60 170 24l90 36"/>
+                  <rect class="sk-soft" x="100" y="84" width="42" height="34"/>
+                  <rect class="sk-fire" x="190" y="84" width="42" height="34"/>
+                  <rect class="sk-soft" x="156" y="190" width="34" height="42"/>
+                  <text class="sk-label" x="96" y="222">INMUEBLE</text>
+                  <path class="sk-fire" d="M211 66c10 8 15 14 15 20a15 15 0 0 1-30 0c0-6 5-12 15-20Z"/>
+                  <text class="sk-label sk-label--fire" x="248" y="96">FUEGO</text>
+                  <path class="sk-dashed" d="M470 214C420 176 350 148 270 138"/>
+                  <rect class="sk-solid" x="330" y="204" width="140" height="44" rx="2"/>
+                  <text class="sk-label sk-label--ink" x="342" y="232">UNIDAD 12</text>
+                  <circle class="sk-solid" cx="356" cy="252" r="10"/>
+                  <circle class="sk-solid" cx="446" cy="252" r="10"/>
+                  <circle class="sk-solid" cx="548" cy="208" r="5"/>
+                  <path class="sk-solid" d="M548 213v18M540 219h16"/>
+                  <text class="sk-label" x="512" y="284">HIDRANTE</text>
+                </svg>
+              </div>
+              <p class="hint">Generado a partir de la descripción y ajustado por el bombero.</p>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Evidencia fotográfica</h2>
+              <span class="hint mono">2</span>
+            </div>
+            <div class="card__body">
+              <div class="photos photos--3">
+                <div class="photo"><svg viewBox="0 0 100 108" preserveAspectRatio="none" aria-hidden="true"><path class="photo__cross" d="M0 0l100 108M100 0L0 108"/></svg></div>
+                <div class="photo"><svg viewBox="0 0 100 108" preserveAspectRatio="none" aria-hidden="true"><path class="photo__cross" d="M0 0l100 108M100 0L0 108"/></svg></div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <footer class="sheet-foot">
+    <p><strong>Por qué seis pantallas y no diez.</strong> La evidencia fotográfica vive dentro del formulario del parte y las tres acciones del jefe de turno dentro de una sola bandeja: agrupar así evita que el bombero navegue entre pantallas en medio de una emergencia, que es justo lo que busca impedir el RNF-02.</p>
+    <p><strong>Lo que estas pantallas todavía suponen.</strong> Provienen de los casos de uso del avance, que a su vez salen de supuestos con certeza media o baja: que el jefe de turno revisa el parte antes de archivarlo y que el llenado ocurre durante la emergencia. Las entrevistas deben confirmarlos, ajustarlos o descartarlos, y con ellos estas pantallas.</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

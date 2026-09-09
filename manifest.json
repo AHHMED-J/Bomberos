@@ -1,0 +1,122 @@
+{
+  "titulo": "Pantallas del Parte Digital",
+  "cabecera": {
+    "eyebrow": "Avance de proyecto no. 1 · Mockup de baja fidelidad",
+    "titulo": "Pantallas del parte digital",
+    "dek": "Seis pantallas, una por cada caso de uso de la Tabla 5, más los estados alternos que el propio modelo exige. Aplicación web: el bombero la abre en el navegador del equipo, el jefe de turno y la Dirección en el suyo.",
+    "meta": [
+      ["Sistema", "Parte digital · Bomberos de Ensenada"],
+      ["Actores representados", "Bombero operativo, jefe de turno, personal de la Dirección"],
+      ["Cobertura", "RF-01 a RF-10"],
+      ["Fecha", "08 de septiembre de 2026"]
+    ]
+  },
+  "secciones": [
+    {
+      "kicker": "Actor principal",
+      "titulo": "Bombero operativo",
+      "lead": "Captura el parte durante la emergencia, adjunta la evidencia y firma el envío con la credencial del propio equipo. Concentra casi todo el sistema porque es quien genera la información.",
+      "rf": ["RF-01", "RF-02", "RF-03", "RF-04", "RF-05", "RF-06", "RF-07"],
+      "pantallas": [
+        {
+          "archivo": "acceso.html",
+          "figura": "8.1",
+          "nombre": "Acceso",
+          "casos": "Iniciar sesión",
+          "cubre": "RF-01"
+        },
+        {
+          "archivo": "formulario.html",
+          "figura": "8.2",
+          "nombre": "Formulario del parte",
+          "casos": "Crear un nuevo parte · Registrar la emergencia · Adjuntar evidencia",
+          "cubre": "RF-02, RF-03, RF-06"
+        },
+        {
+          "archivo": "croquis.html",
+          "figura": "8.3",
+          "nombre": "Croquis",
+          "casos": "Generar croquis con IA",
+          "cubre": "RF-04, RF-05"
+        },
+        {
+          "archivo": "resumen-firma.html",
+          "figura": "8.4",
+          "nombre": "Resumen y firma",
+          "casos": "Firmar y enviar parte",
+          "cubre": "RF-07"
+        }
+      ]
+    },
+    {
+      "kicker": "Caminos alternos",
+      "titulo": "Estados que el modelo exige",
+      "lead": "La Figura 6 del avance bifurca cuando el servicio de IA no responde: el parte se guarda igual y el croquis se agrega después o se dibuja a mano. La confirmación de envío cierra el caso de uso Firmar y enviar parte.",
+      "rf": ["RF-04", "RF-07", "RNF-01"],
+      "pantallas": [
+        {
+          "archivo": "croquis-sin-respuesta.html",
+          "figura": "8.3b",
+          "nombre": "El croquis no se pudo generar",
+          "casos": "Generar croquis con IA · flujo alterno",
+          "cubre": "RF-04, RNF-01"
+        },
+        {
+          "archivo": "envio-confirmado.html",
+          "figura": "8.4b",
+          "nombre": "Confirmación de envío",
+          "casos": "Firmar y enviar parte",
+          "cubre": "RF-07"
+        }
+      ]
+    },
+    {
+      "kicker": "Actor principal",
+      "titulo": "Jefe de turno",
+      "lead": "Control de calidad del parte. La lista y el detalle viven en una sola pantalla: se elige un parte a la izquierda y se decide a la derecha. La devolución con nota es el único punto del sistema donde un parte retrocede en el proceso.",
+      "rf": ["RF-08", "RF-09"],
+      "pantallas": [
+        {
+          "archivo": "bandeja.html",
+          "figura": "8.5",
+          "nombre": "Bandeja del jefe de turno",
+          "casos": "Revisar pendientes",
+          "cubre": "RF-08"
+        },
+        {
+          "archivo": "bandeja-detalle.html",
+          "figura": "8.5b",
+          "nombre": "Validar o devolver",
+          "casos": "Validar el parte · Devolver para corregir",
+          "cubre": "RF-09"
+        }
+      ]
+    },
+    {
+      "kicker": "Actor principal",
+      "titulo": "Personal de la Dirección",
+      "lead": "Sólo consume información: es quien hoy recibe la papelería en físico. El jefe de turno entra a esta misma pantalla para consultar el histórico de partes ya validados de su turno.",
+      "rf": ["RF-10"],
+      "pantallas": [
+        {
+          "archivo": "panel-direccion.html",
+          "figura": "8.6",
+          "nombre": "Panel de la Dirección",
+          "casos": "Consultar partes · Filtrar y buscar · Exportar reporte",
+          "cubre": "RF-10"
+        },
+        {
+          "archivo": "panel-detalle.html",
+          "figura": "8.6b",
+          "nombre": "Detalle del parte",
+          "casos": "Ver detalle del parte",
+          "cubre": "RF-10"
+        }
+      ]
+    }
+  ],
+  "notas": [
+    ["Por qué seis pantallas y no diez.", "La evidencia fotográfica vive dentro del formulario del parte y las tres acciones del jefe de turno dentro de una sola bandeja: agrupar así evita que el bombero navegue entre pantallas en medio de una emergencia, que es justo lo que busca impedir el RNF-02."],
+    ["Lo que estas pantallas todavía suponen.", "Provienen de los casos de uso del avance, que a su vez salen de supuestos con certeza media o baja: que el jefe de turno revisa el parte antes de archivarlo y que el llenado ocurre durante la emergencia. Las entrevistas deben confirmarlos, ajustarlos o descartarlos, y con ellos estas pantallas."]
+  ]
+}

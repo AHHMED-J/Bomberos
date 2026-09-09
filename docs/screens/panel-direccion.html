@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel de la Dirección · Parte Digital</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/app.css">
+</head>
+<body class="preview">
+
+<div class="screen" id="panel-direccion">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Dirección</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">V. Acevedo Carrillo</span>
+        <span class="identity__role">Personal de la Dirección</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="app">
+
+    <nav class="sidenav">
+      <p class="label sidenav__label">Menú</p>
+      <div class="sidenav__menu">
+        <a class="sidenav__item" aria-current="page" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg><span>Partes</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Estadísticas</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/><path d="M17 8h5M17 12h5"/></svg><span>Personal</span></a>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="pagehead">
+        <div class="pagehead__titles">
+          <h1 class="pagehead__title">Partes de emergencia</h1>
+          <p class="pagehead__sub">Consulta de los partes recibidos de las estaciones</p>
+        </div>
+        <div class="pagehead__actions">
+          <button type="button" class="btn"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/></svg>Exportar PDF</button>
+          <button type="button" class="btn btn--primary"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>Exportar CSV</button>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div class="field">
+          <span class="label">Desde</span>
+          <div class="control">
+            <span class="control__value mono">01/09/2026</span>
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label">Hasta</span>
+          <div class="control">
+            <span class="control__value mono">08/09/2026</span>
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          </div>
+        </div>
+        <div class="field field--md">
+          <span class="label">Tipo de emergencia</span>
+          <div class="control">
+            <span class="control__value">Todos</span>
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="field">
+          <span class="label">Unidad</span>
+          <div class="control">
+            <span class="control__value">Unidad 12</span>
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="field field--grow">
+          <span class="label">Buscar</span>
+          <div class="control control--placeholder">
+            <span class="control__value">Folio, ubicación o nombre del bombero</span>
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+          </div>
+        </div>
+        <button type="button" class="btn btn--primary">Filtrar</button>
+        <button type="button" class="btn btn--quiet">Limpiar</button>
+      </div>
+
+      <div class="content">
+
+        <div class="row row--between">
+          <p class="pagehead__sub"><strong>48</strong> partes encontrados · 01 al 08 de septiembre de 2026</p>
+          <p class="pagehead__sub">Ordenados por fecha, más reciente primero</p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <colgroup>
+              <col span="1" width="140">
+              <col span="1" width="150">
+              <col span="1" width="200">
+              <col span="1">
+              <col span="1" width="120">
+              <col span="1" width="160">
+              <col span="1" width="140">
+              <col span="1" width="44">
+            </colgroup>
+            <thead>
+              <tr>
+                <th scope="col">Folio</th>
+                <th scope="col">Fecha y hora</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Ubicación</th>
+                <th scope="col">Unidad</th>
+                <th scope="col">Elaboró</th>
+                <th scope="col">Estado</th>
+                <th scope="col"><span class="label">Ver</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">PE-2026-0147</td>
+                <td class="num">08/09 · 14:35</td>
+                <td>Incendio estructural</td>
+                <td>Av. Reforma 1245, Col. Obrera</td>
+                <td class="num">Unidad 12</td>
+                <td>Jalife B., A.</td>
+                <td><span class="status"><span class="status__dot"></span>Validado</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0146</td>
+                <td class="num">08/09 · 11:20</td>
+                <td>Rescate vehicular</td>
+                <td>Carretera Transpeninsular km 106</td>
+                <td class="num">Unidad 07</td>
+                <td>Tamayo S., E.</td>
+                <td><span class="status status--pending"><span class="status__dot"></span>En revisión</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0145</td>
+                <td class="num">08/09 · 09:05</td>
+                <td>Fuga de gas</td>
+                <td>Calle Séptima 320, Zona Centro</td>
+                <td class="num">Unidad 12</td>
+                <td>Rivera Ch., J.</td>
+                <td><span class="status"><span class="status__dot"></span>Validado</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0144</td>
+                <td class="num">07/09 · 22:48</td>
+                <td>Incendio vehicular</td>
+                <td>Blvd. Costero esq. Riveroll</td>
+                <td class="num">Unidad 03</td>
+                <td>Cornejo E., A.</td>
+                <td><span class="status"><span class="status__dot"></span>Validado</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0142</td>
+                <td class="num">07/09 · 16:12</td>
+                <td>Incendio de pastizal</td>
+                <td>Ejido Chapultepec s/n</td>
+                <td class="num">Unidad 12</td>
+                <td>Rivera Ch., J.</td>
+                <td><span class="status status--returned"><span class="status__dot"></span>Devuelto</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0141</td>
+                <td class="num">07/09 · 08:30</td>
+                <td>Servicio de auxilio</td>
+                <td>Calle Segunda 88, Zona Centro</td>
+                <td class="num">Unidad 07</td>
+                <td>Tamayo S., E.</td>
+                <td><span class="status"><span class="status__dot"></span>Validado</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+              <tr>
+                <td class="num">PE-2026-0140</td>
+                <td class="num">06/09 · 19:04</td>
+                <td>Incendio estructural</td>
+                <td>Calle Novena 415, Col. Bustamante</td>
+                <td class="num">Unidad 12</td>
+                <td>Acevedo C., V.</td>
+                <td><span class="status"><span class="status__dot"></span>Validado</span></td>
+                <td class="go"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pager">
+          <p class="hint">Mostrando 1–7 de 48</p>
+          <div class="pager__pages">
+            <span class="pager__page pager__page--off"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></span>
+            <span class="pager__page" aria-current="page">1</span>
+            <span class="pager__page">2</span>
+            <span class="pager__page">3</span>
+            <span class="pager__page"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+
+</body>
+</html>

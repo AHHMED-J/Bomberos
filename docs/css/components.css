@@ -1,0 +1,317 @@
+/* ==========================================================================
+   components.css — piezas reutilizables del wireframe
+   Orden: avisos, tarjetas, formulario, botones, chips, datos, listas,
+          tablas, pasos, croquis, evidencia.
+   ========================================================================== */
+
+/* --- Avisos --------------------------------------------------------------- */
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 13px 16px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-sunken);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.banner--error { border-color: var(--wf-accent); background: var(--wf-accent-bg); }
+.banner--error .banner__title { color: var(--wf-accent-ink); }
+.banner--error .icon { color: var(--wf-accent); }
+.banner--strip { border-radius: 0; border-width: 0 0 1px; align-items: center; padding: 10px var(--wf-pad-x); }
+.banner__title { font-size: 13.5px; font-weight: 600; }
+.banner__text { color: var(--wf-ink-soft); text-wrap: pretty; }
+
+/* --- Tarjetas ------------------------------------------------------------- */
+.card {
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.card--emphasis { border-color: var(--wf-ink); }
+.card--flat { background: transparent; border-style: dashed; border-color: var(--wf-faint); }
+.card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--wf-line-soft);
+}
+.card__title { font-size: 14px; font-weight: 600; }
+.card__body { display: flex; flex-direction: column; gap: var(--wf-gap); padding: 18px; }
+.card__foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--wf-line-soft);
+  background: var(--wf-sunken);
+  font-size: 13px;
+}
+.card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--wf-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- Formulario ----------------------------------------------------------- */
+.field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 13px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+  font-size: 14.5px;
+  color: var(--wf-ink);
+}
+.control--area {
+  align-items: flex-start;
+  min-height: 118px;
+  padding: 12px 14px;
+  line-height: 1.55;
+}
+.control--placeholder { color: var(--wf-faint); }
+.control__value { min-width: 0; }
+.field__foot { display: flex; justify-content: space-between; gap: 12px; }
+
+/* Mapa esquemático de la ubicación. */
+.map {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 132px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-fill);
+  overflow: hidden;
+}
+.map__grid { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map__pin {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius-sm);
+  background: var(--wf-paper);
+  font-size: 11.5px;
+  color: var(--wf-muted);
+}
+.map__pin .icon { color: var(--wf-accent); }
+
+/* --- Botones -------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--wf-ink);
+  white-space: nowrap;
+}
+.btn--primary { background: var(--wf-ink); border-color: var(--wf-ink); color: var(--wf-paper); font-weight: 600; }
+.btn--outline { background: transparent; border-color: var(--wf-ink); }
+.btn--danger { background: transparent; border-color: var(--wf-accent); color: var(--wf-accent); }
+.btn--quiet { border-color: transparent; background: transparent; color: var(--wf-muted); }
+.btn--sm { min-height: 34px; padding: 0 11px; font-size: 13px; }
+.btn--lg { min-height: 48px; padding: 0 22px; font-size: 15px; }
+.btn--xl { min-height: 54px; font-size: 16px; }
+.btn--grow { flex: 1; }
+.btn--block { width: 100%; }
+.btn--left { justify-content: flex-start; }
+
+/* --- Chips y etiquetas de estado ------------------------------------------ */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+  font-size: 13px;
+}
+.chip--selected { background: var(--wf-ink); border-color: var(--wf-ink); color: var(--wf-paper); }
+.chip--add { border-style: dashed; border-color: var(--wf-faint); background: transparent; color: var(--wf-muted); }
+.chip--meta { min-height: 0; padding: 3px 8px; border-radius: var(--wf-radius-sm); font-size: 11px; color: var(--wf-muted); gap: 5px; }
+.chip--muted { border-style: dashed; color: var(--wf-faint); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 9px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius-sm);
+  font-size: 12px;
+}
+
+.status { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--wf-ink); }
+.status__dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.status--pending { color: var(--wf-muted); }
+.status--pending .status__dot { background: transparent; border: 1px solid currentColor; }
+.status--returned { color: var(--wf-accent); }
+
+/* --- Pares dato/valor ------------------------------------------------------ */
+.dl { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px 14px; margin: 0; }
+.dl dt { font: 400 12px/1.35 var(--font-mono); color: var(--wf-muted); }
+.dl dd { margin: 0; font-size: 14px; line-height: 1.35; }
+.dl--stacked { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 32px; }
+.dl--stacked > div { display: flex; flex-direction: column; gap: 4px; }
+.dl--stacked dt { font-size: 11.5px; }
+
+/* --- Listas --------------------------------------------------------------- */
+.list { display: flex; flex-direction: column; border: 1px solid var(--wf-line); border-radius: var(--wf-radius); background: var(--wf-surface); }
+.list__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--wf-line-soft);
+  font-size: 14.5px;
+}
+.list__row:last-child { border-bottom: 0; }
+.list__row--action { color: var(--wf-muted); }
+.list__aside { font: 400 11.5px/1 var(--font-mono); color: var(--wf-muted); }
+
+.timeline { display: flex; flex-direction: column; gap: 13px; margin: 0; padding: 0; list-style: none; }
+.timeline__row { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.timeline__when { font: 400 12px/1.3 var(--font-mono); color: var(--wf-muted); }
+.timeline strong { font-weight: 600; }
+
+/* --- Tabla ---------------------------------------------------------------- */
+.table-wrap { border: 1px solid var(--wf-line); border-radius: var(--wf-radius); background: var(--wf-surface); overflow: hidden; }
+.table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.table th, .table td { padding: 14px 18px; text-align: left; vertical-align: middle; }
+.table thead th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--wf-line);
+  background: var(--wf-sunken);
+  font: 500 10.5px/1.2 var(--font-mono);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--wf-muted);
+}
+.table tbody tr { border-bottom: 1px solid var(--wf-line-soft); }
+.table tbody tr:last-child { border-bottom: 0; }
+.table tbody tr[aria-current] { background: var(--wf-sunken); }
+.table .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.table .go { width: 40px; color: var(--wf-faint); }
+
+.pager { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.pager__pages { display: flex; gap: 6px; }
+.pager__page {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  font-size: 13px;
+}
+.pager__page[aria-current] { background: var(--wf-ink); border-color: var(--wf-ink); color: var(--wf-paper); }
+.pager__page--off { color: var(--wf-faint); }
+
+/* --- Pasos del parte ------------------------------------------------------- */
+.steps { display: flex; align-items: center; gap: 10px; }
+.step { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--wf-muted); }
+.step__n {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--wf-line);
+  border-radius: 50%;
+  font: 500 11px var(--font-mono);
+}
+.step[aria-current] { color: var(--wf-ink); font-weight: 600; }
+.step[aria-current] .step__n { background: var(--wf-ink); border-color: var(--wf-ink); color: var(--wf-paper); }
+.step--done .step__n { border-color: var(--wf-ink); color: var(--wf-ink); }
+.steps__bar { width: 26px; height: 1px; background: var(--wf-line); }
+
+/* --- Croquis --------------------------------------------------------------- */
+.sketch {
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+  overflow: hidden;
+}
+.sketch svg:not(.icon) { display: block; width: 100%; height: auto; }
+.sketch--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-style: dashed;
+  border-color: var(--wf-faint);
+  background: var(--wf-sunken);
+  color: var(--wf-muted);
+  font-size: 13px;
+}
+/* Trazos del croquis: una clase por papel, ningún atributo de estilo suelto. */
+.sk-street { stroke: var(--wf-line); stroke-width: 1.5; fill: none; }
+.sk-solid { stroke: var(--wf-ink); stroke-width: 1.5; fill: none; stroke-linejoin: round; }
+.sk-soft { stroke: var(--wf-muted); stroke-width: 1.4; fill: none; }
+.sk-fire { stroke: var(--wf-accent); stroke-width: 2; fill: none; stroke-linejoin: round; }
+.sk-dashed { stroke: var(--wf-muted); stroke-width: 1.5; fill: none; stroke-dasharray: 6 5; }
+.sk-label { font: 10px var(--font-mono); fill: var(--wf-muted); }
+.sk-label--ink { fill: var(--wf-ink); }
+.sk-label--fire { fill: var(--wf-accent); }
+.sk-label--faint { fill: var(--wf-faint); }
+
+.toolbar { display: flex; gap: 8px; }
+.toolbar .btn { flex: 1; }
+
+/* --- Evidencia fotográfica -------------------------------------------------- */
+.photos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.photos--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.photo {
+  height: 108px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-fill);
+  overflow: hidden;
+}
+.photo svg { display: block; width: 100%; height: 100%; }
+.photo--sm { height: 62px; }
+.photo__cross { stroke: var(--wf-line); stroke-width: 1.5; fill: none; }
+.photo--add {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-style: dashed;
+  border-color: var(--wf-faint);
+  background: transparent;
+  color: var(--wf-muted);
+  font-size: 12px;
+}

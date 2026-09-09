@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Croquis · Parte Digital</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/app.css">
+</head>
+<body class="preview">
+
+<div class="screen" id="croquis">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Captura de parte</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">A. Jalife Burgueño</span>
+        <span class="identity__role">Bombero · Unidad 12</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="app">
+
+    <nav class="sidenav">
+      <p class="label sidenav__label">Menú</p>
+      <div class="sidenav__menu">
+        <a class="sidenav__item" aria-current="page" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg><span>Nuevo parte</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6L5 5Z"/></svg><span>Mis partes</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg><span>Consulta</span></a>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="pagehead">
+        <div class="pagehead__titles">
+          <h1 class="pagehead__title">Croquis de la escena</h1>
+          <p class="pagehead__sub mono">Folio local 2026-0147 · incendio estructural</p>
+        </div>
+        <div class="pagehead__actions">
+          <div class="steps">
+            <span class="step step--done"><span class="step__n"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"/></svg></span>Datos</span>
+            <span class="steps__bar"></span>
+            <span class="step" aria-current="step"><span class="step__n">2</span>Croquis</span>
+            <span class="steps__bar"></span>
+            <span class="step"><span class="step__n">3</span>Firma</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content content--wide-split">
+
+        <div class="stack">
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Describe la escena</h2>
+              <span class="hint mono">RF-04</span>
+            </div>
+            <div class="card__body">
+              <div class="field">
+                <div class="control control--area">
+                  Casa de dos plantas sobre la acera norte. El fuego salía por la ventana del segundo piso. La Unidad 12 se estacionó enfrente y se tomó agua del hidrante de la esquina.
+                </div>
+                <div class="field__foot">
+                  <span class="hint">Esta descripción también queda escrita en el parte.</span>
+                  <span class="hint mono">218/500</span>
+                </div>
+              </div>
+              <button type="button" class="btn btn--outline btn--lg btn--block">
+                <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.9 4.6L18.5 9.5 13.9 11.4 12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3Z"/><path d="M18.5 15.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1Z"/></svg>
+                Volver a generar el croquis
+              </button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Elementos del croquis</h2>
+              <span class="hint mono">4 · RF-05</span>
+            </div>
+            <div class="card__body">
+              <div class="chips">
+                <span class="chip">Inmueble<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                <span class="chip">Foco de fuego<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                <span class="chip">Unidad 12<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                <span class="chip">Hidrante<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                <span class="chip chip--add"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Agregar</span>
+              </div>
+              <p class="note">Se puede arrastrar cada elemento sobre el croquis, cambiarle el nombre o quitarlo antes de guardar.</p>
+            </div>
+          </section>
+
+        </div>
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Croquis generado</h2>
+            <div class="toolbar">
+              <button type="button" class="btn btn--sm"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg>Mover</button>
+              <button type="button" class="btn btn--sm"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L20 8l-4-4L4 16v4Z"/><path d="M14 6l4 4"/></svg>Editar</button>
+              <button type="button" class="btn btn--sm"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>Eliminar</button>
+            </div>
+          </div>
+          <div class="card__body">
+            <div class="sketch">
+              <svg viewBox="0 0 880 420" aria-label="Croquis esquemático de la escena">
+                <path class="sk-soft" d="M36 44h26M36 44v26"/>
+                <text class="sk-label sk-label--faint" x="36" y="34">N</text>
+
+                <path class="sk-street" d="M0 330h880M0 364h880"/>
+                <path class="sk-street" d="M20 347h44M100 347h44M180 347h44M260 347h44M340 347h44M420 347h44M500 347h44M580 347h44M660 347h44M740 347h44M820 347h44"/>
+                <text class="sk-label sk-label--faint" x="24" y="400">AV. REFORMA</text>
+
+                <rect class="sk-solid" x="120" y="96" width="270" height="234"/>
+                <path class="sk-solid" d="M120 96 255 46l135 50"/>
+                <rect class="sk-soft" x="152" y="128" width="62" height="50"/>
+                <rect class="sk-fire" x="292" y="128" width="62" height="50"/>
+                <rect class="sk-soft" x="232" y="258" width="56" height="72"/>
+                <text class="sk-label" x="150" y="316">INMUEBLE</text>
+
+                <path class="sk-fire" d="M323 100c14 12 21 20 21 28a21 21 0 0 1-42 0c0-8 7-16 21-28Z"/>
+                <text class="sk-label sk-label--fire" x="410" y="140">FUEGO · 2.º PISO</text>
+
+                <path class="sk-dashed" d="M680 300C600 250 500 210 400 196"/>
+
+                <rect class="sk-solid" x="470" y="286" width="210" height="62" rx="2"/>
+                <text class="sk-label sk-label--ink" x="486" y="324">UNIDAD 12</text>
+                <circle class="sk-solid" cx="508" cy="352" r="14"/>
+                <circle class="sk-solid" cx="642" cy="352" r="14"/>
+
+                <circle class="sk-solid" cx="790" cy="300" r="7"/>
+                <path class="sk-solid" d="M790 307v26M778 315h24"/>
+                <text class="sk-label" x="748" y="392">HIDRANTE</text>
+              </svg>
+            </div>
+            <p class="hint">Esquema sin escala. Sirve para ubicar el inmueble, el foco del fuego y la posición de las unidades.</p>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="footbar">
+        <p class="hint">El croquis es opcional: el parte se puede enviar sin él.</p>
+        <div class="footbar__actions">
+          <button type="button" class="btn btn--outline btn--lg">Omitir croquis</button>
+          <button type="button" class="btn btn--primary btn--lg">
+            Guardar y continuar
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+
+</body>
+</html>

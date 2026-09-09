@@ -1,0 +1,68 @@
+/* ==========================================================================
+   tokens.css — variables de diseño
+   Dos paletas independientes y deliberadamente separadas:
+
+   --wf-*  wireframe. Fija. Cada pantalla es una muestra de baja fidelidad
+           que debe verse igual en tema claro y oscuro, como una lámina
+           impresa. Por eso se declara sobre .screen y no sobre :root.
+
+   --bd-*  hoja de presentación (el tablero que sostiene las láminas).
+           Sí responde al tema del lector.
+   ========================================================================== */
+
+:root {
+  --font-sans: 'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Tablero — tema claro */
+  --bd-board: #e4e0d8;
+  --bd-grid: #d2cdc3;
+  --bd-ink: #241f1a;
+  --bd-muted: #6f6a61;
+  --bd-hair: #cdc7bc;
+  --bd-chip: #dcd7cd;
+  --bd-accent: #a8362b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bd-board: #191714;
+    --bd-grid: #2b2823;
+    --bd-ink: #efe9df;
+    --bd-muted: #a09a90;
+    --bd-hair: #38342d;
+    --bd-chip: #2e2a24;
+    --bd-accent: #d2705f;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bd-board: #191714;
+  --bd-grid: #2b2823;
+  --bd-ink: #efe9df;
+  --bd-muted: #a09a90;
+  --bd-hair: #38342d;
+  --bd-chip: #2e2a24;
+  --bd-accent: #d2705f;
+}
+
+.screen {
+  --wf-paper: #fbfaf8;
+  --wf-surface: #ffffff;
+  --wf-sunken: #f4f2ee;
+  --wf-fill: #eceae5;
+  --wf-ink: #26241f;
+  --wf-ink-soft: #4d4941;
+  --wf-muted: #7a756d;
+  --wf-faint: #a8a39b;
+  --wf-line: #c9c5be;
+  --wf-line-soft: #e6e3df;
+  --wf-accent: #b03a2e;
+  --wf-accent-ink: #8a2c22;
+  --wf-accent-bg: #faf1ef;
+
+  --wf-radius: 4px;
+  --wf-radius-sm: 3px;
+  --wf-gap: 18px;
+  --wf-pad-x: 32px;
+}

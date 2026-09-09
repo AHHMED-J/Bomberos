@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parte digital · Bomberos de Ensenada</title>
+<meta name="description" content="Mockup de baja fidelidad de la aplicación web del parte digital para el H. Cuerpo de Bomberos de Ensenada, derivado de los casos de uso en UML del Avance de Proyecto no. 1.">
+<meta property="og:title" content="Parte digital · Bomberos de Ensenada">
+<meta property="og:description" content="Diez pantallas de baja fidelidad derivadas de los casos de uso del sistema de parte digital.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 66 74'><path d='M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z' fill='none' stroke='%23a8362b' stroke-width='7'/></svg>">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <a class="sitenav__brand" href="index.html">
+    <svg class="sitenav__mark" viewBox="0 0 66 74" aria-hidden="true">
+      <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+      <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+    </svg>
+    <span class="sitenav__name">Parte Digital</span>
+  </a>
+  <div class="sitenav__links">
+    <a class="sitenav__link" aria-current="page" href="index.html">Proyecto</a>
+    <a class="sitenav__link" href="pantallas.html">Pantallas</a>
+    <a class="sitenav__link" href="avance-proyecto-1.docx">
+      <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>
+      Documento
+    </a>
+    <a class="sitenav__link" href="https://github.com/AHHMED-J/Bomberos">Repositorio</a>
+  </div>
+</nav>
+
+<div class="site">
+
+  <header class="hero">
+    <p class="hero__eyebrow">UABC · FIAD · Tecnologías Emergentes para el Desarrollo de Soluciones</p>
+    <h1>Parte digital para los Bomberos de Ensenada</h1>
+    <p class="hero__dek">Hoy cada emergencia se documenta a mano y alguien tiene que llevar la papelería hasta la dirección. Estas son las diez pantallas de la aplicación web que sustituye ese trámite, dibujadas en baja fidelidad a partir de los casos de uso en UML del primer avance.</p>
+    <div class="hero__actions">
+      <a class="action action--primary" href="pantallas.html">
+        Ver las diez pantallas
+        <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
+      <a class="action action--ghost" href="avance-proyecto-1.docx">
+        <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>
+        Descargar el avance (.docx)
+      </a>
+    </div>
+    <dl class="hero__meta">
+      <div><dt>Entrega</dt><dd>Avance de Proyecto no. 1</dd></div>
+      <div><dt>Fecha</dt><dd>08 de septiembre de 2026</dd></div>
+      <div><dt>Profesor</dt><dd>Antonio de Jesús García Chávez</dd></div>
+      <div><dt>Estado del mockup</dt><dd>Baja fidelidad, sin validar en campo</dd></div>
+    </dl>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <p>Punto de partida</p>
+      <h2>El problema y la propuesta</h2>
+    </div>
+    <div class="columns">
+      <div>
+        <p>Los bomberos de Ensenada documentan a mano un reporte por cada emergencia atendida. Como el personal permanece ocupado durante toda la jornada, los reportes se acumulan y, además, alguien debe trasladar físicamente la papelería hasta la dirección de bomberos para entregarla.</p>
+        <p>El proyecto propone una aplicación que permita capturar el parte y enviarlo de forma digital, sin que el trámite dependa de que alguien cruce la ciudad con hojas en la mano.</p>
+      </div>
+      <div>
+        <p>Sobre esa base se agregan dos elementos. El primero es la <strong>firma del parte con la credencial del propio equipo</strong>, siguiendo el estándar WebAuthn, que sustituye la firma de puño y letra sin perder la trazabilidad de quién elaboró el reporte.</p>
+        <p>El segundo es la <strong>generación automática de un croquis</strong> de la escena a partir de la descripción escrita por el bombero. Es opcional por diseño: si el servicio no responde, el parte se guarda igual.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>Quiénes usan el sistema</p>
+      <h2>Actores</h2>
+    </div>
+    <div class="actors">
+
+      <article class="actor">
+        <p class="actor__role">Actor principal</p>
+        <h3>Bombero operativo</h3>
+        <p>Captura el parte durante la emergencia, adjunta la evidencia y firma el envío. Concentra casi todo el sistema porque es quien genera la información.</p>
+        <div class="actor__rfs">
+          <span class="rf">RF-01</span><span class="rf">RF-02</span><span class="rf">RF-03</span>
+          <span class="rf">RF-04</span><span class="rf">RF-05</span><span class="rf">RF-06</span><span class="rf">RF-07</span>
+        </div>
+      </article>
+
+      <article class="actor">
+        <p class="actor__role">Actor principal</p>
+        <h3>Jefe de turno</h3>
+        <p>Revisa los partes recibidos: los valida o los devuelve con una nota de corrección. Es el único punto del sistema donde un parte retrocede en el proceso.</p>
+        <div class="actor__rfs">
+          <span class="rf">RF-08</span><span class="rf">RF-09</span>
+        </div>
+      </article>
+
+      <article class="actor">
+        <p class="actor__role">Actor principal</p>
+        <h3>Personal de la Dirección</h3>
+        <p>Consulta, filtra y exporta los partes validados. Es quien hoy recibe la papelería en físico: si puede consultarla en línea, desaparece el traslado.</p>
+        <div class="actor__rfs">
+          <span class="rf">RF-10</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>Una pantalla por caso de uso</p>
+      <h2>Las pantallas</h2>
+    </div>
+    <div class="gallery">
+
+      <a class="thumb-card" href="screens/acceso.html">
+        <span class="shot"><iframe src="screens/acceso.html" title="Acceso" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.1</span><span class="thumb-card__cov">RF-01</span></span>
+        <h3>Acceso</h3>
+        <p>Iniciar sesión</p>
+      </a>
+
+      <a class="thumb-card" href="screens/formulario.html">
+        <span class="shot"><iframe src="screens/formulario.html" title="Formulario del parte" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.2</span><span class="thumb-card__cov">RF-02, RF-03, RF-06</span></span>
+        <h3>Formulario del parte</h3>
+        <p>Crear un nuevo parte · Registrar la emergencia · Adjuntar evidencia</p>
+      </a>
+
+      <a class="thumb-card" href="screens/croquis.html">
+        <span class="shot"><iframe src="screens/croquis.html" title="Croquis" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.3</span><span class="thumb-card__cov">RF-04, RF-05</span></span>
+        <h3>Croquis</h3>
+        <p>Generar croquis con IA</p>
+      </a>
+
+      <a class="thumb-card" href="screens/croquis-sin-respuesta.html">
+        <span class="shot"><iframe src="screens/croquis-sin-respuesta.html" title="El croquis no se pudo generar" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.3b</span><span class="thumb-card__cov">RF-04, RNF-01</span></span>
+        <h3>El croquis no se pudo generar</h3>
+        <p>Generar croquis con IA · flujo alterno</p>
+      </a>
+
+      <a class="thumb-card" href="screens/resumen-firma.html">
+        <span class="shot"><iframe src="screens/resumen-firma.html" title="Resumen y firma" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.4</span><span class="thumb-card__cov">RF-07</span></span>
+        <h3>Resumen y firma</h3>
+        <p>Firmar y enviar parte</p>
+      </a>
+
+      <a class="thumb-card" href="screens/envio-confirmado.html">
+        <span class="shot"><iframe src="screens/envio-confirmado.html" title="Confirmación de envío" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.4b</span><span class="thumb-card__cov">RF-07</span></span>
+        <h3>Confirmación de envío</h3>
+        <p>Firmar y enviar parte</p>
+      </a>
+
+      <a class="thumb-card" href="screens/bandeja.html">
+        <span class="shot"><iframe src="screens/bandeja.html" title="Bandeja del jefe de turno" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.5</span><span class="thumb-card__cov">RF-08</span></span>
+        <h3>Bandeja del jefe de turno</h3>
+        <p>Revisar pendientes</p>
+      </a>
+
+      <a class="thumb-card" href="screens/bandeja-detalle.html">
+        <span class="shot"><iframe src="screens/bandeja-detalle.html" title="Validar o devolver" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.5b</span><span class="thumb-card__cov">RF-09</span></span>
+        <h3>Validar o devolver</h3>
+        <p>Validar el parte · Devolver para corregir</p>
+      </a>
+
+      <a class="thumb-card" href="screens/panel-direccion.html">
+        <span class="shot"><iframe src="screens/panel-direccion.html" title="Panel de la Dirección" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.6</span><span class="thumb-card__cov">RF-10</span></span>
+        <h3>Panel de la Dirección</h3>
+        <p>Consultar partes · Filtrar y buscar · Exportar reporte</p>
+      </a>
+
+      <a class="thumb-card" href="screens/panel-detalle.html">
+        <span class="shot"><iframe src="screens/panel-detalle.html" title="Detalle del parte" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.6b</span><span class="thumb-card__cov">RF-10</span></span>
+        <h3>Detalle del parte</h3>
+        <p>Ver detalle del parte</p>
+      </a>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>De la Tabla 3 del documento</p>
+      <h2>Qué requerimiento cubre cada pantalla</h2>
+    </div>
+    <div class="rf-table-wrap">
+      <table class="rf-table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Requerimiento funcional</th>
+            <th scope="col">Pantalla</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>RF-01</td><td>Autenticar al usuario con la credencial del dispositivo.</td><td>Acceso · 8.1</td></tr>
+          <tr><td>RF-02</td><td>Capturar tipo de emergencia, fecha, hora, ubicación, unidades y personal en sitio.</td><td>Formulario · 8.2</td></tr>
+          <tr><td>RF-03</td><td>Guardar el parte como borrador local desde que se crea, sin depender de la conexión.</td><td>Formulario · 8.2</td></tr>
+          <tr><td>RF-04</td><td>Generar un croquis esquemático de la escena a partir de la descripción escrita.</td><td>Croquis · 8.3 y 8.3b</td></tr>
+          <tr><td>RF-05</td><td>Permitir mover, editar o eliminar elementos del croquis antes de guardarlo.</td><td>Croquis · 8.3</td></tr>
+          <tr><td>RF-06</td><td>Adjuntar fotografías al parte.</td><td>Formulario · 8.2</td></tr>
+          <tr><td>RF-07</td><td>Firmar el parte con la credencial del dispositivo y enviarlo a la Dirección.</td><td>Resumen y firma · 8.4 y 8.4b</td></tr>
+          <tr><td>RF-08</td><td>Listar los partes pendientes de revisión.</td><td>Bandeja · 8.5</td></tr>
+          <tr><td>RF-09</td><td>Validar un parte o devolverlo con una nota de corrección.</td><td>Validar o devolver · 8.5b</td></tr>
+          <tr><td>RF-10</td><td>Consultar, filtrar, exportar y ver el detalle de los partes por fecha, tipo y unidad.</td><td>Panel de la Dirección · 8.6 y 8.6b</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>Ingeniería en Software y Tecnologías Emergentes</p>
+      <h2>Equipo</h2>
+    </div>
+    <ul class="team">
+      <li><span>Ahhmed Affif Jalife Burgueño</span><em>376285</em></li>
+      <li><span>Elias Tamayo Salcedo</span><em>376290</em></li>
+      <li><span>Verónica Acevedo Carrillo</span><em>380207</em></li>
+      <li><span>Josselyn Alexa Rivera Chávez</span><em>379219</em></li>
+      <li><span>Arturo Rafael Cornejo Escobar</span><em>365239</em></li>
+    </ul>
+  </section>
+
+  <footer class="sitefoot">
+    <p>Las pantallas provienen de los casos de uso del avance, que a su vez salen de supuestos con certeza media o baja. Las entrevistas con bomberos siguen pendientes: hasta entonces, esto es una hipótesis de trabajo, no un diseño cerrado.</p>
+    <p>Universidad Autónoma de Baja California · Facultad de Ingeniería, Arquitectura y Diseño · <a href="https://github.com/AHHMED-J/Bomberos">Código del sitio</a></p>
+  </footer>
+
+</div>
+
+</body>
+</html>

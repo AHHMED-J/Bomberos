@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formulario del parte · Parte Digital</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/app.css">
+</head>
+<body class="preview">
+
+<div class="screen" id="formulario">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </div>
+    <span class="topbar__divider"></span>
+    <span class="topbar__context">Captura de parte</span>
+    <div class="topbar__user">
+      <span class="avatar"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg></span>
+      <span class="identity">
+        <span class="identity__name">A. Jalife Burgueño</span>
+        <span class="identity__role">Bombero · Unidad 12</span>
+      </span>
+    </div>
+  </header>
+
+  <div class="app">
+
+    <nav class="sidenav">
+      <p class="label sidenav__label">Menú</p>
+      <div class="sidenav__menu">
+        <a class="sidenav__item" aria-current="page" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M15 3v4h4"/><path d="M9 12h7M9 16h5"/></svg><span>Nuevo parte</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6L5 5Z"/></svg><span>Mis partes</span></a>
+        <a class="sidenav__item" href="#"><svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg><span>Consulta</span></a>
+      </div>
+    </nav>
+
+    <main class="main">
+
+      <div class="pagehead">
+        <div class="pagehead__titles">
+          <h1 class="pagehead__title">Nuevo parte de emergencia</h1>
+          <p class="pagehead__sub mono">Folio local 2026-0147 · iniciado 14:35</p>
+        </div>
+        <div class="pagehead__actions">
+          <div class="steps">
+            <span class="step" aria-current="step"><span class="step__n">1</span>Datos</span>
+            <span class="steps__bar"></span>
+            <span class="step"><span class="step__n">2</span>Croquis</span>
+            <span class="steps__bar"></span>
+            <span class="step"><span class="step__n">3</span>Firma</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="banner banner--strip">
+        <svg class="icon icon--md" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M5 12.5a11 11 0 0 1 4-2.5"/><path d="M1.5 8.8A16 16 0 0 1 8 5.4"/><path d="M15.5 10.2A11 11 0 0 1 19 12.5"/><path d="M14 5.6a16 16 0 0 1 8.5 3.2"/><path d="M8.8 16a6 6 0 0 1 6.4 0"/><path d="M12 20h.01"/></svg>
+        <span>Sin conexión. El parte se guarda en este equipo y se envía solo cuando vuelva la señal.</span>
+      </div>
+
+      <div class="content content--split">
+
+        <div class="stack">
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Datos de la emergencia</h2>
+              <span class="hint mono">RF-02</span>
+            </div>
+            <div class="card__body">
+              <div class="cols-4">
+                <div class="field span-2">
+                  <span class="label">Tipo de emergencia</span>
+                  <div class="control">
+                    <span class="control__value">Incendio estructural</span>
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                  </div>
+                </div>
+                <div class="field">
+                  <span class="label">Fecha</span>
+                  <div class="control">
+                    <span class="control__value mono">08/09/2026</span>
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                  </div>
+                </div>
+                <div class="field">
+                  <span class="label">Hora de llegada</span>
+                  <div class="control">
+                    <span class="control__value mono">14:35</span>
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <span class="label">Ubicación</span>
+                <div class="control">
+                  <span class="control__value">Av. Reforma 1245, Col. Obrera</span>
+                  <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                </div>
+                <div class="map">
+                  <svg class="map__grid" viewBox="0 0 800 132" preserveAspectRatio="none" aria-hidden="true">
+                    <path class="sk-street" d="M-10 92h820M240 -10v152M560 -10L470 142"/>
+                  </svg>
+                  <span class="map__pin">
+                    <svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/></svg>
+                    Punto tomado del GPS del equipo
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Unidades y personal en sitio</h2>
+              <span class="hint mono">RF-02</span>
+            </div>
+            <div class="card__body">
+              <div class="field">
+                <span class="label">Unidades que asistieron</span>
+                <div class="chips">
+                  <span class="chip chip--selected">Unidad 12<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                  <span class="chip chip--selected">Pipa 04<svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+                  <span class="chip chip--add"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Agregar unidad</span>
+                </div>
+              </div>
+              <div class="field">
+                <span class="label">Personal</span>
+                <div class="list">
+                  <div class="list__row">
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg>
+                    <span class="grow">Jalife Burgueño, Ahhmed</span>
+                    <span class="list__aside">Comandante</span>
+                    <svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                  </div>
+                  <div class="list__row">
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-5.5 7-5.5s7 2 7 5.5"/></svg>
+                    <span class="grow">Acevedo Carrillo, Verónica</span>
+                    <span class="list__aside">Bombero</span>
+                    <svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                  </div>
+                  <div class="list__row list__row--action">
+                    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                    <span class="grow">Agregar personal del turno</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <div class="rail">
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Evidencia fotográfica</h2>
+              <span class="hint mono">2 fotos · RF-06</span>
+            </div>
+            <div class="card__body">
+              <div class="photos photos--3">
+                <div class="photo">
+                  <svg viewBox="0 0 100 108" preserveAspectRatio="none" aria-hidden="true"><path class="photo__cross" d="M0 0l100 108M100 0L0 108"/></svg>
+                </div>
+                <div class="photo">
+                  <svg viewBox="0 0 100 108" preserveAspectRatio="none" aria-hidden="true"><path class="photo__cross" d="M0 0l100 108M100 0L0 108"/></svg>
+                </div>
+                <div class="photo photo--add">
+                  <svg class="icon icon--lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.5h3.5L8 6h8l1.5 2.5H21V19H3V8.5Z"/><circle cx="12" cy="13" r="3.5"/></svg>
+                  Agregar
+                </div>
+              </div>
+              <p class="hint">Se toman desde la cámara del equipo o se arrastran a este recuadro.</p>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Estado del borrador</h2>
+              <span class="badge"><svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"/></svg>Guardado</span>
+            </div>
+            <div class="card__body">
+              <dl class="dl">
+                <dt>Guardado</dt><dd class="mono">14:52 · en este equipo</dd>
+                <dt>Envío</dt><dd>Pendiente de señal</dd>
+              </dl>
+              <p class="note note--flex">
+                <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+                <span>El parte existe desde que se abre esta pantalla. Perder la señal no pierde lo capturado.</span>
+              </p>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+      <div class="footbar">
+        <p class="hint">Cada campo se guarda al salir de él. No hace falta guardar a mano.</p>
+        <div class="footbar__actions">
+          <button type="button" class="btn btn--outline btn--lg">Guardar y salir</button>
+          <button type="button" class="btn btn--primary btn--lg">
+            Continuar al croquis
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+
+</body>
+</html>

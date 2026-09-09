@@ -1,0 +1,82 @@
+/* ==========================================================================
+   sheet.css — la hoja que presenta las láminas
+   Sólo la usa pantallas.html. El fondo y la navegación vienen de site.css;
+   aquí está lo propio de la lámina. Sigue el tema claro/oscuro del lector,
+   a diferencia de las pantallas.
+   ========================================================================== */
+
+.sheet { max-width: 1536px; margin: 0 auto; padding: 56px 24px 96px; display: flex; flex-direction: column; gap: 60px; }
+.sheet a { color: var(--bd-accent); }
+.sheet a:hover { color: var(--bd-ink); }
+
+/* --- Cabecera --------------------------------------------------------------- */
+.masthead { display: flex; flex-direction: column; gap: 22px; border-top: 2px solid var(--bd-ink); padding-top: 22px; }
+.masthead__eyebrow {
+  margin: 0;
+  font: 400 11.5px/1.2 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bd-accent);
+}
+.masthead h1 {
+  margin: 0;
+  font-size: clamp(30px, 4.4vw, 46px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+.masthead__dek { margin: 0; font-size: 16.5px; line-height: 1.6; color: var(--bd-muted); max-width: 64ch; text-wrap: pretty; }
+.masthead__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 18px 28px;
+  border-top: 1px solid var(--bd-hair);
+  padding-top: 18px;
+  margin: 0;
+}
+.masthead__meta > div { display: flex; flex-direction: column; gap: 5px; }
+.masthead__meta dt {
+  font: 400 10.5px/1.2 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bd-muted);
+}
+.masthead__meta dd { margin: 0; font-size: 14.5px; line-height: 1.45; }
+
+/* --- Bloque por actor -------------------------------------------------------- */
+.act { display: flex; flex-direction: column; gap: 28px; }
+.act__head { display: flex; flex-direction: column; gap: 9px; border-left: 3px solid var(--bd-accent); padding-left: 16px; }
+.act__kicker { margin: 0; font: 400 10.5px/1.2 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--bd-muted); }
+.act__head h2 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
+.act__lead { margin: 0; font-size: 15px; line-height: 1.6; color: var(--bd-muted); max-width: 72ch; text-wrap: pretty; }
+.act__rfs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+
+/* --- Lámina ------------------------------------------------------------------ */
+.figures { display: flex; flex-direction: column; gap: 44px; }
+.figure { display: flex; flex-direction: column; gap: 14px; margin: 0; }
+.figure__caption { display: flex; flex-direction: column; gap: 5px; max-width: 78ch; }
+.figure__line { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.figure__n { font: 500 11.5px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-accent); }
+.figure__cov { font: 400 11.5px/1.2 var(--font-mono); color: var(--bd-muted); }
+.figure__caption h3 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -0.005em; }
+.figure__uses { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
+
+.stage {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--bd-hair);
+  background: #fbfaf8;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 14px 30px -18px rgba(0, 0, 0, 0.4);
+}
+.stage .screen { flex-shrink: 0; }
+
+/* --- Pie ---------------------------------------------------------------------- */
+.sheet-foot { display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--bd-hair); padding-top: 20px; }
+.sheet-foot p { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--bd-muted); max-width: 74ch; text-wrap: pretty; }
+.sheet-foot strong { color: var(--bd-ink); font-weight: 600; }
+
+@media (max-width: 720px) {
+  .sheet { padding: 36px 16px 64px; gap: 44px; }
+}
