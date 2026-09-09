@@ -87,6 +87,7 @@
         <p class="actor__role">Actor principal</p>
         <h3>Bombero operativo</h3>
         <p>Captura el parte durante la emergencia, adjunta la evidencia y firma el envío. Concentra casi todo el sistema porque es quien genera la información.</p>
+        <p>Antes de su primera sesión, la Dirección tiene que darlo de alta: ese caso de uso todavía no está en el diagrama.</p>
         <div class="actor__rfs">
           <span class="rf">RF-01</span><span class="rf">RF-02</span><span class="rf">RF-03</span>
           <span class="rf">RF-04</span><span class="rf">RF-05</span><span class="rf">RF-06</span><span class="rf">RF-07</span>
@@ -126,6 +127,20 @@
         <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.1</span><span class="thumb-card__cov">RF-01</span></span>
         <h3>Acceso</h3>
         <p>Iniciar sesión</p>
+      </a>
+
+      <a class="thumb-card" href="screens/registro-credencial.html">
+        <span class="shot"><iframe src="screens/registro-credencial.html" title="Alta de credencial" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.1a</span><span class="thumb-card__cov">RF-01</span></span>
+        <h3>Alta de credencial</h3>
+        <p>Registrar credencial · caso de uso nuevo</p>
+      </a>
+
+      <a class="thumb-card" href="screens/acceso-compartido.html">
+        <span class="shot"><iframe src="screens/acceso-compartido.html" title="Acceso en equipo compartido" loading="lazy" scrolling="no" tabindex="-1"></iframe></span>
+        <span class="thumb-card__line"><span class="thumb-card__n">Figura 8.1b</span><span class="thumb-card__cov">RF-01</span></span>
+        <h3>Acceso en equipo compartido</h3>
+        <p>Iniciar sesión · equipo de la estación</p>
       </a>
 
       <a class="thumb-card" href="screens/formulario.html">
@@ -209,7 +224,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td>RF-01</td><td>Autenticar al usuario con la credencial del dispositivo.</td><td>Acceso · 8.1</td></tr>
+          <tr><td>RF-01</td><td>Autenticar al usuario con la credencial del dispositivo.</td><td>Acceso · 8.1, 8.1a y 8.1b</td></tr>
           <tr><td>RF-02</td><td>Capturar tipo de emergencia, fecha, hora, ubicación, unidades y personal en sitio.</td><td>Formulario · 8.2</td></tr>
           <tr><td>RF-03</td><td>Guardar el parte como borrador local desde que se crea, sin depender de la conexión.</td><td>Formulario · 8.2</td></tr>
           <tr><td>RF-04</td><td>Generar un croquis esquemático de la escena a partir de la descripción escrita.</td><td>Croquis · 8.3 y 8.3b</td></tr>

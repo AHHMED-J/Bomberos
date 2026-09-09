@@ -224,7 +224,8 @@
   flex: 1;
   padding: 60px 24px;
 }
-.centered__card { width: 468px; }
+.centered__card { width: 520px; }
+.centered__card--wide { width: 920px; }
 .centered__head { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
 .centered__title { font-size: 28px; font-weight: 600; letter-spacing: -0.015em; }
 .centered__sub { font-size: 14.5px; line-height: 1.55; color: var(--wf-muted); max-width: 44ch; text-wrap: pretty; }

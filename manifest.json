@@ -5,10 +5,22 @@
     "titulo": "Pantallas del parte digital",
     "dek": "Seis pantallas, una por cada caso de uso de la Tabla 5, más los estados alternos que el propio modelo exige. Aplicación web: el bombero la abre en el navegador del equipo, el jefe de turno y la Dirección en el suyo.",
     "meta": [
-      ["Sistema", "Parte digital · Bomberos de Ensenada"],
-      ["Actores representados", "Bombero operativo, jefe de turno, personal de la Dirección"],
-      ["Cobertura", "RF-01 a RF-10"],
-      ["Fecha", "08 de septiembre de 2026"]
+      [
+        "Sistema",
+        "Parte digital · Bomberos de Ensenada"
+      ],
+      [
+        "Actores representados",
+        "Bombero operativo, jefe de turno, personal de la Dirección"
+      ],
+      [
+        "Cobertura",
+        "RF-01 a RF-10"
+      ],
+      [
+        "Fecha",
+        "08 de septiembre de 2026"
+      ]
     ]
   },
   "secciones": [
@@ -16,7 +28,15 @@
       "kicker": "Actor principal",
       "titulo": "Bombero operativo",
       "lead": "Captura el parte durante la emergencia, adjunta la evidencia y firma el envío con la credencial del propio equipo. Concentra casi todo el sistema porque es quien genera la información.",
-      "rf": ["RF-01", "RF-02", "RF-03", "RF-04", "RF-05", "RF-06", "RF-07"],
+      "rf": [
+        "RF-01",
+        "RF-02",
+        "RF-03",
+        "RF-04",
+        "RF-05",
+        "RF-06",
+        "RF-07"
+      ],
       "pantallas": [
         {
           "archivo": "acceso.html",
@@ -49,10 +69,38 @@
       ]
     },
     {
+      "kicker": "Hallazgo al dibujar el mockup",
+      "titulo": "Alta de credencial y equipos compartidos",
+      "lead": "El caso de uso Iniciar sesión daba por hecho que la credencial ya existe. No puede: alguien tiene que dar fe de quién es cada bombero antes de la primera sesión, y en la computadora de la estación —que usa todo el turno— el PIN del equipo no distingue a nadie. De ahí salen estas dos pantallas y un caso de uso que el diagrama todavía no tiene: Registrar credencial, a cargo de la Dirección.",
+      "rf": [
+        "RF-01"
+      ],
+      "pantallas": [
+        {
+          "archivo": "registro-credencial.html",
+          "figura": "8.1a",
+          "nombre": "Alta de credencial",
+          "casos": "Registrar credencial · caso de uso nuevo",
+          "cubre": "RF-01"
+        },
+        {
+          "archivo": "acceso-compartido.html",
+          "figura": "8.1b",
+          "nombre": "Acceso en equipo compartido",
+          "casos": "Iniciar sesión · equipo de la estación",
+          "cubre": "RF-01"
+        }
+      ]
+    },
+    {
       "kicker": "Caminos alternos",
       "titulo": "Estados que el modelo exige",
       "lead": "La Figura 6 del avance bifurca cuando el servicio de IA no responde: el parte se guarda igual y el croquis se agrega después o se dibuja a mano. La confirmación de envío cierra el caso de uso Firmar y enviar parte.",
-      "rf": ["RF-04", "RF-07", "RNF-01"],
+      "rf": [
+        "RF-04",
+        "RF-07",
+        "RNF-01"
+      ],
       "pantallas": [
         {
           "archivo": "croquis-sin-respuesta.html",
@@ -74,7 +122,10 @@
       "kicker": "Actor principal",
       "titulo": "Jefe de turno",
       "lead": "Control de calidad del parte. La lista y el detalle viven en una sola pantalla: se elige un parte a la izquierda y se decide a la derecha. La devolución con nota es el único punto del sistema donde un parte retrocede en el proceso.",
-      "rf": ["RF-08", "RF-09"],
+      "rf": [
+        "RF-08",
+        "RF-09"
+      ],
       "pantallas": [
         {
           "archivo": "bandeja.html",
@@ -96,7 +147,9 @@
       "kicker": "Actor principal",
       "titulo": "Personal de la Dirección",
       "lead": "Sólo consume información: es quien hoy recibe la papelería en físico. El jefe de turno entra a esta misma pantalla para consultar el histórico de partes ya validados de su turno.",
-      "rf": ["RF-10"],
+      "rf": [
+        "RF-10"
+      ],
       "pantallas": [
         {
           "archivo": "panel-direccion.html",
@@ -116,7 +169,13 @@
     }
   ],
   "notas": [
-    ["Por qué seis pantallas y no diez.", "La evidencia fotográfica vive dentro del formulario del parte y las tres acciones del jefe de turno dentro de una sola bandeja: agrupar así evita que el bombero navegue entre pantallas en medio de una emergencia, que es justo lo que busca impedir el RNF-02."],
-    ["Lo que estas pantallas todavía suponen.", "Provienen de los casos de uso del avance, que a su vez salen de supuestos con certeza media o baja: que el jefe de turno revisa el parte antes de archivarlo y que el llenado ocurre durante la emergencia. Las entrevistas deben confirmarlos, ajustarlos o descartarlos, y con ellos estas pantallas."]
+    [
+      "Por qué seis pantallas y no diez.",
+      "La evidencia fotográfica vive dentro del formulario del parte y las tres acciones del jefe de turno dentro de una sola bandeja: agrupar así evita que el bombero navegue entre pantallas en medio de una emergencia, que es justo lo que busca impedir el RNF-02."
+    ],
+    [
+      "Lo que estas pantallas todavía suponen.",
+      "Provienen de los casos de uso del avance, que a su vez salen de supuestos con certeza media o baja: que el jefe de turno revisa el parte antes de archivarlo y que el llenado ocurre durante la emergencia. Las entrevistas deben confirmarlos, ajustarlos o descartarlos, y con ellos estas pantallas."
+    ]
   ]
 }

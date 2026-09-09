@@ -116,6 +116,39 @@
 }
 .map__pin .icon { color: var(--wf-accent); }
 
+/* --- Código de alta ---------------------------------------------------------
+   Los seis caracteres del código que emite la Dirección, uno por casilla. */
+.code { display: flex; gap: 8px; }
+.code span {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 60px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+  font: 400 24px/1 var(--font-mono);
+}
+.code span:last-child { border-color: var(--wf-faint); border-style: dashed; color: var(--wf-faint); }
+
+/* Persona registrada en un equipo compartido. */
+.person { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.person__name { font-size: 14.5px; font-weight: 500; }
+.person__meta { font: 400 11.5px/1.3 var(--font-mono); color: var(--wf-muted); }
+
+/* Código QR de emparejamiento con el teléfono; retícula de relleno. */
+.qr {
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+}
+.qr svg { display: block; width: 168px; height: 168px; }
+.qr rect { fill: var(--wf-ink); }
+.qr .qr-off { fill: var(--wf-surface); }
+
 /* --- Botones -------------------------------------------------------------- */
 .btn {
   display: inline-flex;
@@ -162,6 +195,7 @@
 .chip--muted { border-style: dashed; color: var(--wf-faint); }
 
 .badge {
+  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -198,6 +232,8 @@
 }
 .list__row:last-child { border-bottom: 0; }
 .list__row--action { color: var(--wf-muted); }
+.list__row--person { min-height: 66px; padding: 10px 14px; }
+.list__row[aria-current] { background: var(--wf-sunken); }
 .list__aside { font: 400 11.5px/1 var(--font-mono); color: var(--wf-muted); }
 
 .timeline { display: flex; flex-direction: column; gap: 13px; margin: 0; padding: 0; list-style: none; }
