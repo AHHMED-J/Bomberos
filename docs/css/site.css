@@ -6,12 +6,7 @@
 
 body {
   margin: 0;
-  background-color: var(--bd-board);
-  background-image:
-    linear-gradient(var(--bd-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--bd-grid) 1px, transparent 1px);
-  background-size: 32px 32px;
-  background-position: -1px -1px;
+  background: var(--bd-board);
   color: var(--bd-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -60,7 +55,7 @@ body {
 .site { max-width: 1240px; margin: 0 auto; padding: 0 24px 96px; display: flex; flex-direction: column; gap: 72px; }
 .site section { display: flex; flex-direction: column; gap: 22px; }
 
-.section-head { display: flex; flex-direction: column; gap: 8px; border-left: 3px solid var(--bd-accent); padding-left: 16px; }
+.section-head { display: flex; flex-direction: column; gap: 8px; }
 .section-head p { margin: 0; font: 400 10.5px/1.2 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--bd-muted); }
 .section-head h2 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
 
@@ -123,7 +118,7 @@ body {
   padding: 22px;
   border: 1px solid var(--bd-hair);
   border-radius: 4px;
-  background: color-mix(in srgb, var(--bd-board) 60%, #ffffff);
+  background: var(--bd-panel);
 }
 .actor__role { font: 400 10.5px/1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bd-accent); }
 .actor h3 { margin: 0; font-size: 18px; font-weight: 600; }
@@ -161,7 +156,7 @@ body {
 .thumb-card p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
 
 /* --- Tabla de requerimientos ----------------------------------------------------- */
-.rf-table-wrap { border: 1px solid var(--bd-hair); border-radius: 4px; overflow-x: auto; background: color-mix(in srgb, var(--bd-board) 60%, #ffffff); }
+.rf-table-wrap { border: 1px solid var(--bd-hair); border-radius: 4px; overflow-x: auto; background: var(--bd-panel); }
 .rf-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .rf-table th, .rf-table td { padding: 13px 18px; text-align: left; vertical-align: top; }
 .rf-table thead th {

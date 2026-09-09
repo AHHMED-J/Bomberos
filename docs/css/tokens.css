@@ -6,44 +6,44 @@
            que debe verse igual en tema claro y oscuro, como una lámina
            impresa. Por eso se declara sobre .screen y no sobre :root.
 
-   --bd-*  hoja de presentación (el tablero que sostiene las láminas).
-           Sí responde al tema del lector.
+   --bd-*  el sitio: portada y hoja de láminas. Es el rojo apagado de un
+           hidrante, y sí responde al tema del lector.
    ========================================================================== */
 
 :root {
   --font-sans: 'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Tablero — tema claro */
-  --bd-board: #e4e0d8;
-  --bd-grid: #d2cdc3;
-  --bd-ink: #241f1a;
-  --bd-muted: #6f6a61;
-  --bd-hair: #cdc7bc;
-  --bd-chip: #dcd7cd;
-  --bd-accent: #a8362b;
+  /* Sitio — rojo de hidrante */
+  --bd-board: #8c3a30;
+  --bd-panel: #7d332a;
+  --bd-ink: #fdf3ed;
+  --bd-muted: #ecc9bf;
+  --bd-hair: #a1544a;
+  --bd-chip: #6e2a22;
+  --bd-accent: #f0c9a2;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bd-board: #191714;
-    --bd-grid: #2b2823;
-    --bd-ink: #efe9df;
-    --bd-muted: #a09a90;
-    --bd-hair: #38342d;
-    --bd-chip: #2e2a24;
-    --bd-accent: #d2705f;
+    --bd-board: #3e1611;
+    --bd-panel: #4a1b15;
+    --bd-ink: #f4e4dc;
+    --bd-muted: #d3aa9e;
+    --bd-hair: #6b2f26;
+    --bd-chip: #58201a;
+    --bd-accent: #e9b98f;
   }
 }
 
 :root[data-theme="dark"] {
-  --bd-board: #191714;
-  --bd-grid: #2b2823;
-  --bd-ink: #efe9df;
-  --bd-muted: #a09a90;
-  --bd-hair: #38342d;
-  --bd-chip: #2e2a24;
-  --bd-accent: #d2705f;
+  --bd-board: #3e1611;
+  --bd-panel: #4a1b15;
+  --bd-ink: #f4e4dc;
+  --bd-muted: #d3aa9e;
+  --bd-hair: #6b2f26;
+  --bd-chip: #58201a;
+  --bd-accent: #e9b98f;
 }
 
 .screen {

@@ -47,7 +47,7 @@
 
 /* --- Bloque por actor -------------------------------------------------------- */
 .act { display: flex; flex-direction: column; gap: 28px; }
-.act__head { display: flex; flex-direction: column; gap: 9px; border-left: 3px solid var(--bd-accent); padding-left: 16px; }
+.act__head { display: flex; flex-direction: column; gap: 9px; }
 .act__kicker { margin: 0; font: 400 10.5px/1.2 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--bd-muted); }
 .act__head h2 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
 .act__lead { margin: 0; font-size: 15px; line-height: 1.6; color: var(--bd-muted); max-width: 72ch; text-wrap: pretty; }
