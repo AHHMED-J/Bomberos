@@ -1,0 +1,12 @@
+# Claude Code
+.claude/
+CLAUDE.local.md
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+*.swp
