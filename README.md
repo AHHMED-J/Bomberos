@@ -11,8 +11,7 @@ línea de JavaScript.
 
     docs/                   ← esto es el sitio que publica GitHub Pages
       index.html            portada: problema, actores, galería y trazabilidad
-      pantallas.html        edición de trabajo: las láminas con sus RF (generada)
-      pantallas-bomberos.html  la misma hoja sin requerimientos (generada)
+      pantallas.html        la hoja con las doce láminas y sus RF (generada)
       screens/              una pantalla por archivo; cada una abre sola
       css/
         tokens.css          variables: paleta del wireframe y paleta del sitio
@@ -33,8 +32,7 @@ línea de JavaScript.
 - **Ver o ajustar una pantalla:** abre `docs/screens/<nombre>.html` en el
   navegador. Toma su estilo de `docs/css/`, así que un cambio en un componente
   se ve en todas.
-- **Regenerar las hojas:** `python3 build.py`. Escribe `docs/pantallas.html`
-  (con RF), `docs/pantallas-bomberos.html` (sin RF) y
+- **Regenerar la hoja:** `python3 build.py`. Escribe `docs/pantallas.html` y
   `dist/pantallas-parte-digital.html` (un solo archivo con el CSS incrustado).
   Cada lámina sale dos veces, en computadora y en celular: la de celular no es
   un archivo aparte, es el mismo marcado con la clase `.screen--mobile`.

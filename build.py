@@ -3,10 +3,9 @@
 
     python3 build.py
 
-Escribe tres archivos, todos generados: no se editan a mano.
+Escribe dos archivos, los dos generados: no se editan a mano.
 
-  docs/pantallas.html               edición de trabajo: incluye los RF
-  docs/pantallas-bomberos.html      edición para bomberos: sin RF
+  docs/pantallas.html               la hoja del sitio
   dist/pantallas-parte-digital.html un solo archivo con el css incrustado
 
 Cada lámina aparece dos veces, en computadora y en celular. La de celular
@@ -23,8 +22,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent
 SITIO = RAIZ / "docs"
 
-SALIDA_TRABAJO = SITIO / "pantallas.html"
-SALIDA_BOMBEROS = SITIO / "pantallas-bomberos.html"
+SALIDA_SITIO = SITIO / "pantallas.html"
 SALIDA_SUELTA = RAIZ / "dist" / "pantallas-parte-digital.html"
 
 # El orden importa: tokens define las variables que usan las demás.
@@ -93,12 +91,11 @@ def fila_meta(clave: str, valor) -> str:
     return f"      <div><dt>{esc(clave)}</dt><dd>{valor}</dd></div>"
 
 
-def figura(pantalla: dict, tecnica: bool) -> str:
+def figura(pantalla: dict) -> str:
     cuerpo = cuerpo_de(SITIO / "screens" / pantalla["archivo"])
     rol = pantalla.get("rol")
     etiqueta = f'\n            <span class="figure__rol">{esc(rol)}</span>' if rol else ""
-    cobertura = (f'\n            <span class="figure__cov">{esc(pantalla["cubre"])}</span>'
-                 if tecnica else "")
+    cobertura = f'\n            <span class="figure__cov">{esc(pantalla["cubre"])}</span>' 
     return f"""      <figure class="figure" id="{ancla(pantalla['figura'])}">
         <figcaption class="figure__caption">
           <p class="figure__line">
@@ -124,12 +121,10 @@ def figura(pantalla: dict, tecnica: bool) -> str:
       </figure>"""
 
 
-def seccion(datos: dict, tecnica: bool) -> str:
-    rfs = ""
-    if tecnica:
-        fichas = "".join(f'<span class="rf">{esc(rf)}</span>' for rf in datos["rf"])
-        rfs = f'\n      <div class="act__rfs">{fichas}</div>'
-    figuras = "\n".join(figura(p, tecnica) for p in datos["pantallas"])
+def seccion(datos: dict) -> str:
+    fichas = "".join(f'<span class="rf">{esc(rf)}</span>' for rf in datos["rf"])
+    rfs = f'\n      <div class="act__rfs">{fichas}</div>'
+    figuras = "\n".join(figura(p) for p in datos["pantallas"])
     return f"""  <section class="act">
     <div class="act__head">
       <p class="act__kicker">{esc(datos['kicker'])}</p>
@@ -142,27 +137,11 @@ def seccion(datos: dict, tecnica: bool) -> str:
   </section>"""
 
 
-def selector(tecnica: bool) -> str:
-    def opcion(activa: bool, destino: str, texto: str) -> str:
-        marca = ' aria-current="page"' if activa else ""
-        return f'<a class="switch__opt"{marca} href="{destino}">{texto}</a>'
-
-    return f"""  <div class="switch">
-    <div class="switch__opts">
-      {opcion(not tecnica, "pantallas-bomberos.html", "Para bomberos")}
-      {opcion(tecnica, "pantallas.html", "De trabajo")}
-    </div>
-    <p class="switch__hint">Las dos ediciones muestran las mismas pantallas. La de trabajo agrega los requerimientos funcionales que cada una cubre.</p>
-  </div>"""
-
-
-def hoja(datos: dict, tecnica: bool, con_selector: bool) -> str:
-    """El contenido de la hoja, igual en las tres versiones salvo los RF."""
+def hoja(datos: dict) -> str:
+    """El contenido de la hoja, igual en el sitio y en el archivo suelto."""
     cab = datos["cabecera"]
-    meta = [(k, v) for k, v in cab["meta"] if tecnica or k != "Cobertura"]
-    eyebrow = cab["eyebrow"] if tecnica else "Así se vería la aplicación, en la computadora y en el celular"
     dek = f'\n    <p class="masthead__dek">{esc(cab["dek"])}</p>' if cab.get("dek") else ""
-    secciones = "\n\n".join(seccion(s, tecnica) for s in datos["secciones"])
+    secciones = "\n\n".join(seccion(s) for s in datos["secciones"])
 
     pie = ""
     if datos.get("notas"):
@@ -174,14 +153,12 @@ def hoja(datos: dict, tecnica: bool, con_selector: bool) -> str:
     return f"""<div class="sheet">
 
   <header class="masthead">
-    <p class="masthead__eyebrow">{esc(eyebrow)}</p>
+    <p class="masthead__eyebrow">{esc(cab['eyebrow'])}</p>
     <h1>{esc(cab['titulo'])}</h1>{dek}
     <dl class="masthead__meta">
-{chr(10).join(fila_meta(k, v) for k, v in meta)}
+{chr(10).join(fila_meta(k, v) for k, v in cab["meta"])}
     </dl>
   </header>
-
-{selector(tecnica) if con_selector else ""}
 
 {secciones}
 {pie}
@@ -205,10 +182,9 @@ NAV = """<nav class="sitenav">
 </nav>"""
 
 
-def pagina_sitio(datos: dict, tecnica: bool) -> str:
+def pagina_sitio(datos: dict) -> str:
     enlaces = "\n".join(f'<link rel="stylesheet" href="css/{h}">' for h in HOJAS)
-    titulo = ("Pantallas · Parte digital de los Bomberos de Ensenada" if tecnica
-              else "Cómo se ve la aplicación · Parte digital de los Bomberos de Ensenada")
+    titulo = "Pantallas · Parte digital de los Bomberos de Ensenada"
     return f"""<!doctype html>
 <html lang="es">
 <head>
@@ -224,7 +200,7 @@ def pagina_sitio(datos: dict, tecnica: bool) -> str:
 
 {NAV}
 
-{hoja(datos, tecnica, con_selector=True)}
+{hoja(datos)}
 
 </body>
 </html>
@@ -240,15 +216,14 @@ def pagina_suelta(datos: dict) -> str:
 {estilos}
 </style>
 
-{hoja(datos, tecnica=True, con_selector=False)}
+{hoja(datos)}
 """
 
 
 def main() -> None:
     datos = json.loads((RAIZ / "manifest.json").read_text(encoding="utf-8"))
     salidas = (
-        (SALIDA_TRABAJO, pagina_sitio(datos, tecnica=True)),
-        (SALIDA_BOMBEROS, pagina_sitio(datos, tecnica=False)),
+        (SALIDA_SITIO, pagina_sitio(datos)),
         (SALIDA_SUELTA, pagina_suelta(datos)),
     )
     for destino, contenido in salidas:

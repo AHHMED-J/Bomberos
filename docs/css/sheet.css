@@ -129,28 +129,6 @@
 }
 .stage .screen { flex-shrink: 0; }
 
-/* Selector entre la edición de trabajo y la de bomberos. */
-.switch { display: flex; flex-direction: column; gap: 9px; }
-.switch__opts {
-  display: inline-flex;
-  align-self: flex-start;
-  gap: 4px;
-  padding: 4px;
-  border: 1px solid var(--bd-hair);
-  border-radius: 5px;
-}
-.switch__opt {
-  color: var(--bd-muted);
-  text-decoration: none;
-  padding: 9px 16px;
-  border-radius: 3px;
-  font-size: 13.5px;
-  color: var(--bd-muted);
-  text-decoration: none;
-}
-.switch__opt:hover { color: var(--bd-ink); }
-.switch__opt[aria-current] { background: var(--bd-ink); color: var(--bd-board); font-weight: 600; }
-.switch__hint { margin: 0; font-size: 13px; line-height: 1.5; color: var(--bd-muted); max-width: 66ch; }
 
 /* --- Pie ---------------------------------------------------------------------- */
 .sheet-foot { display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--bd-hair); padding-top: 20px; }
