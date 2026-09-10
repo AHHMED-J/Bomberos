@@ -16,7 +16,7 @@
   font: 700 11.5px/1.2 var(--font-mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--bd-accent);
+  color: var(--bd-ink);
 }
 .masthead h1 {
   margin: 0;
@@ -87,7 +87,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.figure__n { font: 700 11.5px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-accent); }
+.figure__n { font: 700 11.5px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-ink); }
 .figure__cov { font: 400 11.5px/1.2 var(--font-mono); color: var(--bd-muted); }
 .figure__caption h3 { margin: 0; font-family: var(--font-display); font-size: 21px; font-weight: 600; }
 .figure__uses { margin: 0; max-width: 78ch; font-size: 13.5px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }

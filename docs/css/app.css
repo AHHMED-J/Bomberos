@@ -69,7 +69,7 @@
   border-right: 1px solid var(--wf-line);
   background: var(--wf-fill);
 }
-.sidenav__label { padding: 0 24px 10px; color: var(--wf-ink-soft); }
+.sidenav__label { padding: 0 24px 10px; color: var(--wf-ink); }
 .sidenav__menu { display: flex; flex-direction: column; gap: 8px; padding: 0 12px; }
 .sidenav__item {
   display: flex;
@@ -149,7 +149,7 @@
   background: var(--wf-surface);
 }
 .tabs { display: flex; gap: 20px; padding: 0 20px; border-bottom: 1px solid var(--wf-line); }
-.tab { padding: 13px 0; border-bottom: 2px solid transparent; font-size: 13.5px; color: var(--wf-muted); }
+.tab { padding: 13px 0; border-bottom: 2px solid transparent; font-size: 13.5px; color: var(--wf-ink-soft); }
 .tab[aria-current] { border-bottom-color: var(--wf-ink); color: var(--wf-ink); font-weight: 600; }
 
 .parte-list { display: flex; flex-direction: column; }

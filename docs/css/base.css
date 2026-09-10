@@ -40,7 +40,7 @@ body.preview {
   font: 700 11px/1.2 var(--font-mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--wf-muted, var(--bd-muted));
+  color: var(--wf-ink-soft, var(--bd-muted));
 }
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .note { font-size: 12.5px; line-height: 1.55; color: var(--wf-muted, var(--bd-muted)); text-wrap: pretty; }

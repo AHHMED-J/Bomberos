@@ -3,7 +3,7 @@
   "cabecera": {
     "eyebrow": "Avance de proyecto no. 1 · Mockup de baja fidelidad",
     "titulo": "Pantallas del parte digital",
-    "dek": "",
+    "dek": "Hoy cada emergencia se documenta a mano. Los reportes se acumulan durante el turno y alguien tiene que llevar la papelería hasta la dirección de bomberos para entregarla. Estas son las pantallas de la aplicación que sustituye ese trámite.",
     "meta": [
       [
         "Sistema",
@@ -20,10 +20,6 @@
       [
         "Cobertura",
         "RF-01 a RF-10"
-      ],
-      [
-        "Fecha",
-        "08 de septiembre de 2026"
       ]
     ]
   },
@@ -58,7 +54,7 @@
           "archivo": "formulario.html",
           "figura": "8.2",
           "nombre": "Formulario del parte",
-          "casos": "Crear un nuevo parte · Registrar la emergencia · Adjuntar evidencia",
+          "casos": "Crear un nuevo parte · Registrar la emergencia · Adjuntar evidencia — dibujada en el momento en que no hay señal: el aviso de arriba avisa que el parte se está guardando en el propio equipo",
           "cubre": "RF-02, RF-03, RF-06",
           "rol": "Bombero operativo"
         },
