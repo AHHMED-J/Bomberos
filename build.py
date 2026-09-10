@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
-"""Arma la hoja de láminas a partir de las pantallas sueltas.
+"""Arma las hojas de láminas a partir de las pantallas sueltas.
 
     python3 build.py
 
-Escribe dos versiones de la misma hoja:
+Escribe tres archivos, todos generados: no se editan a mano.
 
-  docs/pantallas.html               para el sitio; enlaza las hojas de css/
-  dist/pantallas-parte-digital.html un solo archivo con el css incrustado,
-                                    para compartir, imprimir o publicar suelto
+  docs/pantallas.html               edición de trabajo: incluye los RF
+  docs/pantallas-bomberos.html      edición para bomberos: sin RF
+  dist/pantallas-parte-digital.html un solo archivo con el css incrustado
 
-Ambas se generan: no se editan a mano. La fuente son docs/screens/,
-docs/css/ y manifest.json.
+Cada lámina aparece dos veces, en computadora y en celular. La de celular
+no es un archivo aparte: es el mismo marcado con la clase .screen--mobile.
+La fuente son docs/screens/, docs/css/ y manifest.json.
 """
 
 import html
@@ -21,11 +22,14 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent
 SITIO = RAIZ / "docs"
-SALIDA_SITIO = SITIO / "pantallas.html"
+
+SALIDA_TRABAJO = SITIO / "pantallas.html"
+SALIDA_BOMBEROS = SITIO / "pantallas-bomberos.html"
 SALIDA_SUELTA = RAIZ / "dist" / "pantallas-parte-digital.html"
 
 # El orden importa: tokens define las variables que usan las demás.
-HOJAS = ["tokens.css", "base.css", "components.css", "app.css", "sheet.css", "site.css"]
+HOJAS = ["tokens.css", "base.css", "components.css", "app.css", "mobile.css",
+         "sheet.css", "site.css"]
 
 FUENTES = (
     "https://fonts.googleapis.com/css2"
@@ -41,6 +45,7 @@ ESCUDO = (
 )
 
 CUERPO = re.compile(r'<body class="preview">(.*)</body>', re.S)
+RAIZ_PANTALLA = re.compile(r'<div class="screen" id="([\w-]+)">')
 
 
 def esc(texto: str) -> str:
@@ -61,6 +66,15 @@ def cuerpo_de(archivo: Path) -> str:
     return encontrado.group(1).strip()
 
 
+def a_movil(cuerpo: str) -> str:
+    """La misma pantalla, marcada para que el css la reacomode a 390 px."""
+    apertura = RAIZ_PANTALLA.search(cuerpo)
+    if not apertura:
+        raise SystemExit('no se encontró el <div class="screen" id="…"> de la pantalla')
+    nueva = f'<div class="screen screen--mobile" id="{apertura.group(1)}-movil">'
+    return cuerpo.replace(apertura.group(0), nueva, 1)
+
+
 def parrafos(textos, clase: str) -> str:
     """Bloque de prosa que acompaña a una lámina, arriba o abajo de ella."""
     if not textos:
@@ -79,34 +93,48 @@ def fila_meta(clave: str, valor) -> str:
     return f"      <div><dt>{esc(clave)}</dt><dd>{valor}</dd></div>"
 
 
-def figura(pantalla: dict) -> str:
+def figura(pantalla: dict, tecnica: bool) -> str:
     cuerpo = cuerpo_de(SITIO / "screens" / pantalla["archivo"])
     rol = pantalla.get("rol")
     etiqueta = f'\n            <span class="figure__rol">{esc(rol)}</span>' if rol else ""
+    cobertura = (f'\n            <span class="figure__cov">{esc(pantalla["cubre"])}</span>'
+                 if tecnica else "")
     return f"""      <figure class="figure" id="{ancla(pantalla['figura'])}">
         <figcaption class="figure__caption">
           <p class="figure__line">
-            <span class="figure__n">Figura {esc(pantalla['figura'])}</span>
-            <span class="figure__cov">{esc(pantalla['cubre'])}</span>{etiqueta}
+            <span class="figure__n">Figura {esc(pantalla['figura'])}</span>{cobertura}{etiqueta}
           </p>
           <h3>{esc(pantalla['nombre'])}</h3>
           <p class="figure__uses">{esc(pantalla['casos'])}</p>
         </figcaption>{parrafos(pantalla.get("intro"), "figure__prosa")}
-        <div class="stage">
+        <div class="stages">
+          <div class="stage-wrap">
+            <p class="stage__label">En computadora · al 75 %</p>
+            <div class="stage stage--desktop">
 {cuerpo}
+            </div>
+          </div>
+          <div class="stage-wrap">
+            <p class="stage__label">En celular</p>
+            <div class="stage">
+{a_movil(cuerpo)}
+            </div>
+          </div>
         </div>{parrafos(pantalla.get("nota"), "figure__prosa figure__prosa--pie")}
       </figure>"""
 
 
-def seccion(datos: dict) -> str:
-    rfs = "".join(f'<span class="rf">{esc(rf)}</span>' for rf in datos["rf"])
-    figuras = "\n".join(figura(p) for p in datos["pantallas"])
+def seccion(datos: dict, tecnica: bool) -> str:
+    rfs = ""
+    if tecnica:
+        fichas = "".join(f'<span class="rf">{esc(rf)}</span>' for rf in datos["rf"])
+        rfs = f'\n      <div class="act__rfs">{fichas}</div>'
+    figuras = "\n".join(figura(p, tecnica) for p in datos["pantallas"])
     return f"""  <section class="act">
     <div class="act__head">
       <p class="act__kicker">{esc(datos['kicker'])}</p>
       <h2>{esc(datos['titulo'])}</h2>
-      <p class="act__lead">{esc(datos['lead'])}</p>
-      <div class="act__rfs">{rfs}</div>
+      <p class="act__lead">{esc(datos['lead'])}</p>{rfs}
     </div>
     <div class="figures">
 {figuras}
@@ -114,27 +142,46 @@ def seccion(datos: dict) -> str:
   </section>"""
 
 
-def hoja(datos: dict) -> str:
-    """El contenido de la hoja, igual en las dos versiones."""
+def selector(tecnica: bool) -> str:
+    def opcion(activa: bool, destino: str, texto: str) -> str:
+        marca = ' aria-current="page"' if activa else ""
+        return f'<a class="switch__opt"{marca} href="{destino}">{texto}</a>'
+
+    return f"""  <div class="switch">
+    <div class="switch__opts">
+      {opcion(not tecnica, "pantallas-bomberos.html", "Para bomberos")}
+      {opcion(tecnica, "pantallas.html", "De trabajo")}
+    </div>
+    <p class="switch__hint">Las dos ediciones muestran las mismas pantallas. La de trabajo agrega los requerimientos funcionales que cada una cubre.</p>
+  </div>"""
+
+
+def hoja(datos: dict, tecnica: bool, con_selector: bool) -> str:
+    """El contenido de la hoja, igual en las tres versiones salvo los RF."""
     cab = datos["cabecera"]
-    meta = "\n".join(fila_meta(k, v) for k, v in cab["meta"])
-    secciones = "\n\n".join(seccion(s) for s in datos["secciones"])
+    meta = [(k, v) for k, v in cab["meta"] if tecnica or k != "Cobertura"]
+    eyebrow = cab["eyebrow"] if tecnica else "Así se vería la aplicación, en la computadora y en el celular"
     dek = f'\n    <p class="masthead__dek">{esc(cab["dek"])}</p>' if cab.get("dek") else ""
+    secciones = "\n\n".join(seccion(s, tecnica) for s in datos["secciones"])
+
     pie = ""
     if datos.get("notas"):
         notas = "\n".join(
             f"    <p><strong>{esc(t)}</strong> {esc(c)}</p>" for t, c in datos["notas"]
         )
         pie = f'\n  <footer class="sheet-foot">\n{notas}\n  </footer>\n'
+
     return f"""<div class="sheet">
 
   <header class="masthead">
-    <p class="masthead__eyebrow">{esc(cab['eyebrow'])}</p>
+    <p class="masthead__eyebrow">{esc(eyebrow)}</p>
     <h1>{esc(cab['titulo'])}</h1>{dek}
     <dl class="masthead__meta">
-{meta}
+{chr(10).join(fila_meta(k, v) for k, v in meta)}
     </dl>
   </header>
+
+{selector(tecnica) if con_selector else ""}
 
 {secciones}
 {pie}
@@ -158,15 +205,17 @@ NAV = """<nav class="sitenav">
 </nav>"""
 
 
-def pagina_sitio(datos: dict) -> str:
+def pagina_sitio(datos: dict, tecnica: bool) -> str:
     enlaces = "\n".join(f'<link rel="stylesheet" href="css/{h}">' for h in HOJAS)
+    titulo = ("Pantallas · Parte digital de los Bomberos de Ensenada" if tecnica
+              else "Cómo se ve la aplicación · Parte digital de los Bomberos de Ensenada")
     return f"""<!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pantallas · Parte digital de los Bomberos de Ensenada</title>
-<meta name="description" content="Las diez pantallas de baja fidelidad del sistema de parte digital, una por caso de uso.">
+<title>{esc(titulo)}</title>
+<meta name="description" content="Las pantallas del sistema de parte digital, en computadora y en celular.">
 <link rel="icon" href="{ESCUDO}">
 <link rel="stylesheet" href="{FUENTES}">
 {enlaces}
@@ -175,7 +224,7 @@ def pagina_sitio(datos: dict) -> str:
 
 {NAV}
 
-{hoja(datos)}
+{hoja(datos, tecnica, con_selector=True)}
 
 </body>
 </html>
@@ -191,16 +240,18 @@ def pagina_suelta(datos: dict) -> str:
 {estilos}
 </style>
 
-{hoja(datos)}
+{hoja(datos, tecnica=True, con_selector=False)}
 """
 
 
 def main() -> None:
     datos = json.loads((RAIZ / "manifest.json").read_text(encoding="utf-8"))
-    for destino, contenido in (
-        (SALIDA_SITIO, pagina_sitio(datos)),
+    salidas = (
+        (SALIDA_TRABAJO, pagina_sitio(datos, tecnica=True)),
+        (SALIDA_BOMBEROS, pagina_sitio(datos, tecnica=False)),
         (SALIDA_SUELTA, pagina_suelta(datos)),
-    ):
+    )
+    for destino, contenido in salidas:
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(contenido, encoding="utf-8")
         print(f"{destino.relative_to(RAIZ)}: {len(contenido):,} caracteres")

@@ -31,7 +31,7 @@
     {
       "kicker": "Actor principal",
       "titulo": "Bombero operativo",
-      "lead": "Captura el parte durante la emergencia, adjunta la evidencia y firma el envío con la credencial del propio equipo. Concentra casi todo el sistema porque es quien genera la información.",
+      "lead": "Captura el parte durante la emergencia o al terminarla, desde su celular o desde la computadora de la estación, adjunta la evidencia y firma el envío con su propia credencial. Concentra casi todo el sistema porque es quien genera la información.",
       "rf": [
         "RF-01",
         "RF-02",
@@ -50,8 +50,8 @@
           "cubre": "RF-01",
           "rol": "Los tres roles",
           "nota": [
-            "Hoy firmas el parte con pluma. Aquí, en lugar de pluma, cada bombero tiene un sello digital: un número secreto que se guarda dentro de su aparato y que físicamente no puede salir de ahí. No hay copia en el servidor ni en ninguna otra computadora. Cuando entras o firmas, ese sello estampa el documento, y el sistema comprueba que sólo tu sello pudo haberlo hecho.",
-            "La huella —o el PIN del aparato— es el candado de ese sello: le da permiso al aparato de usarlo. Se queda entre tú y tu aparato: no viaja a ningún lado, el sistema nunca la ve y en ningún momento se guarda. Por eso no hay usuario ni contraseña que memorizar, y tampoco hay una lista de contraseñas que alguien pueda robarse."
+            "Hoy firmas el parte con pluma. Aquí, en lugar de pluma, cada bombero tiene un sello digital: un número secreto que se guarda dentro de su dispositivo móvil y que físicamente no puede salir de ahí. No hay copia en el servidor ni en ninguna otra computadora. Cuando entras o firmas, ese sello estampa el documento, y el sistema comprueba que sólo tu sello pudo haberlo hecho.",
+            "La huella —o el PIN del dispositivo móvil— es el candado de ese sello: le da permiso al dispositivo de usarlo. Se queda entre tú y tu dispositivo móvil: no viaja a ningún lado, el sistema nunca la ve y en ningún momento se guarda. Por eso no hay usuario ni contraseña que memorizar, y tampoco hay una lista de contraseñas que alguien pueda robarse."
           ]
         },
         {

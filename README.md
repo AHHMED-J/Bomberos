@@ -11,13 +11,15 @@ línea de JavaScript.
 
     docs/                   ← esto es el sitio que publica GitHub Pages
       index.html            portada: problema, actores, galería y trazabilidad
-      pantallas.html        la hoja con las diez láminas seguidas (generada)
+      pantallas.html        edición de trabajo: las láminas con sus RF (generada)
+      pantallas-bomberos.html  la misma hoja sin requerimientos (generada)
       screens/              una pantalla por archivo; cada una abre sola
       css/
         tokens.css          variables: paleta del wireframe y paleta del sitio
         base.css            reset, tipografía de apoyo, iconos, utilidades
         components.css      tarjetas, campos, botones, chips, tablas, croquis…
         app.css             armazón de la app: barra superior, menú, paneles
+        mobile.css          la misma pantalla adaptada a 390 px de celular
         sheet.css           la lámina y su pie de figura
         site.css            portada y navegación del sitio
       avance-proyecto-1.docx  copia del documento, para descargar desde el sitio
@@ -31,9 +33,11 @@ línea de JavaScript.
 - **Ver o ajustar una pantalla:** abre `docs/screens/<nombre>.html` en el
   navegador. Toma su estilo de `docs/css/`, así que un cambio en un componente
   se ve en todas.
-- **Regenerar la hoja:** `python3 build.py`. Escribe `docs/pantallas.html` (la
-  del sitio) y `dist/pantallas-parte-digital.html` (un solo archivo con el CSS
-  incrustado, para compartir o imprimir).
+- **Regenerar las hojas:** `python3 build.py`. Escribe `docs/pantallas.html`
+  (con RF), `docs/pantallas-bomberos.html` (sin RF) y
+  `dist/pantallas-parte-digital.html` (un solo archivo con el CSS incrustado).
+  Cada lámina sale dos veces, en computadora y en celular: la de celular no es
+  un archivo aparte, es el mismo marcado con la clase `.screen--mobile`.
 - **Agregar una pantalla:** crea el archivo en `docs/screens/` copiando la
   estructura de otro (documento completo, con `<body class="preview">` y un
   `<div class="screen" id="…">`), regístrala en `manifest.json` y vuelve a

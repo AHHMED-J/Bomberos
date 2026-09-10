@@ -5,7 +5,7 @@
    a diferencia de las pantallas.
    ========================================================================== */
 
-.sheet { max-width: 1536px; margin: 0 auto; padding: 56px 24px 96px; display: flex; flex-direction: column; gap: 60px; }
+.sheet { max-width: 1560px; margin: 0 auto; padding: 56px 24px 96px; display: flex; flex-direction: column; gap: 60px; }
 .sheet a { color: var(--bd-accent); }
 .sheet a:hover { color: var(--bd-ink); }
 
@@ -97,14 +97,57 @@
 .figure__prosa p { margin: 0; font-size: 15px; line-height: 1.7; color: var(--bd-muted); text-wrap: pretty; }
 .figure__prosa--pie { padding-top: 4px; }
 
-.stage {
+/* Cada lámina se muestra dos veces, en computadora y en celular; el par
+   desplaza en horizontal dentro de su propio carril. */
+.stages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 22px;
   max-width: 100%;
   overflow-x: auto;
+  padding-bottom: 8px;
+}
+/* La lámina de computadora mide 1440 px reales; se reduce para que quepa
+   junto a la de celular sin recortarla. El zoom reflowea, no rasteriza,
+   así que el texto sigue nítido. Donde no haya zoom, el par se apila. */
+.stage--desktop { zoom: 0.75; }
+.stage-wrap { display: flex; flex-direction: column; gap: 9px; flex-shrink: 0; }
+.stage__label {
+  margin: 0;
+  font: 700 10.5px/1.2 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bd-muted);
+}
+.stage {
+  flex-shrink: 0;
   border: 1px solid var(--bd-hair);
   background: #fbfaf8;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 14px 30px -18px rgba(0, 0, 0, 0.4);
 }
 .stage .screen { flex-shrink: 0; }
+
+/* Selector entre la edición de trabajo y la de bomberos. */
+.switch { display: flex; flex-direction: column; gap: 9px; }
+.switch__opts {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--bd-hair);
+  border-radius: 5px;
+}
+.switch__opt {
+  padding: 9px 16px;
+  border-radius: 3px;
+  font-size: 13.5px;
+  color: var(--bd-muted);
+  text-decoration: none;
+}
+.switch__opt:hover { color: var(--bd-ink); }
+.switch__opt[aria-current] { background: var(--bd-ink); color: var(--bd-board); font-weight: 600; }
+.switch__hint { margin: 0; font-size: 13px; line-height: 1.5; color: var(--bd-muted); max-width: 66ch; }
 
 /* --- Pie ---------------------------------------------------------------------- */
 .sheet-foot { display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--bd-hair); padding-top: 20px; }

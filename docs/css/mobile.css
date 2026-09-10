@@ -1,0 +1,125 @@
+/* ==========================================================================
+   mobile.css — la misma pantalla, adaptada a celular
+   No hay HTML aparte: la lámina de celular es el mismo marcado con la clase
+   .screen--mobile. Aquí sólo se recoloca lo que a 390 px no cabe.
+   ========================================================================== */
+
+.screen--mobile {
+  width: 390px;
+  min-height: 844px;
+  --wf-pad-x: 16px;
+  --wf-gap: 14px;
+}
+
+/* --- Barra superior: sólo marca y avatar ---------------------------------- */
+.screen--mobile .topbar { height: 56px; gap: 12px; }
+.screen--mobile .topbar__divider,
+.screen--mobile .topbar__context,
+.screen--mobile .topbar__user .identity { display: none; }
+
+/* --- El menú lateral se vuelve una fila bajo la barra --------------------- */
+.screen--mobile .app { flex-direction: column; }
+.screen--mobile .sidenav {
+  width: auto;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 10px var(--wf-pad-x);
+  border-right: 0;
+  border-bottom: 1px solid var(--wf-line);
+  overflow-x: auto;
+}
+.screen--mobile .sidenav__label,
+.screen--mobile .sidenav__foot { display: none; }
+.screen--mobile .sidenav__menu { flex-direction: row; gap: 8px; padding: 0; }
+.screen--mobile .sidenav__item { height: 38px; padding: 0 12px; white-space: nowrap; }
+
+/* --- Encabezado de página y pasos ----------------------------------------- */
+.screen--mobile .pagehead {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px var(--wf-pad-x);
+}
+.screen--mobile .pagehead__title { font-size: 20px; }
+.screen--mobile .pagehead__actions { flex-wrap: wrap; }
+.screen--mobile .steps { flex-wrap: wrap; gap: 8px 12px; }
+.screen--mobile .steps__bar { display: none; }
+
+/* --- Todo lo que iba en dos columnas, ahora en una ------------------------ */
+.screen--mobile .content { padding: 16px var(--wf-pad-x) 24px; }
+.screen--mobile .content--split,
+.screen--mobile .content--wide-split,
+.screen--mobile .cols-2,
+.screen--mobile .cols-3,
+.screen--mobile .dl--stacked { grid-template-columns: minmax(0, 1fr); }
+.screen--mobile .cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.screen--mobile .rail { position: static; }
+.screen--mobile .dl { grid-template-columns: 96px minmax(0, 1fr); }
+.screen--mobile .card__body { padding: 14px; }
+.screen--mobile .map { height: 110px; }
+
+/* --- Barra de acciones al pie --------------------------------------------- */
+.screen--mobile .footbar {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 12px var(--wf-pad-x) 18px;
+}
+.screen--mobile .footbar__actions .btn { flex: 1; }
+
+/* --- Bandeja: lista y detalle, uno encima del otro ------------------------ */
+.screen--mobile .panes { flex-direction: column; }
+.screen--mobile .master {
+  width: auto;
+  border-right: 0;
+  border-bottom: 1px solid var(--wf-line);
+}
+.screen--mobile .parte-row { padding: 14px var(--wf-pad-x); }
+.screen--mobile .detail__head,
+.screen--mobile .detail__foot {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 16px var(--wf-pad-x);
+}
+.screen--mobile .detail__foot .btn { flex: 1; }
+.screen--mobile .detail__body {
+  grid-template-columns: minmax(0, 1fr);
+  padding: 16px var(--wf-pad-x);
+}
+.screen--mobile .detail__empty { padding: 40px 24px; }
+
+/* --- Filtros y listado de la Dirección ------------------------------------ */
+.screen--mobile .filters {
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px var(--wf-pad-x);
+}
+.screen--mobile .filters .field,
+.screen--mobile .filters .field--md,
+.screen--mobile .filters .field--grow { width: 100%; }
+.screen--mobile .filters .btn { flex: 1; }
+.screen--mobile .table-wrap { overflow-x: auto; }
+.screen--mobile .table { table-layout: auto; }
+.screen--mobile .table colgroup { display: none; }
+.screen--mobile .table th, .screen--mobile .table td { padding: 10px 12px; font-size: 12.5px; }
+/* Ubicación, unidad, quién elaboró y la flecha no caben: se quedan fuera. */
+.screen--mobile .table th:nth-child(4), .screen--mobile .table td:nth-child(4),
+.screen--mobile .table th:nth-child(5), .screen--mobile .table td:nth-child(5),
+.screen--mobile .table th:nth-child(6), .screen--mobile .table td:nth-child(6),
+.screen--mobile .table th:nth-child(8), .screen--mobile .table td:nth-child(8) { display: none; }
+.screen--mobile .pager { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+/* --- Páginas centradas: acceso, alta y confirmación ------------------------ */
+.screen--mobile .centered { padding: 32px var(--wf-pad-x); gap: 24px; }
+.screen--mobile .centered__card,
+.screen--mobile .centered__card--wide { width: 100%; }
+.screen--mobile .centered__title { font-size: 23px; }
+.screen--mobile .centered__sub { font-size: 14px; }
+.screen--mobile .crest { width: 54px; height: 60px; }
+.screen--mobile .seal { width: 68px; height: 68px; }
+.screen--mobile .code { gap: 6px; }
+.screen--mobile .code span { width: 44px; height: 52px; font-size: 20px; }
+.screen--mobile .qr svg { width: 148px; height: 148px; }
+.screen--mobile .pagefoot { padding: 16px var(--wf-pad-x); text-align: center; }
