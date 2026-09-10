@@ -6,8 +6,9 @@
    ========================================================================== */
 
 .sheet { max-width: 1560px; margin: 0 auto; padding: 56px 24px 96px; display: flex; flex-direction: column; gap: 60px; }
-.sheet a { color: var(--bd-accent); }
-.sheet a:hover { color: var(--bd-ink); }
+/* Ojo: las pantallas viven dentro de .sheet, así que aquí NO puede haber una
+   regla suelta para `a`: le ganaría a la del menú de cada pantalla y lo
+   pintaría del color del tablero. Cada enlace de la hoja lleva su clase. */
 
 /* --- Cabecera --------------------------------------------------------------- */
 .masthead { display: flex; flex-direction: column; gap: 22px; border-top: 2px solid var(--bd-ink); padding-top: 22px; }
@@ -139,6 +140,8 @@
   border-radius: 5px;
 }
 .switch__opt {
+  color: var(--bd-muted);
+  text-decoration: none;
   padding: 9px 16px;
   border-radius: 3px;
   font-size: 13.5px;
