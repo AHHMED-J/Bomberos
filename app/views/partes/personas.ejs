@@ -1,0 +1,268 @@
+<%#
+    PANTALLA NUEVA. El mockup tenia 3 pasos y metia el personal dentro del
+    formulario. Este paso existe porque el formato en papel tiene una
+    seccion entera: propietario o arrendatario con telefono, domicilio y
+    aseguradora, personal de turno con No. de empleado, voluntarios, y
+    unidades e instituciones de apoyo.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title">Personas y apoyos</h1>
+        <p class="pagehead__sub mono"><%= parte.folio %> · <%= f.texto(parte.tipo_servicio, 'sin tipo') %></p>
+      </div>
+      <div class="pagehead__actions">
+        <%- include('/parcial/pasos', { pasos: pasos }) %>
+      </div>
+    </div>
+
+    <% if (locals.query && query.incompleto) { %>
+      <div class="banner banner--strip">
+        <%- include('/parcial/icono', { icono: 'aviso', tam: 'md' }) %>
+        <span>Falta registrar al menos a una persona del personal de turno.</span>
+      </div>
+    <% } %>
+
+    <div class="content">
+
+      <%# Personal de turno%>
+      <section class="card <%= faltantes.has('personal') ? 'card--emphasis' : '' %>">
+        <div class="card__head">
+          <h2 class="card__title">Personal de turno</h2>
+          <span class="hint mono"><%= parte.personal.length %> · RF-02</span>
+        </div>
+        <div class="card__body">
+          <div class="list">
+            <% parte.personal.forEach(function (p) { %>
+              <div class="list__row">
+                <%- include('/parcial/icono', { icono: 'usuario', tam: 'sm' }) %>
+                <span class="grow"><%= p.nombre %></span>
+                <span class="list__aside mono">No. <%= p.no_empleado %></span>
+                <form method="post" action="/partes/<%= parte.id %>/personal/quitar">
+                  <input type="hidden" name="usuario_id" value="<%= p.id %>">
+                  <button type="submit" class="btn btn--quiet btn--sm" aria-label="Quitar a <%= p.nombre %>">
+                    <%- include('/parcial/icono', { icono: 'equis', tam: 'xs' }) %>
+                  </button>
+                </form>
+              </div>
+            <% }); %>
+            <% if (!parte.personal.length) { %>
+              <p class="sin-nada">Todavía no hay nadie. En el papel esta sección nunca va vacía.</p>
+            <% } %>
+          </div>
+
+          <form class="fila-botones" method="post" action="/partes/<%= parte.id %>/personal">
+            <div class="field crece">
+              <label class="label" for="usuario_id">Agregar del personal</label>
+              <select class="control" id="usuario_id" name="usuario_id">
+                <% personal.forEach(function (p) { %>
+                  <% if (!parte.personal.some(function (x) { return x.id === p.id; })) { %>
+                    <option value="<%= p.id %>"><%= p.nombre %> · No. <%= p.no_empleado %></option>
+                  <% } %>
+                <% }); %>
+              </select>
+            </div>
+            <button type="submit" class="btn btn--outline btn--lg">Agregar</button>
+          </form>
+        </div>
+      </section>
+
+      <form method="post" action="/partes/<%= parte.id %>/personas">
+
+        <%# Propietario o arrendatario%>
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Propietario o arrendatario</h2>
+            <span class="hint mono">RF-02</span>
+          </div>
+          <div class="card__body">
+            <% const pr = parte.propietario || {}; %>
+
+            <div class="field">
+              <span class="label">Es</span>
+              <div class="opciones">
+                <label class="opcion">
+                  <input type="radio" name="propietario_rol" value="propietario"
+                         <%= pr.rol !== 'arrendatario' ? 'checked' : '' %>>
+                  <span>Propietario</span>
+                </label>
+                <label class="opcion">
+                  <input type="radio" name="propietario_rol" value="arrendatario"
+                         <%= pr.rol === 'arrendatario' ? 'checked' : '' %>>
+                  <span>Arrendatario</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="cols-2">
+              <div class="field">
+                <label class="label" for="propietario_nombre">Nombre completo</label>
+                <input class="control" type="text" id="propietario_nombre" name="propietario_nombre"
+                       value="<%= f.texto(pr.nombre, '') %>">
+              </div>
+              <div class="field">
+                <label class="label" for="propietario_telefono">Teléfono de contacto</label>
+                <input class="control mono" type="text" id="propietario_telefono" name="propietario_telefono"
+                       value="<%= f.texto(pr.telefono, '') %>">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="propietario_domicilio">Domicilio particular</label>
+              <input class="control" type="text" id="propietario_domicilio" name="propietario_domicilio"
+                     value="<%= f.texto(pr.domicilio, '') %>">
+            </div>
+
+            <div class="cols-2">
+              <div class="field">
+                <label class="label" for="propietario_aseguradora">Compañía aseguradora</label>
+                <input class="control" type="text" id="propietario_aseguradora" name="propietario_aseguradora"
+                       value="<%= f.texto(pr.aseguradora, '') %>">
+              </div>
+              <div class="field">
+                <label class="label" for="propietario_edad">Edad</label>
+                <input class="control mono" type="number" id="propietario_edad" name="propietario_edad"
+                       min="0" max="120" value="<%= f.texto(pr.edad, '') %>">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <%# Testigo%>
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Testigo</h2>
+            <span class="hint">Firma al cerrar el parte</span>
+          </div>
+          <div class="card__body">
+            <% const te = parte.testigo || {}; %>
+            <div class="cols-2">
+              <div class="field">
+                <label class="label" for="testigo_nombre">Nombre completo</label>
+                <input class="control" type="text" id="testigo_nombre" name="testigo_nombre"
+                       value="<%= f.texto(te.nombre, '') %>">
+              </div>
+              <div class="field">
+                <label class="label" for="testigo_telefono">Teléfono</label>
+                <input class="control mono" type="text" id="testigo_telefono" name="testigo_telefono"
+                       value="<%= f.texto(te.telefono, '') %>">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="footbar">
+          <span class="autoguardado">
+            <%- include('/parcial/icono', { icono: 'palomita', tam: 'xs' }) %>
+            Se guarda al pasar de paso.
+          </span>
+          <div class="footbar__actions">
+            <button type="submit" name="accion" value="salir" class="btn btn--outline btn--lg">Guardar y salir</button>
+            <button type="submit" name="accion" value="seguir" class="btn btn--primary btn--lg">
+              Continuar a la descripción
+              <%- include('/parcial/icono', { icono: 'flecha', tam: 'sm' }) %>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <%# Voluntarios%>
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">Voluntarios</h2>
+          <span class="hint mono"><%= parte.voluntarios.length %></span>
+        </div>
+        <div class="card__body">
+          <% if (parte.voluntarios.length) { %>
+            <div class="list">
+              <% parte.voluntarios.forEach(function (v) { %>
+                <div class="list__row">
+                  <%- include('/parcial/icono', { icono: 'usuario', tam: 'sm' }) %>
+                  <span class="grow"><%= v.nombre %></span>
+                  <form method="post" action="/partes/<%= parte.id %>/quitar-renglon">
+                    <input type="hidden" name="tabla" value="persona_involucrada">
+                    <input type="hidden" name="renglon_id" value="<%= v.id %>">
+                    <button type="submit" class="btn btn--quiet btn--sm" aria-label="Quitar a <%= v.nombre %>">
+                      <%- include('/parcial/icono', { icono: 'equis', tam: 'xs' }) %>
+                    </button>
+                  </form>
+                </div>
+              <% }); %>
+            </div>
+          <% } %>
+          <form class="fila-botones" method="post" action="/partes/<%= parte.id %>/voluntario">
+            <div class="field crece">
+              <label class="label" for="voluntario">Nombre del voluntario</label>
+              <input class="control" type="text" id="voluntario" name="nombre">
+            </div>
+            <button type="submit" class="btn btn--outline btn--lg">Agregar</button>
+          </form>
+        </div>
+      </section>
+
+      <%# Apoyos%>
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">Unidades e instituciones de apoyo</h2>
+          <span class="hint mono"><%= parte.apoyos.length %></span>
+        </div>
+        <div class="card__body">
+          <% if (parte.apoyos.length) { %>
+            <div class="list">
+              <% parte.apoyos.forEach(function (a) { %>
+                <div class="list__row">
+                  <%- include('/parcial/icono', { icono: a.tipo === 'unidad' ? 'bandeja' : 'persona', tam: 'sm' }) %>
+                  <span class="grow">
+                    <%= a.tipo === 'unidad' ? f.texto(a.no_unidad) : f.texto(a.institucion) %>
+                    <% if (a.tipo === 'institucion' && a.no_unidad) { %> · <%= a.no_unidad %><% } %>
+                  </span>
+                  <span class="list__aside">A cargo de <%= f.texto(a.a_cargo_de) %></span>
+                  <form method="post" action="/partes/<%= parte.id %>/quitar-renglon">
+                    <input type="hidden" name="tabla" value="apoyo">
+                    <input type="hidden" name="renglon_id" value="<%= a.id %>">
+                    <button type="submit" class="btn btn--quiet btn--sm" aria-label="Quitar apoyo">
+                      <%- include('/parcial/icono', { icono: 'equis', tam: 'xs' }) %>
+                    </button>
+                  </form>
+                </div>
+              <% }); %>
+            </div>
+          <% } %>
+
+          <form method="post" action="/partes/<%= parte.id %>/apoyo">
+            <div class="cols-2">
+              <div class="field">
+                <label class="label" for="apoyo_tipo">Tipo</label>
+                <select class="control" id="apoyo_tipo" name="tipo">
+                  <option value="unidad">Unidad de bomberos</option>
+                  <option value="institucion">Institución de apoyo</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="label" for="apoyo_institucion">Institución</label>
+                <input class="control" type="text" id="apoyo_institucion" name="institucion"
+                       placeholder="Cruz Roja, Protección Civil…">
+              </div>
+            </div>
+            <div class="cols-2">
+              <div class="field">
+                <label class="label" for="apoyo_no_unidad">No. de unidad</label>
+                <input class="control mono" type="text" id="apoyo_no_unidad" name="no_unidad">
+              </div>
+              <div class="field">
+                <label class="label" for="apoyo_a_cargo">A cargo de</label>
+                <input class="control" type="text" id="apoyo_a_cargo" name="a_cargo_de">
+              </div>
+            </div>
+            <button type="submit" class="btn btn--outline btn--lg">Agregar apoyo</button>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>

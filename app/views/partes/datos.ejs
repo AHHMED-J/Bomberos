@@ -1,0 +1,218 @@
+<%#
+    Paso 1 · De docs/screens/formulario.html (figura 8.2).
+    Cambios: los campos son los del formato en papel (Anexo E) y en su
+    orden; al mockup le faltaban el No. C-5, la hora de regreso, la zona y
+    el despacho. Los .control estaticos son input y select de verdad.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title">Reporte de salida de incidente</h1>
+        <p class="pagehead__sub mono"><%= parte.folio %> · <%= f.estado(parte.estado).texto.toLowerCase() %></p>
+      </div>
+      <div class="pagehead__actions">
+        <%- include('/parcial/pasos', { pasos: pasos }) %>
+      </div>
+    </div>
+
+    <% if (parte.estado === 'devuelto' && parte.devolucion) { %>
+      <div class="banner banner--strip banner--error">
+        <%- include('/parcial/icono', { icono: 'alerta', tam: 'md' }) %>
+        <span>
+          <strong>Te devolvieron este parte.</strong>
+          <%= parte.devolucion.nota %>
+        </span>
+      </div>
+    <% } %>
+
+    <% if (locals.query && query.incompleto) { %>
+      <div class="banner banner--strip">
+        <%- include('/parcial/icono', { icono: 'aviso', tam: 'md' }) %>
+        <span>Te trajimos a este paso porque falta algo obligatorio para poder firmar.</span>
+      </div>
+    <% } %>
+
+    <form method="post" action="/partes/<%= parte.id %>/datos">
+    <div class="content content--split">
+
+      <div class="stack">
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Datos del servicio</h2>
+            <span class="hint mono">RF-02</span>
+          </div>
+          <div class="card__body">
+
+            <div class="cols-2">
+              <div class="field <%= faltantes.has('no_incidente_c5') ? 'field--falta' : '' %>">
+                <label class="label" for="no_incidente_c5">No. de incidente del C-5</label>
+                <input class="control mono" type="text" id="no_incidente_c5" name="no_incidente_c5"
+                       value="<%= f.texto(parte.no_incidente_c5, '') %>" placeholder="C-5 000000">
+              </div>
+              <div class="field">
+                <label class="label" for="nuc">NUC de fiscalía</label>
+                <input class="control mono" type="text" id="nuc" name="nuc"
+                       value="<%= f.texto(parte.nuc, '') %>" placeholder="Sólo si lo hay">
+              </div>
+            </div>
+
+            <div class="cols-3">
+              <div class="field <%= faltantes.has('fecha') ? 'field--falta' : '' %>">
+                <label class="label" for="fecha">Fecha</label>
+                <input class="control mono" type="date" id="fecha" name="fecha"
+                       value="<%= f.valorFecha(parte.fecha) %>">
+              </div>
+              <div class="field <%= faltantes.has('hora_salida') ? 'field--falta' : '' %>">
+                <label class="label" for="hora_salida">Hora de salida</label>
+                <input class="control mono" type="time" id="hora_salida" name="hora_salida"
+                       value="<%= f.valorHora(parte.hora_salida) %>">
+              </div>
+              <div class="field <%= faltantes.has('hora_regreso') ? 'field--falta' : '' %>">
+                <label class="label" for="hora_regreso">Hora de regreso</label>
+                <input class="control mono" type="time" id="hora_regreso" name="hora_regreso"
+                       value="<%= f.valorHora(parte.hora_regreso) %>">
+              </div>
+            </div>
+
+            <div class="cols-3">
+              <div class="field <%= faltantes.has('unidad_id') ? 'field--falta' : '' %>">
+                <label class="label" for="unidad_id">Unidad</label>
+                <select class="control" id="unidad_id" name="unidad_id">
+                  <option value="">Elige una</option>
+                  <% unidades.forEach(function (u) { %>
+                    <option value="<%= u.id %>" <%= parte.unidad_id === u.id ? 'selected' : '' %>><%= u.clave %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="field <%= faltantes.has('turno') ? 'field--falta' : '' %>">
+                <label class="label" for="turno">Turno</label>
+                <select class="control" id="turno" name="turno">
+                  <option value="">Elige uno</option>
+                  <% ['A', 'B', 'C', 'D', 'unico'].forEach(function (t) { %>
+                    <option value="<%= t %>" <%= parte.turno === t ? 'selected' : '' %>><%= t === 'unico' ? 'Único' : t %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="field <%= faltantes.has('estacion_id') ? 'field--falta' : '' %>">
+                <label class="label" for="estacion_id">Estación</label>
+                <select class="control" id="estacion_id" name="estacion_id">
+                  <option value="">Elige una</option>
+                  <% estaciones.forEach(function (e) { %>
+                    <option value="<%= e.id %>" <%= parte.estacion_id === e.id ? 'selected' : '' %>><%= e.numero %> · <%= e.nombre %></option>
+                  <% }); %>
+                </select>
+              </div>
+            </div>
+
+            <div class="field <%= faltantes.has('tipo_servicio_id') ? 'field--falta' : '' %>">
+              <label class="label" for="tipo_servicio_id">Tipo de servicio</label>
+              <select class="control" id="tipo_servicio_id" name="tipo_servicio_id">
+                <option value="">Elige uno</option>
+                <% tipos.forEach(function (t) { %>
+                  <option value="<%= t.id %>" <%= parte.tipo_servicio_id === t.id ? 'selected' : '' %>><%= t.nombre %> · <%= t.division %></option>
+                <% }); %>
+              </select>
+              <p class="hint">
+                El tipo de servicio decide dos cosas: a qué revisor le llega el
+                parte y qué fundamento normativo cita.
+              </p>
+            </div>
+
+            <div class="cols-2">
+              <div class="field <%= faltantes.has('zona') ? 'field--falta' : '' %>">
+                <span class="label">Zona</span>
+                <div class="opciones">
+                  <label class="opcion">
+                    <input type="radio" name="zona" value="urbana" <%= parte.zona === 'urbana' ? 'checked' : '' %>>
+                    <span>Urbana</span>
+                  </label>
+                  <label class="opcion">
+                    <input type="radio" name="zona" value="rural" <%= parte.zona === 'rural' ? 'checked' : '' %>>
+                    <span>Rural</span>
+                  </label>
+                </div>
+              </div>
+              <div class="field <%= faltantes.has('despacho') ? 'field--falta' : '' %>">
+                <label class="label" for="despacho">Despacho</label>
+                <input class="control" type="text" id="despacho" name="despacho"
+                       value="<%= f.texto(parte.despacho, '') %>" placeholder="C-5, 911, estación…">
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Lugar del servicio</h2>
+            <span class="hint mono">RF-03</span>
+          </div>
+          <div class="card__body">
+            <div class="field <%= faltantes.has('lugar_servicio') ? 'field--falta' : '' %>">
+              <label class="label" for="lugar_servicio">Dirección o referencia</label>
+              <input class="control" type="text" id="lugar_servicio" name="lugar_servicio"
+                     value="<%= f.texto(parte.lugar_servicio, '') %>"
+                     placeholder="Calle, número y colonia, o el kilómetro">
+            </div>
+            <div class="cols-2">
+              <div class="field">
+                <label class="label" for="latitud">Latitud</label>
+                <input class="control mono" type="text" id="latitud" name="latitud"
+                       value="<%= f.texto(parte.latitud, '') %>" placeholder="31.8667">
+              </div>
+              <div class="field">
+                <label class="label" for="longitud">Longitud</label>
+                <input class="control mono" type="text" id="longitud" name="longitud"
+                       value="<%= f.texto(parte.longitud, '') %>" placeholder="-116.5964">
+              </div>
+            </div>
+            <p class="hint">En el equipo real las coordenadas las toma el GPS. Aquí se escriben.</p>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="rail">
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Estado del parte</h2>
+            <span class="badge"><%- include('/parcial/icono', { icono: 'palomita', tam: 'xs' }) %>Guardado</span>
+          </div>
+          <div class="card__body">
+            <dl class="dl">
+              <dt>Folio</dt><dd class="mono"><%= parte.folio %></dd>
+              <dt>Abierto</dt><dd class="mono"><%= f.momento(parte.creado_en) %></dd>
+              <dt>Último cambio</dt><dd class="mono"><%= f.momento(parte.actualizado_en) %></dd>
+            </dl>
+            <p class="note note--flex">
+              <%- include('/parcial/icono', { icono: 'aviso', tam: 'sm' }) %>
+              <span>El parte existe desde que se abre esta pantalla. Está guardado como borrador en la base de datos, así que salir no pierde lo capturado.</span>
+            </p>
+          </div>
+        </section>
+      </div>
+
+    </div>
+
+    <div class="footbar">
+      <span class="autoguardado">
+        <%- include('/parcial/icono', { icono: 'palomita', tam: 'xs' }) %>
+        Se guarda al pasar de paso. No hace falta guardar a mano.
+      </span>
+      <div class="footbar__actions">
+        <button type="submit" name="accion" value="salir" class="btn btn--outline btn--lg">Guardar y salir</button>
+        <button type="submit" name="accion" value="seguir" class="btn btn--primary btn--lg">
+          Continuar a personas
+          <%- include('/parcial/icono', { icono: 'flecha', tam: 'sm' }) %>
+        </button>
+      </div>
+    </div>
+    </form>
+
+  </main>
+
+<%- include('/parcial/abajo') %>

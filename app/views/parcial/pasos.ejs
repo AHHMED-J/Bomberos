@@ -1,0 +1,18 @@
+<%#
+    La navegacion local de la captura. En la maqueta eran tres pasos fijos
+    y dibujados; aqui son los cuatro del documento, cada uno sabe si esta
+    completo y lleva a su paso.
+%>
+<div class="steps">
+  <% pasos.forEach(function (paso, i) { %>
+    <% if (i) { %><span class="steps__bar"></span><% } %>
+    <a class="step <%= paso.completo && !paso.actual ? 'step--done' : '' %>"
+       href="<%= paso.ruta %>"
+       <%= paso.actual ? 'aria-current="step"' : '' %>>
+      <span class="step__n"><%
+        if (paso.completo && !paso.actual) { %><%- include('/parcial/icono', { icono: 'palomita', tam: 'xs' }) %><% }
+        else { %><%= paso.numero %><% }
+      %></span><%= paso.texto %>
+    </a>
+  <% }); %>
+</div>

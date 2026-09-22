@@ -1,0 +1,111 @@
+<%#
+    De docs/screens/envio-confirmado.html (figura 8.4b).
+    Cambio: dice a que revisor de la division le llego, no a un jefe de
+    turno fijo.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="centered">
+
+    <div class="centered__head">
+      <span class="seal">
+        <%- include('/parcial/icono', { icono: parte.estado === 'devuelto' ? 'alerta' : 'palomita', tam: 'xl' }) %>
+      </span>
+      <p class="centered__title">
+        <% if (parte.estado === 'validado') { %>Parte validado
+        <% } else if (parte.estado === 'devuelto') { %>Parte devuelto
+        <% } else { %>Parte enviado<% } %>
+      </p>
+      <p class="centered__sub">
+        <% if (parte.estado === 'validado') { %>
+          Quedó archivado y la Dirección ya lo puede consultar.
+        <% } else if (parte.estado === 'devuelto') { %>
+          Te lo regresaron con una nota. Desde Mis partes se abre en el paso que hay que corregir.
+        <% } else { %>
+          Quedó firmado con tu credencial y ya está en la bandeja del revisor de su división.
+        <% } %>
+      </p>
+    </div>
+
+    <section class="card centered__card">
+      <div class="card__head">
+        <span class="label">Comprobante</span>
+        <% const e = f.estado(parte.estado); %>
+        <span class="status <%= e.clase %>"><span class="status__dot"></span><%= e.texto %></span>
+      </div>
+      <div class="card__body">
+        <dl class="dl">
+          <dt>Folio</dt>
+          <dd class="mono"><%= parte.folio %></dd>
+
+          <dt>Enviado</dt>
+          <dd class="mono"><%= f.momento(parte.enviado_en) %></dd>
+
+          <dt>Firmado por</dt>
+          <dd>
+            <%= f.texto(parte.elaboro) %>
+            <span class="hint mono">No. <%= f.texto(parte.elaboro_no_empleado) %></span>
+          </dd>
+
+          <dt>Credencial</dt>
+          <dd class="mono"><%= firmaFormula ? firmaFormula.firma : '—' %></dd>
+
+          <dt>Recibe</dt>
+          <dd>
+            <% if (revisores.length) { %>
+              <%= f.listaRevisores(revisores) %>
+              <span class="hint">División <%= f.texto(parte.division) %></span>
+            <% } else { %>
+              Sin revisor asignado a la división <%= f.texto(parte.division) %>
+            <% } %>
+          </dd>
+
+          <dt>Servicio</dt>
+          <dd><%= f.texto(parte.tipo_servicio) %> · <%= f.texto(parte.lugar_servicio) %></dd>
+        </dl>
+
+        <% if (parte.archivo) { %>
+          <div class="card card--flat">
+            <div class="card__body">
+              <span class="label">Sellado y resguardo</span>
+              <dl class="dl">
+                <dt>Archivado</dt><dd class="mono"><%= f.momento(parte.archivo.archivado_en) %></dd>
+                <dt>Resguardo</dt><dd class="mono">hasta <%= f.fecha(parte.archivo.resguardo_hasta) %></dd>
+              </dl>
+              <p class="hash">SHA-256 · <%= parte.archivo.hash_sha256 %></p>
+            </div>
+          </div>
+        <% } %>
+
+        <% if (parte.revisiones.length) { %>
+          <div class="field">
+            <span class="label">Historial</span>
+            <ol class="timeline">
+              <% parte.revisiones.forEach(function (r) { %>
+                <li class="timeline__row">
+                  <span class="grow">
+                    <strong><%= r.decision === 'validado' ? 'Validado' : 'Devuelto' %></strong>
+                    por <%= r.revisor %>
+                    <% if (r.nota) { %> · <%= r.nota %><% } %>
+                  </span>
+                  <span class="hint mono"><%= f.momento(r.fecha) %></span>
+                </li>
+              <% }); %>
+            </ol>
+          </div>
+        <% } %>
+
+        <p class="note note--flex">
+          <%- include('/parcial/icono', { icono: 'aviso', tam: 'sm' }) %>
+          <span>Si te lo devuelven, el parte reaparece en <strong>Mis partes</strong> con la nota de qué hay que corregir.</span>
+        </p>
+      </div>
+      <div class="card__foot">
+        <a class="btn btn--outline btn--lg" href="/partes/nuevo">Capturar otro parte</a>
+        <a class="btn btn--primary btn--lg grow" href="/partes">Ver mis partes</a>
+      </div>
+    </section>
+
+  </main>
+
+<%- include('/parcial/abajo') %>

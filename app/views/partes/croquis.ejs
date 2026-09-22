@@ -1,0 +1,193 @@
+<%#
+    Paso 3 · De docs/screens/croquis.html (8.3) y croquis-sin-respuesta.html
+    (8.3b), fusionadas: en la app son el mismo momento con dos estados.
+    Toda la pantalla es un solo form; cada boton dice con formaction a
+    donde manda, asi la descripcion viaja con cualquiera y no se pierde.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title">Descripción y croquis</h1>
+        <p class="pagehead__sub mono"><%= parte.folio %> · <%= f.texto(parte.tipo_servicio, 'sin tipo') %></p>
+      </div>
+      <div class="pagehead__actions">
+        <%- include('/parcial/pasos', { pasos: pasos }) %>
+      </div>
+    </div>
+
+    <% if (locals.query && query.incompleto) { %>
+      <div class="banner banner--strip">
+        <%- include('/parcial/icono', { icono: 'aviso', tam: 'md' }) %>
+        <span>Falta la descripción de los hechos, que sí es obligatoria. El croquis no lo es.</span>
+      </div>
+    <% } %>
+
+    <form method="post" action="/partes/<%= parte.id %>/croquis">
+    <div class="content content--split">
+
+      <div class="stack">
+
+        <section class="card <%= faltantes.has('descripcion') ? 'card--emphasis' : '' %>">
+          <div class="card__head">
+            <h2 class="card__title">Describe la escena</h2>
+            <span class="hint mono">RF-04 · RF-05</span>
+          </div>
+          <div class="card__body">
+            <div class="field <%= faltantes.has('descripcion') ? 'field--falta' : '' %>">
+              <label class="label" for="descripcion">Descripción de los hechos</label>
+              <textarea class="control" id="descripcion" name="descripcion"
+                        placeholder="Cuenta cómo estaba la escena, con tus palabras."><%= f.texto(parte.descripcion, '') %></textarea>
+              <div class="field__foot">
+                <span class="hint">Los cuatro encuestados marcaron esto como lo más tedioso de escribir a mano.</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn--outline btn--lg btn--block"
+                    formaction="/partes/<%= parte.id %>/croquis/generar">
+              <%- include('/parcial/icono', { icono: 'lapiz', tam: 'md' }) %>
+              <%= parte.croquis ? 'Volver a generar el croquis' : 'Generar croquis a partir del texto' %>
+            </button>
+            <p class="marca-simulado">
+              <%= conIA ? 'Con GEMINI_API_KEY · llama a la API' : 'Simulado · croquis de ejemplo, sin llave de IA' %>
+            </p>
+          </div>
+        </section>
+
+        <% if (parte.croquis && parte.croquis.elementos) { %>
+          <% const elementos = (typeof parte.croquis.elementos === 'string'
+                ? JSON.parse(parte.croquis.elementos)
+                : parte.croquis.elementos).elementos || []; %>
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Elementos del croquis</h2>
+              <span class="hint mono"><%= elementos.length %></span>
+            </div>
+            <div class="card__body">
+              <div class="chips">
+                <% elementos.forEach(function (e) { %>
+                  <span class="chip"><%= e.etiqueta %></span>
+                <% }); %>
+              </div>
+              <p class="hint">
+                Se reconocieron a partir de la descripción. En el sistema real
+                cada uno se puede mover, renombrar o borrar antes de guardarlo.
+              </p>
+            </div>
+          </section>
+        <% } %>
+
+      </div>
+
+      <div class="rail">
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Croquis</h2>
+            <% if (parte.croquis) { %>
+              <span class="chip chip--meta"><%= parte.croquis.origen === 'ia' ? 'Generado por IA' : 'Dibujado a mano' %></span>
+            <% } %>
+          </div>
+          <div class="card__body">
+
+            <% if (sinRespuesta) { %>
+              <%# Estado alterno, de croquis-sin-respuesta.html %>
+              <div class="banner banner--error">
+                <%- include('/parcial/icono', { icono: 'alerta', tam: 'md' }) %>
+                <span>
+                  <span class="banner__title">No se pudo generar el croquis</span>
+                  <span class="banner__text">
+                    <%= sinRespuesta %>
+                    Lo capturado hasta aquí ya está guardado: el croquis puede
+                    reintentarse, dibujarse a mano o quedar fuera del parte.
+                  </span>
+                </span>
+              </div>
+
+              <div class="stack stack--sm">
+                <button type="submit" class="btn btn--outline btn--lg btn--block btn--left"
+                        formaction="/partes/<%= parte.id %>/croquis/generar">
+                  Reintentar la generación
+                </button>
+                <button type="submit" class="btn btn--lg btn--block btn--left"
+                        formaction="/partes/<%= parte.id %>/croquis/manual">
+                  Dibujar el croquis a mano
+                </button>
+                <button type="submit" name="accion" value="seguir" class="btn btn--lg btn--block btn--left">
+                  Agregarlo después, desde la estación
+                </button>
+              </div>
+
+            <% } else if (parte.croquis && parte.croquis.svg) { %>
+              <div class="sketch"><%- parte.croquis.svg %></div>
+
+              <% if (parte.croquis.desactualizado) { %>
+                <p class="aviso aviso--alerta">
+                  <%- include('/parcial/icono', { icono: 'alerta', tam: 'sm' }) %>
+                  <span>
+                    Cambiaste la descripción después de generarlo, así que el
+                    croquis quedó desactualizado. No se borró: tú decides si lo
+                    vuelves a generar.
+                  </span>
+                </p>
+              <% } %>
+
+              <button type="submit" class="btn btn--quiet btn--sm"
+                      formaction="/partes/<%= parte.id %>/croquis/quitar">
+                Quitar el croquis
+              </button>
+
+            <% } else { %>
+              <div class="sketch sketch--empty">
+                <%- include('/parcial/icono', { icono: 'lapiz', tam: 'lg' }) %>
+                <span>Todavía no hay croquis. Escribe la descripción y genéralo, o sigue sin él.</span>
+              </div>
+            <% } %>
+
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Evidencia fotográfica</h2>
+            <span class="hint mono"><%= parte.evidencias.length %> · RF-06</span>
+          </div>
+          <div class="card__body">
+            <div class="photos photos--3">
+              <% parte.evidencias.forEach(function () { %>
+                <div class="photo">
+                  <svg viewBox="0 0 100 108" preserveAspectRatio="none" aria-hidden="true"><path class="photo__cross" d="M0 0l100 108M100 0L0 108"/></svg>
+                </div>
+              <% }); %>
+              <div class="photo photo--add">
+                <%- include('/parcial/icono', { icono: 'camara', tam: 'lg' }) %>
+                Agregar
+              </div>
+            </div>
+            <p class="marca-simulado">Simulado · la subida de fotos no se implementó</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <div class="footbar">
+      <span class="autoguardado">
+        <%- include('/parcial/icono', { icono: 'palomita', tam: 'xs' }) %>
+        El croquis es opcional: el parte se guarda con él o sin él.
+      </span>
+      <div class="footbar__actions">
+        <button type="submit" name="accion" value="salir" class="btn btn--outline btn--lg">Guardar y salir</button>
+        <button type="submit" name="accion" value="seguir" class="btn btn--primary btn--lg">
+          Continuar al cierre
+          <%- include('/parcial/icono', { icono: 'flecha', tam: 'sm' }) %>
+        </button>
+      </div>
+    </div>
+    </form>
+
+  </main>
+
+<%- include('/parcial/abajo') %>

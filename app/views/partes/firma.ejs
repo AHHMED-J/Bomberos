@@ -1,0 +1,201 @@
+<%#
+    Paso 4 · De docs/screens/resumen-firma.html (figura 8.4).
+    Cambio: antes del resumen va el CIERRE, que es la segunda pagina del
+    formato en papel y no estaba en el mockup (peritaje y firmas del
+    propietario y del testigo). Por eso la captura pasa de 3 pasos a 4.
+    La firma esta SIMULADA.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title">Cierre y firma</h1>
+        <p class="pagehead__sub mono"><%= parte.folio %> · último paso</p>
+      </div>
+      <div class="pagehead__actions">
+        <%- include('/parcial/pasos', { pasos: pasos }) %>
+      </div>
+    </div>
+
+    <% if (locals.query && query.falta_peritaje) { %>
+      <div class="banner banner--strip banner--error">
+        <%- include('/parcial/icono', { icono: 'alerta', tam: 'md' }) %>
+        <span>Antes de firmar hay que decir si el servicio requiere peritaje. En el papel es una casilla obligatoria.</span>
+      </div>
+    <% } %>
+
+    <div class="content content--split">
+
+      <div class="stack">
+
+        <%# El cierre: lo que no estaba en el mockup%>
+        <section class="card card--emphasis">
+          <div class="card__head">
+            <h2 class="card__title">Cierre del parte</h2>
+            <span class="hint mono">Anexo E · pág. 2</span>
+          </div>
+          <div class="card__body">
+            <form method="post" action="/partes/<%= parte.id %>/cierre">
+
+              <div class="field <%= faltantes.has('requiere_peritaje') ? 'field--falta' : '' %>">
+                <span class="label">¿Requiere peritaje?</span>
+                <div class="opciones">
+                  <label class="opcion">
+                    <input type="radio" name="requiere_peritaje" value="1"
+                           <%= parte.requiere_peritaje === 1 ? 'checked' : '' %>>
+                    <span>Sí · que el perito investigue</span>
+                  </label>
+                  <label class="opcion">
+                    <input type="radio" name="requiere_peritaje" value="0"
+                           <%= parte.requiere_peritaje === 0 ? 'checked' : '' %>>
+                    <span>No · se libera a la Dirección</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="cols-2">
+                <div class="field">
+                  <span class="label">Firma del propietario</span>
+                  <% if (parte.firmas.some(function (x) { return x.tipo === 'propietario'; })) { %>
+                    <span class="badge"><%- include('/parcial/icono', { icono: 'palomita', tam: 'xs' }) %>Firmado</span>
+                  <% } else if (parte.propietario) { %>
+                    <label class="opcion">
+                      <input type="checkbox" name="firma_propietario" value="1">
+                      <span>Firmó <%= parte.propietario.nombre %></span>
+                    </label>
+                  <% } else { %>
+                    <p class="hint">Todavía no hay propietario capturado. Se agrega en el paso 2.</p>
+                  <% } %>
+                </div>
+                <div class="field">
+                  <span class="label">Firma del testigo</span>
+                  <% if (parte.firmas.some(function (x) { return x.tipo === 'testigo'; })) { %>
+                    <span class="badge"><%- include('/parcial/icono', { icono: 'palomita', tam: 'xs' }) %>Firmado</span>
+                  <% } else if (parte.testigo) { %>
+                    <label class="opcion">
+                      <input type="checkbox" name="firma_testigo" value="1">
+                      <span>Firmó <%= parte.testigo.nombre %></span>
+                    </label>
+                  <% } else { %>
+                    <p class="hint">Sin testigo capturado. Se agrega en el paso 2.</p>
+                  <% } %>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn--outline btn--lg">Guardar el cierre</button>
+              <p class="marca-simulado">Simulado · las firmas de trazo se registran con un botón</p>
+            </form>
+          </div>
+        </section>
+
+        <%# El resumen, como en el mockup%>
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Datos del servicio</h2>
+            <a class="card__link" href="/partes/<%= parte.id %>/datos">Editar</a>
+          </div>
+          <div class="card__body">
+            <dl class="dl dl--stacked">
+              <div><dt>Tipo</dt><dd><%= f.texto(parte.tipo_servicio) %></dd></div>
+              <div><dt>No. C-5</dt><dd class="mono"><%= f.texto(parte.no_incidente_c5) %></dd></div>
+              <div><dt>Fecha</dt><dd class="mono"><%= f.fecha(parte.fecha) %></dd></div>
+              <div><dt>Horas</dt><dd class="mono"><%= f.hora(parte.hora_salida) %> → <%= f.hora(parte.hora_regreso) %></dd></div>
+              <div><dt>Lugar</dt><dd><%= f.texto(parte.lugar_servicio) %></dd></div>
+              <div><dt>Zona</dt><dd><%= f.texto(parte.zona) %></dd></div>
+              <div><dt>Unidad</dt><dd><%= f.texto(parte.unidad) %></dd></div>
+              <div><dt>Estación</dt><dd><%= f.texto(parte.estacion) %> · turno <%= f.texto(parte.turno) %></dd></div>
+            </dl>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Personas y apoyos</h2>
+            <a class="card__link" href="/partes/<%= parte.id %>/personas">Editar</a>
+          </div>
+          <div class="card__body">
+            <dl class="dl">
+              <dt>Personal</dt>
+              <dd><%= f.listaNombres(parte.personal) %></dd>
+              <dt>Propietario</dt>
+              <dd><%= parte.propietario ? parte.propietario.nombre : '—' %></dd>
+              <dt>Testigo</dt>
+              <dd><%= parte.testigo ? parte.testigo.nombre : '—' %></dd>
+              <dt>Apoyos</dt>
+              <dd><%= f.listaApoyos(parte.apoyos) %></dd>
+            </dl>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Descripción y croquis</h2>
+            <a class="card__link" href="/partes/<%= parte.id %>/croquis">Editar</a>
+          </div>
+          <div class="card__body">
+            <p class="text"><%= f.texto(parte.descripcion) %></p>
+            <% if (parte.croquis && parte.croquis.svg) { %>
+              <div class="sketch"><%- parte.croquis.svg %></div>
+            <% } else { %>
+              <p class="hint">Sin croquis. El parte se puede firmar igual.</p>
+            <% } %>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="rail">
+
+        <section class="card card--emphasis">
+          <div class="card__head">
+            <h2 class="card__title">Firmar y enviar</h2>
+            <span class="hint mono">RF-07</span>
+          </div>
+          <div class="card__body">
+            <p class="text">
+              Firmar es lo que convierte el borrador en un parte entregado. A
+              partir de ese momento queda a tu nombre y le llega al revisor de
+              la división <strong><%= f.texto(parte.division, 'que corresponda') %></strong>.
+            </p>
+
+            <form method="post" action="/partes/<%= parte.id %>/firma">
+              <button type="submit" class="btn btn--primary btn--xl btn--block">
+                <%- include('/parcial/icono', { icono: 'huella', tam: 'md' }) %>
+                Firmar con huella o PIN
+              </button>
+            </form>
+            <p class="marca-simulado">Simulado · no hay WebAuthn detrás del botón</p>
+
+            <p class="note note--flex">
+              <%- include('/parcial/icono', { icono: 'aviso', tam: 'sm' }) %>
+              <span>
+                Si cancelas la firma, el parte no se pierde: se queda listo
+                para firmar y puedes volver cuando quieras.
+              </span>
+            </p>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Fundamento normativo</h2>
+            <span class="hint mono">N8</span>
+          </div>
+          <div class="card__body">
+            <p class="text">
+              Al firmar, el parte guarda el fundamento que le toca a su tipo de
+              servicio, para que un cambio posterior en el catálogo no altere
+              partes ya firmados.
+            </p>
+            <p class="hint">Los artículos concretos están POR DEFINIR con la Dirección.</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+  </main>
+
+<%- include('/parcial/abajo') %>
