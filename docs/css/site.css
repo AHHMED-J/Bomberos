@@ -297,6 +297,8 @@ body {
 @media (max-width: 760px) {
   .site { padding: 0 16px 64px; gap: 52px; }
   .sitenav { padding: 12px 16px; }
-  .sitenav__links { gap: 0; }
+  /* A este tamaño de letra los cuatro links ya no caben en una fila; que
+     pasen a una segunda línea en vez de encimarse o salirse de pantalla. */
+  .sitenav__links { flex-wrap: wrap; justify-content: flex-end; row-gap: 6px; gap: 4px; }
   .hero { padding-top: 44px; }
 }

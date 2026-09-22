@@ -174,9 +174,11 @@
 }
 .parte-row--muted .parte-row__flag { background: var(--wf-line); }
 .parte-row__main { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
-.parte-row__top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-.parte-row__title { font-size: 25px; font-weight: 600; }
-.parte-row__folio { font: 400 18px/1 var(--font-mono); color: var(--wf-muted); }
+/* flex-wrap: si el título no cabe junto al folio a este tamaño de letra,
+   el folio baja a su propia línea en vez de encimarse o achicar el texto. */
+.parte-row__top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 4px 10px; }
+.parte-row__title { min-width: 0; flex: 1 1 auto; font-size: 25px; font-weight: 600; }
+.parte-row__folio { flex-shrink: 0; font: 400 18px/1 var(--font-mono); color: var(--wf-muted); }
 .parte-row__place { font-size: 21.5px; color: var(--wf-ink-soft); }
 .parte-row__meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font: 400 18px/1 var(--font-mono); color: var(--wf-muted); }
 .parte-row__sep { width: 3px; height: 3px; border-radius: 50%; background: var(--wf-line); }
