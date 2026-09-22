@@ -10,10 +10,10 @@
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 66 74'><path d='M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z' fill='none' stroke='%23a8362b' stroke-width='7'/></svg>">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&family=Courier+Prime:wght@400;700&display=swap">
-<link rel="stylesheet" href="css/tokens.css?v=20260922f">
-<link rel="stylesheet" href="css/base.css?v=20260922f">
-<link rel="stylesheet" href="css/site.css?v=20260922f">
-<link rel="stylesheet" href="css/investigacion.css?v=20260922f">
+<link rel="stylesheet" href="css/tokens.css?v=20260922g">
+<link rel="stylesheet" href="css/base.css?v=20260922g">
+<link rel="stylesheet" href="css/site.css?v=20260922g">
+<link rel="stylesheet" href="css/investigacion.css?v=20260922g">
 </head>
 <body>
 
@@ -49,7 +49,8 @@
   <section>
     <div class="section-head">
       <p>Entrevista a expertos · Caso 01</p>
-      <h2>Perfil de los participantes</h2>
+      <h2>Entrevistas</h2>
+      <h3>Perfil de los participantes</h3>
     </div>
     <div class="rf-table-wrap">
       <table class="rf-table">
@@ -426,6 +427,65 @@
       </table>
     </div>
     <p class="nota-sesion"><strong>"Ley embebida":</strong> los requisitos 1 y 3 compiten por la prioridad más alta del primer sprint — resuelven el mismo síntoma, así que si uno sube o baja, el otro debería recalcularse junto con él. Los requisitos 2, 4 y 8 están relacionados entre sí (todos nacen de la desconfianza institucional) y podrían agruparse como un mismo eje, distinto del eje de "velocidad de captura" (1, 3, 6).</p>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>Roper Dynagram</p>
+      <h2>Segmentación por valores</h2>
+    </div>
+    <p class="act__lead">7 personas reales — los 4 encuestados y los 3 de la sesión de campo — clasificadas en 3 segmentos propios, no en las 4 categorías de ejemplo del documento de tarea (pensadas para consumo general, no calzan con un cuerpo de bomberos).</p>
+
+    <div class="columns">
+      <div>
+        <h3>Institucionales / orden y control</h3>
+        <p>Valores: seguridad, legalidad, control del entorno. El único encuestado que prefirió la web sobre la app justificó: <em>"Ya que está tranquilo controlado y ordenado estar en un escritorio que estar en campo en un ambiente no controlado."</em> La sesión de campo refuerza el mismo eje: retención legal, sindicatura, resguardo físico.</p>
+      </div>
+      <div>
+        <h3>Prácticos de tiempo</h3>
+        <p>Valores: eficiencia, rapidez. <em>"Por tiempos."</em> / <em>"No escribirías tanto en la hoja sería más rápido en el móvil."</em> El atajo de WhatsApp existe porque el papel es más lento que la necesidad real de reportar rápido.</p>
+      </div>
+      <div>
+        <h3>Conformistas sociales</h3>
+        <p>Valores: pertenencia, seguir la norma del grupo. <em>"Por que todo mundo lo utiliza."</em></p>
+      </div>
+    </div>
+
+    <h3 class="subtitulo">Asignación</h3>
+    <div class="rf-table-wrap">
+      <table class="rf-table rf-table--datos">
+        <thead>
+          <tr><th scope="col">Persona</th><th scope="col">Segmento</th><th scope="col">Evidencia</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Encuestado 1 (anónimo)</td><td>Prácticos de tiempo</td><td>"Por tiempos"</td></tr>
+          <tr><td>Encuestado 2 (anónimo)</td><td>Institucionales / orden</td><td>"tranquilo controlado y ordenado…"</td></tr>
+          <tr><td>Encuestado 3 (anónimo)</td><td>Prácticos de tiempo</td><td>"sería más rápido en el móvil"</td></tr>
+          <tr><td>Encuestado 4 (anónimo)</td><td>Conformistas sociales</td><td>"todo mundo lo utiliza"</td></tr>
+          <tr><td>Capitán González</td><td>Institucionales / orden</td><td>retención legal, sindicatura, POA</td></tr>
+          <tr><td>Maquinista Ortega</td><td>Sin evidencia individual suficiente</td><td>sesión conjunta, no atribuible a él solo</td></tr>
+          <tr><td>Bombero Carrillo</td><td>Sin evidencia individual suficiente</td><td>sesión conjunta, no atribuible a él solo</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="nota-sesion">Muestra chica (7 personas, casi todas con una sola frase de evidencia): alcanza para demostrar el método y dar una primera clasificación real, no para un porcentaje estadísticamente robusto — la rueda de la interfaz debe recalcularse conforme entren más usuarios.</p>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>Documento de reflexión · resumen</p>
+      <h2>El problema y cómo cambió su definición</h2>
+    </div>
+    <div class="columns">
+      <div>
+        <p>Hoy los bomberos de Ensenada documentan cada emergencia a mano. Los reportes se acumulan durante el turno y alguien tiene que trasladar físicamente la papelería hasta la dirección para entregarla. Antes de esta investigación, digitalizarlo era una hipótesis sin validar: mockups derivados de casos de uso en UML, sin haber hablado todavía con ningún bombero real.</p>
+        <p>Se investigó con <strong>7 personas reales</strong>: 4 respuestas de encuesta anónima, más la sesión de campo del sábado 19 de septiembre de 2026 con el Capitán Mauricio Javier González Navarro (32 años), el Maquinista José Antonio Ortega (25) y el Bombero Alonso Carrillo (15).</p>
+      </div>
+      <div>
+        <p>El cambio menos visible pero más grande: el problema ya no es sólo "reemplazar el papel" — es que el sistema nuevo tiene que ser <strong>al menos tan rápido como el atajo de WhatsApp</strong> que el personal ya usa, o no lo van a adoptar de verdad. Es lo que exige el requisito de tiempo de captura medible del Mapeo de Requerimientos, arriba.</p>
+        <p>Un hallazgo que todavía no se ha traducido en un cambio de diseño: el sistema necesita archivo de largo plazo (retención legal de 10 años) y permisos por jerarquía real, no por rol genérico — afecta más a la base de datos que a las pantallas, y sigue pendiente.</p>
+      </div>
+    </div>
   </section>
 
   <section>
