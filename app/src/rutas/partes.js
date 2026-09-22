@@ -254,6 +254,7 @@ router.post('/partes/:id/personas', soloBombero, cargarParaCaptura, async (req, 
 
 router.post('/partes/:id/personal', soloBombero, cargarParaCaptura, async (req, res, siguiente) => {
   try {
+    if (req.soloLectura) return res.redirect(`/partes/${req.parte.id}/enviado`);
     const usuarioId = numero(req.body.usuario_id);
     if (usuarioId) {
       await ejecutar('INSERT IGNORE INTO parte_personal (parte_id, usuario_id) VALUES (?, ?)', [
@@ -268,6 +269,7 @@ router.post('/partes/:id/personal', soloBombero, cargarParaCaptura, async (req, 
 
 router.post('/partes/:id/personal/quitar', soloBombero, cargarParaCaptura, async (req, res, siguiente) => {
   try {
+    if (req.soloLectura) return res.redirect(`/partes/${req.parte.id}/enviado`);
     await ejecutar('DELETE FROM parte_personal WHERE parte_id = ? AND usuario_id = ?', [
       req.parte.id, numero(req.body.usuario_id),
     ]);
@@ -279,6 +281,7 @@ router.post('/partes/:id/personal/quitar', soloBombero, cargarParaCaptura, async
 
 router.post('/partes/:id/voluntario', soloBombero, cargarParaCaptura, async (req, res, siguiente) => {
   try {
+    if (req.soloLectura) return res.redirect(`/partes/${req.parte.id}/enviado`);
     if (limpio(req.body.nombre)) {
       await ejecutar(
         "INSERT INTO persona_involucrada (parte_id, rol, nombre) VALUES (?, 'voluntario', ?)",
@@ -293,6 +296,7 @@ router.post('/partes/:id/voluntario', soloBombero, cargarParaCaptura, async (req
 
 router.post('/partes/:id/apoyo', soloBombero, cargarParaCaptura, async (req, res, siguiente) => {
   try {
+    if (req.soloLectura) return res.redirect(`/partes/${req.parte.id}/enviado`);
     const tipo = req.body.tipo === 'institucion' ? 'institucion' : 'unidad';
     if (limpio(req.body.no_unidad) || limpio(req.body.institucion)) {
       await ejecutar(
@@ -308,6 +312,7 @@ router.post('/partes/:id/apoyo', soloBombero, cargarParaCaptura, async (req, res
 
 router.post('/partes/:id/quitar-renglon', soloBombero, cargarParaCaptura, async (req, res, siguiente) => {
   try {
+    if (req.soloLectura) return res.redirect(`/partes/${req.parte.id}/enviado`);
     const tabla = req.body.tabla === 'apoyo' ? 'apoyo' : 'persona_involucrada';
     await ejecutar(`DELETE FROM ${tabla} WHERE id = ? AND parte_id = ?`, [
       numero(req.body.renglon_id), req.parte.id,
@@ -370,6 +375,7 @@ async function guardarCroquis(parteId, origen, elementos, svg) {
 
 router.post('/partes/:id/croquis/generar', soloBombero, cargarParaCaptura, async (req, res, siguiente) => {
   try {
+    if (req.soloLectura) return res.redirect(`/partes/${req.parte.id}/enviado`);
     const id = req.parte.id;
     await guardarDescripcion(req.parte, req.body.descripcion);
 
@@ -391,6 +397,7 @@ router.post('/partes/:id/croquis/generar', soloBombero, cargarParaCaptura, async
 
 router.post('/partes/:id/croquis/manual', soloBombero, cargarParaCaptura, async (req, res, siguiente) => {
   try {
+    if (req.soloLectura) return res.redirect(`/partes/${req.parte.id}/enviado`);
     const elementos = croquisIA.elementosDe(req.parte.descripcion);
     await guardarCroquis(
       req.parte.id, 'manual', elementos,
@@ -404,6 +411,7 @@ router.post('/partes/:id/croquis/manual', soloBombero, cargarParaCaptura, async 
 
 router.post('/partes/:id/croquis/quitar', soloBombero, cargarParaCaptura, async (req, res, siguiente) => {
   try {
+    if (req.soloLectura) return res.redirect(`/partes/${req.parte.id}/enviado`);
     await ejecutar('DELETE FROM croquis WHERE parte_id = ?', [req.parte.id]);
     res.redirect(`/partes/${req.parte.id}/croquis`);
   } catch (error) {
@@ -432,6 +440,7 @@ router.get('/partes/:id/firma', soloBombero, cargarParaCaptura, (req, res) => {
 
 router.post('/partes/:id/cierre', soloBombero, cargarParaCaptura, async (req, res, siguiente) => {
   try {
+    if (req.soloLectura) return res.redirect(`/partes/${req.parte.id}/enviado`);
     const id = req.parte.id;
     const peritaje = req.body.requiere_peritaje;
 
@@ -461,6 +470,10 @@ router.post('/partes/:id/cierre', soloBombero, cargarParaCaptura, async (req, re
 router.post('/partes/:id/firma', soloBombero, cargarParaCaptura, async (req, res, siguiente) => {
   try {
     const parte = req.parte;
+    // Sin esto, reenviar este formulario a un parte ya enviado insertaría
+    // otra firma y volvería a incrementar el contador de la credencial —
+    // rompe la garantía de que el documento sellado no cambia después.
+    if (req.soloLectura) return res.redirect(`/partes/${parte.id}/enviado`);
 
     const falta = parteDb.primerPasoIncompleto(parte);
     if (falta) return res.redirect(`/partes/${parte.id}/${falta}?incompleto=1`);

@@ -36,6 +36,14 @@ function vacio(valor) {
   return valor === null || valor === undefined || String(valor).trim() === '';
 }
 
+// YYYY-MM-DD en hora local. new Date().toISOString() da la fecha en UTC,
+// que en Ensenada (detrás de UTC 7-8 horas) adelanta el día entre
+// medianoche y las 7-8am — un parte de las 11pm quedaría fechado mañana.
+function fechaLocal(d) {
+  const dos = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${dos(d.getMonth() + 1)}-${dos(d.getDate())}`;
+}
+
 async function siguienteFolio() {
   const anio = new Date().getFullYear();
   const ultimo = await fila(
@@ -56,7 +64,7 @@ async function crearBorrador(usuario) {
      VALUES (?, ?, ?, ?, ?, ?, 'borrador')`,
     [
       await siguienteFolio(),
-      ahora.toISOString().slice(0, 10),
+      fechaLocal(ahora),
       ahora.toTimeString().slice(0, 8),
       usuario.estacion_id,
       usuario.turno,
