@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arquitectura · Parte Digital · Bomberos de Ensenada</title>
-<meta name="description" content="Arquitectura de la información del parte digital para el H. Cuerpo de Bomberos de Ensenada: necesidades, sitemap, base de datos, task flows, wireframes anotados y matriz diagnóstica.">
+<meta name="description" content="Arquitectura de la información del parte digital para el H. Cuerpo de Bomberos de Ensenada: necesidades, sitemap, base de datos, task flows, wireframes anotados, matriz diagnóstica y el prototipo navegable recorrido de inicio a fin.">
 <meta property="og:title" content="Arquitectura · Parte Digital · Bomberos de Ensenada">
 <meta property="og:description" content="Fases 0 a 5 de la arquitectura de la información del parte digital.">
 <meta property="og:type" content="website">
@@ -57,7 +57,7 @@
     <dl class="hero__meta">
       <div><dt>Entrega</dt><dd>Examen 1 · Arquitectura de la Información (1.2)</dd></div>
       <div><dt>Fuentes de campo</dt><dd>Encuesta (4 respuestas), entrevista a experto y formato en papel</dd></div>
-      <div><dt>Estado</dt><dd>Fases 0 a 5 listas · prototipo navegable en construcción</dd></div>
+      <div><dt>Estado</dt><dd>Fases 0 a 5 listas · prototipo navegable recorrido de inicio a fin</dd></div>
     </dl>
   </header>
 
@@ -229,10 +229,93 @@
       <p>Implementación mínima</p>
       <h2>Prototipo navegable</h2>
     </div>
-    <div class="ai-pending">
-      <p><span class="ai-tag">En construcción</span></p>
-      <p>El prototipo vive en la carpeta <strong>app/</strong> del repositorio, separado de esta maqueta. Va a tener las rutas del sitemap, el esquema de base de datos con sus índices y claves foráneas, y un flujo completo: levantar el parte, firmarlo, enviarlo y validarlo o devolverlo.</p>
-      <p>Cuando esté listo, aquí se agregan el enlace, las rutas activas y las capturas del flujo recorrido.</p>
+    <p class="ai-lead">El prototipo vive en la carpeta <a href="https://github.com/AHHMED-J/Bomberos/tree/main/app">app/</a> del repositorio, separado de esta maqueta. Es Node con Express, vistas EJS que se arman en el servidor y MySQL 8, sin JavaScript de cliente: cada acción es un enlace o un formulario, así que el sitemap de la Figura 1 se ve tal cual en las URLs. Se corre con <strong>npm install</strong>, <strong>npm run db:crear</strong> —que levanta la base con datos ficticios— y <strong>npm start</strong>, en <strong>localhost:3000</strong>.</p>
+    <p class="ai-lead">Quedaron activas las 16 rutas de la tabla de rutas, con el menú que le toca a cada rol: bombero (Inicio, Nuevo parte, Consulta), revisor (Bandeja, Consulta) y Dirección (Partes, Archivo, Personal); <strong>/estadisticas</strong> contesta que quedó fuera de esta versión. Cinco pantallas son nuevas respecto a los <a href="pantallas.html">mockups</a>: Inicio · Mis partes, el paso 2 de personas y apoyos, el cierre del paso 4, Archivo y Personal. El esquema crea las 17 tablas del ERD con sus claves foráneas y los índices de la tabla de metadatos. El camino recorrido es el Flujo 3 combinado con el 1: levantar el parte, firmarlo, enviarlo, la revisión del mando —validar o devolver con nota— y el sellado en la Dirección, con hash SHA-256 y resguardo a diez años. <strong>npm run probar</strong> recorre ese mismo camino por HTTP y comprueba 29 cosas, incluidos los permisos por rol y por división.</p>
+
+    <div class="ai-figs">
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig09_inicio.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig09_inicio.png" alt="Pantalla de inicio del bombero: arriba, el aviso con el parte devuelto; abajo, la lista de borradores." loading="lazy"></a>
+        <figcaption>Figura 9. Inicio · Mis partes. La Johnson Box pone arriba lo que hay que corregir.</figcaption>
+      </figure>
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig10_paso1_datos.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig10_paso1_datos.png" alt="Paso 1 del formulario, Datos del servicio, con el aviso de la devolución y marcado el campo obligatorio que falta." loading="lazy"></a>
+        <figcaption>Figura 10. Paso 1 · Datos del servicio. El campo que falta se señala en el mismo paso.</figcaption>
+      </figure>
+    </div>
+
+    <div class="ai-figs">
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig11_paso2_personas.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig11_paso2_personas.png" alt="Paso 2, Personas y apoyos: personal de turno, propietario, testigo, voluntarios y unidades e instituciones de apoyo." loading="lazy"></a>
+        <figcaption>Figura 11. Paso 2 · Personas y apoyos, una de las cinco pantallas nuevas.</figcaption>
+      </figure>
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig12_paso3_croquis.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig12_paso3_croquis.png" alt="Paso 3, Descripción y croquis, con los elementos que se reconocieron en la narración y el croquis ya generado." loading="lazy"></a>
+        <figcaption>Figura 12. Paso 3 · Descripción y croquis.</figcaption>
+      </figure>
+    </div>
+
+    <div class="ai-figs">
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig13_paso4_firma.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig13_paso4_firma.png" alt="Paso 4, Cierre y firma: la pregunta del peritaje, el resumen de los pasos anteriores y el botón de firmar." loading="lazy"></a>
+        <figcaption>Figura 13. Paso 4 · Cierre y firma. El resumen deja revisar todo antes de firmar.</figcaption>
+      </figure>
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig14_comprobante.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig14_comprobante.png" alt="Comprobante del envío: el folio del parte, la credencial con la que se firmó y el historial del parte." loading="lazy"></a>
+        <figcaption>Figura 14. Envío confirmado. El comprobante es la prueba de que el parte salió.</figcaption>
+      </figure>
+    </div>
+
+    <div class="ai-figs">
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig15_bandeja.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig15_bandeja.png" alt="Bandeja de la revisora de Estructural, con pestañas de pendientes, devueltos y validados." loading="lazy"></a>
+        <figcaption>Figura 15. Bandeja de revisión. Cada mando ve los partes de su división.</figcaption>
+      </figure>
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig16_devuelto.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig16_devuelto.png" alt="El parte devuelto con su nota, visto desde la Johnson Box de quien lo levantó." loading="lazy"></a>
+        <figcaption>Figura 16. El mismo parte, del otro lado: la nota viaja con la devolución.</figcaption>
+      </figure>
+    </div>
+
+    <div class="ai-figs">
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig17_direccion_partes.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig17_direccion_partes.png" alt="Dirección · Partes de emergencia: la lista con filtros por fecha, tipo de servicio, unidad y estado." loading="lazy"></a>
+        <figcaption>Figura 17. Dirección · Partes de emergencia.</figcaption>
+      </figure>
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig18_direccion_detalle.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig18_direccion_detalle.png" alt="Detalle de un parte validado: la trazabilidad, el sellado con su resguardo y el fundamento normativo." loading="lazy"></a>
+        <figcaption>Figura 18. Detalle del parte validado, con la trazabilidad completa.</figcaption>
+      </figure>
+    </div>
+
+    <div class="ai-figs">
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig19_sellado.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig19_sellado.png" alt="El documento sellado: folio, fecha del sellado, datos del servicio, personas, descripción, croquis y firmas." loading="lazy"></a>
+        <figcaption>Figura 19. El documento que se congela al validar y sobre el que se calcula el hash.</figcaption>
+      </figure>
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/pantallas/fig20_archivo.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig20_archivo.png" alt="Pantalla de Archivo: los partes con el resguardo ya vencido y, abajo, los siguientes en vencer." loading="lazy"></a>
+        <figcaption>Figura 20. Archivo. Los resguardos vencidos salen primero.</figcaption>
+      </figure>
+    </div>
+
+    <figure class="ai-fig ai-fig--narrow">
+      <a class="ai-fig__frame" href="img/pantallas/fig21_probar.png" aria-label="Abrir la figura en tamaño completo"><img src="img/pantallas/fig21_probar.png" alt="Salida de la terminal al correr npm run probar, con las 29 comprobaciones del flujo." loading="lazy"></a>
+      <figcaption>Figura 21. npm run probar recorre el flujo por HTTP y comprueba 29 cosas.</figcaption>
+    </figure>
+
+    <p class="ai-lead">Siendo un prototipo, hay piezas que están puestas de mentiras. Vale la pena decir cuáles, y qué sí funciona de verdad debajo de cada una.</p>
+    <div class="rf-table-wrap">
+      <table class="rf-table ai-table">
+        <thead><tr><th>Pieza</th><th>Qué está puesto de mentiras y qué funciona debajo</th></tr></thead>
+        <tbody>
+          <tr><td>Sesión <span class="ai-tag">Simulado</span></td><td>Se entra con un selector de usuario en vez de WebAuthn. El parte sí queda ligado a quien lo elaboró, y los permisos salen del rol y de la división.</td></tr>
+          <tr><td>Firma <span class="ai-tag">Simulado</span></td><td>Un botón de firmar en lugar de la huella. El renglón sí se guarda en la tabla <strong>firma</strong>, y la tabla <strong>credencial</strong> guarda sólo la llave pública, como haría WebAuthn.</td></tr>
+          <tr><td>Croquis <span class="ai-tag">Simulado</span></td><td>Sin la llave de Gemini, el croquis se arma por palabras clave. Con la llave puesta sí llama a la API y le pide la salida en JSON.</td></tr>
+          <tr><td>Documento sellado <span class="ai-tag">Simulado</span></td><td>Se sella en HTML y no en PDF. El hash SHA-256 y el resguardo a diez años sí se calculan sobre ese archivo.</td></tr>
+          <tr><td>Modo sin conexión <span class="ai-tag">Fuera</span></td><td>El parte se guarda al pasar de un paso al siguiente, pero no hay borrador local ni envío diferido.</td></tr>
+          <tr><td>Fotos y exportación <span class="ai-tag">Fuera</span></td><td>Subir evidencia fotográfica y exportar a PDF o CSV no están implementados.</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
