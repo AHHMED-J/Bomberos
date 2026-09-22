@@ -177,7 +177,17 @@ body {
 .thumb-card h3 { margin: 0; font-family: var(--font-display); font-size: 20px; font-weight: 600; }
 .thumb-card p { margin: 0; font-size: 19.5px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
 
-/* --- Hallazgos de la investigación ----------------------------------------------- */
+/* --- Aviso que manda a investigacion.html, donde vive el detalle ----------------- */
+.research-pointer {
+  padding: 18px 22px;
+  border: 1px solid var(--bd-hair);
+  border-radius: 4px;
+  background: var(--bd-panel);
+}
+.research-pointer p { margin: 0; font-size: 17px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
+.research-pointer a { color: var(--bd-accent); font-weight: 500; }
+
+/* --- Hallazgos de la investigación (docs/investigacion.html) --------------------- */
 .findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
 .finding {
   display: flex;
