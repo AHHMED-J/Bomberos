@@ -205,12 +205,3 @@ app/
   public/css/app-ui.css
   almacen/          los documentos sellados (no se versiona)
 ```
-
-## Respaldo
-
-Existen dos respaldos de la reescritura a fecha de 22/09/2026, antes de hacer el gitpush de `app/` por lo que si ocurre un error, se puede volver atrás con `git reset --hard`.
-
-Se creo una rama de respaldo apuntando al estado anterios, con nombre de **respaldo-antes-de-reescribir** y otra fue creada por `filter-branch`, el nombre de esta rama es **refs/original/refs/heads/main**.
-
-Si se requieren borrar, se hace con los siguientes comandos: `git branch -D respaldo-antes-de-reescribir` y
-`git update-ref -d refs/original/refs/heads/main`.
