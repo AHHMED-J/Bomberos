@@ -211,12 +211,51 @@ body {
   background: var(--bd-panel);
   overflow: hidden;
 }
-/* La captura de la gráfica de Forms es horizontal; la foto de la encuesta
-   impresa que falta agregar es más bien vertical, como una hoja. */
+/* La captura de la gráfica de Forms es horizontal. */
 .finding__shot--wide { aspect-ratio: 16 / 7; }
-.finding__shot--tall { aspect-ratio: 3 / 4; }
 .finding__shot img { display: block; width: 100%; height: 100%; object-fit: contain; background: #fbfaf8; }
 .finding__evidence figcaption { font-size: 19.5px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
+
+/* Muestra de antes/después: usa la paleta del wireframe (--wf-*), no la del
+   sitio, para que se sienta como una muestra real de la maqueta y no como
+   una tarjeta más de la portada. */
+.finding__compare {
+  --wf-paper: #fbfaf8;
+  --wf-ink: #26241f;
+  --wf-muted: #7a756d;
+  --wf-line: #c9c5be;
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--bd-hair);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--wf-paper);
+}
+.compare__side {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 18px;
+  min-width: 0;
+}
+.compare__side--before { border-right: 1px solid var(--wf-line); }
+.compare__label {
+  margin: 0;
+  font: 700 12px/1.2 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wf-muted);
+}
+.compare__sample {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--wf-ink);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+.compare__side--before .compare__sample { font-size: 14.5px; }
+.compare__side--after .compare__sample { font-size: 24px; }
 
 /* --- Tabla de requerimientos ----------------------------------------------------- */
 .rf-table-wrap { border: 1px solid var(--bd-hair); border-radius: 4px; overflow-x: auto; background: var(--bd-panel); }
