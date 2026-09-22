@@ -10,19 +10,6 @@
 .research-hero { padding-top: 56px; }
 .research-hero .hero__dek { max-width: 68ch; }
 
-.research-note {
-  display: flex;
-  gap: 10px;
-  padding: 16px 18px;
-  border: 1px solid var(--bd-hair);
-  border-radius: 4px;
-  background: var(--bd-panel);
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--bd-muted);
-}
-.research-note strong { color: var(--bd-ink); font-weight: 600; }
-
 /* --- Ficha de perfil ------------------------------------------------------- */
 .profile { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; border: 1px solid var(--bd-hair); border-radius: 4px; overflow: hidden; background: var(--bd-hair); }
 .profile__field { display: flex; flex-direction: column; gap: 4px; padding: 14px 18px; background: var(--bd-panel); }
