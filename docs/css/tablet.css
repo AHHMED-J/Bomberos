@@ -1,0 +1,123 @@
+/* ==========================================================================
+   tablet.css — la misma pantalla, acomodada a una tablet (~820 px)
+   Se aplica con la clase .screen--tablet, además de .screen (que ya trae el
+   layout de celular de mobile.css). Sólo existe dentro de pantallas.html,
+   como comparación junto a la de celular — screens/*.html y la portada
+   siguen siendo sólo celular, que es la versión de producto.
+   ========================================================================== */
+
+.screen--tablet {
+  width: 820px;
+  --wf-pad-x: 24px;
+  --wf-gap: 16px;
+}
+
+/* --- Barra superior: vuelve a mostrar contexto y usuario ------------------- */
+.screen--tablet .topbar { height: 60px; gap: 20px; }
+.screen--tablet .topbar__divider { display: block; }
+.screen--tablet .topbar__context { display: block; }
+.screen--tablet .topbar__user .identity { display: flex; }
+
+/* --- El menú lateral vuelve a ser un riel vertical, más angosto que en
+   escritorio ------------------------------------------------------------ */
+.screen--tablet .app { flex-direction: row; }
+.screen--tablet .sidenav {
+  width: 168px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 18px 0;
+  border-right: 1px solid var(--wf-line);
+  border-bottom: 0;
+  overflow-x: visible;
+}
+.screen--tablet .sidenav__label { display: block; padding: 0 16px 10px; }
+.screen--tablet .sidenav__foot { display: block; margin-top: auto; padding: 16px 16px 0; }
+.screen--tablet .sidenav__menu { flex-direction: column; gap: 8px; padding: 0 10px; }
+.screen--tablet .sidenav__item { height: 40px; padding: 0 12px; white-space: normal; }
+
+/* --- Encabezado de página y pasos: vuelven a ir en una fila ---------------- */
+.screen--tablet .pagehead {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 22px var(--wf-pad-x) 16px;
+}
+.screen--tablet .pagehead__title { font-size: 25px; }
+.screen--tablet .pagehead__actions { flex-wrap: nowrap; }
+.screen--tablet .steps { flex-wrap: nowrap; }
+.screen--tablet .steps__bar { display: block; }
+
+/* --- Contenido: hay ancho para dos columnas en las cuadrículas simples,
+   pero no para un panel lateral fijo de 420/460 px además del principal --- */
+.screen--tablet .content { padding: 20px var(--wf-pad-x) 28px; }
+.screen--tablet .content--split,
+.screen--tablet .content--wide-split,
+.screen--tablet .cols-3,
+.screen--tablet .dl--stacked { grid-template-columns: minmax(0, 1fr); }
+.screen--tablet .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.screen--tablet .cols-4 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.screen--tablet .rail { position: static; }
+.screen--tablet .dl { grid-template-columns: 108px minmax(0, 1fr); }
+.screen--tablet .card__body { padding: 16px; }
+.screen--tablet .map { height: 122px; }
+
+/* --- Barra de acciones al pie: vuelve a ir en una fila --------------------- */
+.screen--tablet .footbar {
+  flex-direction: row;
+  align-items: center;
+  padding: 14px var(--wf-pad-x);
+}
+.screen--tablet .footbar__actions .btn { flex: initial; }
+
+/* --- Bandeja: lista y detalle vuelven a ir lado a lado, con una lista
+   más angosta que en escritorio ------------------------------------------ */
+.screen--tablet .panes { flex-direction: row; }
+.screen--tablet .master {
+  width: 260px;
+  border-right: 1px solid var(--wf-line);
+  border-bottom: 0;
+}
+.screen--tablet .parte-row { padding: 14px 16px; }
+.screen--tablet .detail__head,
+.screen--tablet .detail__foot {
+  flex-direction: row;
+  align-items: center;
+  padding: 18px 22px;
+}
+.screen--tablet .detail__foot .btn { flex: initial; }
+.screen--tablet .detail__body {
+  grid-template-columns: minmax(0, 1fr);
+  padding: 18px 22px;
+}
+.screen--tablet .detail__empty { padding: 48px 24px; }
+
+/* --- Filtros: vuelven a ir en una fila, con campos flexibles en vez de
+   fijos, para no desbordar los 820 px ---------------------------------- */
+.screen--tablet .filters { flex-wrap: nowrap; padding: 14px var(--wf-pad-x); }
+.screen--tablet .filters .field,
+.screen--tablet .filters .field--md { width: auto; min-width: 0; flex: 1; }
+.screen--tablet .filters .btn { flex: initial; }
+
+/* --- Listado de la Dirección: caben todas las columnas, con scroll de
+   respaldo por si acaso -------------------------------------------------- */
+.screen--tablet .table-wrap { overflow-x: auto; }
+.screen--tablet .table th, .screen--tablet .table td { padding: 12px 16px; font-size: 16px; }
+.screen--tablet .table colgroup { display: table-column-group; }
+.screen--tablet .table th:nth-child(4), .screen--tablet .table td:nth-child(4),
+.screen--tablet .table th:nth-child(5), .screen--tablet .table td:nth-child(5),
+.screen--tablet .table th:nth-child(6), .screen--tablet .table td:nth-child(6),
+.screen--tablet .table th:nth-child(8), .screen--tablet .table td:nth-child(8) { display: table-cell; }
+
+/* --- Páginas centradas: acceso, alta y confirmación ------------------------ */
+.screen--tablet .centered { padding: 48px 24px; gap: 28px; }
+.screen--tablet .centered__card { width: 440px; }
+.screen--tablet .centered__card--wide { width: 640px; }
+.screen--tablet .centered__title { font-size: 29px; }
+.screen--tablet .centered__sub { font-size: 16px; }
+.screen--tablet .crest { width: 60px; height: 67px; }
+.screen--tablet .seal { width: 76px; height: 76px; }
+.screen--tablet .code { gap: 7px; }
+.screen--tablet .code span { width: 48px; height: 56px; font-size: 26px; }
+.screen--tablet .qr svg { width: 158px; height: 158px; }
+.screen--tablet .pagefoot { padding: 18px var(--wf-pad-x); }

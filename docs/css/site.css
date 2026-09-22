@@ -199,6 +199,7 @@ body {
 .finding h3 { margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 600; }
 .finding p { margin: 0; font-size: 16px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
 .finding__change strong { color: var(--bd-ink); font-weight: 600; }
+.finding__change a { color: var(--bd-accent); }
 
 .finding__evidence { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 0; }
 .finding__shot {

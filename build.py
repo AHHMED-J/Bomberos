@@ -8,9 +8,11 @@ Escribe dos archivos, los dos generados: no se editan a mano.
   docs/pantallas.html               la hoja del sitio
   dist/pantallas-parte-digital.html un solo archivo con el css incrustado
 
-Cada lámina sale una sola vez, del tamaño de un celular: la encuesta con el
-personal mostró que 3 de 4 preferían la app de celular sobre la web de
-escritorio, así que ya no se genera una versión de computadora.
+La encuesta con el personal mostró que 3 de 4 preferían la app de celular
+sobre la web de escritorio, así que ya no se genera una versión de
+computadora. Cada lámina sale dos veces: en celular (la versión de
+producto, la misma que screens/ y la portada) y en tablet, para comparar
+cómo se acomoda en una pantalla más grande.
 La fuente son docs/screens/, docs/css/ y manifest.json.
 """
 
@@ -26,9 +28,11 @@ SITIO = RAIZ / "docs"
 SALIDA_SITIO = SITIO / "pantallas.html"
 SALIDA_SUELTA = RAIZ / "dist" / "pantallas-parte-digital.html"
 
-# El orden importa: tokens define las variables que usan las demás.
+# El orden importa: tokens define las variables que usan las demás, y
+# tablet.css tiene que ir después de mobile.css para ganarle los empates de
+# especificidad en los selectores que las dos tocan.
 HOJAS = ["tokens.css", "base.css", "components.css", "app.css", "mobile.css",
-         "sheet.css", "site.css"]
+         "tablet.css", "sheet.css", "site.css"]
 
 FUENTES = (
     "https://fonts.googleapis.com/css2"
@@ -44,6 +48,7 @@ ESCUDO = (
 )
 
 CUERPO = re.compile(r'<body class="preview">(.*)</body>', re.S)
+RAIZ_PANTALLA = re.compile(r'<div class="screen" id="([\w-]+)">')
 
 
 def esc(texto: str) -> str:
@@ -62,6 +67,15 @@ def cuerpo_de(archivo: Path) -> str:
     if not encontrado:
         raise SystemExit(f'{archivo.name}: falta <body class="preview"> … </body>')
     return encontrado.group(1).strip()
+
+
+def a_tablet(cuerpo: str) -> str:
+    """La misma pantalla, con la clase de más que la acomoda a tablet."""
+    apertura = RAIZ_PANTALLA.search(cuerpo)
+    if not apertura:
+        raise SystemExit('no se encontró el <div class="screen" id="…"> de la pantalla')
+    nueva = f'<div class="screen screen--tablet" id="{apertura.group(1)}-tablet">'
+    return cuerpo.replace(apertura.group(0), nueva, 1)
 
 
 def parrafos(textos, clase: str) -> str:
@@ -95,8 +109,19 @@ def figura(pantalla: dict) -> str:
           <h3>{esc(pantalla['nombre'])}</h3>
           <p class="figure__uses">{esc(pantalla['casos'])}</p>
         </figcaption>{parrafos(pantalla.get("intro"), "figure__prosa")}
-        <div class="stage">
+        <div class="stages">
+          <div class="stage-wrap">
+            <p class="stage__label">En celular</p>
+            <div class="stage">
 {cuerpo}
+            </div>
+          </div>
+          <div class="stage-wrap">
+            <p class="stage__label">En tablet</p>
+            <div class="stage">
+{a_tablet(cuerpo)}
+            </div>
+          </div>
         </div>{parrafos(pantalla.get("nota"), "figure__prosa figure__prosa--pie")}
       </figure>"""
 
@@ -171,7 +196,7 @@ def pagina_sitio(datos: dict) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(titulo)}</title>
-<meta name="description" content="Las pantallas del sistema de parte digital, en celular.">
+<meta name="description" content="Las pantallas del sistema de parte digital, en celular y en tablet.">
 <link rel="icon" href="{ESCUDO}">
 <link rel="stylesheet" href="{FUENTES}">
 {enlaces}

@@ -98,11 +98,30 @@
 .figure__prosa p { margin: 0; font-size: 16.5px; line-height: 1.7; color: var(--bd-muted); text-wrap: pretty; }
 .figure__prosa--pie { padding-top: 4px; }
 
-/* Cada lámina se muestra una sola vez, del tamaño de un celular: es lo que
-   la encuesta con el personal validó, ya no hace falta un carril con la
-   versión de escritorio al lado. .figure es un flex en columna, así que sin
-   align-self la caja se estiraría al ancho completo del contenedor —de ahí
-   el hueco beige de fondo que quedaba donde antes iba la computadora. */
+/* Cada lámina se muestra dos veces, en celular y en tablet, para comparar
+   cómo se acomoda en una pantalla más grande. Ya no hay versión de
+   escritorio: la encuesta con el personal mostró que 3 de 4 preferían la
+   app de celular. El par se desplaza en horizontal dentro de su carril. */
+.stages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 22px;
+  max-width: 100%;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+.stage-wrap { display: flex; flex-direction: column; gap: 9px; flex-shrink: 0; }
+.stage__label {
+  margin: 0;
+  font: 700 12px/1.2 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bd-muted);
+}
+/* .stage-wrap es un flex en columna, así que sin align-self la caja se
+   estiraría al ancho de su contenedor; con flex-start hereda el ancho real
+   de la pantalla que envuelve. */
 .stage {
   align-self: flex-start;
   flex-shrink: 0;
