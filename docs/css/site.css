@@ -14,7 +14,7 @@ body {
 
 /* Ficha de requerimiento, compartida por la portada y las láminas. */
 .rf {
-  font: 400 11px/1 var(--font-mono);
+  font: 400 15px/1 var(--font-mono);
   letter-spacing: 0.04em;
   background: var(--bd-chip);
   border-radius: 3px;
@@ -36,7 +36,7 @@ body {
 }
 .sitenav__brand { display: flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; }
 .sitenav__mark { width: 22px; height: 25px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linejoin: round; }
-.sitenav__name { font-size: 14px; font-weight: 600; }
+.sitenav__name { font-size: 19px; font-weight: 600; }
 .sitenav__links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 .sitenav__link {
   display: inline-flex;
@@ -44,7 +44,7 @@ body {
   gap: 7px;
   padding: 8px 12px;
   border-radius: 4px;
-  font-size: 15px;
+  font-size: 20px;
   color: var(--bd-ink);
   text-decoration: none;
 }
@@ -61,7 +61,7 @@ body {
   align-items: center;
   gap: 9px;
   margin: 0;
-  font: 700 11px/1.2 var(--font-mono);
+  font: 700 15px/1.2 var(--font-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--bd-muted);
@@ -78,7 +78,7 @@ body {
 
 /* --- Portada ---------------------------------------------------------------- */
 .hero { display: flex; flex-direction: column; gap: 26px; padding-top: 76px; }
-.hero__eyebrow { margin: 0; font: 700 11.5px/1.4 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--bd-ink); }
+.hero__eyebrow { margin: 0; font: 700 15.5px/1.4 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--bd-ink); }
 .hero h1 {
   margin: 0;
   font-family: var(--font-display);
@@ -89,7 +89,7 @@ body {
   max-width: 17ch;
   text-wrap: balance;
 }
-.hero__dek { margin: 0; font-size: 19.5px; line-height: 1.6; color: var(--bd-muted); max-width: 60ch; text-wrap: pretty; }
+.hero__dek { margin: 0; font-size: 26.5px; line-height: 1.6; color: var(--bd-muted); max-width: 60ch; text-wrap: pretty; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .hero__meta {
   display: grid;
@@ -100,8 +100,8 @@ body {
   border-top: 1px solid var(--bd-hair);
 }
 .hero__meta > div { display: flex; flex-direction: column; gap: 5px; }
-.hero__meta dt { font: 400 10.5px/1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bd-muted); }
-.hero__meta dd { margin: 0; font-size: 16px; line-height: 1.45; }
+.hero__meta dt { font: 400 14.5px/1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bd-muted); }
+.hero__meta dd { margin: 0; font-size: 21.5px; line-height: 1.45; }
 .meta-list { display: flex; flex-direction: column; gap: 4px; margin: 0; padding-left: 17px; }
 .meta-list li { line-height: 1.35; }
 
@@ -113,7 +113,7 @@ body {
   padding: 0 20px;
   border: 1px solid var(--bd-ink);
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 21.5px;
   font-weight: 500;
   color: var(--bd-ink);
   text-decoration: none;
@@ -125,7 +125,7 @@ body {
 
 /* --- Prosa ------------------------------------------------------------------ */
 .columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; }
-.columns p { margin: 0 0 14px; font-size: 17px; line-height: 1.7; color: var(--bd-muted); text-wrap: pretty; }
+.columns p { margin: 0 0 14px; font-size: 23px; line-height: 1.7; color: var(--bd-muted); text-wrap: pretty; }
 .columns p:last-child { margin-bottom: 0; }
 .columns strong { color: var(--bd-ink); font-weight: 600; }
 
@@ -140,9 +140,9 @@ body {
   border-radius: 4px;
   background: var(--bd-panel);
 }
-.actor__role { font: 700 10.5px/1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bd-ink); }
+.actor__role { font: 700 14.5px/1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bd-ink); }
 .actor h3 { margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 600; }
-.actor p { margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
+.actor p { margin: 0; font-size: 21px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
 .actor__rfs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
 
 /* --- Galería de pantallas ------------------------------------------------------
@@ -172,10 +172,10 @@ body {
 }
 .thumb-card:hover .shot { border-color: var(--bd-ink); }
 .thumb-card__line { display: flex; align-items: baseline; gap: 10px; }
-.thumb-card__n { font: 700 11px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-ink); }
-.thumb-card__cov { font: 400 11px/1.2 var(--font-mono); color: var(--bd-muted); }
+.thumb-card__n { font: 700 15px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-ink); }
+.thumb-card__cov { font: 400 15px/1.2 var(--font-mono); color: var(--bd-muted); }
 .thumb-card h3 { margin: 0; font-family: var(--font-display); font-size: 20px; font-weight: 600; }
-.thumb-card p { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
+.thumb-card p { margin: 0; font-size: 19.5px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
 
 /* --- Hallazgos de la investigación ----------------------------------------------- */
 .findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
@@ -191,13 +191,13 @@ body {
 .finding__stat {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(30px, 4vw, 44px);
+  font-size: clamp(36px, 4.5vw, 52px);
   font-weight: 700;
   line-height: 1;
   color: var(--bd-accent);
 }
 .finding h3 { margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 600; }
-.finding p { margin: 0; font-size: 16px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
+.finding p { margin: 0; font-size: 21.5px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
 .finding__change strong { color: var(--bd-ink); font-weight: 600; }
 .finding__change a { color: var(--bd-accent); }
 
@@ -216,15 +216,15 @@ body {
 .finding__shot--wide { aspect-ratio: 16 / 7; }
 .finding__shot--tall { aspect-ratio: 3 / 4; }
 .finding__shot img { display: block; width: 100%; height: 100%; object-fit: contain; background: #fbfaf8; }
-.finding__evidence figcaption { font-size: 14.5px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
+.finding__evidence figcaption { font-size: 19.5px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
 
 /* --- Tabla de requerimientos ----------------------------------------------------- */
 .rf-table-wrap { border: 1px solid var(--bd-hair); border-radius: 4px; overflow-x: auto; background: var(--bd-panel); }
-.rf-table { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+.rf-table { width: 100%; border-collapse: collapse; font-size: 21px; }
 .rf-table th, .rf-table td { padding: 13px 18px; text-align: left; vertical-align: top; }
 .rf-table thead th {
   border-bottom: 1px solid var(--bd-hair);
-  font: 500 10.5px/1.2 var(--font-mono);
+  font: 500 14.5px/1.2 var(--font-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--bd-muted);
@@ -232,17 +232,17 @@ body {
 }
 .rf-table tbody tr { border-bottom: 1px solid color-mix(in srgb, var(--bd-hair) 55%, transparent); }
 .rf-table tbody tr:last-child { border-bottom: 0; }
-.rf-table td:first-child { font-family: var(--font-mono); font-size: 14px; white-space: nowrap; }
+.rf-table td:first-child { font-family: var(--font-mono); font-size: 19px; white-space: nowrap; }
 .rf-table td:last-child { color: var(--bd-muted); white-space: nowrap; }
 
 /* --- Equipo y pie ------------------------------------------------------------------ */
 .team { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px 28px; margin: 0; padding: 0; list-style: none; }
 .team li { display: flex; flex-direction: column; gap: 3px; padding-top: 12px; border-top: 1px solid var(--bd-hair); }
-.team span { font-size: 16px; font-weight: 500; }
-.team em { font: 400 11.5px/1.2 var(--font-mono); font-style: normal; color: var(--bd-muted); }
+.team span { font-size: 21.5px; font-weight: 500; }
+.team em { font: 400 15.5px/1.2 var(--font-mono); font-style: normal; color: var(--bd-muted); }
 
 .sitefoot { border-top: 2px solid var(--bd-ink); padding-top: 20px; display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; }
-.sitefoot p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--bd-muted); max-width: 56ch; text-wrap: pretty; }
+.sitefoot p { margin: 0; font-size: 19.5px; line-height: 1.6; color: var(--bd-muted); max-width: 56ch; text-wrap: pretty; }
 .sitefoot a { color: var(--bd-accent); }
 
 /* Rango de iPad/tablet: menos aire a los costados que en escritorio, sin

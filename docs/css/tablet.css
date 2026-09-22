@@ -43,7 +43,7 @@
   gap: 20px;
   padding: 22px var(--wf-pad-x) 16px;
 }
-.screen--tablet .pagehead__title { font-size: 25px; }
+.screen--tablet .pagehead__title { font-size: 32px; }
 .screen--tablet .pagehead__actions { flex-wrap: nowrap; }
 .screen--tablet .steps { flex-wrap: nowrap; }
 .screen--tablet .steps__bar { display: block; }
@@ -102,7 +102,7 @@
 /* --- Listado de la Dirección: caben todas las columnas, con scroll de
    respaldo por si acaso -------------------------------------------------- */
 .screen--tablet .table-wrap { overflow-x: auto; }
-.screen--tablet .table th, .screen--tablet .table td { padding: 12px 16px; font-size: 16px; }
+.screen--tablet .table th, .screen--tablet .table td { padding: 12px 16px; font-size: 22px; }
 .screen--tablet .table colgroup { display: table-column-group; }
 .screen--tablet .table th:nth-child(4), .screen--tablet .table td:nth-child(4),
 .screen--tablet .table th:nth-child(5), .screen--tablet .table td:nth-child(5),
@@ -113,11 +113,11 @@
 .screen--tablet .centered { padding: 48px 24px; gap: 28px; }
 .screen--tablet .centered__card { width: 440px; }
 .screen--tablet .centered__card--wide { width: 640px; }
-.screen--tablet .centered__title { font-size: 29px; }
-.screen--tablet .centered__sub { font-size: 16px; }
+.screen--tablet .centered__title { font-size: 37px; }
+.screen--tablet .centered__sub { font-size: 22px; }
 .screen--tablet .crest { width: 60px; height: 67px; }
 .screen--tablet .seal { width: 76px; height: 76px; }
 .screen--tablet .code { gap: 7px; }
-.screen--tablet .code span { width: 48px; height: 56px; font-size: 26px; }
+.screen--tablet .code span { width: 48px; height: 56px; font-size: 34px; }
 .screen--tablet .qr svg { width: 158px; height: 158px; }
 .screen--tablet .pagefoot { padding: 18px var(--wf-pad-x); }

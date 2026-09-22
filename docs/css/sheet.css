@@ -14,7 +14,7 @@
 .masthead { display: flex; flex-direction: column; gap: 22px; border-top: 2px solid var(--bd-ink); padding-top: 22px; }
 .masthead__eyebrow {
   margin: 0;
-  font: 700 11.5px/1.2 var(--font-mono);
+  font: 700 15.5px/1.2 var(--font-mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--bd-ink);
@@ -29,7 +29,7 @@
   max-width: 18ch;
   text-wrap: balance;
 }
-.masthead__dek { margin: 0; font-size: 18px; line-height: 1.6; color: var(--bd-muted); max-width: 64ch; text-wrap: pretty; }
+.masthead__dek { margin: 0; font-size: 24.5px; line-height: 1.6; color: var(--bd-muted); max-width: 64ch; text-wrap: pretty; }
 .masthead__meta {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -40,12 +40,12 @@
 }
 .masthead__meta > div { display: flex; flex-direction: column; gap: 5px; }
 .masthead__meta dt {
-  font: 400 10.5px/1.2 var(--font-mono);
+  font: 400 14.5px/1.2 var(--font-mono);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--bd-muted);
 }
-.masthead__meta dd { margin: 0; font-size: 16px; line-height: 1.45; }
+.masthead__meta dd { margin: 0; font-size: 21.5px; line-height: 1.45; }
 .meta-list { display: flex; flex-direction: column; gap: 4px; margin: 0; padding-left: 17px; }
 .meta-list li { line-height: 1.35; }
 
@@ -57,7 +57,7 @@
   align-items: center;
   gap: 9px;
   margin: 0;
-  font: 700 11px/1.2 var(--font-mono);
+  font: 700 15px/1.2 var(--font-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--bd-muted);
@@ -71,7 +71,7 @@
   flex-shrink: 0;
 }
 .act__head h2 { margin: 0; font-family: var(--font-display); font-size: 30px; font-weight: 600; letter-spacing: 0; }
-.act__lead { margin: 0; font-size: 16.5px; line-height: 1.6; color: var(--bd-muted); max-width: 72ch; text-wrap: pretty; }
+.act__lead { margin: 0; font-size: 22.5px; line-height: 1.6; color: var(--bd-muted); max-width: 72ch; text-wrap: pretty; }
 .act__rfs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 
 /* --- Lámina ------------------------------------------------------------------ */
@@ -84,18 +84,18 @@
   padding: 5px 10px;
   border: 1px solid var(--bd-hair);
   border-radius: 3px;
-  font: 700 11px/1 var(--font-mono);
+  font: 700 15px/1 var(--font-mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.figure__n { font: 700 11.5px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-ink); }
-.figure__cov { font: 400 11.5px/1.2 var(--font-mono); color: var(--bd-muted); }
-.figure__caption h3 { margin: 0; font-family: var(--font-display); font-size: 22.5px; font-weight: 600; }
-.figure__uses { margin: 0; max-width: 78ch; font-size: 15px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
+.figure__n { font: 700 15.5px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-ink); }
+.figure__cov { font: 400 15.5px/1.2 var(--font-mono); color: var(--bd-muted); }
+.figure__caption h3 { margin: 0; font-family: var(--font-display); font-size: 30.5px; font-weight: 600; }
+.figure__uses { margin: 0; max-width: 78ch; font-size: 20px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
 
 /* Prosa que explica una lámina, encima o debajo de ella. */
 .figure__prosa { display: flex; flex-direction: column; gap: 12px; max-width: 74ch; }
-.figure__prosa p { margin: 0; font-size: 16.5px; line-height: 1.7; color: var(--bd-muted); text-wrap: pretty; }
+.figure__prosa p { margin: 0; font-size: 22.5px; line-height: 1.7; color: var(--bd-muted); text-wrap: pretty; }
 .figure__prosa--pie { padding-top: 4px; }
 
 /* Cada lámina se muestra dos veces, en celular y en tablet, para comparar
@@ -114,7 +114,7 @@
 .stage-wrap { display: flex; flex-direction: column; gap: 9px; flex-shrink: 0; }
 .stage__label {
   margin: 0;
-  font: 700 12px/1.2 var(--font-mono);
+  font: 700 16px/1.2 var(--font-mono);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--bd-muted);
@@ -134,7 +134,7 @@
 
 /* --- Pie ---------------------------------------------------------------------- */
 .sheet-foot { display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--bd-hair); padding-top: 20px; }
-.sheet-foot p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--bd-muted); max-width: 74ch; text-wrap: pretty; }
+.sheet-foot p { margin: 0; font-size: 20px; line-height: 1.6; color: var(--bd-muted); max-width: 74ch; text-wrap: pretty; }
 .sheet-foot strong { color: var(--bd-ink); font-weight: 600; }
 
 /* Rango de iPad/tablet: menos aire a los costados que en escritorio. */

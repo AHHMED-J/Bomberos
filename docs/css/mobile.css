@@ -42,7 +42,7 @@
   gap: 14px;
   padding: 16px var(--wf-pad-x);
 }
-.screen .pagehead__title { font-size: 23px; }
+.screen .pagehead__title { font-size: 28px; }
 .screen .pagehead__actions { flex-wrap: wrap; }
 .screen .steps { flex-wrap: wrap; gap: 8px 12px; }
 .screen .steps__bar { display: none; }
@@ -104,7 +104,7 @@
 .screen .table-wrap { overflow-x: auto; }
 .screen .table { table-layout: auto; }
 .screen .table colgroup { display: none; }
-.screen .table th, .screen .table td { padding: 10px 12px; font-size: 15px; }
+.screen .table th, .screen .table td { padding: 10px 12px; font-size: 20.5px; }
 /* Ubicación, unidad, quién elaboró y la flecha no caben: se quedan fuera. */
 .screen .table th:nth-child(4), .screen .table td:nth-child(4),
 .screen .table th:nth-child(5), .screen .table td:nth-child(5),
@@ -116,11 +116,11 @@
 .screen .centered { padding: 32px var(--wf-pad-x); gap: 24px; }
 .screen .centered__card,
 .screen .centered__card--wide { width: 100%; }
-.screen .centered__title { font-size: 27px; }
-.screen .centered__sub { font-size: 17px; }
+.screen .centered__title { font-size: 32px; }
+.screen .centered__sub { font-size: 23px; }
 .screen .crest { width: 54px; height: 60px; }
 .screen .seal { width: 68px; height: 68px; }
 .screen .code { gap: 6px; }
-.screen .code span { width: 44px; height: 52px; font-size: 23px; }
+.screen .code span { width: 44px; height: 52px; font-size: 28px; }
 .screen .qr svg { width: 148px; height: 148px; }
 .screen .pagefoot { padding: 16px var(--wf-pad-x); text-align: center; }
