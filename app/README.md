@@ -18,10 +18,13 @@ npm run db:crear         # crea la base y la llena con datos de ejemplo
 npm start                # http://localhost:3000
 ```
 
-`npm run db:crear` corre `db/schema.sql` y `db/seed.sql` con `mysql2`, así
-que no hace falta tener el cliente `mysql` en el PATH. Ojo: `schema.sql`
-empieza con `DROP DATABASE IF EXISTS parte_digital`, o sea que borra y
-vuelve a crear la base cada vez.
+Y para comprobar que todo funciona, con el servidor ya levantado:
+
+```sh
+npm run probar           # recorre el flujo completo · 29 comprobaciones
+```
+
+Los dos scripts están explicados más abajo, en las decisiones.
 
 ## Usuarios de prueba
 
@@ -133,15 +136,32 @@ Las fuentes se piden a Google Fonts con el mismo `<link>` de la maqueta.
 No hay archivos de íconos ni de imágenes: todos los íconos son SVG en línea
 (`views/parcial/icono.ejs`).
 
-### Las vistas se generaron con un script
+### Los dos scripts
 
-`scripts/importar-pantallas.js` leyó `docs/screens/` y `manifest.json`,
-sacó el `<div class="screen">` de cada pantalla reusando el regex `CUERPO`
-de `build.py`, y escribió las doce vistas. Se corrió una vez; de ahí en
-adelante se editan en `views/`, porque divergen de la maqueta. El script se
-niega a sobrescribir salvo que se le pase `--forzar`.
+**`npm run db:crear`** (`scripts/cargar-bd.js`) levanta la base desde cero:
+corre `db/schema.sql` y luego `db/seed.sql` con `mysql2`, así que no hace
+falta tener el cliente `mysql` instalado ni en el PATH. Es un solo comando y
+deja siempre el mismo estado conocido, que es justo lo que se quiere antes
+de una demo o de una prueba.
 
-Cada vista empieza diciendo de qué pantalla salió y qué le cambió.
+Ojo: `schema.sql` empieza con `DROP DATABASE IF EXISTS parte_digital`. Cada
+vez que se corre, borra y vuelve a crear todo.
+
+**`npm run probar`** (`scripts/probar-flujo.js`) recorre el prototipo de
+principio a fin y comprueba 29 cosas. No usa navegador: habla con el
+servidor por HTTP, igual que lo haría una persona haciendo clic. Cubre el
+Flujo 3 combinado con el 1, los permisos por rol y por división, y el
+sellado con su hash.
+
+```sh
+npm start        # en una terminal
+npm run probar   # en otra
+```
+
+Sirve para tres cosas: comprobar que un cambio no rompió nada, demostrar el
+sistema completo sin hacer un solo clic, y dejar escrito cuál es el
+recorrido. Necesita la base recién creada, porque cuenta con los datos de
+`seed.sql`.
 
 ### Stack
 
@@ -189,7 +209,9 @@ La llave de Gemini nunca va al repositorio: se lee de `.env`, que está en el
 app/
   db/schema.sql     17 tablas, claves foráneas e índices
   db/seed.sql       datos de ejemplo (ficticios)
-  scripts/          importar-pantallas.js · cargar-bd.js
+  scripts/
+    cargar-bd.js    crea la base y la llena
+    probar-flujo.js recorre el prototipo y comprueba 29 cosas
   src/
     server.js       rutas, estáticos, manejo de errores
     db.js           el pool de MySQL
