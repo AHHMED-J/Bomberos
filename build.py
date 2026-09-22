@@ -37,7 +37,7 @@ HOJAS = ["tokens.css", "base.css", "components.css", "app.css", "mobile.css",
 # GitHub Pages cachea los .css diez minutos. Subir este número (a mano, cada
 # vez que cambie algún css/*.css) fuerza a que el navegador pida el archivo
 # de nuevo en vez de servir una versión vieja desde su caché.
-VERSION = "20260922b"
+VERSION = "20260922c"
 
 FUENTES = (
     "https://fonts.googleapis.com/css2"
@@ -186,6 +186,7 @@ NAV = """<nav class="sitenav">
   <div class="sitenav__links">
     <a class="sitenav__link" href="index.html">Proyecto</a>
     <a class="sitenav__link" aria-current="page" href="pantallas.html">Pantallas</a>
+    <a class="sitenav__link" href="investigacion.html">Investigación</a>
     <a class="sitenav__link" href="avance-proyecto-1.docx">Documento</a>
     <a class="sitenav__link" href="https://github.com/AHHMED-J/Bomberos">Repositorio</a>
   </div>

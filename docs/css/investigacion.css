@@ -1,0 +1,124 @@
+/* ==========================================================================
+   investigacion.css — resumen del guion y mapa de complejidad técnica
+   Sólo la usa investigacion.html. Usa la paleta del sitio (--bd-*) para el
+   armazón de la página, y una paleta de papel local (--wf-*, redeclarada
+   aquí mismo) para las tarjetas donde vive el diagrama — igual que
+   .finding__compare en site.css, porque --wf-* normalmente sólo existe
+   dentro de .screen y esta página no tiene ninguna maqueta.
+   ========================================================================== */
+
+.research-hero { padding-top: 56px; }
+.research-hero .hero__dek { max-width: 68ch; }
+
+.research-note {
+  display: flex;
+  gap: 10px;
+  padding: 16px 18px;
+  border: 1px solid var(--bd-hair);
+  border-radius: 4px;
+  background: var(--bd-panel);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--bd-muted);
+}
+.research-note strong { color: var(--bd-ink); font-weight: 600; }
+
+/* --- Ficha de perfil ------------------------------------------------------- */
+.profile { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; border: 1px solid var(--bd-hair); border-radius: 4px; overflow: hidden; background: var(--bd-hair); }
+.profile__field { display: flex; flex-direction: column; gap: 4px; padding: 14px 18px; background: var(--bd-panel); }
+.profile__field dt { font: 700 13px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-muted); }
+.profile__field dd { margin: 0; font-size: 17px; color: var(--bd-ink); }
+.profile__field--pending dd { color: var(--bd-muted); font-style: italic; }
+
+/* --- Resumen del guion ------------------------------------------------------ */
+.script { display: flex; flex-direction: column; gap: 18px; }
+.script__item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  border: 1px solid var(--bd-hair);
+  border-radius: 4px;
+  background: var(--bd-panel);
+}
+.script__q { margin: 0; font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--bd-ink); }
+.script__a { margin: 0; font-size: 16px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
+.script__quote {
+  margin: 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--bd-accent);
+  font-size: 15.5px;
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--bd-ink);
+}
+
+/* --- Tarjeta de papel para el mapa ------------------------------------------
+   Paleta local: no depende de .screen, este mapa vive fuera de la maqueta. */
+.map-card {
+  --wf-paper: #fbfaf8;
+  --wf-ink: #26241f;
+  --wf-muted: #7a756d;
+  --wf-faint: #a8a39b;
+  --wf-line: #c9c5be;
+  --wf-accent: #b03a2e;
+  padding: 28px;
+  border: 1px solid var(--bd-hair);
+  border-radius: 4px;
+  background: var(--wf-paper);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.map-card__label {
+  margin: 0;
+  font: 700 12px/1.2 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wf-muted);
+}
+
+/* Diagrama de flujo (SVG) */
+.map-flow { display: block; width: 100%; height: auto; }
+.map-node rect { fill: var(--wf-paper); stroke: var(--wf-ink); stroke-width: 1.5; }
+.map-node text { font: 600 15px/1.2 var(--font-sans); fill: var(--wf-ink); }
+.map-node--branch rect { stroke: var(--wf-accent); stroke-dasharray: 5 4; }
+.map-node--branch text { fill: var(--wf-accent); }
+.map-line { stroke: var(--wf-ink); stroke-width: 1.5; fill: none; marker-end: url(#map-arrow); }
+.map-line--dashed { stroke: var(--wf-accent); stroke-width: 1.5; fill: none; stroke-dasharray: 5 4; marker-end: url(#map-arrow-accent); }
+.map-line-label { font: 400 12.5px/1.2 var(--font-mono); fill: var(--wf-muted); }
+.map-line-label--accent { fill: var(--wf-accent); font-weight: 700; }
+.map-arrowhead { fill: var(--wf-ink); }
+.map-arrowhead--accent { fill: var(--wf-accent); }
+
+/* Actores del ecosistema */
+.map-actors { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+.map-actor-group {
+  padding: 14px 16px;
+  border: 1px solid var(--wf-line);
+  border-radius: 4px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.map-actor-group h4 { margin: 0; font: 700 12px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--wf-muted); }
+.map-actor-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.map-actor-chip {
+  padding: 5px 10px;
+  border: 1px solid var(--wf-line);
+  border-radius: 20px;
+  background: var(--wf-paper);
+  font-size: 13.5px;
+  color: var(--wf-ink);
+}
+
+/* Glosario */
+.map-glossary { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px 24px; margin: 0; }
+.map-glossary div { display: flex; flex-direction: column; gap: 2px; padding-top: 10px; border-top: 1px solid var(--wf-line); }
+.map-glossary dt { font: 700 13.5px/1.2 var(--font-mono); color: var(--wf-ink); }
+.map-glossary dd { margin: 0; font-size: 14.5px; line-height: 1.4; color: var(--wf-muted); }
+
+@media (max-width: 720px) {
+  .map-card { padding: 18px; gap: 20px; }
+}

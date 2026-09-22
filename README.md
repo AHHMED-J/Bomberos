@@ -12,6 +12,7 @@ línea de JavaScript.
     docs/                   ← esto es el sitio que publica GitHub Pages
       index.html            portada: problema, actores, galería y trazabilidad
       pantallas.html        la hoja con las doce láminas y sus RF (generada)
+      investigacion.html    entrevista a experto: guion y mapa de complejidad
       screens/              una pantalla por archivo; cada una abre sola
       css/
         tokens.css          variables: paleta del wireframe y paleta del sitio
@@ -22,6 +23,7 @@ línea de JavaScript.
         tablet.css          lo que se le acomoda encima con .screen--tablet
         sheet.css           la lámina y su pie de figura
         site.css            portada y navegación del sitio
+        investigacion.css   estilos propios de investigacion.html
       avance-proyecto-1.docx  copia del documento, para descargar desde el sitio
       .nojekyll             que GitHub sirva los archivos tal cual
     manifest.json           qué figura es cada pantalla, qué caso de uso y qué RF cubre
