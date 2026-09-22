@@ -22,11 +22,7 @@
 | Dominio | Operación y administración de un cuerpo de bomberos (despacho de emergencias, jerarquía de mando, papeleo/reportes, presupuesto) |
 | Organización | H. Cuerpo de Bomberos de Ensenada |
 | Fecha | Sábado 19 de septiembre de 2026 |
-| Medio | **(pendiente — presencial o remoto)** |
-
-*Nota: fecha y medio siguen sin dato real, así que se dejan pendientes en
-vez de inventados. Dime cuándo fue y si fue presencial o remota y los
-actualizo.*
+| Medio | Presencial, en la estación de bomberos |
 
 ## Guion dinámico (pregunta → respuesta)
 
@@ -94,7 +90,6 @@ No se mencionaron documentos o reglamentos específicos por nombre en esta entre
 
 ## Notas y siguientes pasos
 
-- Completar el medio (presencial o remoto) de la sesión — la fecha (sábado 19 de septiembre de 2026) y los tres perfiles ya están identificados.
 - Profundizar en qué campos exactos lleva cada una de las ~4-5 hojas diarias (parte de novedades, hoja de incidente, revisión mecánica, FRAP, notas) para diseñar el formulario digital sin dejar ninguna fuera.
 - Ninguno de los tres descarta computadora fija como dispositivo — contrasta con la encuesta general (mayoría celular). Vale la pena preguntar si es porque el Capitán y el Maquinista tienen roles más de supervisión/mantenimiento que operativos de campo puro.
 - El **Capitán González cuenta como el experto del dominio** que pide la tarea de campo (conocimiento institucional/administrativo). La lectura de **usuario extremo** (`usuario-extremo-01.md`) sigue tomando esta misma sesión como base, porque el guion no permite separar qué dijo cada quien — pero ahora que hay tres personas reales identificadas (32 / 25 / 15 años de experiencia), el **Maquinista Ortega** es un candidato natural para un perfil de usuario extremo propio en una siguiente ronda (su rol es intrínsecamente más técnico/operativo que administrativo), y el **Bombero Carrillo** para un usuario más cercano al promedio — ninguno de los dos tiene todavía respuestas atribuibles a él individualmente.

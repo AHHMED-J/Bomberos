@@ -21,8 +21,9 @@ archivos tienen el detalle método por método.
 
 - `resumen-y-evolucion.md` — el problema investigado, a quién se
   entrevistó, las necesidades ocultas y cómo cambió la definición del
-  problema, todo junto en una narrativa. **No está publicado** (es
-  material de trabajo interno, no una pieza terminada para el sitio).
+  problema, todo junto en una narrativa. Es el insumo para el documento
+  de reflexión de 1-2 páginas que pide la tarea. Resumen publicado en
+  `docs/investigacion.html` ("El problema y cómo cambió su definición").
 - `Bomberos (respuestas).xlsx` — encuesta al personal, 4 respuestas
   reales, sin datos que identifiquen a nadie.
 - `Examen_1_Investigacion de usuarios.pdf` — el documento de tarea.
@@ -54,23 +55,16 @@ archivos tienen el detalle método por método.
 - `roper-dynagram-01.md` — 3 segmentos por valores (institucionales,
   prácticos de tiempo, conformistas sociales), con evidencia real de las
   4 respuestas de la encuesta y la sesión de campo, y la asignación de
-  cada una de las 7 personas identificadas. **No está publicado todavía.**
+  cada una de las 7 personas identificadas. Publicado completo en
+  `docs/investigacion.html`.
 
-Casi todo el contenido de esta carpeta ya tiene su resumen o versión
-completa publicada en `docs/investigacion.html` — las excepciones son
-`resumen-y-evolucion.md` y `roper-dynagram-01.md` (los dos más nuevos,
-todavía no llevados al sitio), la encuesta cruda, el PDF de la tarea, el
-guion sin resumir, y las notas internas de "qué falta" de cada documento.
+Todo el contenido de esta carpeta ya tiene su resumen o versión
+completa publicada en `docs/investigacion.html` — lo único que se queda
+sólo aquí es la encuesta cruda, el PDF de la tarea, el guion sin
+resumir, y las notas internas de "qué falta" de cada documento.
 
 ## Qué falta
 
-- Completar el medio (presencial o remoto) de la sesión en
-  `entrevista-experto-01.md` y `usuario-extremo-01.md` — la fecha
-  (sábado 19 de septiembre de 2026) y los tres participantes ya están
-  identificados.
-- Publicar `resumen-y-evolucion.md` y `roper-dynagram-01.md` en
-  `docs/investigacion.html`, si se quiere que el sitio público quede
-  tan completo como esta carpeta.
 - Las 6 interfaces en sí (CRUD, validación, persistencia, exportación
   JSON/CSV, visualizaciones) — ese es el trabajo de código que sigue.
   No confundir con `app/`, que es el prototipo del producto "Parte

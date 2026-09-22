@@ -72,5 +72,5 @@ Transcripción completa de la sesión en `entrevista-experto-01.md`, con
 los tres participantes identificados (Capitán González, Maquinista
 Ortega, Bombero Carrillo), del sábado 19 de septiembre de 2026; sin
 fotos ni marcas de tiempo de observación directa (fue entrevista, no
-observación en campo) — medio **pendiente de confirmar**, igual que en
-`entrevista-experto-01.md`.
+observación en campo) — presencial, en la estación de bomberos, igual
+que en `entrevista-experto-01.md`.
