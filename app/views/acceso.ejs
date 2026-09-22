@@ -1,0 +1,71 @@
+<%#
+    De docs/screens/acceso.html (figura 8.1).
+    Cambio: el boton de huella abre el selector de usuario de prueba,
+    porque la sesion del prototipo esta SIMULADA.
+%>
+<%- include('/parcial/arriba', { titulo: 'Acceso', id: 'acceso', sinMenu: true }) %>
+
+  <main class="centered">
+
+    <div class="centered__head">
+      <svg class="crest" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 24c6 6 9 10 9 15a9 9 0 0 1-18 0c0-5 3-9 9-15Z"/>
+      </svg>
+      <p class="centered__title">Parte Digital</p>
+      <p class="centered__sub">Captura, firma y consulta de los partes de emergencia del H. Cuerpo de Bomberos de Ensenada.</p>
+    </div>
+
+    <section class="card centered__card">
+      <div class="card__head">
+        <span class="label">Acceso al sistema</span>
+        <span class="marca-simulado">Simulado</span>
+      </div>
+      <div class="card__body">
+        <p class="text">
+          En el sistema real se entra con la credencial que vive en el equipo:
+          no hay usuario ni contraseña. En el prototipo se elige con quién
+          entrar, para poder recorrer el flujo con los tres roles.
+        </p>
+
+        <div class="usuarios-prueba">
+          <% usuarios.forEach(function (u) { %>
+            <form method="post" action="/acceso">
+              <input type="hidden" name="usuario_id" value="<%= u.id %>">
+              <button type="submit">
+                <%- include('/parcial/icono', { icono: 'huella' }) %>
+                <span class="person">
+                  <span class="person__name"><%= u.nombre %></span>
+                  <span class="person__meta">
+                    <%= u.cargo %> · <%= u.rol %><%= u.division ? ' · ' + u.division : '' %> · No. <%= u.no_empleado %>
+                  </span>
+                </span>
+              </button>
+            </form>
+          <% }); %>
+        </div>
+
+        <p class="note note--flex">
+          <%- include('/parcial/icono', { icono: 'aviso', tam: 'sm' }) %>
+          <span>
+            En el sistema real la huella no viaja a ningún lado y el servidor
+            sólo guarda la llave pública de la credencial (RNF-05). La tabla
+            <span class="mono">credencial</span> ya existe con esa forma.
+          </span>
+        </p>
+      </div>
+      <div class="card__foot">
+        <span class="label">Otras entradas</span>
+        <a class="card__link grow" href="/registro">Dar de alta una credencial</a>
+        <a class="card__link" href="/acceso/estacion">Equipo compartido</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="pagefoot">
+    <%- include('/parcial/icono', { icono: 'aviso', tam: 'sm' }) %>
+    ¿Problemas para entrar? Comunícate con la Dirección para volver a registrar el equipo.
+  </footer>
+
+<%- include('/parcial/abajo') %>
