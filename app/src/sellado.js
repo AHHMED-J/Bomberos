@@ -25,16 +25,16 @@ function resguardoHasta(fechaServicio) {
   return base.toISOString().slice(0, 10);
 }
 
-// UNIQUE en archivo.parte_id: un solo documento por parte.
-async function sellar(parte) {
-  const yaEsta = await fila('SELECT * FROM archivo WHERE parte_id = ?', [parte.id]);
-  if (yaEsta) return yaEsta;
-
+// Dibuja el documento, lo deja congelado en app/almacen/ y devuelve su ruta
+// y el hash, calculado sobre el archivo ya escrito. Aparte de sellar(), lo
+// usa cargar-bd.js: los partes de ejemplo llegan ya sellados desde seed.sql
+// y ese renglon de la tabla archivo necesita un documento de verdad detras.
+async function escribirDocumento(parte, selladoEn = new Date()) {
   // La plantilla se dibuja aqui, no por Express, asi que hay que pasarle a
   // mano el f de formato.js que las demas vistas reciben solas.
   const documento = await ejs.renderFile(PLANTILLA, {
     parte: parte,
-    selladoEn: new Date(),
+    selladoEn: selladoEn,
     f: formato,
   });
 
@@ -45,12 +45,22 @@ async function sellar(parte) {
 
   const hash = crypto.createHash('sha256').update(await fs.readFile(destino)).digest('hex');
 
+  return { ruta: `almacen/${nombre}`, hash };
+}
+
+// UNIQUE en archivo.parte_id: un solo documento por parte.
+async function sellar(parte) {
+  const yaEsta = await fila('SELECT * FROM archivo WHERE parte_id = ?', [parte.id]);
+  if (yaEsta) return yaEsta;
+
+  const { ruta, hash } = await escribirDocumento(parte, new Date());
+
   await ejecutar(
     'INSERT INTO archivo (parte_id, pdf_ruta, hash_sha256, resguardo_hasta) VALUES (?, ?, ?, ?)',
-    [parte.id, `almacen/${nombre}`, hash, resguardoHasta(parte.fecha)],
+    [parte.id, ruta, hash, resguardoHasta(parte.fecha)],
   );
 
   return fila('SELECT * FROM archivo WHERE parte_id = ?', [parte.id]);
 }
 
-module.exports = { sellar, resguardoHasta, ALMACEN };
+module.exports = { sellar, escribirDocumento, resguardoHasta, ALMACEN };

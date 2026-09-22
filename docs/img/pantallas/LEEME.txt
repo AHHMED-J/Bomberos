@@ -1,0 +1,17 @@
+Capturas del prototipo navegable · sistema de parte digital
+Tomadas el 22 de septiembre de 2026 con la base recién creada (npm run db:crear).
+Son los originales completos; en el documento TE_AI_Cornejo_365239 las más altas van partidas en dos columnas.
+
+fig09_inicio.png                 Figura 9 · Inicio · Mis partes (bombero), con la Johnson Box
+fig10_paso1_datos.png            Figura 10 · Paso 1 · Datos del servicio
+fig11_paso2_personas.png         Figura 11 · Paso 2 · Personas y apoyos
+fig12_paso3_croquis.png          Figura 12 · Paso 3 · Descripción y croquis
+fig13_paso4_firma.png            Figura 13 · Paso 4 · Cierre y firma
+fig14_comprobante.png            Figura 14 · Envío confirmado · comprobante
+fig15_bandeja.png                Figura 15 · Bandeja de revisión (revisora de Estructural)
+fig16_devuelto.png               Figura 16 · Parte devuelto con nota en la Johnson Box
+fig17_direccion_partes.png       Figura 17 · Dirección · Partes de emergencia
+fig18_direccion_detalle.png      Figura 18 · Dirección · Detalle del parte validado
+fig19_sellado.png                Figura 19 · Documento sellado
+fig20_archivo.png                Figura 20 · Dirección · Archivo y resguardos
+fig21_probar.png                 Figura 21 · Salida de npm run probar

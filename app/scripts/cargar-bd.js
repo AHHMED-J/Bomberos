@@ -20,7 +20,37 @@ const fs = require('node:fs');
 const path = require('node:path');
 const mysql = require('mysql2/promise');
 
+const { filas, ejecutar, pool } = require('../src/db');
+const parteDb = require('../src/parte');
+const sellado = require('../src/sellado');
+
 const DB = path.resolve(__dirname, '..', 'db');
+
+/**
+ * seed.sql inserta los renglones de la tabla archivo, pero el documento
+ * sellado no vive en la base: es un HTML en app/almacen/. Sin este paso el
+ * enlace "Ver el documento sellado" de Dirección apunta a un archivo que no
+ * existe y la ruta /direccion/partes/:id/sellado truena con ENOENT.
+ *
+ * De paso queda el hash de verdad, porque el del seed es relleno de ceros.
+ * Se sella con la fecha de archivado_en que trae el seed, no con la de hoy,
+ * para que el documento diga lo mismo que la pantalla de Archivo.
+ */
+async function sellarLosDeEjemplo() {
+  const registros = await filas('SELECT id, parte_id, archivado_en FROM archivo ORDER BY parte_id');
+
+  for (const registro of registros) {
+    const parte = await parteDb.cargar(registro.parte_id);
+    const { ruta, hash } = await sellado.escribirDocumento(parte, registro.archivado_en);
+    await ejecutar('UPDATE archivo SET pdf_ruta = ?, hash_sha256 = ? WHERE id = ?', [
+      ruta,
+      hash,
+      registro.id,
+    ]);
+  }
+
+  return registros.length;
+}
 
 async function main() {
   const conexion = await mysql.createConnection({
@@ -47,8 +77,17 @@ async function main() {
     `SELECT COUNT(*) AS n FROM ${process.env.DB_NAME || 'parte_digital'}.parte`,
   );
 
-  console.log(`\n${tablas[0].n} tablas creadas · ${partes[0].n} partes de ejemplo.`);
   await conexion.end();
+
+  process.stdout.write('sellando los partes ya validados… ');
+  const sellados = await sellarLosDeEjemplo();
+  console.log('listo');
+  await pool.end();
+
+  console.log(
+    `\n${tablas[0].n} tablas creadas · ${partes[0].n} partes de ejemplo · ` +
+      `${sellados} documento${sellados === 1 ? '' : 's'} en app/almacen/.`,
+  );
 }
 
 main().catch((error) => {

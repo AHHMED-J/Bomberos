@@ -95,27 +95,34 @@ const DATOS_DEL_SERVICIO = {
 async function probar() {
   let r;
 
+  // Se comprueba que las pantallas de acceso se dibujan.
   console.log('\n— Las pantallas de acceso —');
   const anonimo = sesionNueva();
+  // Devuelve 200 OK y la página de acceso, no un redirect a /registro.
   for (const ruta of ['/acceso', '/acceso/estacion', '/registro']) {
     r = await anonimo.pide(ruta);
     ok(r.estado === 200, 'GET ' + ruta, String(r.estado));
   }
 
+  // Se comprueba que el QR de la estación se dibuja completo desde el parcial.
   r = await anonimo.pide('/acceso/estacion');
   const cuadros = (r.texto.match(/<rect/g) || []).length;
   ok(cuadros === 285, 'el QR se dibuja completo desde el parcial', cuadros + ' rect');
 
   console.log('\n— Flujo 3 + 1: del borrador al sellado —');
+  // Se entra como bombero y se recorre el flujo completo, paso a paso.
   const bombero = await entrar(1);
 
+  // Se comprueba que la Johnson Box de Mis partes se dibuja.
   r = await bombero.pide('/partes');
   ok(r.estado === 200 && r.texto.includes('Mis partes'), '1 · Johnson Box del bombero');
 
+  // Se crea un nuevo parte y se comprueba que devuelve el id del borrador.
   r = await bombero.pide('/partes/nuevo');
   const id = idDeLaRuta(r.destino);
   ok(id > 0, '2 · Nuevo parte crea el borrador', 'id ' + id);
 
+  
   r = await bombero.pide('/partes/' + id + '/firma');
   ok(r.destino === '/partes/' + id + '/datos?incompleto=1',
     '3 · la puerta de la Figura 3 manda al primer paso que falta', String(r.destino));
@@ -134,22 +141,30 @@ async function probar() {
   ok(r.destino === '/partes/' + id + '/croquis',
     '6 · paso 2 guarda y pasa al 3', String(r.destino));
 
+  // El paso 3 es el croquis. Se genera con Gemini y se dibuja en SVG.
   const descripcion = 'Incendio en una casa de dos pisos; la unidad quedo sobre la calle.';
 
+  // Se simula la llamada a Gemini, que devuelve un JSON con los elementos del croquis.
   r = await bombero.post('/partes/' + id + '/croquis/generar', { descripcion: descripcion });
   ok(r.destino === '/partes/' + id + '/croquis',
     '7 · generar croquis (simulado)', String(r.destino));
 
+  // Se pide la página del croquis y se comprueba que el SVG se dibujó.
   r = await bombero.pide('/partes/' + id + '/croquis');
   ok(r.texto.includes('<svg'), '8 · el croquis quedo dibujado');
 
+  // Se guarda la descripción del croquis y se pasa al paso 4.
   r = await bombero.post('/partes/' + id + '/croquis', { descripcion: descripcion });
   ok(r.destino === '/partes/' + id + '/firma', '9 · paso 3 pasa al 4', String(r.destino));
 
+
+  // El paso 4 es la firma. Se puede firmar sin decidir el peritaje, pero no se
+  //puede cerrar el parte hasta que se decida. Se simula la firma y el cierre.
   r = await bombero.post('/partes/' + id + '/firma', {});
   ok(r.destino === '/partes/' + id + '/firma?falta_peritaje=1',
     '10 · firmar sin decidir el peritaje no pasa', String(r.destino));
 
+  
   r = await bombero.post('/partes/' + id + '/cierre', { requiere_peritaje: '1' });
   ok(r.destino === '/partes/' + id + '/firma', '11 · el cierre guarda el peritaje');
 

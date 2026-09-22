@@ -232,8 +232,11 @@ INSERT INTO revision (parte_id, revisor_id, decision, nota, paso, fecha) VALUES
   (10,3, 'validado', NULL, NULL, '2016-02-02 19:00:00');
 
 -- --- Archivo (resguardo de 10 años) ----------------------------------------
--- El hash SHA-256 se calcula de verdad al validar; los de este seed son de
--- relleno, porque estos partes no pasaron por el sellado del prototipo.
+-- El hash SHA-256 se calcula de verdad al validar. Aqui va de relleno porque
+-- SQL no puede dibujar el documento: en cuanto termina este seed,
+-- cargar-bd.js escribe cada HTML en app/almacen/ y reemplaza estos ceros por
+-- el hash real del archivo. La ruta de abajo es la que genera ese paso
+-- (almacen/<folio>.html), asi que los dos tienen que decir lo mismo.
 INSERT INTO archivo (parte_id, pdf_ruta, hash_sha256, archivado_en, resguardo_hasta, autorizacion_destruccion, destruido_en) VALUES
   (1, 'almacen/PE-2026-0147.html', REPEAT('0', 64), '2026-09-08 17:10:00', '2036-09-08', NULL, NULL),
   (2, 'almacen/PE-2026-0146.html', REPEAT('0', 64), '2026-09-08 11:15:00', '2036-09-08', NULL, NULL),
