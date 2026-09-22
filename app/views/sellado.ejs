@@ -1,0 +1,148 @@
+<%#
+    El documento que se congela al validar y sobre el que se calcula el
+    hash. No es una pantalla: es autocontenido, sin enlaces al CSS de la
+    app, porque tiene que abrirse dentro de diez anios. Por eso aqui si hay
+    un <style> propio.
+    SIMULADO: en el sistema real esto seria un PDF.
+%>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title><%= parte.folio %> · Reporte de salida de incidente</title>
+<style>
+  body { margin: 0; padding: 40px; font: 15px/1.5 Georgia, 'Times New Roman', serif; color: #1a1a1a; background: #fff; }
+  .hoja { max-width: 760px; margin: 0 auto; }
+  h1 { margin: 0; font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .sub { margin: 4px 0 0; font-size: 13px; color: #555; }
+  .sello { margin: 24px 0; padding: 14px 16px; border: 2px solid #1a1a1a; }
+  .sello p { margin: 0 0 4px; font-size: 13px; }
+  h2 { margin: 28px 0 8px; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid #999; padding-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 6px 8px; text-align: left; vertical-align: top; border-bottom: 1px solid #ddd; font-size: 14px; }
+  th { width: 34%; font-weight: normal; color: #555; }
+  .narracion { white-space: pre-wrap; }
+  .croquis svg { width: 100%; height: auto; border: 1px solid #ccc; }
+  .croquis text { font-family: monospace; font-size: 15px; }
+  .pie { margin-top: 32px; padding-top: 12px; border-top: 1px solid #999; font-size: 12px; color: #555; }
+</style>
+</head>
+<body>
+<div class="hoja">
+
+  <h1>Reporte de salida de incidente</h1>
+  <p class="sub">H. Cuerpo de Bomberos de Ensenada · Documento sellado</p>
+
+  <div class="sello">
+    <p><strong>Folio:</strong> <%= parte.folio %></p>
+    <p><strong>Sellado el:</strong> <%= selladoEn.toISOString() %></p>
+    <p><strong>Estado:</strong> validado</p>
+    <p><strong>Resguardo:</strong> diez años a partir de la fecha del servicio</p>
+  </div>
+
+  <h2>Datos del servicio</h2>
+  <table>
+    <tr><th>No. de incidente del C-5</th><td><%= parte.no_incidente_c5 || '—' %></td></tr>
+    <tr><th>NUC de fiscalía</th><td><%= parte.nuc || '—' %></td></tr>
+    <tr><th>Fecha</th><td><%= parte.fecha || '—' %></td></tr>
+    <tr><th>Hora de salida</th><td><%= parte.hora_salida || '—' %></td></tr>
+    <tr><th>Hora de regreso</th><td><%= parte.hora_regreso || '—' %></td></tr>
+    <tr><th>Unidad</th><td><%= parte.unidad || '—' %></td></tr>
+    <tr><th>Turno</th><td><%= parte.turno || '—' %></td></tr>
+    <tr><th>Estación</th><td><%= parte.estacion || '—' %></td></tr>
+    <tr><th>Tipo de servicio</th><td><%= parte.tipo_servicio || '—' %> (división <%= parte.division || '—' %>)</td></tr>
+    <tr><th>Zona</th><td><%= parte.zona || '—' %></td></tr>
+    <tr><th>Despacho</th><td><%= parte.despacho || '—' %></td></tr>
+    <tr><th>Lugar del servicio</th><td><%= parte.lugar_servicio || '—' %></td></tr>
+    <tr><th>Coordenadas</th><td><%= parte.latitud !== null ? parte.latitud + ', ' + parte.longitud : '—' %></td></tr>
+  </table>
+
+  <h2>Personas y apoyos</h2>
+  <table>
+    <tr>
+      <th>Personal de turno</th>
+      <td><%= f.listaPersonal(parte.personal, '; ') %></td>
+    </tr>
+    <tr>
+      <th>Propietario o arrendatario</th>
+      <td>
+        <% if (parte.propietario) { %>
+          <%= parte.propietario.nombre %><br>
+          Teléfono: <%= parte.propietario.telefono || '—' %><br>
+          Domicilio: <%= parte.propietario.domicilio || '—' %><br>
+          Aseguradora: <%= parte.propietario.aseguradora || '—' %>
+        <% } else { %>—<% } %>
+      </td>
+    </tr>
+    <tr><th>Testigo</th><td><%= parte.testigo ? parte.testigo.nombre : '—' %></td></tr>
+    <tr>
+      <th>Voluntarios</th>
+      <td><%= f.listaNombres(parte.voluntarios, '; ') %></td>
+    </tr>
+    <tr>
+      <th>Unidades e instituciones de apoyo</th>
+      <td>
+        <%= f.listaApoyos(parte.apoyos, '; ', true) %>
+      </td>
+    </tr>
+  </table>
+
+  <h2>Descripción del incidente</h2>
+  <p class="narracion"><%= parte.descripcion || '—' %></p>
+
+  <% if (parte.croquis && parte.croquis.svg) { %>
+    <h2>Croquis</h2>
+    <div class="croquis"><%- parte.croquis.svg %></div>
+    <p class="sub">Origen: <%= parte.croquis.origen === 'ia' ? 'generado por IA' : 'dibujado a mano' %></p>
+  <% } %>
+
+  <h2>Cierre</h2>
+  <table>
+    <tr>
+      <th>¿Requiere peritaje?</th>
+      <td><%= parte.requiere_peritaje === 1 ? 'Sí' : parte.requiere_peritaje === 0 ? 'No' : '—' %></td>
+    </tr>
+    <% ['formula', 'propietario', 'testigo'].forEach(function (tipo) { %>
+      <% const firma = parte.firmas.find(function (x) { return x.tipo === tipo; }); %>
+      <tr>
+        <th>Firma <%= tipo === 'formula' ? 'de quien formuló' : 'del ' + tipo %></th>
+        <td>
+          <% if (firma) { %>
+            <%= firma.usuario || 'Registrada' %> · <%= firma.firmado_en.toISOString ? firma.firmado_en.toISOString() : firma.firmado_en %><br>
+            <%= firma.firma %>
+          <% } else { %>Sin firma<% } %>
+        </td>
+      </tr>
+    <% }); %>
+    <tr>
+      <th>Fundamento normativo</th>
+      <td>
+        <%= parte.fundamento_ordenamiento || 'POR DEFINIR con la Dirección' %>
+        <% if (parte.fundamento_articulo) { %> · artículo <%= parte.fundamento_articulo %><% } %>
+      </td>
+    </tr>
+  </table>
+
+  <h2>Revisión</h2>
+  <table>
+    <% parte.revisiones.forEach(function (r) { %>
+      <tr>
+        <th><%= r.decision === 'validado' ? 'Validado' : 'Devuelto' %></th>
+        <td>
+          <%= r.revisor %> · <%= r.fecha.toISOString ? r.fecha.toISOString() : r.fecha %>
+          <% if (r.nota) { %><br><%= r.nota %><% } %>
+        </td>
+      </tr>
+    <% }); %>
+  </table>
+
+  <p class="pie">
+    Documento generado por el prototipo del sistema de parte digital. El hash
+    SHA-256 de este archivo se guarda en la tabla <code>archivo</code> junto
+    con la fecha hasta la que debe resguardarse, y sirve para comprobar
+    después que el documento no cambió.
+  </p>
+
+</div>
+</body>
+</html>

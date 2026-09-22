@@ -1,0 +1,22 @@
+<%# Pantalla nueva: la ruta no existe. %>
+<%- include('/parcial/arriba', { titulo: 'No existe esa ruta', id: 'no-existe', contexto: 'Ruta desconocida' }) %>
+
+  <main class="main">
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title">No existe esa ruta</h1>
+        <p class="pagehead__sub mono"><%= ruta %></p>
+      </div>
+    </div>
+    <div class="content">
+      <div class="fuera-version">
+        <p class="text">
+          Las rutas del prototipo son las de la Tabla 3 del documento. El menú
+          de arriba lleva a las de tu rol.
+        </p>
+        <a class="btn btn--primary btn--lg" href="<%= inicioDeRol %>">Volver a mi inicio</a>
+      </div>
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>

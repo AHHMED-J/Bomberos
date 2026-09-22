@@ -1,0 +1,5 @@
+node_modules/
+.env
+# PDFs sellados y evidencia que genera el prototipo al correr la demo
+almacen/
+views/partes/croquis-sin-respuesta.ejs

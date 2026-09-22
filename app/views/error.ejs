@@ -1,0 +1,25 @@
+<%# Pantalla nueva: el error del servidor. %>
+<%- include('/parcial/arriba', { titulo: 'Algo falló', id: 'error', contexto: 'Error' }) %>
+
+  <main class="main">
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title">Algo falló</h1>
+      </div>
+    </div>
+    <div class="content">
+      <div class="fuera-version">
+        <p class="aviso aviso--alerta">
+          <%- include('/parcial/icono', { icono: 'alerta', tam: 'sm' }) %>
+          <span class="mono"><%= mensaje %></span>
+        </p>
+        <p class="text">
+          Si dice que no se pudo conectar, revisa que MySQL esté corriendo y que
+          el .env tenga los datos correctos. El README explica cómo crear la base.
+        </p>
+        <a class="btn btn--primary btn--lg" href="<%= inicioDeRol %>">Volver a mi inicio</a>
+      </div>
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>

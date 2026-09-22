@@ -1,0 +1,93 @@
+<%#
+    De docs/screens/acceso-compartido.html (figura 8.1b).
+    Cambio: la lista sale de usuario JOIN credencial y cada renglon entra.
+    El emparejamiento por QR y Bluetooth esta SIMULADO.
+%>
+<%- include('/parcial/arriba', { titulo: 'Equipo compartido', id: 'acceso-compartido', sinMenu: true }) %>
+
+<main class="centered">
+
+    <div class="centered__head">
+      <p class="centered__title">¿Quién va a capturar?</p>
+      <p class="centered__sub">Este equipo lo usa todo el turno, así que cada quien entra con su propia credencial: la del teléfono o la llave física que trae consigo.</p>
+    </div>
+
+    <div class="centered__card centered__card--wide cols-2">
+
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">Personal con credencial en este equipo</h2>
+          <span class="hint mono"><%= personal.length %></span>
+        </div>
+        <div class="card__body">
+          <div class="list">
+            <% personal.forEach(function (p) { %>
+              <form method="post" action="/acceso">
+                <input type="hidden" name="usuario_id" value="<%= p.id %>">
+                <button type="submit" class="list__row list__row--person">
+                  <span class="avatar"><%- include('/parcial/icono', { icono: 'usuario' }) %></span>
+                  <span class="grow person">
+                    <span class="person__name"><%= p.nombre %></span>
+                    <span class="person__meta"><%= p.no_empleado %> · <%= p.cargo %> · credencial registrada</span>
+                  </span>
+                  <%- include('/parcial/icono', { icono: 'flecha', tam: 'sm' }) %>
+                </button>
+              </form>
+            <% }); %>
+            <a class="list__row list__row--action" href="/registro">
+              <%- include('/parcial/icono', { icono: 'mas', tam: 'sm' }) %>
+              <span class="grow">No aparezco: registrar mi credencial</span>
+            </a>
+          </div>
+          <p class="hint">El equipo sólo recuerda qué llave corresponde a quién. No guarda datos personales.</p>
+        </div>
+      </section>
+
+      <section class="card card--emphasis">
+        <div class="card__head">
+          <h2 class="card__title">Verifica que eres tú</h2>
+          <span class="hint mono">RF-01</span>
+        </div>
+        <div class="card__body">
+          <p class="text">Elige tu nombre en la lista de la izquierda. En el sistema real, la computadora muestra este código y tu teléfono lo escanea para firmar desde allá.</p>
+
+          <%- include('/parcial/qr') %>
+
+          <p class="note"><strong>Tu credencial vive en tu teléfono, no en esta computadora.</strong> El código de arriba sirve para que el teléfono firme desde allá.</p>
+
+          <ol class="timeline">
+            <li class="timeline__row">
+              <span class="step__n">1</span>
+              <span class="grow">Escanea el código con la cámara de tu teléfono</span>
+            </li>
+            <li class="timeline__row">
+              <span class="step__n">2</span>
+              <span class="grow">Confirma en tu teléfono con tu huella o el PIN del propio teléfono</span>
+            </li>
+            <li class="timeline__row">
+              <span class="step__n">3</span>
+              <span class="grow">Tu teléfono firma y esta computadora te deja entrar</span>
+            </li>
+          </ol>
+
+          <p class="note">Ese permiso se queda en tu aparato: la huella nunca llega aquí ni se guarda en ningún lado. Los dos aparatos comprueban por Bluetooth que están en el mismo lugar, así que nadie puede hacerlo desde fuera de la estación.</p>
+
+          <p class="marca-simulado">Simulado · el emparejamiento por QR y Bluetooth no se implementó</p>
+
+          <p class="note note--flex">
+            <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 22 20H2L12 3.5Z"/><path d="M12 10v4.5"/><path d="M12 17.5h.01"/></svg>
+            <span><strong>En un equipo compartido no se usa el PIN de la computadora.</strong> Ese PIN lo conoce todo el turno y no distinguiría quién firma el parte.</span>
+          </p>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer class="pagefoot">
+    <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    La sesión se cierra sola al terminar el turno
+  </footer>
+
+<%- include('/parcial/abajo') %>

@@ -1,0 +1,134 @@
+<%#
+    PANTALLA NUEVA. Es una de las dos cosas que entraron por la entrevista
+    (N7): el resguardo de 10 anios. Arriba lo accionable, los resguardos ya
+    vencidos. Pedir la destruccion a sindicatura queda fuera del sistema;
+    aqui solo se registra el oficio, y por eso no hay boton de destruir.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title">Archivo</h1>
+        <p class="pagehead__sub"><%= total %> parte<%= total === 1 ? '' : 's' %> sellado<%= total === 1 ? '' : 's' %> en resguardo</p>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <%# Lo accionable: resguardos vencidos%>
+      <section class="card <%= vencidos.length ? 'card--emphasis' : '' %>">
+        <div class="card__head">
+          <h2 class="card__title">Resguardo vencido</h2>
+          <span class="hint mono"><%= vencidos.length %></span>
+        </div>
+        <div class="card__body">
+          <% if (!vencidos.length) { %>
+            <p class="sin-nada">Ningún parte cumplió todavía sus diez años.</p>
+          <% } else { %>
+            <p class="aviso aviso--alerta">
+              <%- include('/parcial/icono', { icono: 'alerta', tam: 'sm' }) %>
+              <span>
+                Estos partes ya cumplieron los diez años de resguardo. Para
+                destruirlos hace falta la autorización de sindicatura, que se
+                tramita fuera del sistema; aquí sólo se registra el oficio.
+              </span>
+            </p>
+
+            <div class="table-wrap tabla-compacta">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Folio</th>
+                    <th>Servicio</th>
+                    <th>Venció</th>
+                    <th>Documento</th>
+                    <th>Autorización de sindicatura</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% vencidos.forEach(function (a) { %>
+                    <tr>
+                      <td class="num"><%= a.folio %></td>
+                      <td>
+                        <%= f.texto(a.tipo_servicio) %>
+                        <span class="hint"><%= f.fecha(a.fecha) %> · <%= f.texto(a.lugar_servicio) %></span>
+                      </td>
+                      <td class="num vencido"><%= f.fecha(a.resguardo_hasta) %></td>
+                      <td>
+                        <a class="card__link" href="/direccion/partes/<%= a.parte_id %>/sellado">Ver sellado</a>
+                        <span class="hash"><%= a.hash_sha256.slice(0, 16) %>…</span>
+                      </td>
+                      <td>
+                        <% if (a.autorizacion_destruccion) { %>
+                          <span class="badge">
+                            <%- include('/parcial/icono', { icono: 'palomita', tam: 'xs' }) %>
+                            <%= a.autorizacion_destruccion %>
+                          </span>
+                        <% } else { %>
+                          <form class="fila-botones" method="post" action="/direccion/archivo/<%= a.id %>">
+                            <input class="control crece" type="text" name="autorizacion_destruccion"
+                                   placeholder="No. de oficio" aria-label="No. de oficio de sindicatura para <%= a.folio %>">
+                            <button type="submit" class="btn btn--outline btn--sm">Registrar</button>
+                          </form>
+                        <% } %>
+                      </td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } %>
+        </div>
+      </section>
+
+      <%# Lo que sigue en resguardo%>
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">En resguardo</h2>
+          <span class="hint mono">los <%= vigentes.length %> que vencen primero</span>
+        </div>
+        <div class="card__body">
+          <% if (!vigentes.length) { %>
+            <p class="sin-nada">Todavía no hay partes sellados.</p>
+          <% } else { %>
+            <div class="table-wrap tabla-compacta">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Folio</th>
+                    <th>Servicio</th>
+                    <th>Archivado</th>
+                    <th>Resguardo hasta</th>
+                    <th>Hash SHA-256</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% vigentes.forEach(function (a) { %>
+                    <tr>
+                      <td class="num">
+                        <a href="/direccion/partes/<%= a.parte_id %>"><%= a.folio %></a>
+                      </td>
+                      <td><%= f.texto(a.tipo_servicio) %></td>
+                      <td class="num"><%= f.fecha(a.archivado_en) %></td>
+                      <td class="num"><%= f.fecha(a.resguardo_hasta) %></td>
+                      <td><span class="hash"><%= a.hash_sha256 %></span></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } %>
+          <p class="hint">
+            El resguardo se fija al validar: fecha del servicio más diez años.
+            El hash se calcula sobre el documento sellado, así que sirve para
+            comprobar después que nadie lo cambió.
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>

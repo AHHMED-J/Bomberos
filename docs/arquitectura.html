@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arquitectura · Parte Digital · Bomberos de Ensenada</title>
+<meta name="description" content="Arquitectura de la información del parte digital para el H. Cuerpo de Bomberos de Ensenada: necesidades, sitemap, base de datos, task flows, wireframes anotados y matriz diagnóstica.">
+<meta property="og:title" content="Arquitectura · Parte Digital · Bomberos de Ensenada">
+<meta property="og:description" content="Fases 0 a 5 de la arquitectura de la información del parte digital.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 66 74'><path d='M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z' fill='none' stroke='%23a8362b' stroke-width='7'/></svg>">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="css/tokens.css?v=20260922d">
+<link rel="stylesheet" href="css/base.css?v=20260922d">
+<link rel="stylesheet" href="css/site.css?v=20260922d">
+<link rel="stylesheet" href="css/arquitectura.css?v=20260922d">
+</head>
+<body>
+
+<nav class="sitenav">
+  <a class="sitenav__brand" href="index.html">
+    <svg class="sitenav__mark" viewBox="0 0 66 74" aria-hidden="true">
+      <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+      <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+    </svg>
+    <span class="sitenav__name">Parte Digital</span>
+  </a>
+  <div class="sitenav__links">
+    <a class="sitenav__link" href="index.html">Proyecto</a>
+    <a class="sitenav__link" href="pantallas.html">Pantallas</a>
+    <a class="sitenav__link" href="investigacion.html">Investigación</a>
+    <a class="sitenav__link" aria-current="page" href="arquitectura.html">Arquitectura</a>
+    <a class="sitenav__link" href="avance-proyecto-1.docx">
+      <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>
+      Documento
+    </a>
+    <a class="sitenav__link" href="https://github.com/AHHMED-J/Bomberos">Repositorio</a>
+  </div>
+</nav>
+
+<div class="site">
+
+  <header class="hero">
+    <p class="hero__eyebrow">UABC · FIAD · Arquitectura de la información</p>
+    <h1>Cómo se organiza la información del parte digital</h1>
+    <p class="hero__dek">Esta página resume el documento de arquitectura de la información: qué necesidades resuelve, cómo se estructura el sistema en pantallas, rutas y tablas, cómo se mueve cada usuario por él y qué ve primero en cada pantalla. Se construyó con la encuesta al personal, la entrevista al experto y el formato en papel que se usa hoy.</p>
+    <div class="hero__actions">
+      <a class="action action--primary" href="arquitectura-informacion.pdf">
+        <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>
+        Descargar el documento (PDF)
+      </a>
+      <a class="action action--ghost" href="arquitectura-fuentes-diagramas.zip">
+        <svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>
+        Fuentes editables de los diagramas
+      </a>
+    </div>
+    <dl class="hero__meta">
+      <div><dt>Entrega</dt><dd>Examen 1 · Arquitectura de la Información (1.2)</dd></div>
+      <div><dt>Fuentes de campo</dt><dd>Encuesta (4 respuestas), entrevista a experto y formato en papel</dd></div>
+      <div><dt>Estado</dt><dd>Fases 0 a 5 listas · prototipo navegable en construcción</dd></div>
+    </dl>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <p>Fase 0 · Cimientos</p>
+      <h2>Qué necesidades resuelve la arquitectura</h2>
+    </div>
+    <p class="ai-lead">Las obvias son las que el personal dijo directamente. Las ocultas nadie las pidió, pero salen de cómo el experto describió su trabajo en la <a href="investigacion.html">entrevista</a>.</p>
+    <div class="rf-table-wrap">
+      <table class="rf-table ai-table">
+        <thead><tr><th>#</th><th>Necesidad</th><th>Fuente</th></tr></thead>
+        <tbody>
+          <tr><td>N1</td><td>Llenar el parte en menos tiempo: hoy tarda desde 1–5 hasta más de 20 minutos.</td><td>Encuesta</td></tr>
+          <tr><td>N2</td><td>Que el parte no se pierda ni se dañe: a 2 de 4 ya les pasó.</td><td>Encuesta</td></tr>
+          <tr><td>N3</td><td>Usarlo como app en el celular o en una tablet.</td><td>Encuesta y comentario del personal</td></tr>
+          <tr><td>N4</td><td>Que la descripción de los hechos cueste menos: los 4 la marcaron como lo más tedioso.</td><td>Encuesta</td></tr>
+          <tr><td>N5</td><td>Letras grandes e íconos: buena parte del personal operativo son adultos mayores, por eso el texto ya subió de 14.5 a 24 px.</td><td>Encuesta e <a href="investigacion.html">investigación</a></td></tr>
+          <tr><td>N6</td><td>Entregar sin llevar el papel a la Dirección.</td><td>Entrevista</td></tr>
+          <tr><td>N7</td><td>Cumplir el resguardo obligatorio de 10 años sin acumular papel en las estaciones.</td><td>Entrevista</td></tr>
+          <tr><td>N8</td><td>Que el parte cite su fundamento normativo, para que tenga valor ante la fiscalía.</td><td>Entrevista</td></tr>
+          <tr><td>O1</td><td>Que lo que ya mandan por WhatsApp cuente como el registro oficial, sin transcribirlo después. <span class="ai-tag">Oculta</span></td><td>Entrevista</td></tr>
+          <tr><td>O2</td><td>Conservar un respaldo propio de la estación por si les restringen el acceso al sistema. <span class="ai-tag">Oculta</span></td><td>Entrevista</td></tr>
+          <tr><td>O3</td><td>Ligar el parte con el número del C-5 y el NUC de fiscalía. <span class="ai-tag">Oculta</span></td><td>Entrevista</td></tr>
+          <tr><td>O4</td><td>Que revise quien corresponde por división, no un solo jefe de turno. <span class="ai-tag">Oculta</span></td><td>Entrevista</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="findings">
+      <article class="finding">
+        <p class="finding__stat">Mensajería</p>
+        <h3>Enviar como un mensaje</h3>
+        <p>Del WhatsApp se toma la captura rápida de foto y texto, el envío que espera a que regrese la señal y las marcas de enviado. El personal ya lo usa para reportar, así que la app se aprende más rápido.</p>
+      </article>
+      <article class="finding">
+        <p class="finding__stat">Paquetería</p>
+        <h3>Rastrear como una guía</h3>
+        <p>De los servicios de paquetería se toma el folio único y la línea de estados con comprobante. El parte cambia de manos (bombero, revisor, Dirección) igual que un paquete.</p>
+      </article>
+      <article class="finding">
+        <p class="finding__stat">Ambulancias</p>
+        <h3>Llenar como el formato oficial</h3>
+        <p>Del registro electrónico de atención prehospitalaria se toma el formulario por secciones que calca el formato en papel y la firma del responsable al entregar.</p>
+      </article>
+    </div>
+
+    <div class="columns">
+      <div>
+        <p><strong>Qué entra en esta versión:</strong> el "Reporte de salida de incidente" completo, desde que se abre hasta que la Dirección lo consulta; la revisión por el mando de cada división; la exportación en PDF como respaldo de la estación; el fundamento normativo que cita cada parte; y el archivo de largo plazo, donde cada parte validado se sella en PDF y se guarda los 10 años de resguardo.</p>
+      </div>
+      <div>
+        <p><strong>Qué queda fuera:</strong> la bitácora, las notas, la revisión mecánica, el FRAP, la conexión directa con el C-5, las estadísticas y el trámite de destrucción ante sindicatura (el sistema sólo registra la autorización).</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>Fase 1 · Estructura</p>
+      <h2>Sitemap, base de datos y rutas</h2>
+    </div>
+    <p class="ai-lead">Frente a las <a href="pantallas.html">pantallas</a> del avance hay tres cambios:</p>
+    <ul class="ai-lead">
+      <li>La captura pasa de tres pasos a cuatro, siguiendo las secciones de la hoja de papel.</li>
+      <li>El jefe de turno pasa a ser un revisor por división.</li>
+      <li>Aparece una pantalla de Inicio con lo pendiente de cada bombero.</li>
+    </ul>
+
+    <figure class="ai-fig">
+      <a class="ai-fig__frame" href="img/arquitectura/fig1_sitemap.png" aria-label="Abrir la figura en tamaño completo"><img src="img/arquitectura/fig1_sitemap.png" alt="Sitemap por rol: acceso común; el bombero pasa de Inicio a los cuatro pasos del parte y al envío confirmado; el revisor va de su bandeja a revisar, validar o devolver; la Dirección consulta, ve el detalle, exporta, administra el archivo y da de alta personal." loading="lazy"></a>
+      <figcaption>Figura 1. Sitemap organizado por rol, con la ruta de cada pantalla.</figcaption>
+    </figure>
+
+    <figure class="ai-fig ai-fig--narrow">
+      <a class="ai-fig__frame" href="img/arquitectura/fig2_erd.png" aria-label="Abrir la figura en tamaño completo"><img src="img/arquitectura/fig2_erd.png" alt="Diagrama entidad-relación de 17 tablas en MySQL con la tabla parte al centro, relacionada con unidad, estación, tipo de servicio, usuario, personas involucradas, personal, apoyos, evidencia, croquis, firmas y revisiones." loading="lazy"></a>
+      <figcaption>Figura 2. Diagrama entidad-relación en MySQL (17 tablas). Incluye el fundamento normativo y el archivo de 10 años; la tabla credencial guarda sólo la llave pública, nunca la huella.</figcaption>
+    </figure>
+
+    <div class="rf-table-wrap">
+      <table class="rf-table ai-table">
+        <thead><tr><th>Ruta</th><th>Pantalla</th><th>RF</th></tr></thead>
+        <tbody>
+          <tr><td>/acceso</td><td>Acceso con huella o PIN</td><td>RF-01</td></tr>
+          <tr><td>/partes</td><td>Inicio · Mis partes</td><td>RF-03, RF-09</td></tr>
+          <tr><td>/partes/:id/datos</td><td>1 Datos del servicio</td><td>RF-02, RF-03</td></tr>
+          <tr><td>/partes/:id/personas</td><td>2 Personas y apoyos</td><td>RF-02</td></tr>
+          <tr><td>/partes/:id/croquis</td><td>3 Descripción y croquis</td><td>RF-04 a RF-06</td></tr>
+          <tr><td>/partes/:id/firma</td><td>4 Cierre y firma</td><td>RF-07</td></tr>
+          <tr><td>/revision</td><td>Bandeja del revisor</td><td>RF-08</td></tr>
+          <tr><td>/revision/:id</td><td>Revisar parte</td><td>RF-09</td></tr>
+          <tr><td>/direccion/partes</td><td>Consulta, filtros y exportación</td><td>RF-10</td></tr>
+          <tr><td>/direccion/archivo</td><td>Archivo · resguardo de 10 años</td><td>RF-10</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ai-lead">Cada filtro tiene su índice: estado y fecha para la bandeja, autor y estado para la pantalla de Inicio, número del C-5 y NUC para búsquedas exactas, fecha de vencimiento del resguardo para la pantalla de Archivo, y un índice de texto completo para el buscador. La lista completa de rutas, consultas e índices está en el documento.</p>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>Fase 2 · Task flows</p>
+      <h2>Cómo se mueve cada usuario, incluso cuando algo sale mal</h2>
+    </div>
+    <p class="ai-lead">La ruta feliz va en rojo, las entradas por otro lado (notificaciones, links, la computadora de la estación) en azul punteado y los comportamientos erráticos en naranja. Salen de los diagramas de actividad del avance.</p>
+    <figure class="ai-fig">
+      <a class="ai-fig__frame" href="img/arquitectura/fig3_flujo1.png" aria-label="Abrir la figura en tamaño completo"><img src="img/arquitectura/fig3_flujo1.png" alt="Task flow para levantar el reporte de salida en tres pasos, con autoguardado y respuestas a pérdida de señal, salida de la app y entrada directa a la firma." loading="lazy"></a>
+      <figcaption>Figura 3. Levantar el reporte de salida. El parte existe desde que se abre, así que perder la señal o salir de la app no borra nada.</figcaption>
+    </figure>
+    <div class="ai-figs">
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/arquitectura/fig4_flujo2.png" aria-label="Abrir la figura en tamaño completo"><img src="img/arquitectura/fig4_flujo2.png" alt="Task flow del croquis con IA: si la API responde se dibuja y se corrige; si no, se reintenta, se dibuja a mano o se deja para después." loading="lazy"></a>
+        <figcaption>Figura 4. Croquis con IA. Si la API falla, el parte se guarda igual.</figcaption>
+      </figure>
+      <figure class="ai-fig">
+        <a class="ai-fig__frame" href="img/arquitectura/fig5_flujo3.png" aria-label="Abrir la figura en tamaño completo"><img src="img/arquitectura/fig5_flujo3.png" alt="Task flow de firma, envío y validación: el revisor de la división valida o devuelve con nota, y la notificación lleva al bombero directo a la corrección." loading="lazy"></a>
+        <figcaption>Figura 5. Firmar, enviar y validar. El parte devuelto viaja con su nota; el validado se sella en PDF y se archiva 10 años.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>Fase 3 · Entrega</p>
+      <h2>Qué se ve primero en cada pantalla</h2>
+    </div>
+    <p class="ai-lead">La <strong>Johnson Box</strong> es un resumen corto arriba de la pantalla de entrada que deja saltar directo a lo pendiente. La <strong>pirámide invertida</strong> pone primero el qué, cuándo, dónde y quién, luego los detalles y al final lo que es agradable de saber. Los folios y horas de los wireframes son datos de ejemplo.</p>
+    <figure class="ai-fig">
+      <a class="ai-fig__frame" href="img/arquitectura/fig6_wire_inicio.png" aria-label="Abrir la figura en tamaño completo"><img src="img/arquitectura/fig6_wire_inicio.png" alt="Wireframe anotado de Inicio · Mis partes: Johnson Box con un parte devuelto y un borrador, botón para levantar reporte, partes recientes y conteo del mes, con sus capas de interfaz, task flow y base de datos." loading="lazy"></a>
+      <figcaption>Figura 6. Inicio · Mis partes (bombero): la Johnson Box muestra primero lo devuelto y después los borradores.</figcaption>
+    </figure>
+    <figure class="ai-fig">
+      <a class="ai-fig__frame" href="img/arquitectura/fig7_wire_revision.png" aria-label="Abrir la figura en tamaño completo"><img src="img/arquitectura/fig7_wire_revision.png" alt="Wireframe anotado de Revisar parte: nivel 1 con tipo, número del C-5, fecha, horas, lugar y unidad; aviso de campos vacíos; botones validar y devolver; detalles y evidencia abajo." loading="lazy"></a>
+      <figcaption>Figura 7. Revisar parte (revisor): el nivel 1 sigue el mismo orden que la parte de arriba de la hoja de papel.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>Fase 4 · Matriz diagnóstica</p>
+      <h2>Qué cambió del diseño anterior</h2>
+    </div>
+    <div class="rf-table-wrap">
+      <table class="rf-table ai-table">
+        <thead><tr><th>Dimensión</th><th>Antes (lógica del sistema)</th><th>Ahora (lógica del usuario)</th></tr></thead>
+        <tbody>
+          <tr><td>Prioridad</td><td>Campos que el equipo supuso; faltaban el número del C-5, la hora de regreso, la zona y el despacho.</td><td>El orden de la hoja de papel que ya conocen; en la revisión, lo crítico y los faltantes arriba.</td></tr>
+          <tr><td>Navegación</td><td>Menú por entidad y opciones sin pantalla.</td><td>Menú por tarea y rol; la Johnson Box lleva directo a lo pendiente.</td></tr>
+          <tr><td>Estructura de datos</td><td>Tres pasos y un solo jefe de turno que revisa todo.</td><td>Cuatro pasos que calcan el formato, revisión por división, fundamento normativo y archivo de 10 años.</td></tr>
+          <tr><td>Medida de éxito</td><td>Que el parte quede guardado y la consulta responda rápido.</td><td>Minutos para llenar el parte, partes que ya no pasan por WhatsApp, devueltos por datos faltantes y cero partes perdidos.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>Fase 5 · Síntesis</p>
+      <h2>Experience stack</h2>
+    </div>
+    <figure class="ai-fig">
+      <a class="ai-fig__frame" href="img/arquitectura/fig8_stack.png" aria-label="Abrir la figura en tamaño completo"><img src="img/arquitectura/fig8_stack.png" alt="Experience stack en tres capas: entrega (Johnson Box y pirámide invertida), estructura (categorías, navegación, metadatos y task flows) y cimientos (productos análogos y la necesidad oculta que gobierna el diseño)." loading="lazy"></a>
+      <figcaption>Figura 8. Las tres capas del proyecto en una sola lámina.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <p>Implementación mínima</p>
+      <h2>Prototipo navegable</h2>
+    </div>
+    <div class="ai-pending">
+      <p><span class="ai-tag">En construcción</span></p>
+      <p>El prototipo vive en la carpeta <strong>app/</strong> del repositorio, separado de esta maqueta. Va a tener las rutas del sitemap, el esquema de base de datos con sus índices y claves foráneas, y un flujo completo: levantar el parte, firmarlo, enviarlo y validarlo o devolverlo.</p>
+      <p>Cuando esté listo, aquí se agregan el enlace, las rutas activas y las capturas del flujo recorrido.</p>
+    </div>
+  </section>
+
+  <footer class="sitefoot">
+    <p>Tarea "Arquitectura de la Información de tu proyecto" (1.2) de Tecnologías Emergentes para el Desarrollo de Soluciones. El documento completo, con tablas de rutas, consultas, índices y anexos, está en el PDF de arriba.</p>
+    <p>Universidad Autónoma de Baja California · Facultad de Ingeniería, Arquitectura y Diseño · <a href="https://github.com/AHHMED-J/Bomberos">Código del sitio</a></p>
+  </footer>
+
+</div>
+
+</body>
+</html>

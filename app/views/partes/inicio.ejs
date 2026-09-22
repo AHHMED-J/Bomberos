@@ -1,0 +1,120 @@
+<%#
+    PANTALLA NUEVA (Figura 6). En los mockups "Mis partes" estaba en el
+    menu pero no tenia pantalla.
+    Piramide invertida: Johnson Box con lo pendiente (devueltos primero,
+    borradores despues), el boton principal, los partes recientes y al
+    final el conteo del mes.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title">Mis partes</h1>
+        <p class="pagehead__sub mono"><%= usuario.nombre %> · <%= usuario.estacion || 'Sin estación' %><%= usuario.turno ? ' · turno ' + usuario.turno : '' %></p>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <%# Johnson Box: lo unico pendiente hoy. %>
+      <% const devueltos = pendientes.filter(function (p) { return p.estado === 'devuelto'; }); %>
+      <% const borradores = pendientes.filter(function (p) { return p.estado === 'borrador'; }); %>
+
+      <% if (pendientes.length) { %>
+        <section class="johnson <%= devueltos.length ? '' : 'johnson--limpia' %>">
+          <p class="johnson__titulo">
+            <% if (devueltos.length) { %>
+              Tienes <%= devueltos.length %> parte<%= devueltos.length === 1 ? '' : 's' %> devuelto<%= devueltos.length === 1 ? '' : 's' %>
+            <% } else { %>
+              Tienes <%= borradores.length %> borrador<%= borradores.length === 1 ? '' : 'es' %> sin enviar
+            <% } %>
+          </p>
+          <p class="hint">Esto es lo que tienes que atender hoy. Lo demás ya salió de tus manos.</p>
+
+          <div class="johnson__lista">
+            <% devueltos.forEach(function (p) { %>
+              <a class="johnson__fila" href="/partes/<%= p.id %>/<%= p.paso || 'datos' %>">
+                <span class="johnson__enc">
+                  <span class="johnson__folio"><%= p.folio %></span>
+                  <span class="status status--returned"><span class="status__dot"></span>Devuelto</span>
+                </span>
+                <span class="johnson__que"><%= f.texto(p.tipo_servicio, 'Sin tipo de servicio') %></span>
+                <span class="johnson__nota"><%= f.texto(p.nota, 'Sin nota de corrección') %></span>
+                <span class="johnson__salto">
+                  Corregir
+                  <%- include('/parcial/icono', { icono: 'flecha', tam: 'xs' }) %>
+                </span>
+              </a>
+            <% }); %>
+
+            <% borradores.forEach(function (p) { %>
+              <a class="johnson__fila" href="/partes/<%= p.id %>/datos">
+                <span class="johnson__enc">
+                  <span class="johnson__folio"><%= p.folio %></span>
+                  <span class="status status--pending"><span class="status__dot"></span>Borrador</span>
+                </span>
+                <span class="johnson__que"><%= f.texto(p.tipo_servicio, 'Sin tipo de servicio') %> · <%= f.texto(p.lugar_servicio, 'Sin lugar') %></span>
+                <span class="johnson__salto">
+                  Continuar
+                  <%- include('/parcial/icono', { icono: 'flecha', tam: 'xs' }) %>
+                </span>
+              </a>
+            <% }); %>
+          </div>
+        </section>
+      <% } else { %>
+        <section class="johnson johnson--limpia">
+          <p class="johnson__titulo">No tienes nada pendiente</p>
+          <p class="hint">Ningún parte devuelto y ningún borrador a medias.</p>
+        </section>
+      <% } %>
+
+      <a class="btn btn--primary btn--xl btn--block" href="/partes/nuevo">
+        <%- include('/parcial/icono', { icono: 'mas', tam: 'md' }) %>
+        Levantar reporte de salida
+      </a>
+
+      <%# Nivel 2 %>
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">Mis partes recientes</h2>
+          <span class="hint mono"><%= recientes.length %></span>
+        </div>
+        <div class="card__body">
+          <% if (!recientes.length) { %>
+            <p class="sin-nada">Todavía no has levantado ningún parte.</p>
+          <% } else { %>
+            <div class="list">
+              <% recientes.forEach(function (p) { %>
+                <% const e = f.estado(p.estado); %>
+                <a class="list__row" href="<%= p.estado === 'borrador' || p.estado === 'devuelto' ? '/partes/' + p.id + '/datos' : '/partes/' + p.id + '/enviado' %>">
+                  <span class="grow person">
+                    <span class="person__name"><%= f.texto(p.tipo_servicio, 'Sin tipo') %> · <%= f.texto(p.lugar_servicio, 'Sin lugar') %></span>
+                    <span class="person__meta">
+                      <%= p.folio %> · <%= f.fechaCorta(p.fecha) %> <%= f.hora(p.hora_salida) %>
+                    </span>
+                  </span>
+                  <span class="status <%= e.clase %>"><span class="status__dot"></span><%= e.texto %></span>
+                </a>
+              <% }); %>
+            </div>
+          <% } %>
+        </div>
+        <div class="card__foot">
+          <a class="card__link grow" href="/consulta">Ver todos en Consulta</a>
+        </div>
+      </section>
+
+      <%# Nivel 3: lo agradable de saber %>
+      <p class="conteo-mes">
+        Este mes: <%= totalMes %> parte<%= totalMes === 1 ? '' : 's' %><%
+        conteo.forEach(function (c) { %> · <%= c.n %> <%= f.estado(c.estado).texto.toLowerCase() %><% });
+        %>
+      </p>
+
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>

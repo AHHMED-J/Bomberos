@@ -1,0 +1,279 @@
+/* ==========================================================================
+   app-ui.css — lo único propio del prototipo.
+
+   Las cinco hojas de la maqueta (tokens, base, components, app y mobile) se
+   sirven tal cual desde docs/css/. Ésta se carga al final y sólo agrega lo
+   que la maqueta no podía tener, porque era una lámina y esto es una app:
+   pantalla completa, campos de formulario de verdad, estados, y las
+   pantallas nuevas (Johnson Box, pirámide invertida, Archivo y Personal).
+
+   Se respetan las convenciones de docs/: todo color y medida sale de las
+   variables --wf-* de tokens.css, y no hay atributos style en el HTML.
+   ========================================================================== */
+
+/* --- De lámina a aplicación ----------------------------------------------- */
+
+body { margin: 0; background: #e8e6e1; font-family: var(--font-sans); }
+
+/* app.css fija .screen en 402x900 porque cada pantalla era una muestra
+   impresa. Aquí ocupa la ventana, centrada en el ancho en que se diseñó. */
+.screen {
+  width: 100%;
+  max-width: 920px;
+  min-height: 100dvh;
+  margin: 0 auto;
+}
+
+@media (min-width: 960px) {
+  .screen { border-left: 1px solid var(--wf-line); border-right: 1px solid var(--wf-line); }
+}
+
+.topbar .brand { text-decoration: none; }
+.topbar__salir { margin-left: 4px; }
+.topbar__user .btn--quiet { color: var(--wf-muted); }
+.sidenav__item--fuera { color: var(--wf-faint); }
+
+/* mobile.css esconde la identidad para ganar ancho; en la app importa saber
+   con qué usuario de prueba se trabaja. */
+@media (min-width: 560px) {
+  .screen .topbar__user .identity { display: flex; }
+}
+
+/* --- Campos de formulario de verdad --------------------------------------- */
+
+/* En la maqueta .control era un div con un span. Aquí son input, select y
+   textarea, con el mismo aspecto. */
+input.control,
+select.control,
+textarea.control {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 13px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+  color: var(--wf-ink);
+  font: inherit;
+  font-size: 23px;
+}
+
+textarea.control { min-height: 150px; padding: 12px 14px; line-height: 1.55; resize: vertical; }
+
+select.control {
+  appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237a756d' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  background-size: 20px 20px;
+}
+
+input.control:focus-visible,
+select.control:focus-visible,
+textarea.control:focus-visible { outline: 2px solid var(--wf-ink); outline-offset: 1px; }
+
+input.control::placeholder,
+textarea.control::placeholder { color: var(--wf-faint); }
+
+/* Radios y casillas grandes: buena parte del personal son adultos mayores. */
+.opciones { display: flex; flex-wrap: wrap; gap: 10px; }
+.opcion {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+  font-size: 23px;
+  cursor: pointer;
+}
+.opcion input { width: 22px; height: 22px; accent-color: var(--wf-ink); }
+.opcion:has(input:checked) { border-color: var(--wf-ink); background: var(--wf-sunken); }
+
+/* --- Estados que la maqueta no tenía -------------------------------------- */
+
+/* Campo obligatorio vacío: lo marca la revisión automática y el regreso de
+   una devolución. */
+.field--falta .control,
+.field--falta input.control,
+.field--falta select.control,
+.field--falta textarea.control { border-color: var(--wf-accent); }
+.field--falta .label { color: var(--wf-accent-ink); }
+
+.aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 15px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+  font-size: 22px;
+  line-height: 1.45;
+}
+.aviso .icon { flex-shrink: 0; margin-top: 2px; }
+.aviso--alerta { border-color: var(--wf-accent); background: var(--wf-accent-bg); color: var(--wf-accent-ink); }
+.aviso--alerta .icon { color: var(--wf-accent); }
+.aviso--ok { border-color: var(--wf-ink); }
+
+.autoguardado {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: 400 19px/1.2 var(--font-mono);
+  color: var(--wf-muted);
+}
+
+/* Lo que está simulado va marcado a la vista, no sólo en el código. */
+.marca-simulado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border: 1px dashed var(--wf-faint);
+  border-radius: var(--wf-radius-sm);
+  font: 400 17px/1.4 var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--wf-muted);
+}
+
+.fuera-version { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; max-width: 44ch; }
+
+/* --- Johnson Box de Inicio (Figura 6) ------------------------------------- */
+
+.johnson {
+  padding: 18px var(--wf-pad-x);
+  border: 2px solid var(--wf-accent);
+  border-radius: var(--wf-radius);
+  background: var(--wf-accent-bg);
+}
+.johnson--limpia { border-color: var(--wf-line); background: var(--wf-surface); }
+.johnson__titulo {
+  margin: 0 0 4px;
+  font: 700 25px/1.2 var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--wf-accent-ink);
+}
+.johnson--limpia .johnson__titulo { color: var(--wf-ink); }
+.johnson__lista { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+.johnson__fila {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+}
+.johnson__fila:hover { border-color: var(--wf-ink); }
+.johnson__enc { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.johnson__folio { font: 700 21px/1.2 var(--font-mono); }
+.johnson__que { font-size: 24px; font-weight: 600; }
+.johnson__nota { font-size: 21px; color: var(--wf-accent-ink); }
+.johnson__salto {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--wf-accent-ink);
+}
+.johnson--limpia .johnson__salto { color: var(--wf-ink); }
+
+.conteo-mes {
+  padding: 13px 15px;
+  border: 1px dashed var(--wf-line);
+  border-radius: var(--wf-radius);
+  font: 400 21px/1.35 var(--font-mono);
+  color: var(--wf-muted);
+}
+
+/* --- Pirámide invertida de Revisar parte (Figura 7) ----------------------- */
+
+.piramide { display: flex; flex-direction: column; gap: 18px; }
+
+.nivel1 {
+  padding: 16px 18px;
+  border: 2px solid var(--wf-ink);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+}
+.nivel1__que { margin: 0; font: 700 30px/1.15 var(--font-display); letter-spacing: 0.04em; text-transform: uppercase; }
+.nivel1__c5 { font: 400 22px/1.2 var(--font-mono); color: var(--wf-muted); }
+.nivel1__linea { margin: 6px 0 0; font-size: 23px; line-height: 1.45; }
+
+.nivel { display: flex; flex-direction: column; gap: 14px; }
+.nivel__rotulo {
+  font: 400 19px/1.2 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wf-faint);
+}
+
+.faltantes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+/* Los dos botones quedan a la vista, sin bajar hasta el final. */
+.decision {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-sunken);
+}
+.decision__botones { display: flex; gap: 12px; }
+.decision__botones .btn { flex: 1; }
+/* Cuando otro revisor ya decidió: sin botones. */
+.decision--cerrada { border-style: dashed; background: var(--wf-surface); }
+
+/* --- Archivo, Personal y el selector de usuario --------------------------- */
+
+.tabla-compacta .table { font-size: 21px; }
+.tabla-compacta .table th,
+.tabla-compacta .table td { padding: 11px 13px; }
+
+/* En la maqueta la flecha de la última columna era un adorno. Aquí abre el
+   parte, así que se ve como algo en lo que se puede hacer clic, y el
+   renglón entero se marca al pasar por encima. */
+.table .go a { display: inline-flex; color: var(--wf-ink); }
+.table tbody tr:hover { background: var(--wf-sunken); }
+
+.vencido { color: var(--wf-accent); font-weight: 600; }
+.hash { font: 400 17px/1.3 var(--font-mono); color: var(--wf-muted); word-break: break-all; }
+
+/* El código de alta, en grande para dictarlo. */
+.codigo-grande { font: 700 34px/1.2 var(--font-mono); letter-spacing: 0.22em; }
+
+.usuarios-prueba { display: flex; flex-direction: column; gap: 10px; }
+.usuarios-prueba button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 62px;
+  padding: 10px 16px;
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  background: var(--wf-surface);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.usuarios-prueba button:hover { border-color: var(--wf-ink); }
+.usuarios-prueba .person__name { font-size: 23px; font-weight: 600; }
+.usuarios-prueba .person__meta { font: 400 19px/1.3 var(--font-mono); color: var(--wf-muted); }
+
+/* --- Utilidades ----------------------------------------------------------- */
+
+.parte-row { width: 100%; text-align: left; background: none; border: 0; font: inherit; color: inherit; cursor: pointer; }
+.fila-botones { display: flex; flex-wrap: wrap; gap: 12px; }
+.crece { flex: 1; min-width: 0; }
+.sin-nada { padding: 34px 20px; text-align: center; color: var(--wf-muted); font-size: 23px; }

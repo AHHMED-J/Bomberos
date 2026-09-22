@@ -1,0 +1,110 @@
+<%#
+    PANTALLA NUEVA. En los mockups "Personal" estaba en el menu sin
+    pantalla. Existe porque de aqui sale el codigo de alta que consume
+    /registro, el unico momento en que una persona da fe de quien es quien.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title">Personal</h1>
+        <p class="pagehead__sub"><%= personal.length %> personas dadas de alta</p>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <% if (codigoNuevo) { %>
+        <section class="card card--emphasis">
+          <div class="card__head">
+            <h2 class="card__title">Código de alta para <%= paraQuien %></h2>
+            <span class="hint mono">un solo uso · 24 horas</span>
+          </div>
+          <div class="card__body">
+            <p class="codigo-grande"><%= codigoNuevo %></p>
+            <p class="aviso aviso--alerta">
+              <%- include('/parcial/icono', { icono: 'alerta', tam: 'sm' }) %>
+              <span>
+                Es la única vez que se ve. En la base sólo queda su SHA-256, así
+                que si se pierde hay que emitir otro. Díctaselo a la persona y
+                que lo escriba en <span class="mono">/registro</span>.
+              </span>
+            </p>
+          </div>
+        </section>
+      <% } %>
+
+      <section class="card">
+        <div class="card__head">
+          <h2 class="card__title">Altas y credenciales</h2>
+          <span class="hint mono">RF-01</span>
+        </div>
+        <div class="card__body">
+          <div class="table-wrap tabla-compacta">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>No. de empleado</th>
+                  <th>Nombre</th>
+                  <th>Rol y cargo</th>
+                  <th>División</th>
+                  <th>Estación</th>
+                  <th>Credencial</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% personal.forEach(function (p) { %>
+                  <tr>
+                    <td class="num"><%= p.no_empleado %></td>
+                    <td><%= p.nombre %></td>
+                    <td>
+                      <%= p.rol %>
+                      <span class="hint"><%= f.texto(p.cargo) %></span>
+                    </td>
+                    <td><%= f.texto(p.division) %></td>
+                    <td>
+                      <%= f.texto(p.estacion) %>
+                      <% if (p.turno) { %><span class="hint">turno <%= p.turno %></span><% } %>
+                    </td>
+                    <td>
+                      <% if (p.credenciales > 0) { %>
+                        <span class="badge">
+                          <%- include('/parcial/icono', { icono: 'palomita', tam: 'xs' }) %>
+                          Registrada
+                        </span>
+                      <% } else if (p.codigos_vivos > 0) { %>
+                        <span class="status status--pending"><span class="status__dot"></span>Código vigente</span>
+                      <% } else { %>
+                        <span class="status status--returned"><span class="status__dot"></span>Sin credencial</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <form method="post" action="/direccion/personal/<%= p.id %>/codigo">
+                        <button type="submit" class="btn btn--outline btn--sm">Emitir código</button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="note note--flex">
+            <%- include('/parcial/icono', { icono: 'aviso', tam: 'sm' }) %>
+            <span>
+              El alta de personas nuevas no está en el prototipo: los usuarios
+              salen de <span class="mono">db/seed.sql</span>. Lo que sí funciona
+              de verdad es emitir el código y consumirlo en
+              <span class="mono">/registro</span>.
+            </span>
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>

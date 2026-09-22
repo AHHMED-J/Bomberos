@@ -1,0 +1,123 @@
+<%#
+    De docs/screens/panel-direccion.html (figura 8.6).
+    Sirve dos rutas con distinto alcance: /direccion/partes y /consulta.
+    Cambio: los filtros son un form GET, asi el filtro queda en la URL.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title"><%= titulo %></h1>
+        <p class="pagehead__sub"><%= alcanceTexto %></p>
+      </div>
+      <% if (esDireccion) { %>
+        <div class="pagehead__actions">
+          <span class="marca-simulado">Exportar PDF y CSV · no implementado</span>
+        </div>
+      <% } %>
+    </div>
+
+    <form class="filters" method="get">
+      <div class="field">
+        <label class="label" for="desde">Desde</label>
+        <input class="control mono" type="date" id="desde" name="desde" value="<%= filtros.desde %>">
+      </div>
+      <div class="field">
+        <label class="label" for="hasta">Hasta</label>
+        <input class="control mono" type="date" id="hasta" name="hasta" value="<%= filtros.hasta %>">
+      </div>
+      <div class="field field--md">
+        <label class="label" for="tipo_servicio_id">Tipo de servicio</label>
+        <select class="control" id="tipo_servicio_id" name="tipo_servicio_id">
+          <option value="">Todos</option>
+          <% tipos.forEach(function (t) { %>
+            <option value="<%= t.id %>" <%= String(filtros.tipo_servicio_id) === String(t.id) ? 'selected' : '' %>>
+              <%= t.nombre %>
+            </option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="field">
+        <label class="label" for="unidad_id">Unidad</label>
+        <select class="control" id="unidad_id" name="unidad_id">
+          <option value="">Todas</option>
+          <% unidades.forEach(function (u) { %>
+            <option value="<%= u.id %>" <%= String(filtros.unidad_id) === String(u.id) ? 'selected' : '' %>>
+              <%= u.clave %>
+            </option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="field">
+        <label class="label" for="estado">Estado</label>
+        <select class="control" id="estado" name="estado">
+          <option value="">Todos</option>
+          <% ['borrador', 'enviado', 'devuelto', 'validado'].forEach(function (e) { %>
+            <option value="<%= e %>" <%= filtros.estado === e ? 'selected' : '' %>><%= f.estado(e).texto %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="field field--grow">
+        <label class="label" for="texto">Buscar</label>
+        <input class="control" type="search" id="texto" name="texto" value="<%= filtros.texto %>"
+               placeholder="Folio, ubicación o lo que dice la descripción">
+      </div>
+      <button type="submit" class="btn btn--primary">Filtrar</button>
+      <a class="btn btn--quiet" href="<%= esDireccion ? '/direccion/partes' : '/consulta' %>">Limpiar</a>
+    </form>
+
+    <div class="content">
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Folio</th>
+              <th>Fecha</th>
+              <th>Tipo de servicio</th>
+              <th>Lugar</th>
+              <th>Unidad</th>
+              <th>Formuló</th>
+              <th>Estado</th>
+              <th class="go"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (!partes.length) { %>
+              <tr><td colspan="8"><p class="sin-nada">Ningún parte con esos filtros.</p></td></tr>
+            <% } %>
+            <% partes.forEach(function (p) { %>
+              <% const e = f.estado(p.estado); %>
+              <tr>
+                <% const abre = esDireccion ? '/direccion/partes/' + p.id : p.enlace; %>
+                <td class="num">
+                  <a class="card__link" href="<%= abre %>"><%= p.folio %></a>
+                </td>
+                <td class="num"><%= f.fecha(p.fecha) %> <%= f.hora(p.hora_salida) %></td>
+                <td><%= f.texto(p.tipo_servicio) %></td>
+                <td><%= f.texto(p.lugar_servicio) %></td>
+                <td><%= f.texto(p.unidad) %></td>
+                <td><%= f.texto(p.elaboro) %></td>
+                <td><span class="status <%= e.clase %>"><span class="status__dot"></span><%= e.texto %></span></td>
+                <td class="go">
+                  <a href="<%= abre %>" aria-label="Abrir <%= p.folio %>">
+                    <%- include('/parcial/icono', { icono: 'flecha', tam: 'sm' }) %>
+                  </a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pager">
+        <span class="hint mono"><%= partes.length %> parte<%= partes.length === 1 ? '' : 's' %></span>
+        <% if (partes.length === 100) { %>
+          <span class="hint">Se muestran los 100 más recientes. Acota con los filtros.</span>
+        <% } %>
+      </div>
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>

@@ -1,0 +1,87 @@
+<%#
+    El armazon de toda pantalla: documento, barra superior y menu por rol.
+    En la maqueta esto se repetia en cada archivo de docs/screens/.
+    Recibe: titulo, id (el del .screen), contexto y sinMenu.
+%>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= titulo %> · Parte Digital</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&family=Courier+Prime:wght@400;700&display=swap">
+<%# Las cinco de la maqueta, servidas desde docs/css/; app-ui.css al final. %>
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="/css/mobile.css">
+<%# app-ui.css es la version de app.css con los tokens de color reemplazados por variables CSS, para que se pueda cambiar el tema en tiempo de ejecucion. %>
+<link rel="stylesheet" href="/css/app-ui.css">
+</head>
+<body>
+
+<div class="screen" id="<%= id %>">
+
+  <header class="topbar">
+    <a class="brand" href="<%= usuario ? inicioDeRol : '/acceso' %>">
+      <svg class="brand__mark" viewBox="0 0 66 74" aria-hidden="true">
+        <path d="M33 3 62 13v26c0 19-12 29-29 33C16 68 4 58 4 39V13L33 3Z"/>
+        <path d="M33 26c6 6 9 10 9 14a9 9 0 0 1-18 0c0-4 3-8 9-14Z"/>
+      </svg>
+      <span class="brand__text">
+        <span class="brand__name">Parte Digital</span>
+        <span class="brand__sub">Bomberos de Ensenada</span>
+      </span>
+    </a>
+    <% if (typeof contexto !== 'undefined' && contexto) { %>
+      <span class="topbar__divider"></span>
+      <span class="topbar__context"><%= contexto %></span>
+    <% } %>
+    <% if (usuario) { %>
+      <div class="topbar__user">
+        <span class="avatar"><%- include('/parcial/icono', { icono: 'usuario' }) %></span>
+        <span class="identity">
+          <span class="identity__name"><%= usuario.nombre %></span>
+          <span class="identity__role"><%= usuario.cargo %><%= usuario.division ? ' · ' + usuario.division : '' %></span>
+        </span>
+        <form class="topbar__salir" method="post" action="/salir">
+          <button type="submit" class="btn btn--quiet btn--sm">
+            <%- include('/parcial/icono', { icono: 'salir', tam: 'sm' }) %>
+            <span>Salir</span>
+          </button>
+        </form>
+      </div>
+    <% } %>
+  </header>
+
+  <div class="app">
+
+    <% if (!(typeof sinMenu !== 'undefined' && sinMenu) && usuario) { %>
+      <nav class="sidenav">
+        <p class="label sidenav__label">Menú</p>
+        <div class="sidenav__menu">
+          <% menu.forEach(function (opcion) { %>
+            <% 
+            // Se ilumina si es la ruta exacta, o si es "Nuevo parte" y estamos dentro de la edición de un reporte (ej. /partes/39/datos)
+            let esRutaActiva = rutaActual === opcion.ruta || (opcion.texto === 'Nuevo parte' && rutaActual.match(/^\/partes\/\d+/)); 
+            %>
+            <a class="sidenav__item"
+              href="<%= opcion.ruta %>"
+              <%= esRutaActiva ? 'aria-current="page"' : '' %>>
+              <%- include('/parcial/icono', { icono: opcion.icono }) %>
+              <span><%= opcion.texto %></span>
+              <% if (opcion.cuenta) { %><span class="sidenav__count"><%= opcion.cuenta %></span><% } %>
+            </a>
+          <% }); %>
+          <%# Estadisticas quedo fuera del alcance, pero sigue en el menu. %>
+          <% if (usuario.rol === 'direccion') { %>
+            <a class="sidenav__item sidenav__item--fuera" href="/estadisticas"
+              <%= rutaActual === '/estadisticas' || rutaActual.startsWith('/estadisticas/') ? 'aria-current="page"' : '' %>>
+              <%- include('/parcial/icono', { icono: 'estadisticas' }) %>
+              <span>Estadísticas</span>
+            </a>
+          <% } %>
+        </div>
+      </nav>
+    <% } %>

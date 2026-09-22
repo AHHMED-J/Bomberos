@@ -1,0 +1,99 @@
+<%#
+    De docs/screens/registro-credencial.html (figura 8.1a).
+    Cambio: el codigo se escribe y se verifica contra codigo_alta. El alta
+    de la credencial esta SIMULADA.
+%>
+<%- include('/parcial/arriba', { titulo: 'Alta de credencial', id: 'registro-credencial', sinMenu: true }) %>
+
+  <main class="centered">
+
+    <div class="centered__head">
+      <p class="centered__title">Registra tu credencial</p>
+      <p class="centered__sub">Este equipo todavía no tiene una credencial tuya. Usa el código de alta que te dio la Dirección.</p>
+    </div>
+
+    <section class="card centered__card">
+      <div class="card__head">
+        <div class="steps">
+          <span class="step <%= duenio ? 'step--done' : '' %>" <%= duenio ? '' : 'aria-current="step"' %>>
+            <span class="step__n"><% if (duenio) { %><%- include('/parcial/icono', { icono: 'palomita', tam: 'xs' }) %><% } else { %>1<% } %></span>Código
+          </span>
+          <span class="steps__bar"></span>
+          <span class="step" <%= duenio ? 'aria-current="step"' : '' %>><span class="step__n">2</span>Identidad</span>
+          <span class="steps__bar"></span>
+          <span class="step"><span class="step__n">3</span>Credencial</span>
+        </div>
+      </div>
+      <div class="card__body">
+
+        <% if (error) { %>
+          <p class="aviso aviso--alerta">
+            <%- include('/parcial/icono', { icono: 'alerta', tam: 'sm' }) %>
+            <span><%= error %></span>
+          </p>
+        <% } %>
+
+        <% if (!duenio) { %>
+
+          <form method="post" action="/registro">
+            <div class="field">
+              <label class="label" for="codigo">Código de alta</label>
+              <input class="control mono" type="text" id="codigo" name="codigo"
+                     maxlength="6" autocomplete="off" autofocus
+                     placeholder="Escribe el código de 5 caracteres">
+              <div class="field__foot">
+                <span class="hint">Un solo uso · caduca en 24 horas</span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary btn--xl btn--block">Verificar el código</button>
+          </form>
+
+        <% } else { %>
+
+          <div class="card card--flat">
+            <div class="card__body">
+              <span class="label">El código corresponde a</span>
+              <div class="row">
+                <span class="avatar"><%- include('/parcial/icono', { icono: 'usuario' }) %></span>
+                <span class="grow person">
+                  <span class="person__name"><%= duenio.nombre %></span>
+                  <span class="person__meta"><%= duenio.no_empleado %> · <%= duenio.cargo %> · <%= duenio.estacion || 'Sin estación' %></span>
+                </span>
+              </div>
+              <span class="badge"><%- include('/parcial/icono', { icono: 'palomita', tam: 'xs' }) %>Dado de alta por la Dirección</span>
+              <p class="hint">Si estos datos no son tuyos, no continúes: avisa a la Dirección.</p>
+            </div>
+          </div>
+
+          <form method="post" action="/registro/credencial">
+            <input type="hidden" name="codigo" value="<%= codigo %>">
+            <button type="submit" class="btn btn--primary btn--xl btn--block">
+              <%- include('/parcial/icono', { icono: 'huella' }) %>
+              Crear mi credencial en este equipo
+            </button>
+          </form>
+
+          <p class="marca-simulado">Simulado · el alta guarda una llave pública de ejemplo</p>
+
+        <% } %>
+
+        <p class="note note--flex">
+          <%- include('/parcial/icono', { icono: 'aviso', tam: 'sm' }) %>
+          <span><strong>Tu huella no se guarda en ningún lado.</strong> Se queda en el chip de este equipo. El sistema sólo almacena una llave pública, que no sirve para identificarte fuera de aquí.</span>
+        </p>
+
+      </div>
+      <div class="card__foot">
+        <span class="label">Sin código</span>
+        <span class="grow">La Dirección lo emite desde <a class="card__link" href="/direccion/personal">Personal</a> y expira en 24 horas</span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="pagefoot">
+    <%- include('/parcial/icono', { icono: 'lugar', tam: 'sm' }) %>
+    <a class="card__link" href="/acceso">Volver al acceso</a>
+  </footer>
+
+<%- include('/parcial/abajo') %>

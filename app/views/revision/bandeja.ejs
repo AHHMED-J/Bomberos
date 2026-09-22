@@ -1,0 +1,75 @@
+<%#
+    De docs/screens/bandeja.html (figura 8.5).
+    Cambio: filtraba por turno, ahora por la division del tipo de servicio
+    (O4). Las pestanas son enlaces con la cuenta real.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title">Partes por revisar</h1>
+        <p class="pagehead__sub mono">División <%= f.texto(usuario.division) %> · <%= usuario.cargo %></p>
+      </div>
+    </div>
+
+    <div class="panes">
+
+      <section class="master">
+        <div class="tabs">
+          <% pestanas.forEach(function (p) { %>
+            <a class="tab" href="/revision?ver=<%= p.clave %>"
+               <%= p.clave === pestanaActual ? 'aria-current="page"' : '' %>>
+              <%= p.texto %> · <%= p.cuenta %>
+            </a>
+          <% }); %>
+        </div>
+
+        <div class="parte-list">
+          <% if (!partes.length) { %>
+            <p class="sin-nada">
+              No hay partes <%= pestanaActual %> en tu división.
+            </p>
+          <% } %>
+
+          <% partes.forEach(function (p) { %>
+            <a class="parte-row" href="/revision/<%= p.id %>">
+              <span class="parte-row__flag"></span>
+              <span class="parte-row__main">
+                <span class="parte-row__top">
+                  <span class="parte-row__title"><%= f.texto(p.tipo_servicio) %></span>
+                  <span class="parte-row__folio"><%= p.folio %></span>
+                </span>
+                <span class="parte-row__place"><%= f.texto(p.lugar_servicio) %></span>
+                <span class="parte-row__meta">
+                  <span><%= f.fechaCorta(p.fecha) %> · <%= f.hora(p.hora_salida) %></span>
+                  <span class="parte-row__sep"></span>
+                  <span><%= f.texto(p.unidad) %></span>
+                  <span class="parte-row__sep"></span>
+                  <span><%= p.elaboro %></span>
+                </span>
+                <span class="chips">
+                  <span class="chip chip--meta">C-5 <%= f.texto(p.no_incidente_c5) %></span>
+                </span>
+              </span>
+            </a>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="detail">
+        <div class="detail__empty">
+          <%- include('/parcial/icono', { icono: 'bandeja', tam: 'xl' }) %>
+          <p class="text">Elige un parte de la lista para revisarlo.</p>
+          <p class="hint">
+            La lista se queda a la vista mientras revisas, para no perder de
+            vista lo que falta.
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>
