@@ -1,0 +1,249 @@
+<%#
+    De docs/screens/bandeja-detalle.html (figura 8.5b).
+    Cambio: el contenido se reordeno como PIRAMIDE INVERTIDA (Figura 7).
+    Nivel 1: Que, Cuando, Donde y Quien, en el orden de la hoja de papel.
+    Luego la revision automatica de campos vacios y los dos botones.
+    Nivel 2: los detalles para validar. Nivel 3: evidencia e historial.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <a class="card__link" href="/revision">← Volver a la bandeja</a>
+        <p class="pagehead__sub mono"><%= parte.folio %> · división <%= f.texto(parte.division) %></p>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="piramide">
+
+        <%# Nivel 1: lo critico, arriba %>
+        <section class="nivel1">
+          <p class="nivel1__que">
+            <%= f.texto(parte.tipo_servicio, 'Sin tipo de servicio') %>
+            <span class="nivel1__c5">· <%= f.texto(parte.no_incidente_c5, 'sin No. de C-5') %></span>
+          </p>
+          <p class="nivel1__linea mono">
+            <%= f.fecha(parte.fecha) %> · salida <%= f.hora(parte.hora_salida) %> · regreso <%= f.hora(parte.hora_regreso) %>
+          </p>
+          <p class="nivel1__linea">
+            <%= f.texto(parte.lugar_servicio, 'Sin lugar del servicio') %> · zona <%= f.texto(parte.zona) %>
+          </p>
+          <p class="nivel1__linea">
+            <%= f.texto(parte.unidad) %> · <%= f.texto(parte.estacion) %> · formuló <%= f.texto(parte.elaboro) %>
+          </p>
+        </section>
+
+        <% if (faltas.length) { %>
+          <div class="aviso aviso--alerta">
+            <%- include('/parcial/icono', { icono: 'alerta', tam: 'sm' }) %>
+            <span>
+              <strong>Revisión automática:</strong>
+              falta<%= faltas.length === 1 ? '' : 'n' %> <%= faltas.length %> dato<%= faltas.length === 1 ? '' : 's' %>.
+              <span class="faltantes">
+                <% faltas.forEach(function (falta) { %>
+                  <span class="chip chip--meta"><%= falta %></span>
+                <% }); %>
+              </span>
+            </span>
+          </div>
+        <% } else { %>
+          <div class="aviso aviso--ok">
+            <%- include('/parcial/icono', { icono: 'palomita', tam: 'sm' }) %>
+            <span><strong>Revisión automática:</strong> no quedó ningún campo obligatorio vacío.</span>
+          </div>
+        <% } %>
+
+        <% if (decidido) { %>
+          <%# El segundo revisor ve quien decidio, sin botones. %>
+          <div class="decision decision--cerrada">
+            <p class="text">
+              <strong>Este parte ya está validado.</strong>
+              Lo validó <%= decidido.revisor %> el <%= f.momento(decidido.fecha) %>.
+            </p>
+            <% if (parte.archivo) { %>
+              <p class="hint">
+                Sellado y en resguardo hasta el <%= f.fecha(parte.archivo.resguardo_hasta) %>.
+              </p>
+              <p class="hash">SHA-256 · <%= parte.archivo.hash_sha256 %></p>
+            <% } %>
+          </div>
+        <% } else if (sinEnviar) { %>
+          <div class="decision decision--cerrada">
+            <p class="text">
+              <strong>Este parte todavía es un borrador.</strong>
+              Lo estás viendo desde Consulta: no hay nada que validar hasta que
+              quien lo levantó lo firme y lo envíe.
+            </p>
+          </div>
+        <% } else if (parte.estado === 'devuelto') { %>
+          <div class="decision decision--cerrada">
+            <p class="text">
+              <strong>Este parte está devuelto.</strong>
+              Espera a que el bombero lo corrija y lo vuelva a firmar.
+            </p>
+            <% if (parte.devolucion) { %>
+              <p class="hint">Nota: <%= parte.devolucion.nota %></p>
+            <% } %>
+          </div>
+        <% } else { %>
+          <form class="decision" method="post" action="/revision/<%= parte.id %>">
+            <% if (locals.query && query.falta_nota) { %>
+              <p class="aviso aviso--alerta">
+                <%- include('/parcial/icono', { icono: 'alerta', tam: 'sm' }) %>
+                <span>Para devolver hace falta escribir la nota: es lo que el bombero va a leer.</span>
+              </p>
+            <% } %>
+
+            <div class="cols-2">
+              <div class="field">
+                <label class="label" for="nota">Nota de devolución</label>
+                <input class="control" type="text" id="nota" name="nota"
+                       placeholder="Qué hay que corregir">
+              </div>
+              <div class="field">
+                <label class="label" for="paso">Abrir en el paso</label>
+                <select class="control" id="paso" name="paso">
+                  <% pasos.forEach(function (p) { %>
+                    <option value="<%= p.clave %>"><%= p.numero %> · <%= p.texto %></option>
+                  <% }); %>
+                </select>
+              </div>
+            </div>
+
+            <div class="decision__botones">
+              <button type="submit" name="decision" value="validar" class="btn btn--primary btn--lg">
+                <%- include('/parcial/icono', { icono: 'palomita', tam: 'sm' }) %>
+                Validar
+              </button>
+              <button type="submit" name="decision" value="devolver" class="btn btn--danger btn--lg">
+                <%- include('/parcial/icono', { icono: 'atras', tam: 'sm' }) %>
+                Devolver con nota
+              </button>
+            </div>
+            <p class="hint">
+              Validar deja el parte archivado y consultable por la Dirección, y
+              lo sella con su hash y su resguardo de diez años. Devolver es el
+              único punto del sistema donde un parte retrocede.
+            </p>
+          </form>
+        <% } %>
+
+        <div class="nivel">
+          <p class="nivel__rotulo">Nivel 2 · detalles para validar</p>
+
+          <section class="card">
+            <div class="card__head"><h2 class="card__title">Descripción de los hechos</h2></div>
+            <div class="card__body">
+              <p class="text"><%= f.texto(parte.descripcion, 'Sin descripción.') %></p>
+            </div>
+          </section>
+
+          <% if (parte.croquis && parte.croquis.svg) { %>
+            <section class="card">
+              <div class="card__head">
+                <h2 class="card__title">Croquis</h2>
+                <span class="chip chip--meta"><%= parte.croquis.origen === 'ia' ? 'Generado por IA' : 'Dibujado a mano' %></span>
+              </div>
+              <div class="card__body">
+                <div class="sketch"><%- parte.croquis.svg %></div>
+              </div>
+            </section>
+          <% } %>
+
+          <section class="card">
+            <div class="card__head"><h2 class="card__title">Personal, personas y apoyos</h2></div>
+            <div class="card__body">
+              <dl class="dl">
+                <dt>Personal</dt>
+                <dd><%= f.listaPersonal(parte.personal) %></dd>
+                <dt>Propietario</dt>
+                <dd>
+                  <% if (parte.propietario) { %>
+                    <%= parte.propietario.nombre %> · tel. <%= f.texto(parte.propietario.telefono) %>
+                    <% if (parte.propietario.aseguradora) { %><span class="hint"><%= parte.propietario.aseguradora %></span><% } %>
+                  <% } else { %>—<% } %>
+                </dd>
+                <dt>Testigo</dt>
+                <dd><%= parte.testigo ? parte.testigo.nombre : '—' %></dd>
+                <dt>Voluntarios</dt>
+                <dd><%= f.listaNombres(parte.voluntarios) %></dd>
+                <dt>Apoyos</dt>
+                <dd>
+                  <%= f.listaApoyos(parte.apoyos, ' · ', true) %>
+                </dd>
+                <dt>Peritaje</dt>
+                <dd>
+                  <% if (parte.requiere_peritaje === 1) { %>Sí
+                  <% } else if (parte.requiere_peritaje === 0) { %>No
+                  <% } else { %>Sin decidir<% } %>
+                </dd>
+              </dl>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="card__head"><h2 class="card__title">Firmas y fundamento</h2></div>
+            <div class="card__body">
+              <dl class="dl">
+                <% ['formula', 'propietario', 'testigo'].forEach(function (tipo) { %>
+                  <% const firma = parte.firmas.find(function (x) { return x.tipo === tipo; }); %>
+                  <dt><%= tipo === 'formula' ? 'Quien formuló' : tipo %></dt>
+                  <dd>
+                    <% if (firma) { %>
+                      <%= firma.usuario || (parte.propietario && tipo === 'propietario' ? parte.propietario.nombre : 'Firmado') %>
+                      <span class="hint mono"><%= f.momento(firma.firmado_en) %></span>
+                    <% } else { %>Sin firma<% } %>
+                  </dd>
+                <% }); %>
+                <dt>Fundamento</dt>
+                <dd>
+                  <%= f.texto(parte.fundamento_ordenamiento, 'Sin fundamento guardado') %>
+                  <% if (parte.fundamento_articulo) { %>
+                    <span class="hint">Artículo <%= parte.fundamento_articulo %></span>
+                  <% } %>
+                </dd>
+              </dl>
+            </div>
+          </section>
+        </div>
+
+        <div class="nivel">
+          <p class="nivel__rotulo">Nivel 3 · evidencia e historial</p>
+          <section class="card">
+            <div class="card__body">
+              <dl class="dl">
+                <dt>Fotos</dt><dd><%= parte.evidencias.length %></dd>
+                <dt>Coordenadas</dt>
+                <dd class="mono">
+                  <%= parte.latitud !== null ? parte.latitud + ', ' + parte.longitud : '—' %>
+                </dd>
+                <dt>Despacho</dt><dd><%= f.texto(parte.despacho) %></dd>
+                <dt>NUC</dt><dd class="mono"><%= f.texto(parte.nuc) %></dd>
+                <dt>Enviado</dt><dd class="mono"><%= f.momento(parte.enviado_en) %></dd>
+              </dl>
+
+              <% if (parte.revisiones.length) { %>
+                <ol class="timeline">
+                  <% parte.revisiones.forEach(function (r) { %>
+                    <li class="timeline__row">
+                      <span class="grow">
+                        <strong><%= r.decision === 'validado' ? 'Validado' : 'Devuelto' %></strong>
+                        por <%= r.revisor %><% if (r.nota) { %> · <%= r.nota %><% } %>
+                      </span>
+                      <span class="hint mono"><%= f.momento(r.fecha) %></span>
+                    </li>
+                  <% }); %>
+                </ol>
+              <% } %>
+            </div>
+          </section>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>
