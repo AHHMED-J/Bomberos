@@ -46,7 +46,7 @@ y `app/` viven en el repo pero no en el sitio público.
   se ve en todas.
 - **Regenerar la hoja:** `python3 build.py`. Escribe `docs/pantallas.html` y
   `dist/pantallas-parte-digital.html` (un solo archivo con el CSS incrustado).
-  La encuesta con el personal mostró que 3 de 4 preferían la app de celular
+  La encuesta con el personal mostró que 6 de 7 preferían la app de celular
   sobre la web de escritorio, así que ya no se genera una versión de
   computadora. Cada lámina sale dos veces: en celular (`.screen`, la misma
   versión que `screens/` y la portada) y en tablet (con la clase de más

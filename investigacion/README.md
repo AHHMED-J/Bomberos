@@ -24,12 +24,19 @@ archivos tienen el detalle método por método.
   problema, todo junto en una narrativa. Es el insumo para el documento
   de reflexión de 1-2 páginas que pide la tarea. Resumen publicado en
   `docs/investigacion.html` ("El problema y cómo cambió su definición").
-- `Bomberos (respuestas).xlsx` — encuesta al personal, 4 respuestas
-  reales, sin datos que identifiquen a nadie.
+- `Bomberos (respuestas).xlsx` — **desactualizado:** tiene 4 respuestas,
+  pero la encuesta ya llegó a **7**. Las capturas nuevas (abajo) sí
+  traen las 7; falta volver a exportar el Excel para que coincida.
 - `Examen_1_Investigacion de usuarios.pdf` — el documento de tarea.
-- `capturas/` — capturas de pantalla usadas como evidencia (la gráfica
-  real de la encuesta, `forms-celular-vs-web.png`; también está
-  publicada, recortada, en `docs/img/hallazgo-celular.png`).
+- `capturas/` — capturas de pantalla usadas como evidencia. Con 7
+  respuestas: `encuesta-celular-vs-web-7resp.png` (85.7%/14.3%,
+  publicada en `docs/img/hallazgo-celular.png`),
+  `encuesta-computadora-estacion.png` (71.4% no tiene computadora
+  compartida en la estación), `encuesta-justificaciones-7resp.png` (las
+  7 razones completas), `encuesta-diseno-celular-vs-computadora.png`
+  (71.4% Celular / 14.3% Computadora / 14.3% Ninguna, sobre las dos
+  imágenes de diseño). La versión vieja de 4 respuestas se queda como
+  respaldo en `forms-celular-vs-web.png`.
 - `entrevista-experto-01.md` — la sesión con el Capitán Mauricio Javier
   González Navarro, el Maquinista José Antonio Ortega y el Bombero
   Alonso Carrillo (32 / 25 / 15 años de experiencia), estructurada en
@@ -54,8 +61,8 @@ archivos tienen el detalle método por método.
   `docs/investigacion.html`.
 - `roper-dynagram-01.md` — 3 segmentos por valores (institucionales,
   prácticos de tiempo, conformistas sociales), con evidencia real de las
-  4 respuestas de la encuesta y la sesión de campo, y la asignación de
-  cada una de las 7 personas identificadas. Publicado completo en
+  7 respuestas de la encuesta y la sesión de campo, y la asignación de
+  cada una de las 10 personas identificadas. Publicado completo en
   `docs/investigacion.html`.
 
 Todo el contenido de esta carpeta ya tiene su resumen o versión

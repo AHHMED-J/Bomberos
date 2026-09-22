@@ -8,7 +8,7 @@ Escribe dos archivos, los dos generados: no se editan a mano.
   docs/pantallas.html               la hoja del sitio
   dist/pantallas-parte-digital.html un solo archivo con el css incrustado
 
-La encuesta con el personal mostró que 3 de 4 preferían la app de celular
+La encuesta con el personal mostró que 6 de 7 preferían la app de celular
 sobre la web de escritorio, así que ya no se genera una versión de
 computadora. Cada lámina sale dos veces: en celular (la versión de
 producto, la misma que screens/ y la portada) y en tablet, para comparar

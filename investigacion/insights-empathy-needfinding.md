@@ -1,15 +1,17 @@
 # Insights: Empathy Map + Needfinding
 
 > Extraídos de `entrevista-experto-01.md` y de la encuesta al personal
-> (`Bomberos (respuestas).xlsx`, 4 respuestas). Estructurados según los
-> campos de las interfaces "Empathy Map" y "Observación Directa /
-> Needfinding" del documento de tarea.
+> (`Bomberos (respuestas).xlsx` — **el archivo tiene 4 filas, pero la
+> encuesta ya llegó a 7 respuestas**; los números de abajo usan las 7,
+> tomadas de las capturas en `capturas/`, no del Excel desactualizado).
+> Estructurados según los campos de las interfaces "Empathy Map" y
+> "Observación Directa / Needfinding" del documento de tarea.
 
 ## Empathy Map ("The Parser")
 
 **Sujeto del mapa:** personal operativo y de mando del H. Cuerpo de
-Bomberos de Ensenada (combina el experto entrevistado + las 4 respuestas
-de la encuesta).
+Bomberos de Ensenada (combina el experto entrevistado + las 7
+respuestas de la encuesta).
 
 ### Bandeja de ruido cualitativo sin procesar
 
@@ -21,7 +23,17 @@ de la encuesta).
 - "Sería práctico operar en computadora, tablet o celular."
 - "Por tiempos" (encuesta — por qué prefieren la app de celular).
 - "Por que todo mundo lo utiliza" (encuesta).
+- "Por disponibilidad" (encuesta).
+- "El móvil es más práctico y tenemos acceso todo el tiempo" (encuesta).
+- "No escribirías tanto en la hoja sería más rápido en el móvil" (encuesta).
+- "Porque es más fácil, sobre todo si hay opciones para poder reducir el
+  tiempo al hacerlo, también porque es más fácil corregir con el teclado
+  y finalmente por la reducción de papel." (encuesta).
+- "Ya que está tranquilo controlado y ordenado estar en un escritorio que
+  estar en campo en un ambiente no contolado" (encuesta).
 - "Letras grandes, iconos" (encuesta — qué le agregarían a la app).
+- 71.4% de los encuestados dijo que **no** hay una computadora a la que
+  todos tengan acceso en la estación.
 
 ### Cuatro cuadrantes
 
@@ -29,7 +41,8 @@ de la encuesta).
 - "El archivo físico funciona como amparo... en caso de que la dirección
   restrinja el acceso al sistema."
 - "Se generan entre 4 y 5 hojas diarias por turno."
-- "Por tiempos." / "Por que todo mundo lo utiliza."
+- "Por tiempos." / "Por que todo mundo lo utiliza." / "Por disponibilidad."
+- "El móvil es más práctico y tenemos acceso todo el tiempo."
 - "Letras grandes, iconos."
 
 **Hace**
@@ -39,6 +52,8 @@ de la encuesta).
   digital.
 - Llena el parte en cualquier tiempo muerto del turno (no en un momento
   fijo dedicado).
+- En la mayoría de las estaciones (71.4%), no tiene computadora
+  compartida a la que recurrir aunque quisiera.
 
 **Piensa**
 - El sistema digital no sustituye del todo al papel — lo ve como una capa
@@ -47,6 +62,8 @@ de la encuesta).
 - El papeleo actual es más carga administrativa que parte esencial del
   trabajo (por eso valora el ahorro en tinta/papel/impresoras del POA como
   beneficio, un argumento económico, no sólo de comodidad).
+- El celular no es sólo la opción que prefiere: en muchas estaciones es la
+  única opción real disponible.
 
 **Siente**
 - Frustración media-alta por el "doble trabajo" WhatsApp → transcripción
@@ -60,6 +77,7 @@ de la encuesta).
 |---|---|---|
 | Adaptación manual | "Doble trabajo" WhatsApp → transcripción manual en la estación | Alta |
 | Necesidad oculta | Desconfianza institucional/jerárquica, no tecnofobia, detrás del pedido de respaldo físico | Media |
+| Necesidad oculta | El celular no es sólo preferencia: 71.4% de las estaciones no tiene computadora compartida — a veces es la única opción viable, no la favorita | **Alta** |
 | Carga cognitiva | 4–5 formatos distintos por turno sin unificar (parte de novedades, hoja de incidente, revisión mecánica, FRAP, notas) | Alta |
 | Necesidad oculta | Formatos actuales sin fundamento normativo citado | Media |
 | Problema de usabilidad | Texto pequeño, dificulta lectura a personal de mayor edad | Alta *(ya atendido en el rediseño de "Parte digital")* |
@@ -67,8 +85,8 @@ de la encuesta).
 
 ## Observación Directa / Needfinding ("El Iceberg")
 
-**Contexto:** entrevista a experto (interna, medio y fecha pendientes de
-registrar) + encuesta a 4 miembros del personal operativo.
+**Contexto:** sesión de campo (presencial, en la estación, 19 de
+septiembre de 2026) + encuesta a 7 miembros del personal operativo.
 
 ### Necesidades obvias (superficie — lo que piden explícitamente)
 
@@ -94,6 +112,10 @@ registrar) + encuesta a 4 miembros del personal operativo.
   sólo ineficiencia: revela que cualquier sistema nuevo tiene que ser *al
   menos tan rápido* como mandar un WhatsApp o no lo van a adoptar de
   verdad, van a seguir usando el atajo informal por fuera.
+- **La preferencia por celular esconde una limitación de infraestructura,
+  no sólo un gusto.** Con 71.4% de las estaciones sin computadora
+  compartida, diseñar pensando en "celular o computadora, según prefiera
+  cada quien" ignora que para la mayoría no hay elección real.
 
 ### Dato crudo vs. interpretación
 
@@ -102,11 +124,13 @@ registrar) + encuesta a 4 miembros del personal operativo.
 | "Se generan entre 4 y 5 hojas diarias por turno." | Un sistema digital que sólo digitalice *una* hoja (ej. sólo el "parte") no resuelve el problema completo — el personal va a seguir usando papel para el resto. |
 | "El archivo físico funciona como amparo... en caso de que la dirección restrinja el acceso al sistema." | La resistencia a ir 100% digital no es tecnofobia: es desconfianza institucional/jerárquica. Es un problema de gobernanza de datos, no de UX de la pantalla. |
 | Retención legal obligatoria de 10 años antes de destruir un documento. | El sistema necesita almacenamiento y archivo de largo plazo con control de baja, no sólo captura y envío inmediato. |
+| 71.4% no tiene computadora compartida en la estación. | Diseñar "celular o computadora" como dos opciones equivalentes es engañoso — para la mayoría, celular es la única opción con la que de verdad cuentan. |
 
 ### Potencial de innovación
 
-**Alto.** El hallazgo del "doble trabajo" con WhatsApp y la necesidad de
-permisos que reflejen la jerarquía real son accionables, específicos, y no
-son evidentes con sólo leer la lista de "características que le
-gustaría" de la encuesta — salieron de profundizar en el porqué durante la
-entrevista.
+**Alto.** El hallazgo del "doble trabajo" con WhatsApp, la necesidad de
+permisos que reflejen la jerarquía real, y la falta de computadora
+compartida en la mayoría de las estaciones son accionables, específicos,
+y no son evidentes con sólo leer la lista de "características que le
+gustaría" de la encuesta — salieron de profundizar en el porqué durante
+la sesión, y de cruzar dos preguntas distintas de la encuesta entre sí.
