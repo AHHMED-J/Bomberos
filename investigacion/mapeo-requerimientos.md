@@ -30,10 +30,6 @@
   distinto del eje de "velocidad de captura" (#1, #3, #6).
 - El requisito #9 sale de la lectura de "usuario extremo" de la misma
   sesión (`usuario-extremo-01.md`), no de una entrevista distinta.
-- Faltan insights de **Roper Dynagram** (segmentación por valores). Ya no
-  hace falta salir a entrevistar a nadie más para armarlo: con el
-  Capitán González (32 años), el Maquinista Ortega (25) y el Bombero
-  Carrillo (15) identificados, más las 4 respuestas de la encuesta, hay
-  siete personas reales con roles y antigüedad distintos — suficiente
-  para clasificar al menos 2-3 segmentos con evidencia real. Sigue
-  pendiente de armar como su propio documento.
+- El **Roper Dynagram** ya está armado como documento propio, en
+  `roper-dynagram-01.md` — 3 segmentos con evidencia real de las 7
+  personas identificadas.
