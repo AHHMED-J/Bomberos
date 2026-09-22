@@ -8,8 +8,9 @@ Escribe dos archivos, los dos generados: no se editan a mano.
   docs/pantallas.html               la hoja del sitio
   dist/pantallas-parte-digital.html un solo archivo con el css incrustado
 
-Cada lámina aparece dos veces, en computadora y en celular. La de celular
-no es un archivo aparte: es el mismo marcado con la clase .screen--mobile.
+Cada lámina sale una sola vez, del tamaño de un celular: la encuesta con el
+personal mostró que 3 de 4 preferían la app de celular sobre la web de
+escritorio, así que ya no se genera una versión de computadora.
 La fuente son docs/screens/, docs/css/ y manifest.json.
 """
 
@@ -43,7 +44,6 @@ ESCUDO = (
 )
 
 CUERPO = re.compile(r'<body class="preview">(.*)</body>', re.S)
-RAIZ_PANTALLA = re.compile(r'<div class="screen" id="([\w-]+)">')
 
 
 def esc(texto: str) -> str:
@@ -62,15 +62,6 @@ def cuerpo_de(archivo: Path) -> str:
     if not encontrado:
         raise SystemExit(f'{archivo.name}: falta <body class="preview"> … </body>')
     return encontrado.group(1).strip()
-
-
-def a_movil(cuerpo: str) -> str:
-    """La misma pantalla, marcada para que el css la reacomode a 390 px."""
-    apertura = RAIZ_PANTALLA.search(cuerpo)
-    if not apertura:
-        raise SystemExit('no se encontró el <div class="screen" id="…"> de la pantalla')
-    nueva = f'<div class="screen screen--mobile" id="{apertura.group(1)}-movil">'
-    return cuerpo.replace(apertura.group(0), nueva, 1)
 
 
 def parrafos(textos, clase: str) -> str:
@@ -104,19 +95,8 @@ def figura(pantalla: dict) -> str:
           <h3>{esc(pantalla['nombre'])}</h3>
           <p class="figure__uses">{esc(pantalla['casos'])}</p>
         </figcaption>{parrafos(pantalla.get("intro"), "figure__prosa")}
-        <div class="stages">
-          <div class="stage-wrap">
-            <p class="stage__label">En computadora · al 75 %</p>
-            <div class="stage stage--desktop">
+        <div class="stage">
 {cuerpo}
-            </div>
-          </div>
-          <div class="stage-wrap">
-            <p class="stage__label">En celular</p>
-            <div class="stage">
-{a_movil(cuerpo)}
-            </div>
-          </div>
         </div>{parrafos(pantalla.get("nota"), "figure__prosa figure__prosa--pie")}
       </figure>"""
 
@@ -191,7 +171,7 @@ def pagina_sitio(datos: dict) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(titulo)}</title>
-<meta name="description" content="Las pantallas del sistema de parte digital, en computadora y en celular.">
+<meta name="description" content="Las pantallas del sistema de parte digital, en celular.">
 <link rel="icon" href="{ESCUDO}">
 <link rel="stylesheet" href="{FUENTES}">
 {enlaces}

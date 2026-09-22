@@ -18,7 +18,7 @@ línea de JavaScript.
         base.css            reset, tipografía de apoyo, iconos, utilidades
         components.css      tarjetas, campos, botones, chips, tablas, croquis…
         app.css             armazón de la app: barra superior, menú, paneles
-        mobile.css          la misma pantalla adaptada a 390 px de celular
+        mobile.css          el único layout de la maqueta (celular)
         sheet.css           la lámina y su pie de figura
         site.css            portada y navegación del sitio
       avance-proyecto-1.docx  copia del documento, para descargar desde el sitio
@@ -34,8 +34,9 @@ línea de JavaScript.
   se ve en todas.
 - **Regenerar la hoja:** `python3 build.py`. Escribe `docs/pantallas.html` y
   `dist/pantallas-parte-digital.html` (un solo archivo con el CSS incrustado).
-  Cada lámina sale dos veces, en computadora y en celular: la de celular no es
-  un archivo aparte, es el mismo marcado con la clase `.screen--mobile`.
+  Cada lámina sale una sola vez, del tamaño de un celular: la encuesta con el
+  personal mostró que 3 de 4 preferían la app de celular sobre la web de
+  escritorio, así que ya no se genera una versión de computadora.
 - **Agregar una pantalla:** crea el archivo en `docs/screens/` copiando la
   estructura de otro (documento completo, con `<body class="preview">` y un
   `<div class="screen" id="…">`), regístrala en `manifest.json` y vuelve a

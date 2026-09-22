@@ -44,7 +44,7 @@ body {
   gap: 7px;
   padding: 8px 12px;
   border-radius: 4px;
-  font-size: 13.5px;
+  font-size: 15px;
   color: var(--bd-ink);
   text-decoration: none;
 }
@@ -89,7 +89,7 @@ body {
   max-width: 17ch;
   text-wrap: balance;
 }
-.hero__dek { margin: 0; font-size: 18px; line-height: 1.6; color: var(--bd-muted); max-width: 60ch; text-wrap: pretty; }
+.hero__dek { margin: 0; font-size: 19.5px; line-height: 1.6; color: var(--bd-muted); max-width: 60ch; text-wrap: pretty; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .hero__meta {
   display: grid;
@@ -101,7 +101,7 @@ body {
 }
 .hero__meta > div { display: flex; flex-direction: column; gap: 5px; }
 .hero__meta dt { font: 400 10.5px/1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bd-muted); }
-.hero__meta dd { margin: 0; font-size: 14.5px; line-height: 1.45; }
+.hero__meta dd { margin: 0; font-size: 16px; line-height: 1.45; }
 .meta-list { display: flex; flex-direction: column; gap: 4px; margin: 0; padding-left: 17px; }
 .meta-list li { line-height: 1.35; }
 
@@ -113,7 +113,7 @@ body {
   padding: 0 20px;
   border: 1px solid var(--bd-ink);
   border-radius: 4px;
-  font-size: 14.5px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--bd-ink);
   text-decoration: none;
@@ -125,7 +125,7 @@ body {
 
 /* --- Prosa ------------------------------------------------------------------ */
 .columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; }
-.columns p { margin: 0 0 14px; font-size: 15.5px; line-height: 1.7; color: var(--bd-muted); text-wrap: pretty; }
+.columns p { margin: 0 0 14px; font-size: 17px; line-height: 1.7; color: var(--bd-muted); text-wrap: pretty; }
 .columns p:last-child { margin-bottom: 0; }
 .columns strong { color: var(--bd-ink); font-weight: 600; }
 
@@ -142,16 +142,18 @@ body {
 }
 .actor__role { font: 700 10.5px/1.2 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--bd-ink); }
 .actor h3 { margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 600; }
-.actor p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
+.actor p { margin: 0; font-size: 15.5px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
 .actor__rfs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 6px; }
 
-/* --- Galería de pantallas ------------------------------------------------------ */
-.gallery { display: grid; grid-template-columns: repeat(auto-fill, 360px); gap: 28px; justify-content: space-between; }
+/* --- Galería de pantallas ------------------------------------------------------
+   Las miniaturas ahora recortan la app de celular (402px de ancho real),
+   no la de escritorio: por eso la tarjeta es vertical, no horizontal. */
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, 210px); gap: 28px; justify-content: space-between; }
 .thumb-card { display: flex; flex-direction: column; gap: 12px; color: inherit; text-decoration: none; }
 .shot {
   position: relative;
-  width: 360px;
-  height: 225px;
+  width: 210px;
+  height: 440px;
   overflow: hidden;
   border: 1px solid var(--bd-hair);
   background: #fbfaf8;
@@ -161,10 +163,10 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 1440px;
-  height: 900px;
+  width: 402px;
+  height: 920px;
   border: 0;
-  transform: scale(0.25);
+  transform: scale(0.5228);
   transform-origin: top left;
   pointer-events: none;
 }
@@ -172,12 +174,52 @@ body {
 .thumb-card__line { display: flex; align-items: baseline; gap: 10px; }
 .thumb-card__n { font: 700 11px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-ink); }
 .thumb-card__cov { font: 400 11px/1.2 var(--font-mono); color: var(--bd-muted); }
-.thumb-card h3 { margin: 0; font-family: var(--font-display); font-size: 19px; font-weight: 600; }
-.thumb-card p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
+.thumb-card h3 { margin: 0; font-family: var(--font-display); font-size: 20px; font-weight: 600; }
+.thumb-card p { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
+
+/* --- Hallazgos de la investigación ----------------------------------------------- */
+.findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.finding {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  border: 1px solid var(--bd-hair);
+  border-radius: 4px;
+  background: var(--bd-panel);
+}
+.finding__stat {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--bd-accent);
+}
+.finding h3 { margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 600; }
+.finding p { margin: 0; font-size: 16px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
+.finding__change strong { color: var(--bd-ink); font-weight: 600; }
+
+.finding__evidence { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 0; }
+.finding__shot {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1px dashed var(--bd-hair);
+  border-radius: 4px;
+  background: var(--bd-panel);
+  overflow: hidden;
+}
+/* La captura de la gráfica de Forms es horizontal; la foto de la encuesta
+   impresa que falta agregar es más bien vertical, como una hoja. */
+.finding__shot--wide { aspect-ratio: 16 / 7; }
+.finding__shot--tall { aspect-ratio: 3 / 4; }
+.finding__shot img { display: block; width: 100%; height: 100%; object-fit: contain; background: #fbfaf8; }
+.finding__evidence figcaption { font-size: 14.5px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
 
 /* --- Tabla de requerimientos ----------------------------------------------------- */
 .rf-table-wrap { border: 1px solid var(--bd-hair); border-radius: 4px; overflow-x: auto; background: var(--bd-panel); }
-.rf-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.rf-table { width: 100%; border-collapse: collapse; font-size: 15.5px; }
 .rf-table th, .rf-table td { padding: 13px 18px; text-align: left; vertical-align: top; }
 .rf-table thead th {
   border-bottom: 1px solid var(--bd-hair);
@@ -189,25 +231,32 @@ body {
 }
 .rf-table tbody tr { border-bottom: 1px solid color-mix(in srgb, var(--bd-hair) 55%, transparent); }
 .rf-table tbody tr:last-child { border-bottom: 0; }
-.rf-table td:first-child { font-family: var(--font-mono); font-size: 12.5px; white-space: nowrap; }
+.rf-table td:first-child { font-family: var(--font-mono); font-size: 14px; white-space: nowrap; }
 .rf-table td:last-child { color: var(--bd-muted); white-space: nowrap; }
 
 /* --- Equipo y pie ------------------------------------------------------------------ */
 .team { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px 28px; margin: 0; padding: 0; list-style: none; }
 .team li { display: flex; flex-direction: column; gap: 3px; padding-top: 12px; border-top: 1px solid var(--bd-hair); }
-.team span { font-size: 15px; font-weight: 500; }
+.team span { font-size: 16px; font-weight: 500; }
 .team em { font: 400 11.5px/1.2 var(--font-mono); font-style: normal; color: var(--bd-muted); }
 
 .sitefoot { border-top: 2px solid var(--bd-ink); padding-top: 20px; display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; }
-.sitefoot p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--bd-muted); max-width: 56ch; text-wrap: pretty; }
+.sitefoot p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--bd-muted); max-width: 56ch; text-wrap: pretty; }
 .sitefoot a { color: var(--bd-accent); }
+
+/* Rango de iPad/tablet: menos aire a los costados que en escritorio, sin
+   forzar todavía una sola columna. Las miniaturas de la galería (.shot,
+   210px fijos) ya se reacomodan solas al reducirse el ancho porque
+   .gallery usa auto-fill con una pista de ancho fijo. */
+@media (max-width: 1024px) {
+  .site { padding: 0 20px 80px; }
+  .sitenav { padding: 12px 20px; }
+  .hero { padding-top: 56px; }
+}
 
 @media (max-width: 760px) {
   .site { padding: 0 16px 64px; gap: 52px; }
   .sitenav { padding: 12px 16px; }
   .sitenav__links { gap: 0; }
   .hero { padding-top: 44px; }
-  .gallery { grid-template-columns: 1fr; }
-  .shot { width: 100%; height: 190px; }
-  .shot iframe { transform: scale(0.21); }
 }
