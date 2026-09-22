@@ -34,6 +34,11 @@ SALIDA_SUELTA = RAIZ / "dist" / "pantallas-parte-digital.html"
 HOJAS = ["tokens.css", "base.css", "components.css", "app.css", "mobile.css",
          "tablet.css", "sheet.css", "site.css"]
 
+# GitHub Pages cachea los .css diez minutos. Subir este número (a mano, cada
+# vez que cambie algún css/*.css) fuerza a que el navegador pida el archivo
+# de nuevo en vez de servir una versión vieja desde su caché.
+VERSION = "20260922"
+
 FUENTES = (
     "https://fonts.googleapis.com/css2"
     "?family=Barlow:wght@400;500;600"
@@ -188,7 +193,7 @@ NAV = """<nav class="sitenav">
 
 
 def pagina_sitio(datos: dict) -> str:
-    enlaces = "\n".join(f'<link rel="stylesheet" href="css/{h}">' for h in HOJAS)
+    enlaces = "\n".join(f'<link rel="stylesheet" href="css/{h}?v={VERSION}">' for h in HOJAS)
     titulo = "Pantallas · Parte digital de los Bomberos de Ensenada"
     return f"""<!doctype html>
 <html lang="es">

@@ -45,6 +45,12 @@ línea de JavaScript.
   `<div class="screen" id="…">`), regístrala en `manifest.json` y vuelve a
   correr el build. Para que salga también en la portada, agrega su tarjeta en
   `docs/index.html`.
+- **Cambiaste un `.css`:** GitHub Pages lo cachea 10 minutos, así que quien
+  ya había visitado el sitio puede seguir viendo el CSS viejo aunque el HTML
+  se actualice. Los `<link>` a `docs/css/*.css` llevan `?v=AAAAMMDD`; sube
+  ese número (en `docs/index.html`, en cada `docs/screens/*.html` y en la
+  constante `VERSION` de `build.py`) cada vez que edites un `.css`, para que
+  el navegador pida el archivo de nuevo en vez de servir la versión vieja.
 
 ## Publicar en GitHub Pages
 
