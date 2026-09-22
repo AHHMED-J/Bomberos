@@ -8,7 +8,7 @@ Escribe dos archivos, los dos generados: no se editan a mano.
   docs/pantallas.html               la hoja del sitio
   dist/pantallas-parte-digital.html un solo archivo con el css incrustado
 
-La encuesta con el personal mostró que 3 de 4 preferían la app de celular
+La encuesta con el personal mostró que 6 de 7 preferían la app de celular
 sobre la web de escritorio, así que ya no se genera una versión de
 computadora. Cada lámina sale dos veces: en celular (la versión de
 producto, la misma que screens/ y la portada) y en tablet, para comparar
@@ -37,7 +37,7 @@ HOJAS = ["tokens.css", "base.css", "components.css", "app.css", "mobile.css",
 # GitHub Pages cachea los .css diez minutos. Subir este número (a mano, cada
 # vez que cambie algún css/*.css) fuerza a que el navegador pida el archivo
 # de nuevo en vez de servir una versión vieja desde su caché.
-VERSION = "20260922d"
+VERSION = "20260922g"
 
 FUENTES = (
     "https://fonts.googleapis.com/css2"
@@ -187,6 +187,7 @@ NAV = """<nav class="sitenav">
     <a class="sitenav__link" href="index.html">Proyecto</a>
     <a class="sitenav__link" aria-current="page" href="pantallas.html">Pantallas</a>
     <a class="sitenav__link" href="investigacion.html">Investigación</a>
+    <a class="sitenav__link" href="arquitectura.html">Arquitectura</a>
     <a class="sitenav__link" href="avance-proyecto-1.docx">Documento</a>
     <a class="sitenav__link" href="https://github.com/AHHMED-J/Bomberos">Repositorio</a>
   </div>

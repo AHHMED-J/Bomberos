@@ -13,7 +13,9 @@ línea de JavaScript.
       index.html            portada: problema, actores, galería y trazabilidad
       pantallas.html        la hoja con las doce láminas y sus RF (generada)
       investigacion.html    entrevista a experto: guion y mapa de complejidad
+      arquitectura.html     sitemap, ERD y flujos del prototipo (ver app/)
       screens/              una pantalla por archivo; cada una abre sola
+      img/                  capturas e imágenes que sí se publican
       css/
         tokens.css          variables: paleta del wireframe y paleta del sitio
         base.css            reset, tipografía de apoyo, iconos, utilidades
@@ -24,11 +26,18 @@ línea de JavaScript.
         sheet.css           la lámina y su pie de figura
         site.css            portada y navegación del sitio
         investigacion.css   estilos propios de investigacion.html
-      avance-proyecto-1.docx  copia del documento, para descargar desde el sitio
+        arquitectura.css    estilos propios de arquitectura.html
+      avance-proyecto-1.docx      copia del documento, para descargar desde el sitio
+      arquitectura-informacion.pdf  documento de arquitectura, descargable
       .nojekyll             que GitHub sirva los archivos tal cual
     manifest.json           qué figura es cada pantalla, qué caso de uso y qué RF cubre
     build.py                genera pantallas.html
     dist/                   versión de un solo archivo (no se versiona)
+    investigacion/          trabajo de campo — NO se publica, ver su propio README
+    app/                    prototipo funcional (Node/Express/MySQL) — ver app/README.md
+
+`docs/` es el único de estos cuatro que GitHub Pages sirve; `investigacion/`
+y `app/` viven en el repo pero no en el sitio público.
 
 ## Cómo trabajar
 
@@ -37,7 +46,7 @@ línea de JavaScript.
   se ve en todas.
 - **Regenerar la hoja:** `python3 build.py`. Escribe `docs/pantallas.html` y
   `dist/pantallas-parte-digital.html` (un solo archivo con el CSS incrustado).
-  La encuesta con el personal mostró que 3 de 4 preferían la app de celular
+  La encuesta con el personal mostró que 6 de 7 preferían la app de celular
   sobre la web de escritorio, así que ya no se genera una versión de
   computadora. Cada lámina sale dos veces: en celular (`.screen`, la misma
   versión que `screens/` y la portada) y en tablet (con la clase de más

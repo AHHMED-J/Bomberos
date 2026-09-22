@@ -10,6 +10,8 @@
 .research-hero { padding-top: 56px; }
 .research-hero .hero__dek { max-width: 68ch; }
 
+.nota-sesion { margin: 12px 0 0; font-size: 15.5px; font-style: italic; color: var(--bd-muted); }
+
 /* --- Ficha de perfil ------------------------------------------------------- */
 .profile { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; border: 1px solid var(--bd-hair); border-radius: 4px; overflow: hidden; background: var(--bd-hair); }
 .profile__field { display: flex; flex-direction: column; gap: 4px; padding: 14px 18px; background: var(--bd-panel); }
@@ -108,4 +110,31 @@
 
 @media (max-width: 720px) {
   .map-card { padding: 18px; gap: 20px; }
+}
+
+/* --- Secciones agregadas: Empathy Map, Needfinding, Usuario Extremo,
+   Mapeo de Requerimientos --------------------------------------------- */
+.subtitulo { margin: 8px 0 0; font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--bd-ink); }
+.columns h3 { margin: 0 0 10px; font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--bd-ink); }
+
+.investigacion-lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 16px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
+.investigacion-lista strong { color: var(--bd-ink); font-weight: 600; }
+
+.quadrants { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.quadrant { padding: 16px 18px; border: 1px solid var(--bd-hair); border-radius: 4px; background: var(--bd-panel); }
+.quadrant h3 { margin: 0 0 10px; font-family: var(--font-display); font-size: 19px; font-weight: 600; color: var(--bd-ink); }
+
+/* Tablas de contenido largo: el rf-table de base fuerza mono + nowrap en la
+   primera/última columna, pensado para nombres de pantalla cortos — aquí el
+   contenido es prosa y necesita poder envolver. */
+.rf-table--datos td:first-child,
+.rf-table--datos td:last-child {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  white-space: normal;
+}
+
+@media (max-width: 720px) {
+  .quadrants { grid-template-columns: 1fr; }
 }
