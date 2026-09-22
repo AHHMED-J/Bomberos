@@ -19,17 +19,20 @@ todavía no existen; lo de aquí es el insumo para construirlas.
 - `capturas/` — capturas de pantalla usadas como evidencia (la gráfica
   real de la encuesta, `forms-celular-vs-web.png`; también está
   publicada, recortada, en `docs/img/hallazgo-celular.png`).
-- `entrevista-experto-01.md` — la entrevista al Capitán Mauricio
-  González, estructurada en los campos exactos de la interfaz
-  "Entrevista a Expertos": perfil, guion pregunta→respuesta con citas
-  clave, mapa de complejidad técnica, restricciones y riesgos,
-  referencias, notas. Un resumen de esto ya está publicado en
-  `docs/investigacion.html`.
-- `usuario-extremo-01.md` — segunda lectura de esa misma entrevista,
+- `entrevista-experto-01.md` — la sesión con el Capitán Mauricio Javier
+  González Navarro, el Maquinista José Antonio Ortega y el Bombero
+  Alonso Carrillo (32 / 25 / 15 años de experiencia), estructurada en
+  los campos exactos de la interfaz "Entrevista a Expertos": perfil,
+  guion pregunta→respuesta con citas clave, mapa de complejidad técnica,
+  restricciones y riesgos, referencias, notas. Es un relato integrado de
+  los tres, no atribuible frase por frase a uno solo. Un resumen de esto
+  ya está publicado en `docs/investigacion.html`.
+- `usuario-extremo-01.md` — segunda lectura de esa misma sesión,
   estructurada para la interfaz "Usuarios Extremos" (clasificación
-  súper-experto, workarounds, necesidad extrema). Se reutiliza la misma
-  persona como experto y como usuario extremo por falta de tiempo para
-  entrevistar a alguien más — el costo es diversidad de datos, no validez.
+  súper-experto, workarounds, necesidad extrema), anclada al perfil del
+  Capitán porque es lo más claramente identificable en el texto. El
+  Maquinista Ortega queda anotado como candidato a un perfil de usuario
+  extremo propio más adelante.
 - `insights-empathy-needfinding.md` — insights de esa entrevista y de la
   encuesta, organizados para las interfaces "Empathy Map" y "Observación
   Directa / Needfinding".
@@ -40,12 +43,13 @@ todavía no existen; lo de aquí es el insumo para construirlas.
 
 ## Qué falta
 
-- Completar los años de experiencia y la fecha/medio de la entrevista en
-  `entrevista-experto-01.md` y `usuario-extremo-01.md` (alias y rol ya
-  identificados: Capitán Mauricio González) — no se inventó ningún dato
-  porque la tarea exige información real.
+- Completar la fecha/medio de la sesión en `entrevista-experto-01.md` y
+  `usuario-extremo-01.md` (nombre, rol y años de los tres participantes
+  ya identificados) — no se inventó porque la tarea exige información real.
 - Insights de **Roper Dynagram** (segmentación por valores/estilos de
-  vida) — todavía no hay entrevistas suficientes para segmentar.
+  vida) — ya hay suficientes personas reales identificadas (7, entre la
+  encuesta y esta sesión) para armarlo sin entrevistar a nadie más;
+  falta redactarlo como documento propio.
 - Las 6 interfaces en sí (CRUD, validación, persistencia, exportación
   JSON/CSV, visualizaciones) — ese es el trabajo de código que sigue.
   No confundir con `app/`, que es el prototipo del producto "Parte

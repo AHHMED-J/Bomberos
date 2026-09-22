@@ -10,6 +10,8 @@
 .research-hero { padding-top: 56px; }
 .research-hero .hero__dek { max-width: 68ch; }
 
+.nota-sesion { margin: 12px 0 0; font-size: 15.5px; font-style: italic; color: var(--bd-muted); }
+
 /* --- Ficha de perfil ------------------------------------------------------- */
 .profile { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; border: 1px solid var(--bd-hair); border-radius: 4px; overflow: hidden; background: var(--bd-hair); }
 .profile__field { display: flex; flex-direction: column; gap: 4px; padding: 14px 18px; background: var(--bd-panel); }

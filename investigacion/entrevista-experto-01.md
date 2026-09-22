@@ -3,21 +3,29 @@
 > Estructurado según los campos que pide la interfaz "Entrevista a Expertos"
 > del documento de tarea (`Examen_1_Investigacion de usuarios.pdf`). Listo
 > para copiar/pegar o importar en cuanto esa interfaz exista.
+>
+> **Es una sesión conjunta, no una entrevista individual.** Participaron
+> tres personas reales; el guion de abajo es su relato integrado — no se
+> puede atribuir cada frase a una sola persona, así que las citas se
+> presentan como lo que dijo el grupo, no un individuo aislado.
 
-## Perfil del experto
+## Perfil de los participantes
+
+| Alias | Rol | Años de experiencia |
+|---|---|---|
+| Mauricio Javier González Navarro | Capitán | 32 (27 de servicio + 5 como voluntario) |
+| José Antonio Ortega | Maquinista | 25 |
+| Alonso Carrillo | Bombero | 15 |
 
 | Campo | Valor |
 |---|---|
-| Alias | Mauricio González |
-| Rol | Capitán |
 | Dominio | Operación y administración de un cuerpo de bomberos (despacho de emergencias, jerarquía de mando, papeleo/reportes, presupuesto) |
-| Años de experiencia | **(pendiente — completar)** |
 | Organización | H. Cuerpo de Bomberos de Ensenada |
 | Fecha | **(pendiente — completar)** |
 | Medio | **(pendiente — presencial o remoto)** |
 
-*Nota: no se rellenaron estos cuatro campos con datos inventados porque la
-tarea exige datos reales, no ficticios. Dime alias/rol/años/fecha y los
+*Nota: fecha y medio siguen sin dato real, así que se dejan pendientes en
+vez de inventados. Dime cuándo fue y si fue presencial o remota y los
 actualizo.*
 
 ## Guion dinámico (pregunta → respuesta)
@@ -86,7 +94,8 @@ No se mencionaron documentos o reglamentos específicos por nombre en esta entre
 
 ## Notas y siguientes pasos
 
-- Completar los años de experiencia y la fecha/medio de la entrevista (alias y rol ya identificados: Capitán Mauricio González).
+- Completar la fecha/medio de la sesión (los tres perfiles ya están identificados por nombre, rol y años).
 - Profundizar en qué campos exactos lleva cada una de las ~4-5 hojas diarias (parte de novedades, hoja de incidente, revisión mecánica, FRAP, notas) para diseñar el formulario digital sin dejar ninguna fuera.
-- Este experto no descarta computadora fija como dispositivo — contrasta con la encuesta general (mayoría celular). Vale la pena preguntar si es porque su rol es más administrativo que operativo de campo.
-- Éste cuenta como el **experto del dominio** que pide la tarea de campo, y también como el **usuario extremo** (ver `usuario-extremo-01.md`) — se reutilizó la misma entrevista para ambos por falta de tiempo para entrevistar a alguien más.
+- Ninguno de los tres descarta computadora fija como dispositivo — contrasta con la encuesta general (mayoría celular). Vale la pena preguntar si es porque el Capitán y el Maquinista tienen roles más de supervisión/mantenimiento que operativos de campo puro.
+- El **Capitán González cuenta como el experto del dominio** que pide la tarea de campo (conocimiento institucional/administrativo). La lectura de **usuario extremo** (`usuario-extremo-01.md`) sigue tomando esta misma sesión como base, porque el guion no permite separar qué dijo cada quien — pero ahora que hay tres personas reales identificadas (32 / 25 / 15 años de experiencia), el **Maquinista Ortega** es un candidato natural para un perfil de usuario extremo propio en una siguiente ronda (su rol es intrínsecamente más técnico/operativo que administrativo), y el **Bombero Carrillo** para un usuario más cercano al promedio — ninguno de los dos tiene todavía respuestas atribuibles a él individualmente.
+- Con la encuesta (4) más estas tres personas identificadas, ya se supera el mínimo de 4 usuarios reales que pide la tarea, con experto y (al menos) un candidato a extremo cubiertos.

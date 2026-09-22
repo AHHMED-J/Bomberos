@@ -1,11 +1,16 @@
 # Usuario Extremo — Caso 01
 
-> Segunda lectura de la misma entrevista que `entrevista-experto-01.md`
-> (Capitán Mauricio González), estructurada según los campos que pide la
-> interfaz "Usuarios Extremos". Se reutiliza la misma persona como experto
-> del dominio y como usuario extremo — decisión tomada por falta de tiempo
-> para entrevistar a alguien más; el costo es diversidad de datos, no
-> validez: el contenido igual cumple lo que pide cada método.
+> Segunda lectura de la misma sesión que `entrevista-experto-01.md` —
+> ahí participaron tres personas reales (Capitán González, Maquinista
+> Ortega, Bombero Carrillo), pero el guion es su relato integrado y no
+> se puede atribuir cada frase a una sola persona. Esta lectura se sigue
+> anclando al perfil del Capitán, porque el conocimiento institucional
+> del proceso de papeleo (retención legal, sindicatura, POA) es lo más
+> claramente identificable en el texto. El Maquinista Ortega (25 años,
+> un rol intrínsecamente técnico/operativo) queda anotado como el
+> candidato más natural para un perfil de usuario extremo propio el día
+> que se consigan sus respuestas atribuidas a él — no se inventaron aquí
+> porque el texto no permite separarlas con certeza.
 
 ## Clasificación del usuario
 
@@ -20,8 +25,8 @@ sistema por dentro puede señalar.
 
 | Campo | Valor |
 |---|---|
-| Alias | Mauricio González |
-| Contexto y frecuencia de uso | Capitán — supervisa y valida el papeleo de su división de forma constante (parte de novedades, hojas de incidente, revisión mecánica), no sólo lo llena de vez en cuando |
+| Alias | Mauricio Javier González Navarro |
+| Contexto y frecuencia de uso | Capitán, 32 años de experiencia (27 de servicio + 5 como voluntario) — supervisa y valida el papeleo de su división de forma constante (parte de novedades, hojas de incidente, revisión mecánica), no sólo lo llena de vez en cuando |
 | Nivel de habilidad (1–10) | 9 — frente al proceso de papeleo actual, no frente a herramientas digitales (dispositivo aún pendiente de confirmar) |
 
 ## Tareas observadas
@@ -63,7 +68,8 @@ súper-usuario marca el piso mínimo de velocidad para todos los demás.
 
 ## Evidencia
 
-Transcripción completa de la entrevista en `entrevista-experto-01.md`;
-sin fotos ni marcas de tiempo de observación directa (fue entrevista, no
-observación en campo) — medio y fecha de la entrevista **pendientes de
-confirmar**, igual que en el perfil de experto.
+Transcripción completa de la sesión en `entrevista-experto-01.md`, con
+los tres participantes identificados (Capitán González, Maquinista
+Ortega, Bombero Carrillo); sin fotos ni marcas de tiempo de observación
+directa (fue entrevista, no observación en campo) — medio y fecha
+**pendientes de confirmar**, igual que en `entrevista-experto-01.md`.
