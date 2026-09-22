@@ -16,6 +16,7 @@
 | 7 | "Letras grandes, iconos" (encuesta) | Tipografía e iconografía más grande en toda la interfaz | Prioriza accesibilidad para personal de mayor edad | **Alta** | Validado en encuesta *(ya implementado en el rediseño de "Parte digital")* |
 | 8 | Retención legal de 10 años antes de destrucción de documentos (autorización de sindicatura) | Archivo de cada reporte por al menos 10 años, con proceso de baja controlado, no eliminación libre | Requisito no funcional: almacenamiento y trazabilidad de largo plazo | **Alta** | Señalado por experto, sin validar con más usuarios |
 | 9 | Necesidad de que el sistema sea al menos tan rápido como el atajo de WhatsApp (el súper-usuario ya lo usa porque el proceso formal no da abasto) | Tiempo de captura de un parte nuevo por debajo de un umbral medible (ej. bajo 60 segundos para los campos mínimos) | Se valida con pruebas de tiempo, no sólo con opinión | **Alta** | Validado en la lectura de "usuario extremo" de la misma entrevista |
+| 10 | 71.4% de los encuestados dijo que su estación no tiene una computadora a la que todos tengan acceso | La app debe ser 100% funcional sólo con celular — ningún flujo puede requerir pasar por una computadora | Para la mayoría del personal, celular no es la opción preferida: es la única opción real | **Alta** | Validado en encuesta (5 de 7 respuestas, pregunta sobre computadora en la estación) |
 
 ## Notas para quien construya la interfaz interactiva
 
@@ -30,6 +31,15 @@
   distinto del eje de "velocidad de captura" (#1, #3, #6).
 - El requisito #9 sale de la lectura de "usuario extremo" de la misma
   sesión (`usuario-extremo-01.md`), no de una entrevista distinta.
+- Los requisitos **#6 y #10 están en tensión directa** y conviene
+  mostrarlos juntos en la vista de trazabilidad: #6 viene de una sola
+  persona (el experto, por su rol administrativo) y pide no descartar
+  computadora; #10 viene de la encuesta (5 de 7 respuestas) y dice que
+  la mayoría ni siquiera tiene una computadora compartida disponible.
+  Por volumen de evidencia y por ser la razón real detrás de por qué
+  el rediseño de "Parte digital" ya sólo se muestra en celular, #10
+  pesa más — pero la tensión es real y debe quedar visible, no
+  resuelta en automático por la interfaz.
 - El **Roper Dynagram** ya está armado como documento propio, en
-  `roper-dynagram-01.md` — 3 segmentos con evidencia real de las 7
-  personas identificadas.
+  `roper-dynagram-01.md` — 3 segmentos con evidencia real de las 10
+  personas identificadas (7 encuestados + los 3 de la sesión de campo).
