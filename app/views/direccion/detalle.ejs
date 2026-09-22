@@ -1,0 +1,173 @@
+<%#
+    De docs/screens/panel-detalle.html (figura 8.6b).
+    Cambio: la trazabilidad sale de firma, revision y archivo, e incluye
+    el hash del sellado y hasta cuando se resguarda.
+%>
+<%- include('/parcial/arriba', { titulo: titulo, id: id, contexto: contexto }) %>
+
+  <main class="main">
+
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <a class="card__link" href="/direccion/partes">← Volver al listado</a>
+        <h1 class="pagehead__title"><%= f.texto(parte.tipo_servicio) %></h1>
+        <p class="pagehead__sub mono"><%= parte.folio %> · <%= f.texto(parte.estacion) %></p>
+      </div>
+      <div class="pagehead__actions">
+        <% const e = f.estado(parte.estado); %>
+        <span class="status <%= e.clase %>"><span class="status__dot"></span><%= e.texto %></span>
+      </div>
+    </div>
+
+    <div class="content content--split">
+
+      <div class="stack">
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Datos del servicio</h2>
+            <span class="hint mono">RF-10</span>
+          </div>
+          <div class="card__body">
+            <dl class="dl dl--stacked">
+              <div><dt>No. C-5</dt><dd class="mono"><%= f.texto(parte.no_incidente_c5) %></dd></div>
+              <div><dt>NUC</dt><dd class="mono"><%= f.texto(parte.nuc) %></dd></div>
+              <div><dt>Fecha</dt><dd class="mono"><%= f.fecha(parte.fecha) %></dd></div>
+              <div><dt>Horas</dt><dd class="mono"><%= f.hora(parte.hora_salida) %> → <%= f.hora(parte.hora_regreso) %></dd></div>
+              <div><dt>Lugar</dt><dd><%= f.texto(parte.lugar_servicio) %></dd></div>
+              <div><dt>Zona</dt><dd><%= f.texto(parte.zona) %></dd></div>
+              <div><dt>Coordenadas</dt><dd class="mono"><%= parte.latitud !== null ? parte.latitud + ', ' + parte.longitud : '—' %></dd></div>
+              <div><dt>Despacho</dt><dd><%= f.texto(parte.despacho) %></dd></div>
+              <div><dt>Unidad</dt><dd><%= f.texto(parte.unidad) %></dd></div>
+              <div><dt>Turno</dt><dd><%= f.texto(parte.turno) %></dd></div>
+              <div><dt>División</dt><dd><%= f.texto(parte.division) %></dd></div>
+              <div><dt>Peritaje</dt><dd><%= parte.requiere_peritaje === 1 ? 'Sí' : parte.requiere_peritaje === 0 ? 'No' : '—' %></dd></div>
+            </dl>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__head"><h2 class="card__title">Descripción de los hechos</h2></div>
+          <div class="card__body">
+            <p class="text"><%= f.texto(parte.descripcion, 'Sin descripción.') %></p>
+          </div>
+        </section>
+
+        <% if (parte.croquis && parte.croquis.svg) { %>
+          <section class="card">
+            <div class="card__head">
+              <h2 class="card__title">Croquis</h2>
+              <span class="chip chip--meta"><%= parte.croquis.origen === 'ia' ? 'Generado por IA' : 'Dibujado a mano' %></span>
+            </div>
+            <div class="card__body">
+              <div class="sketch"><%- parte.croquis.svg %></div>
+            </div>
+          </section>
+        <% } %>
+
+        <section class="card">
+          <div class="card__head"><h2 class="card__title">Personas y apoyos</h2></div>
+          <div class="card__body">
+            <dl class="dl">
+              <dt>Personal</dt>
+              <dd><%= f.listaPersonal(parte.personal) %></dd>
+              <dt>Propietario</dt>
+              <dd>
+                <% if (parte.propietario) { %>
+                  <%= parte.propietario.nombre %>
+                  <span class="hint">tel. <%= f.texto(parte.propietario.telefono) %> · <%= f.texto(parte.propietario.domicilio) %></span>
+                  <% if (parte.propietario.aseguradora) { %><span class="hint">Aseguradora: <%= parte.propietario.aseguradora %></span><% } %>
+                <% } else { %>—<% } %>
+              </dd>
+              <dt>Testigo</dt>
+              <dd><%= parte.testigo ? parte.testigo.nombre : '—' %></dd>
+              <dt>Voluntarios</dt>
+              <dd><%= f.listaNombres(parte.voluntarios) %></dd>
+              <dt>Apoyos</dt>
+              <dd>
+                <%= f.listaApoyos(parte.apoyos, ' · ', true) %>
+              </dd>
+            </dl>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="rail">
+
+        <%# La trazabilidad: es lo que sustituye la firma de puño y letra. %>
+        <section class="card card--emphasis">
+          <div class="card__head">
+            <h2 class="card__title">Trazabilidad</h2>
+            <span class="hint mono">RF-10</span>
+          </div>
+          <div class="card__body">
+            <ol class="timeline">
+              <li class="timeline__row">
+                <span class="grow">
+                  <strong>Capturó</strong> <%= f.texto(parte.elaboro) %>
+                  <span class="hint mono">No. <%= f.texto(parte.elaboro_no_empleado) %></span>
+                </span>
+                <span class="hint mono"><%= f.momento(parte.creado_en) %></span>
+              </li>
+              <% parte.firmas.forEach(function (fi) { %>
+                <li class="timeline__row">
+                  <span class="grow">
+                    <strong>Firmó</strong>
+                    <%= fi.tipo === 'formula' ? 'quien formuló' : fi.tipo %>
+                    <% if (fi.usuario) { %> · <%= fi.usuario %><% } %>
+                    <span class="hint mono"><%= fi.firma %></span>
+                  </span>
+                  <span class="hint mono"><%= f.momento(fi.firmado_en) %></span>
+                </li>
+              <% }); %>
+              <% parte.revisiones.slice().reverse().forEach(function (r) { %>
+                <li class="timeline__row">
+                  <span class="grow">
+                    <strong><%= r.decision === 'validado' ? 'Validó' : 'Devolvió' %></strong>
+                    <%= r.revisor %><% if (r.nota) { %> · <%= r.nota %><% } %>
+                  </span>
+                  <span class="hint mono"><%= f.momento(r.fecha) %></span>
+                </li>
+              <% }); %>
+            </ol>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Sellado y resguardo</h2>
+            <span class="hint mono">N7</span>
+          </div>
+          <div class="card__body">
+            <% if (parte.archivo) { %>
+              <dl class="dl">
+                <dt>Archivado</dt><dd class="mono"><%= f.momento(parte.archivo.archivado_en) %></dd>
+                <dt>Resguardo</dt><dd class="mono">hasta <%= f.fecha(parte.archivo.resguardo_hasta) %></dd>
+                <dt>Documento</dt>
+                <dd><a class="card__link" href="/direccion/partes/<%= parte.id %>/sellado">Ver el documento sellado</a></dd>
+              </dl>
+              <p class="hash">SHA-256 · <%= parte.archivo.hash_sha256 %></p>
+              <p class="marca-simulado">Simulado · el sellado es HTML, no PDF. El hash sí es real.</p>
+            <% } else { %>
+              <p class="hint">Este parte todavía no se ha validado, así que no está sellado ni en resguardo.</p>
+            <% } %>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__head"><h2 class="card__title">Fundamento normativo</h2></div>
+          <div class="card__body">
+            <dl class="dl">
+              <dt>Ordenamiento</dt><dd><%= f.texto(parte.fundamento_ordenamiento, 'No se guardó') %></dd>
+              <dt>Artículo</dt><dd><%= f.texto(parte.fundamento_articulo) %></dd>
+            </dl>
+            <p class="hint">Los artículos concretos del reglamento están por capturarse con la Dirección.</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>
