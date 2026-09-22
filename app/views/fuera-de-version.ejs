@@ -1,0 +1,28 @@
+<%# Pantalla nueva: Estadísticas quedó fuera del alcance (sección 1.3). %>
+<%- include('/parcial/arriba', { titulo: titulo, id: 'fuera-de-version', contexto: titulo }) %>
+
+  <main class="main">
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title"><%= titulo %></h1>
+        <p class="pagehead__sub">Fuera de esta versión</p>
+      </div>
+    </div>
+    <div class="content">
+      <div class="fuera-version">
+        <p class="aviso">
+          <%- include('/parcial/icono', { icono: 'aviso', tam: 'sm' }) %>
+          <span>Esta pantalla quedó fuera de esta versión.</span>
+        </p>
+        <p class="text">
+          El alcance cubre el reporte de salida de incidente completo, su
+          revisión por división y el archivo de diez años. Las estadísticas, la
+          bitácora, las notas, la revisión mecánica de la unidad, el FRAP y la
+          conexión directa con el C-5 o el 911 quedaron fuera a propósito.
+        </p>
+        <a class="btn btn--primary btn--lg" href="<%= inicioDeRol %>">Volver a mi inicio</a>
+      </div>
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>

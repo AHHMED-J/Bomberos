@@ -1,0 +1,28 @@
+<%# Pantalla nueva: la ruta es de otro rol. %>
+<%- include('/parcial/arriba', { titulo: titulo, id: 'sin-permiso', contexto: 'Sin permiso' }) %>
+
+  <main class="main">
+    <div class="pagehead">
+      <div class="pagehead__titles">
+        <h1 class="pagehead__title"><%= titulo %></h1>
+        <p class="pagehead__sub mono">Entraste como <%= usuario.rol %></p>
+      </div>
+    </div>
+    <div class="content">
+      <div class="fuera-version">
+        <p class="aviso">
+          <%- include('/parcial/icono', { icono: 'candado', tam: 'sm' }) %>
+          <span>Esta ruta es de: <%= roles.join(' o ') %>.</span>
+        </p>
+        <p class="text">El menú cambia con el rol. Para ver esta pantalla, entra con otro usuario de prueba.</p>
+        <div class="fila-botones">
+          <a class="btn btn--primary btn--lg" href="<%= inicioDeRol %>">Volver a mi inicio</a>
+          <form method="post" action="/salir">
+            <button type="submit" class="btn btn--outline btn--lg">Cambiar de usuario</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<%- include('/parcial/abajo') %>

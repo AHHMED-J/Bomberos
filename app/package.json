@@ -1,0 +1,21 @@
+{
+  "name": "parte-digital",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Prototipo navegable del sistema de parte digital · Bomberos de Ensenada",
+  "type": "commonjs",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "db:crear": "node scripts/cargar-bd.js",
+    "importar": "node scripts/importar-pantallas.js",
+    "probar": "node scripts/probar-flujo.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "mysql2": "^3.15.3"
+  }
+}
