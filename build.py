@@ -187,6 +187,7 @@ NAV = """<nav class="sitenav">
     <a class="sitenav__link" href="index.html">Proyecto</a>
     <a class="sitenav__link" aria-current="page" href="pantallas.html">Pantallas</a>
     <a class="sitenav__link" href="investigacion.html">Investigación</a>
+    <a class="sitenav__link" href="arquitectura.html">Arquitectura</a>
     <a class="sitenav__link" href="avance-proyecto-1.docx">Documento</a>
     <a class="sitenav__link" href="https://github.com/AHHMED-J/Bomberos">Repositorio</a>
   </div>
