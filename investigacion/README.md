@@ -32,20 +32,27 @@ todavía no existen; lo de aquí es el insumo para construirlas.
   súper-experto, workarounds, necesidad extrema), anclada al perfil del
   Capitán porque es lo más claramente identificable en el texto. El
   Maquinista Ortega queda anotado como candidato a un perfil de usuario
-  extremo propio más adelante.
-- `insights-empathy-needfinding.md` — insights de esa entrevista y de la
+  extremo propio más adelante. Resumen publicado en `docs/investigacion.html`.
+- `insights-empathy-needfinding.md` — insights de esa sesión y de la
   encuesta, organizados para las interfaces "Empathy Map" y "Observación
-  Directa / Needfinding".
+  Directa / Needfinding". Publicado completo en `docs/investigacion.html`.
 - `mapeo-requerimientos.md` — la tabla insight → requisito → prioridad →
   estado de validación para la interfaz **obligatoria** de Mapeo de
   Requerimientos, con notas sobre qué requisitos están relacionados entre
-  sí (para la "ley embebida" de recálculo).
+  sí (para la "ley embebida" de recálculo). Publicada completa en
+  `docs/investigacion.html`.
+
+Casi todo el contenido de esta carpeta ya tiene su resumen o versión
+completa publicada en `docs/investigacion.html` — lo que se quedó sólo
+aquí es la encuesta cruda, el PDF de la tarea, el guion sin resumir, y
+las notas internas de "qué falta" de cada documento.
 
 ## Qué falta
 
-- Completar la fecha/medio de la sesión en `entrevista-experto-01.md` y
-  `usuario-extremo-01.md` (nombre, rol y años de los tres participantes
-  ya identificados) — no se inventó porque la tarea exige información real.
+- Completar el medio (presencial o remoto) de la sesión en
+  `entrevista-experto-01.md` y `usuario-extremo-01.md` — la fecha
+  (sábado 19 de septiembre de 2026) y los tres participantes ya están
+  identificados.
 - Insights de **Roper Dynagram** (segmentación por valores/estilos de
   vida) — ya hay suficientes personas reales identificadas (7, entre la
   encuesta y esta sesión) para armarlo sin entrevistar a nadie más;

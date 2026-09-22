@@ -70,6 +70,7 @@ súper-usuario marca el piso mínimo de velocidad para todos los demás.
 
 Transcripción completa de la sesión en `entrevista-experto-01.md`, con
 los tres participantes identificados (Capitán González, Maquinista
-Ortega, Bombero Carrillo); sin fotos ni marcas de tiempo de observación
-directa (fue entrevista, no observación en campo) — medio y fecha
-**pendientes de confirmar**, igual que en `entrevista-experto-01.md`.
+Ortega, Bombero Carrillo), del sábado 19 de septiembre de 2026; sin
+fotos ni marcas de tiempo de observación directa (fue entrevista, no
+observación en campo) — medio **pendiente de confirmar**, igual que en
+`entrevista-experto-01.md`.
