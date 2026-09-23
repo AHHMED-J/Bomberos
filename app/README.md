@@ -95,6 +95,7 @@ pantalla de `docs/screens/` salió cada vista.
 | `/direccion/partes/:id` | Detalle del parte | `panel-detalle.html` |
 | `/direccion/archivo` | Archivo | **nueva** |
 | `/direccion/personal` | Personal | **nueva** |
+| `/estadisticas` | Fuera de esta versión | — |
 
 Las cinco pantallas nuevas son las que el documento pide y los mockups no
 tenían: Inicio · Mis partes, el paso 2, el cierre del paso 4, Archivo y
@@ -194,10 +195,13 @@ pantalla, con la etiqueta gris de "Simulado".
 |---|---|---|
 | **Sesión** | Selector de usuario de prueba en `/acceso`, guardado en una cookie. Sin contraseñas. | Cada parte queda ligado a `parte.elaboro_id`, y la bandeja filtra por la división de quien revisa. |
 | **Firma WebAuthn** | Un botón "Firmar con huella o PIN". No hay `navigator.credentials`. | El renglón en la tabla `firma` con el `credential_id`, la hora y quién firmó. La tabla `credencial` tiene su forma real: sólo llave pública, nunca la huella (RNF-05). |
-| **Croquis** | Reconoce palabras en la descripción y arma un SVG de ejemplo con el trazo del mockup. No entiende la escena, sólo empareja palabras clave (`elementosDe` en `src/croquis.js`). | Si la descripción está vacía sale la pantalla "croquis sin respuesta"; el parte se guarda igual, porque el croquis es opcional. |
+| **Croquis con IA** | Sin `GEMINI_API_KEY`, reconoce palabras en la descripción y arma un SVG de ejemplo con el trazo del mockup. | Con la llave puesta en `.env` llama a la API de verdad, con salida en JSON. Si falla, sale la pantalla "croquis sin respuesta" y el parte se guarda igual. |
 | **PDF sellado** | El documento sellado es HTML, no PDF (`views/sellado.ejs`, guardado en `almacen/`). | El hash SHA-256 se calcula sobre el archivo, y `resguardo_hasta` = fecha del servicio + 10 años. Cambiar a PDF es reemplazar `sellar()` en `src/sellado.js`. |
 | **Autoguardado** | Se guarda al pasar de paso, no campo por campo, y no hay guardado sin conexión. | El parte se crea como `borrador` al abrirlo, y entrar a `/partes/:id/firma` sin lo obligatorio manda al primer paso incompleto. |
 | **Fotos, exportar PDF y CSV, alta de personas nuevas** | No implementados. | — |
+
+La llave de Gemini nunca va al repositorio: se lee de `.env`, que está en el
+`.gitignore`, y `.env.example` la deja vacía.
 
 ## Cómo está armado
 
@@ -213,7 +217,7 @@ app/
     db.js           el pool de MySQL
     sesion.js       quién entró y el menú por rol
     parte.js        consultas del parte, qué le falta, la búsqueda
-    croquis.js      el croquis (simulado, por palabras clave)
+    croquis.js      el croquis (simulado o con Gemini)
     sellado.js      sellar, hashear y fijar el resguardo
     formato.js      fechas, horas y estados en pantalla
     rutas/          acceso · partes · revision · direccion
