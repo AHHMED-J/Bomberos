@@ -1,10 +1,10 @@
 // El croquis de la escena (Figura 4).
 //
-// SIMULADO: reconoce palabras en la descripción y arma un SVG de ejemplo
-// con el mismo trazo de docs/screens/croquis.html. No entiende la escena,
-// sólo empareja palabras clave contra un catálogo corto (elementosDe). Si
-// la descripción está vacía, quien llama muestra la pantalla "croquis sin
-// respuesta" y guarda el parte igual, porque el croquis es opcional.
+// Sin GEMINI_API_KEY es SIMULADO: reconoce palabras en la descripción y
+// arma un SVG de ejemplo con el mismo trazo de docs/screens/croquis.html.
+// Con llave, le pide los elementos a la API en JSON. Si falla, quien llama
+// muestra la pantalla "croquis sin respuesta" y guarda el parte igual,
+// porque el croquis es opcional.
 
 'use strict';
 
@@ -96,11 +96,86 @@ function dibujar(elementos, lugar) {
     ${piezas.join('')}</svg>`;
 }
 
+async function pedirAGemini(descripcion) {
+  const modelo = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+
+  const respuesta = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`,
+    {
+      method: 'POST',
+      signal: AbortSignal.timeout(12000),   // se rinde a los 12 segundos
+      headers: {
+        'content-type': 'application/json',
+        'x-goog-api-key': process.env.GEMINI_API_KEY,
+      },
+      body: JSON.stringify({
+        contents: [{
+          role: 'user',
+          parts: [{
+            text:
+              'Eres el asistente de croquis de un parte de bomberos. A partir de la ' +
+              'descripción de los hechos, devuelve los elementos que debe llevar un ' +
+              'croquis esquemático de la escena. Usa sólo estos tipos: ' +
+              CATALOGO.map((c) => c.tipo).join(', ') +
+              '. Responde en español.\n\nDescripción:\n' + descripcion,
+          }],
+        }],
+        generationConfig: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: 'object',
+            properties: {
+              elementos: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    tipo: { type: 'string', enum: CATALOGO.map((c) => c.tipo) },
+                    etiqueta: { type: 'string' },
+                  },
+                  required: ['tipo', 'etiqueta'],
+                },
+              },
+            },
+            required: ['elementos'],
+          },
+        },
+      }),
+    },
+  );
+
+  if (!respuesta.ok) throw new Error(`la API respondió ${respuesta.status}`);
+
+  // La respuesta viene envuelta en varias capas. Se abren de una en una
+  // para que se vea la forma del JSON que manda Gemini.
+  const cuerpo = await respuesta.json();
+  const candidatos = cuerpo.candidates;
+  if (!candidatos || !candidatos.length) throw new Error('la API no devolvió contenido');
+
+  const partes = candidatos[0].content.parts;
+  if (!partes || !partes.length) throw new Error('la API no devolvió contenido');
+
+  const elementos = JSON.parse(partes[0].text).elementos;
+  if (!Array.isArray(elementos) || !elementos.length) {
+    throw new Error('la API no devolvió elementos');
+  }
+  return elementos;
+}
+
 // Devuelve { ok, elementos, svg } o { ok: false, motivo }.
 async function generar(parte) {
   const descripcion = parte.descripcion || '';
   if (!descripcion.trim()) {
     return { ok: false, motivo: 'Todavía no hay descripción de los hechos que leer.' };
+  }
+
+  if (process.env.GEMINI_API_KEY) {
+    try {
+      const elementos = await pedirAGemini(descripcion);
+      return { ok: true, elementos, svg: dibujar(elementos, parte.lugar_servicio) };
+    } catch (error) {
+      return { ok: false, motivo: `El servicio de IA no respondió (${error.message}).` };
+    }
   }
 
   const elementos = elementosDe(descripcion);

@@ -141,9 +141,10 @@ async function probar() {
   ok(r.destino === '/partes/' + id + '/croquis',
     '6 · paso 2 guarda y pasa al 3', String(r.destino));
 
-  // El paso 3 es el croquis: se reconocen palabras clave y se dibuja en SVG.
+  // El paso 3 es el croquis. Se genera con Gemini y se dibuja en SVG.
   const descripcion = 'Incendio en una casa de dos pisos; la unidad quedo sobre la calle.';
 
+  // Se simula la llamada a Gemini, que devuelve un JSON con los elementos del croquis.
   r = await bombero.post('/partes/' + id + '/croquis/generar', { descripcion: descripcion });
   ok(r.destino === '/partes/' + id + '/croquis',
     '7 · generar croquis (simulado)', String(r.destino));

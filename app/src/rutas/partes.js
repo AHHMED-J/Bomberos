@@ -128,7 +128,7 @@ router.get('/partes/:id/datos', soloBombero, cargarParaCaptura, async (req, res,
   try {
     // Las listas de unidades, estaciones y tipos de servicio que llenan los
     // <select> de la pantalla.
-    const catalogos = await parteDb.catalogosDeCaptura();
+    const catalogos = await parteDb.catalogos();
 
     res.render('partes/datos', {
       titulo: 'Datos del servicio',
@@ -140,6 +140,7 @@ router.get('/partes/:id/datos', soloBombero, cargarParaCaptura, async (req, res,
       unidades: catalogos.unidades,
       tipos: catalogos.tipos,
       estaciones: catalogos.estaciones,
+      personal: catalogos.personal,
     });
   } catch (error) {
     siguiente(error);
@@ -178,7 +179,7 @@ router.post('/partes/:id/datos', soloBombero, cargarParaCaptura, async (req, res
 
 router.get('/partes/:id/personas', soloBombero, cargarParaCaptura, async (req, res, siguiente) => {
   try {
-    const personal = await parteDb.catalogoPersonal();
+    const catalogos = await parteDb.catalogos();
 
     res.render('partes/personas', {
       titulo: 'Personas y apoyos',
@@ -187,7 +188,10 @@ router.get('/partes/:id/personas', soloBombero, cargarParaCaptura, async (req, r
       parte: req.parte,
       pasos: pasosDe(req.parte, 'personas'),
       faltantes: new Map(parteDb.faltantesDe(req.parte, 'personas')),
-      personal: personal,
+      unidades: catalogos.unidades,
+      tipos: catalogos.tipos,
+      estaciones: catalogos.estaciones,
+      personal: catalogos.personal,
     });
   } catch (error) {
     siguiente(error);
@@ -330,6 +334,7 @@ router.get('/partes/:id/croquis', soloBombero, cargarParaCaptura, (req, res) => 
     pasos: pasosDe(req.parte, 'croquis'),
     faltantes: new Map(parteDb.faltantesDe(req.parte, 'croquis')),
     sinRespuesta: req.query.sin_respuesta ? String(req.query.sin_respuesta) : null,
+    conIA: Boolean(process.env.GEMINI_API_KEY),
   });
 });
 

@@ -183,37 +183,19 @@ function revisionAutomatica(parte) {
   return faltas;
 }
 
-// Un renglón por catálogo: cada pantalla sólo pide los que dibuja, en vez
-// de cargar los cuatro cada vez (el paso 1 no usa personal, el paso 2 no
-// usa unidades/tipos/estaciones).
-function catalogoUnidades() {
-  return filas('SELECT id, clave FROM unidad ORDER BY clave');
-}
-
-function catalogoTipos() {
-  return filas(
+async function catalogos() {
+  const unidades = await filas('SELECT id, clave FROM unidad ORDER BY clave');
+  const tipos = await filas(
     `SELECT ts.id, ts.nombre, d.nombre AS division
        FROM tipo_servicio ts JOIN division d ON d.id = ts.division_id
       ORDER BY d.nombre, ts.nombre`,
   );
-}
-
-function catalogoEstaciones() {
-  return filas('SELECT id, numero, nombre FROM estacion ORDER BY numero');
-}
-
-function catalogoPersonal() {
-  return filas(
+  const estaciones = await filas('SELECT id, numero, nombre FROM estacion ORDER BY numero');
+  const personal = await filas(
     "SELECT id, nombre, no_empleado FROM usuario WHERE rol <> 'direccion' ORDER BY nombre",
   );
-}
 
-// Paso 1 · Datos del servicio: los tres <select> de esa pantalla.
-async function catalogosDeCaptura() {
-  const [unidades, tipos, estaciones] = await Promise.all([
-    catalogoUnidades(), catalogoTipos(), catalogoEstaciones(),
-  ]);
-  return { unidades: unidades, tipos: tipos, estaciones: estaciones };
+  return { unidades: unidades, tipos: tipos, estaciones: estaciones, personal: personal };
 }
 
 /* --- La búsqueda de /consulta y /direccion/partes (Tabla 3) -------------- */
@@ -294,14 +276,12 @@ async function buscar(filtros = {}, alcance = {}) {
   );
 }
 
-// Los filtros de /consulta y /direccion/partes: sólo tipo de servicio y
-// unidad, que es lo que dibuja esa pantalla.
 async function catalogosDeFiltro() {
-  const [tipos, unidades] = await Promise.all([catalogoTipos(), catalogoUnidades()]);
-  return { tipos: tipos, unidades: unidades };
+  const todos = await catalogos();
+  return { tipos: todos.tipos, unidades: todos.unidades };
 }
 
 module.exports = {
   PASOS, vacio, crearBorrador, cargar, faltantesDe, primerPasoIncompleto,
-  revisionAutomatica, catalogosDeCaptura, catalogoPersonal, buscar, catalogosDeFiltro,
+  revisionAutomatica, catalogos, buscar, catalogosDeFiltro,
 };

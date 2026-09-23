@@ -184,6 +184,7 @@ CREATE TABLE persona_involucrada (
   telefono    VARCHAR(40)       NULL,
   domicilio   VARCHAR(255)      NULL,
   aseguradora VARCHAR(160)      NULL,
+  firma_trazo TEXT              NULL,
   PRIMARY KEY (id),
   KEY idx_persona_parte (parte_id),
   CONSTRAINT fk_persona_parte FOREIGN KEY (parte_id) REFERENCES parte (id) ON DELETE CASCADE
