@@ -58,11 +58,6 @@ app.get('/', (req, res) => {
   res.redirect(req.usuario ? sesion.inicioDe(req.usuario) : '/acceso');
 });
 
-// Estadísticas quedó fuera de esta versión (sección 1.3 del documento).
-app.get('/estadisticas', sesion.exigirSesion, (req, res) => {
-  res.render('fuera-de-version', { titulo: 'Estadísticas' });
-});
-
 app.use((req, res) => {
   res.status(404).render('no-existe', { ruta: req.originalUrl });
 });

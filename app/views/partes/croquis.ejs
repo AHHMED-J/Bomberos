@@ -50,9 +50,7 @@
               <%- include('/parcial/icono', { icono: 'lapiz', tam: 'md' }) %>
               <%= parte.croquis ? 'Volver a generar el croquis' : 'Generar croquis a partir del texto' %>
             </button>
-            <p class="marca-simulado">
-              <%= conIA ? 'Con GEMINI_API_KEY · llama a la API' : 'Simulado · croquis de ejemplo, sin llave de IA' %>
-            </p>
+            <p class="marca-simulado">Simulado · croquis de ejemplo a partir de palabras clave</p>
           </div>
         </section>
 
