@@ -1,0 +1,64 @@
+/* nav.css — la barra lateral con la lista de pantallas del prototipo.
+   Sólo la usa docs/prototipo.html (la hoja combinada); una pantalla suelta
+   en docs/screens/ no la necesita. */
+.app { display: grid; grid-template-columns: 300px 1fr; min-height: 100vh; }
+.panel {
+  background: var(--tinta);
+  color: #fff;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.panel h1 {
+  margin: 0;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 34px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.panel p { margin: 6px 0 0; color: #D6CFC4; font-size: 15px; line-height: 1.4; }
+.grupo h2 {
+  margin: 0 0 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+.grupo ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  counter-reset: n;
+}
+.grupo li a {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: 10px;
+  color: #E9E4DC;
+  text-decoration: none;
+  font-size: 16px;
+}
+.grupo li a::before {
+  counter-increment: n;
+  content: counter(n);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  color: #8A847B;
+  width: 14px;
+}
+.grupo li a:hover { background: #2E2C29; }
+.grupo li a.activa { background: var(--rojo); color: #fff; }
+.grupo li a.activa::before { color: #fff; }
+
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; }
+  .panel { padding: 20px 16px; gap: 16px; }
+  .grupo ol { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  .grupo li a { padding: 8px 10px; background: #2E2C29; font-size: 15px; }
+}

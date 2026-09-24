@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototipo · Bomberos de Ensenada · v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="css/frame.css">
+</head>
+<body>
+<div class="app">
+<nav class="panel" aria-label="Pantallas del prototipo">
+<div><h1>Bomberos de Ensenada</h1><p>Prototipo de la app de reportes. Toca los botones dentro del teléfono o elige una pantalla.</p></div>
+<div class="grupo"><h2>Elemento</h2><ol><li><a href="#Main" data-p="Main">Inicio de sesión</a></li><li><a href="#Inicio" data-p="Inicio">Menú</a></li><li><a href="#HojaIncidente" data-p="HojaIncidente">Hoja de incidente</a></li><li><a href="#Enviado" data-p="Enviado">Hoja enviada</a></li><li><a href="#MisDocumentos" data-p="MisDocumentos">Mis documentos</a></li></ol></div><div class="grupo"><h2>Encargado de turno</h2><ol><li><a href="#InicioEncargado" data-p="InicioEncargado">Menú del encargado</a></li><li><a href="#AdministrarElementos" data-p="AdministrarElementos">Administrar elementos</a></li><li><a href="#Papeleria" data-p="Papeleria">Papelería</a></li><li><a href="#RevisarHoja" data-p="RevisarHoja">Revisar hoja</a></li></ol></div><div class="grupo"><h2>Dirección</h2><ol><li><a href="#DireccionMenu" data-p="DireccionMenu">Menú de dirección</a></li><li><a href="#DireccionDivision" data-p="DireccionDivision">Turnos de la división</a></li><li><a href="#DireccionPapeleria" data-p="DireccionPapeleria">Papelería del turno</a></li></ol></div>
+</nav>
+<main class="escenario">
+<div class="telefono"><div class="visor" id="visor">
+<section class="pantalla" id="Main" aria-label="Inicio de sesión">
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 88px 28px 56px; display: flex; flex-direction: column; gap: 64px; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; width: 320px; height: 382px">
+<img src="img/escudo-login.png" alt="Escudo de Bomberos de Ensenada" style="width: 150px; height: 150px; object-fit: contain; display: block;">
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 44px; line-height: 1; text-transform: uppercase; color: #B3261E;">Bomberos de Ensenada</h1>
+</div>
+<div style="display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<label for="empleado" style="font-size: 20px; font-weight: 500;">Número de empleado</label>
+<input id="empleado" type="text" inputmode="numeric" style="height: 64px; width: 100%; box-sizing: border-box; border: 2px solid #B3261E; border-radius: 14px; padding: 0 18px; font-family: inherit; font-size: 22px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<label for="contrasena" style="font-size: 20px; font-weight: 500;">Contraseña</label>
+<div style="position: relative;">
+<input id="contrasena" type="password" style="height: 64px; width: 100%; box-sizing: border-box; border: 2px solid #B3261E; border-radius: 14px; padding: 0 64px 0 18px; font-family: inherit; font-size: 22px; background: #FFFFFF; color: #1C1B19;">
+<button type="button" aria-label="Mostrar contraseña" style="position: absolute; right: 8px; top: 8px; width: 48px; height: 48px; border: none; background: transparent; color: #5A5650; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+</div>
+</div>
+</div>
+<a href="#Inicio" style="display: flex; align-items: center; justify-content: center; height: 64px; margin-top: auto; border-radius: 14px; background: #B3261E; color: #FFFFFF; font-size: 22px; font-weight: 600; text-decoration: none;">Iniciar sesión</a>
+</div>
+</section>
+<section class="pantalla" id="Inicio" aria-label="Menú">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="background: #B3261E; color: #FFFFFF; padding: 56px 16px 28px 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 44px; line-height: 1; text-transform: uppercase; padding-top: 8px;">División Estructural</h1>
+<button type="button" aria-label="Notificaciones" style="flex-shrink: 0; width: 48px; height: 48px; border: none; border-radius: 999px; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"></path></svg></button>
+</div>
+<a href="#MisDocumentos" style="margin: 20px 20px 0; height: 52px; border-radius: 14px; background: #1C1B19; color: #FFFFFF; display: flex; align-items: center; gap: 10px; padding: 0 14px 0 18px; text-decoration: none;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+<span style="flex-grow: 1; font-size: 20px; font-weight: 600;">Mis documentos</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 16px 20px 28px;">
+<a href="#HojaIncidente" style="height: 230px; box-sizing: border-box; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 16px; text-align: center; text-decoration: none; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1"></path><path d="M12 9.5c.8 1.3 2.3 2 2.3 4a2.3 2.3 0 0 1-4.6 0c0-1 .6-1.6 1.1-2 0 .9.5 1.4 1.2 1.5 0-1.4-.5-2.3 0-3.5z"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Hoja de incidente</span>
+</a>
+<button type="button" style="height: 230px; box-sizing: border-box; border: none; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 16px; font-family: inherit; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3.5 19a5.5 5.5 0 0 1 11 0"></path><path d="M15 12.5l2 2 4-4"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Lista de asistencia</span>
+</button>
+<button type="button" style="height: 230px; box-sizing: border-box; border: none; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 16px; font-family: inherit; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 20H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v4"></path><path d="M8 8h5M8 12h4"></path><path d="M19.5 11.5l1.5 1.5-6 6H13.5V17.5z"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Notas</span>
+</button>
+<button type="button" style="height: 230px; box-sizing: border-box; border: none; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 16px; font-family: inherit; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0 5.2 5.2l-2.2-2.2-.4-2.4-2.4-.4z"></path><path d="M14.7 6.3a4 4 0 0 1 5.2 5.2 4 4 0 0 1-4.6.9L7.5 20.2a1.9 1.9 0 0 1-2.7-2.7l7.8-7.8a4 4 0 0 1 2.1-3.4z"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Revisión mecánica</span>
+</button>
+</div>
+</div>
+</section>
+<section class="pantalla" id="HojaIncidente" aria-label="Hoja de incidente">
+<div style="width: 390px; height: 4900px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+
+<div style="background: #B3261E; color: #FFFFFF; padding: 52px 20px 22px; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; align-items: center; gap: 6px;">
+<a href="#Inicio" aria-label="Regresar al menú" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -10px; color: #FFFFFF;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 34px; line-height: 1; text-transform: uppercase;">Hoja de incidente</h1>
+</div>
+<p style="margin: 0; font-size: 17px;">Reporte de salida de incidente</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 28px; padding: 24px 20px 40px; flex-grow: 1;">
+
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Datos del servicio</h2>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="c5" style="font-size: 16px; font-weight: 600;">No. de incidente de C-5</label>
+<input id="c5" type="text" inputmode="numeric" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="fecha" style="font-size: 16px; font-weight: 600;">Fecha</label>
+<input id="fecha" type="text" value="[dd/mm/aa]" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="salida" style="font-size: 16px; font-weight: 600;">Hora de salida</label>
+<input id="salida" type="text" value="[hh:mm]" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="regreso" style="font-size: 16px; font-weight: 600;">Hora de regreso</label>
+<input id="regreso" type="text" value="[hh:mm]" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="unidad" style="font-size: 16px; font-weight: 600;">Unidad</label>
+<input id="unidad" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="turno" style="font-size: 16px; font-weight: 600;">Turno</label>
+<div style="position: relative;">
+<select id="turno" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 44px 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19; appearance: none; -webkit-appearance: none;"><option>Selecciona el turno</option><option>Único</option><option>[Otro turno]</option></select>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C1B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; right: 14px; top: 15px; pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="estacion" style="font-size: 16px; font-weight: 600;">Estación</label>
+<div style="position: relative;">
+<select id="estacion" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 44px 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19; appearance: none; -webkit-appearance: none;"><option>Selecciona la estación</option><option>[Estación 1]</option><option>[Estación 2]</option><option>3 - Valle Dorado</option></select>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C1B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; right: 14px; top: 15px; pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="tipo" style="font-size: 16px; font-weight: 600;">Tipo de servicio</label>
+<div style="position: relative;">
+<select id="tipo" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 44px 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19; appearance: none; -webkit-appearance: none;"><option>Selecciona el tipo de servicio</option><option>Búsqueda</option><option>Rescate</option><option>Incendio</option><option>Fuga de gas</option><option>Atención prehospitalaria</option><option>Otro</option></select>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C1B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; right: 14px; top: 15px; pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 16px; font-weight: 600;">Zona</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 12px; background: #EFEBE5;">
+<button type="button" aria-pressed="true" style="height: 46px; border: none; border-radius: 9px; background: #B3261E; color: #FFFFFF; font-family: inherit; font-size: 18px; font-weight: 600;">Rural</button>
+<button type="button" aria-pressed="false" style="height: 46px; border: none; border-radius: 9px; background: transparent; color: #1C1B19; font-family: inherit; font-size: 18px; font-weight: 500;">Urbana</button>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="despacho" style="font-size: 16px; font-weight: 600;">Despacho</label>
+<input id="despacho" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Lugar y propietario</h2>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="lugar" style="font-size: 16px; font-weight: 600;">Lugar del servicio</label>
+<input id="lugar" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 12px; border: 1px solid #1C1B19; background: transparent; color: #1C1B19; font-family: inherit; font-size: 16px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>Usar mi ubicación actual</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="propietario" style="font-size: 16px; font-weight: 600;">Nombre del propietario / arrendatario</label>
+<input id="propietario" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="telefono" style="font-size: 16px; font-weight: 600;">Teléfono de contacto</label>
+<input id="telefono" type="tel" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="domicilio" style="font-size: 16px; font-weight: 600;">Domicilio particular</label>
+<input id="domicilio" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="aseguradora" style="font-size: 16px; font-weight: 600;">Compañía aseguradora</label>
+<input id="aseguradora" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Descripción del incidente</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 12px; background: #EFEBE5;">
+<button type="button" aria-pressed="true" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 46px; border: none; border-radius: 9px; background: #B3261E; color: #FFFFFF; font-family: inherit; font-size: 18px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>Escribir</button>
+<button type="button" aria-pressed="false" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 46px; border: none; border-radius: 9px; background: transparent; color: #1C1B19; font-family: inherit; font-size: 18px; font-weight: 500;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path></svg>Con voz</button>
+</div>
+<label for="descripcion" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Descripción del incidente</label>
+<textarea id="descripcion" placeholder="Narra lo ocurrido y las acciones realizadas" style="height: 220px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 14px; font-family: inherit; font-size: 18px; line-height: 1.4; background: #FFFFFF; color: #1C1B19; resize: none;"></textarea>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Personal de turno</h2>
+<div style="display: flex; gap: 8px; font-size: 14px; font-weight: 600; color: #5A5650;"><span style="flex-grow: 1;">Nombre completo</span><span style="width: 110px;">No. empleado</span></div>
+<div style="display: flex; gap: 8px;">
+<input type="text" aria-label="Nombre completo, elemento 1" style="flex-grow: 1; min-width: 0; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<input type="text" inputmode="numeric" aria-label="Número de empleado, elemento 1" style="width: 110px; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 12px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; gap: 8px;">
+<input type="text" aria-label="Nombre completo, elemento 2" style="flex-grow: 1; min-width: 0; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<input type="text" inputmode="numeric" aria-label="Número de empleado, elemento 2" style="width: 110px; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 12px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 12px; border: 1px dashed #8A847B; background: transparent; color: #1C1B19; font-family: inherit; font-size: 16px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Agregar elemento</button>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="voluntarios" style="font-size: 16px; font-weight: 600;">Voluntarios</label>
+<input id="voluntarios" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Unidades de bomberos en apoyo</h2>
+<div style="display: flex; gap: 8px; font-size: 14px; font-weight: 600; color: #5A5650;"><span style="width: 110px;">No. unidad</span><span style="flex-grow: 1;">A cargo de</span></div>
+<div style="display: flex; gap: 8px;">
+<input type="text" aria-label="Número de unidad en apoyo" style="width: 110px; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 12px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<input type="text" aria-label="Unidad en apoyo a cargo de" style="flex-grow: 1; min-width: 0; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 12px; border: 1px dashed #8A847B; background: transparent; color: #1C1B19; font-family: inherit; font-size: 16px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Agregar unidad</button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Instituciones de apoyo</h2>
+<div style="display: flex; gap: 8px; font-size: 14px; font-weight: 600; color: #5A5650;"><span style="width: 110px;">No. unidad</span><span style="flex-grow: 1;">A cargo de</span></div>
+<div style="display: flex; gap: 8px;">
+<input type="text" aria-label="Número de unidad de la institución" style="width: 110px; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 12px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<input type="text" aria-label="Institución a cargo de" style="flex-grow: 1; min-width: 0; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 12px; border: 1px dashed #8A847B; background: transparent; color: #1C1B19; font-family: inherit; font-size: 16px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Agregar institución</button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Firmas del parte</h2>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 16px; font-weight: 600;">Firma del encargado en turno / quien formuló</span>
+<button type="button" style="height: 110px; border-radius: 12px; border: 1px solid #CFC8BD; background: #FFFFFF; color: #5A5650; font-family: inherit; font-size: 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 14px; gap: 8px;"><span style="width: 70%; height: 1px; background: #8A847B;"></span>Toca para firmar</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="recibe" style="font-size: 16px; font-weight: 600;">Nombre de quien recibe parte</label>
+<input id="recibe" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Croquis</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;">
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 52px; border-radius: 12px; border: 2px solid #B3261E; background: #FBEAE8; color: #8C1D17; font-family: inherit; font-size: 17px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="M13.5 6.5l4 4"></path></svg>Dibujar</button>
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 52px; border-radius: 12px; border: 1px solid #CFC8BD; background: #FFFFFF; color: #1C1B19; font-family: inherit; font-size: 17px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"></path><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"></path></svg>Generar con IA</button>
+</div>
+<div style="height: 260px; border-radius: 12px; border: 1px dashed #8A847B; background: #FAF8F5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 20px; box-sizing: border-box; text-align: center; color: #5A5650; font-size: 16px;">
+<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"></path><path d="M9 3v15M15 6v15"></path></svg>
+Dibuja con el dedo el lugar, las unidades y los puntos de referencia
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Propietario y testigo</h2>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="firma-propietario" style="font-size: 16px; font-weight: 600;">Nombre y firma del propietario</label>
+<input id="firma-propietario" type="text" placeholder="Nombre" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<button type="button" style="height: 96px; border-radius: 12px; border: 1px solid #CFC8BD; background: #FFFFFF; color: #5A5650; font-family: inherit; font-size: 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12px; gap: 8px;"><span style="width: 70%; height: 1px; background: #8A847B;"></span>Toca para firmar</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="firma-testigo" style="font-size: 16px; font-weight: 600;">Nombre y firma del testigo</label>
+<input id="firma-testigo" type="text" placeholder="Nombre" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<button type="button" style="height: 96px; border-radius: 12px; border: 1px solid #CFC8BD; background: #FFFFFF; color: #5A5650; font-family: inherit; font-size: 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12px; gap: 8px;"><span style="width: 70%; height: 1px; background: #8A847B;"></span>Toca para firmar</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="terceros" style="font-size: 16px; font-weight: 600;">Propietarios daños a terceros</label>
+<input id="terceros" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">¿Requiere peritaje?</h2>
+<button type="button" aria-pressed="false" style="display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 12px; border: 1px solid #CFC8BD; background: #FFFFFF; color: #1C1B19; font-family: inherit; text-align: left;">
+<span style="flex-shrink: 0; width: 22px; height: 22px; margin-top: 2px; border-radius: 999px; border: 2px solid #8A847B; box-sizing: border-box;"></span>
+<span style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 18px; font-weight: 600;">Sí</span><span style="font-size: 15px; line-height: 1.35; color: #3D3A35;">Estoy de acuerdo en que el perito realice los trabajos de investigación.</span></span>
+</button>
+<button type="button" aria-pressed="true" style="display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 12px; border: 2px solid #B3261E; background: #FBEAE8; color: #1C1B19; font-family: inherit; text-align: left;">
+<span style="flex-shrink: 0; width: 22px; height: 22px; margin-top: 2px; border-radius: 999px; border: 7px solid #B3261E; box-sizing: border-box; background: #FFFFFF;"></span>
+<span style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 18px; font-weight: 600;">No</span><span style="font-size: 15px; line-height: 1.35; color: #3D3A35;">No requiero el trabajo de investigación por parte de la Dirección de Bomberos. Libero de toda responsabilidad al Departamento de Bomberos.</span></span>
+</button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 12px;">
+<a href="#Enviado" style="display: flex; align-items: center; justify-content: center; height: 60px; border-radius: 14px; background: #B3261E; color: #FFFFFF; font-size: 21px; font-weight: 600; text-decoration: none;">Enviar hoja de incidente</a>
+<a href="#Inicio" style="display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 12px; color: #1C1B19; font-size: 17px; font-weight: 600; text-decoration: underline;">Guardar como borrador</a>
+</div>
+
+</div>
+</div>
+</section>
+<section class="pantalla" id="Enviado" aria-label="Hoja enviada">
+<div style="width: 390px; height: 844px; box-sizing: border-box; padding: 48px 24px 40px; display: flex; flex-direction: column; justify-content: space-between; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 28px; margin-top: 200px; text-align: center;">
+<div style="width: 96px; height: 96px; border-radius: 999px; background: #2E6B3A; color: #FFFFFF; display: flex; align-items: center; justify-content: center;">
+<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 44px; line-height: 1; text-transform: uppercase; color: #2E6B3A;">Enviado</h1>
+<p style="margin: 0; font-size: 24px; font-weight: 500; line-height: 1.3; max-width: 320px;">El encargado de turno revisará tu hoja</p>
+</div>
+</div>
+<a href="#Inicio" style="display: flex; align-items: center; justify-content: center; height: 64px; border-radius: 14px; background: #B3261E; color: #FFFFFF; font-size: 22px; font-weight: 600; text-decoration: none;">Volver al inicio</a>
+</div>
+</section>
+<section class="pantalla" id="MisDocumentos" aria-label="Mis documentos">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="background: #B3261E; color: #FFFFFF; padding: 52px 20px 24px; display: flex; align-items: center; gap: 6px;">
+<a href="#Inicio" aria-label="Regresar al menú" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -10px; color: #FFFFFF;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 36px; line-height: 1; text-transform: uppercase;">Mis documentos</h1>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px; padding: 24px 20px;">
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 18px 16px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 56px; height: 56px; border-radius: 999px; background: #2E6B3A; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 20px; font-weight: 600;">Hoja de incidente</span>
+<span style="font-size: 17px; font-weight: 500; color: #3D3A35;">#482917</span>
+<span style="align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: #DDEBDD; color: #1F4D28; font-size: 15px; font-weight: 600;">Revisado</span>
+</span>
+</a>
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 18px 16px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 56px; height: 56px; border-radius: 999px; background: #E8B20E; color: #1C1B19; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 20px; font-weight: 600;">Hoja de incidente</span>
+<span style="font-size: 17px; font-weight: 500; color: #3D3A35;">#735204</span>
+<span style="align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: #FBEFC4; color: #6B4E00; font-size: 15px; font-weight: 600;">Pendiente</span>
+</span>
+</a>
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 18px 16px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 56px; height: 56px; border-radius: 999px; background: #8A847B; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="M13.5 6.5l4 4"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 20px; font-weight: 600;">Hoja de incidente</span>
+<span style="font-size: 17px; font-weight: 500; color: #3D3A35;">#160583</span>
+<span style="align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: #E4E1DC; color: #3D3A35; font-size: 15px; font-weight: 600;">Borrador</span>
+</span>
+</a>
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 18px 16px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 56px; height: 56px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5v7"></path><path d="M12 17.5h.01"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 20px; font-weight: 600;">Hoja de incidente</span>
+<span style="font-size: 17px; font-weight: 500; color: #3D3A35;">#397641</span>
+<span style="align-self: flex-start; padding: 4px 12px; border-radius: 999px; background: #FBE0DD; color: #8C1D17; font-size: 15px; font-weight: 600;">Corregir</span>
+</span>
+</a>
+
+</div>
+</div>
+</section>
+<section class="pantalla" id="InicioEncargado" aria-label="Menú del encargado">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="background: #B3261E; color: #FFFFFF; padding: 56px 16px 28px 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 44px; line-height: 1; text-transform: uppercase; padding-top: 8px;">División Estructural</h1>
+<button type="button" aria-label="Notificaciones" style="flex-shrink: 0; width: 48px; height: 48px; border: none; border-radius: 999px; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"></path></svg></button>
+</div>
+<a href="#MisDocumentos" style="margin: 20px 20px 0; height: 52px; border-radius: 14px; background: #1C1B19; color: #FFFFFF; display: flex; align-items: center; gap: 10px; padding: 0 14px 0 18px; text-decoration: none;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+<span style="flex-grow: 1; font-size: 20px; font-weight: 600;">Mis documentos</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#AdministrarElementos" style="margin: 12px 20px 0; height: 52px; border-radius: 14px; background: #1C1B19; color: #FFFFFF; display: flex; align-items: center; gap: 10px; padding: 0 14px 0 18px; text-decoration: none;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3.5 19a5.5 5.5 0 0 1 11 0"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M16 14.2a4.5 4.5 0 0 1 5 4.8"></path></svg>
+<span style="flex-grow: 1; font-size: 20px; font-weight: 600;">Administrar elementos</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#Papeleria" style="margin: 12px 20px 0; height: 52px; border-radius: 14px; background: #1C1B19; color: #FFFFFF; display: flex; align-items: center; gap: 10px; padding: 0 14px 0 18px; text-decoration: none;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h9a2 2 0 0 1 2 2v12"></path><rect x="4" y="6" width="12" height="15" rx="2"></rect><path d="M7 11h6M7 15h4"></path></svg>
+<span style="flex-grow: 1; font-size: 20px; font-weight: 600;">Papelería</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 16px 20px 28px;">
+<a href="#HojaIncidente" style="height: 200px; box-sizing: border-box; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 16px; text-align: center; text-decoration: none; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1"></path><path d="M12 9.5c.8 1.3 2.3 2 2.3 4a2.3 2.3 0 0 1-4.6 0c0-1 .6-1.6 1.1-2 0 .9.5 1.4 1.2 1.5 0-1.4-.5-2.3 0-3.5z"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Hoja de incidente</span>
+</a>
+<button type="button" style="height: 200px; box-sizing: border-box; border: none; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 16px; font-family: inherit; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3.5 19a5.5 5.5 0 0 1 11 0"></path><path d="M15 12.5l2 2 4-4"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Lista de asistencia</span>
+</button>
+<button type="button" style="height: 200px; box-sizing: border-box; border: none; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 16px; font-family: inherit; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 20H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v4"></path><path d="M8 8h5M8 12h4"></path><path d="M19.5 11.5l1.5 1.5-6 6H13.5V17.5z"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Notas</span>
+</button>
+<button type="button" style="height: 200px; box-sizing: border-box; border: none; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 16px; font-family: inherit; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0 5.2 5.2l-2.2-2.2-.4-2.4-2.4-.4z"></path><path d="M14.7 6.3a4 4 0 0 1 5.2 5.2 4 4 0 0 1-4.6.9L7.5 20.2a1.9 1.9 0 0 1-2.7-2.7l7.8-7.8a4 4 0 0 1 2.1-3.4z"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Revisión mecánica</span>
+</button>
+</div>
+</div>
+</section>
+<section class="pantalla" id="AdministrarElementos" aria-label="Administrar elementos">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="background: #B3261E; color: #FFFFFF; padding: 52px 20px 24px; display: flex; align-items: center; gap: 6px;">
+<a href="#InicioEncargado" aria-label="Regresar al menú" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -10px; color: #FFFFFF;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 34px; line-height: 1; text-transform: uppercase;">Administrar elementos</h1>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 24px 20px;">
+
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 16px; background: #F1EEEA;">
+<label for="rol1" style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.2;">Carlos Mendoza Ruiz</label>
+<div style="position: relative; flex-shrink: 0;">
+<select id="rol1" style="width: 132px; height: 48px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 36px 0 14px; font-family: inherit; font-size: 17px; background: #FFFFFF; color: #1C1B19; appearance: none; -webkit-appearance: none;"><option selected="">Editor</option><option>Revisor</option></select>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1C1B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; right: 10px; top: 14px; pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 16px; background: #F1EEEA;">
+<label for="rol2" style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.2;">Ana Lucía Torres Vega</label>
+<div style="position: relative; flex-shrink: 0;">
+<select id="rol2" style="width: 132px; height: 48px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 36px 0 14px; font-family: inherit; font-size: 17px; background: #FFFFFF; color: #1C1B19; appearance: none; -webkit-appearance: none;"><option>Editor</option><option selected="">Revisor</option></select>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1C1B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; right: 10px; top: 14px; pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 16px; background: #F1EEEA;">
+<label for="rol3" style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.2;">Jorge Ramírez Soto</label>
+<div style="position: relative; flex-shrink: 0;">
+<select id="rol3" style="width: 132px; height: 48px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 36px 0 14px; font-family: inherit; font-size: 17px; background: #FFFFFF; color: #1C1B19; appearance: none; -webkit-appearance: none;"><option>Editor</option><option selected="">Revisor</option></select>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1C1B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; right: 10px; top: 14px; pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 16px; background: #F1EEEA;">
+<label for="rol4" style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.2;">Mariana Villalobos Peña</label>
+<div style="position: relative; flex-shrink: 0;">
+<select id="rol4" style="width: 132px; height: 48px; box-sizing: border-box; border: 2px solid #B3261E; border-radius: 12px; padding: 0 36px 0 13px; font-family: inherit; font-size: 17px; background: #FFFFFF; color: #1C1B19; appearance: none; -webkit-appearance: none;"><option selected="">Editor</option><option>Revisor</option></select>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B3261E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; right: 10px; top: 14px; pointer-events: none;"><path d="M6 15l6-6 6 6"></path></svg>
+<div role="listbox" aria-label="Rol de Mariana Villalobos Peña" style="position: absolute; top: 54px; right: 0; z-index: 2; width: 180px; box-sizing: border-box; padding: 6px; border-radius: 14px; background: #FFFFFF; border: 1px solid #DDD7CE; box-shadow: 0 10px 28px rgba(28,27,25,0.18); display: flex; flex-direction: column; gap: 4px;">
+<button type="button" role="option" aria-selected="true" style="display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 0 12px; border: none; border-radius: 10px; background: #FBEAE8; color: #8C1D17; font-family: inherit; font-size: 18px; font-weight: 600; text-align: left;">Editor<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></button>
+<button type="button" role="option" aria-selected="false" style="display: flex; align-items: center; height: 48px; padding: 0 12px; border: none; border-radius: 10px; background: transparent; color: #1C1B19; font-family: inherit; font-size: 18px; font-weight: 500; text-align: left;">Revisor</button>
+</div>
+</div>
+</div>
+
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 16px; background: #F1EEEA;">
+<label for="rol5" style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.2;">Luis Fernando Castro</label>
+<div style="position: relative; flex-shrink: 0;">
+<select id="rol5" style="width: 132px; height: 48px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 36px 0 14px; font-family: inherit; font-size: 17px; background: #FFFFFF; color: #1C1B19; appearance: none; -webkit-appearance: none;"><option>Editor</option><option selected="">Revisor</option></select>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1C1B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; right: 10px; top: 14px; pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+<section class="pantalla" id="Papeleria" aria-label="Papelería">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="background: #B3261E; color: #FFFFFF; padding: 52px 20px 24px; display: flex; align-items: center; gap: 6px;">
+<a href="#InicioEncargado" aria-label="Regresar al menú" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -10px; color: #FFFFFF;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 36px; line-height: 1; text-transform: uppercase;">Papelería</h1>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 20px 20px 0; flex-grow: 1;">
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 52px; height: 52px; border-radius: 999px; background: #2E6B3A; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 19px; font-weight: 600;">Hoja de incidente</span>
+<span style="font-size: 16px; color: #3D3A35;">#482917 · Carlos Mendoza Ruiz</span>
+<span style="align-self: flex-start; padding: 3px 12px; border-radius: 999px; background: #DDEBDD; color: #1F4D28; font-size: 14px; font-weight: 600;">Revisado</span>
+</span>
+</a>
+
+<a href="#RevisarHoja" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 52px; height: 52px; border-radius: 999px; background: #E8B20E; color: #1C1B19; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 19px; font-weight: 600;">Hoja de incidente</span>
+<span style="font-size: 16px; color: #3D3A35;">#735204 · Ana Lucía Torres Vega</span>
+<span style="align-self: flex-start; padding: 3px 12px; border-radius: 999px; background: #FBEFC4; color: #6B4E00; font-size: 14px; font-weight: 600;">Pendiente</span>
+</span>
+</a>
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 52px; height: 52px; border-radius: 999px; background: #2E6B3A; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 19px; font-weight: 600;">Revisión mecánica</span>
+<span style="font-size: 16px; color: #3D3A35;">#528063 · Jorge Ramírez Soto</span>
+<span style="align-self: flex-start; padding: 3px 12px; border-radius: 999px; background: #DDEBDD; color: #1F4D28; font-size: 14px; font-weight: 600;">Revisado</span>
+</span>
+</a>
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 52px; height: 52px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5v7"></path><path d="M12 17.5h.01"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 19px; font-weight: 600;">Lista de asistencia</span>
+<span style="font-size: 16px; color: #3D3A35;">#614298 · Luis Fernando Castro</span>
+<span style="align-self: flex-start; padding: 3px 12px; border-radius: 999px; background: #FBE0DD; color: #8C1D17; font-size: 14px; font-weight: 600;">Corregir</span>
+</span>
+</a>
+
+</div>
+<div style="padding: 16px 20px 40px;">
+<button type="button" style="width: 100%; height: 64px; border: none; border-radius: 14px; background: #B3261E; color: #FFFFFF; font-family: inherit; font-size: 22px; font-weight: 600;">Entregar papelería</button>
+</div>
+</div>
+</section>
+<section class="pantalla" id="RevisarHoja" aria-label="Revisar hoja">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="background: #B3261E; color: #FFFFFF; padding: 52px 20px 20px; display: flex; align-items: flex-start; gap: 6px;">
+<a href="#Papeleria" aria-label="Regresar a papelería" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -10px; color: #FFFFFF;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column; gap: 2px; padding-top: 4px;">
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.05; text-transform: uppercase;">Hoja de incidente #735204</h1>
+<p style="margin: 0; font-size: 21px; font-weight: 500;">Ana Lucía Torres Vega</p>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 14px 20px 0; flex-grow: 1;">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+<div style="padding: 8px 12px; border-radius: 12px; background: #F1EEEA;"><div style="font-size: 13px; font-weight: 600; color: #5A5650; text-transform: uppercase; letter-spacing: 0.04em;">Fecha</div><div style="font-size: 18px; font-weight: 600;">18/09/26</div></div>
+<div style="padding: 8px 12px; border-radius: 12px; background: #F1EEEA;"><div style="font-size: 13px; font-weight: 600; color: #5A5650; text-transform: uppercase; letter-spacing: 0.04em;">Salida / regreso</div><div style="font-size: 18px; font-weight: 600;">08:40 – 10:15</div></div>
+<div style="padding: 8px 12px; border-radius: 12px; background: #F1EEEA;"><div style="font-size: 13px; font-weight: 600; color: #5A5650; text-transform: uppercase; letter-spacing: 0.04em;">Unidad</div><div style="font-size: 18px; font-weight: 600;">E-07</div></div>
+<div style="padding: 8px 12px; border-radius: 12px; background: #F1EEEA;"><div style="font-size: 13px; font-weight: 600; color: #5A5650; text-transform: uppercase; letter-spacing: 0.04em;">Turno</div><div style="font-size: 18px; font-weight: 600;">Único</div></div>
+<div style="padding: 8px 12px; border-radius: 12px; background: #F1EEEA;"><div style="font-size: 13px; font-weight: 600; color: #5A5650; text-transform: uppercase; letter-spacing: 0.04em;">Tipo de servicio</div><div style="font-size: 18px; font-weight: 600;">Incendio</div></div>
+<div style="padding: 8px 12px; border-radius: 12px; background: #F1EEEA;"><div style="font-size: 13px; font-weight: 600; color: #5A5650; text-transform: uppercase; letter-spacing: 0.04em;">Zona</div><div style="font-size: 18px; font-weight: 600;">Urbana</div></div>
+</div>
+<div style="padding: 8px 12px; border-radius: 12px; background: #F1EEEA;"><div style="font-size: 13px; font-weight: 600; color: #5A5650; text-transform: uppercase; letter-spacing: 0.04em;">Lugar del servicio</div><div style="font-size: 18px; font-weight: 600;">Lote baldío, Calle 9 y Av. Reforma</div></div>
+<div style="padding: 12px; border-radius: 12px; background: #F1EEEA; display: flex; flex-direction: column; gap: 4px;"><div style="font-size: 13px; font-weight: 600; color: #5A5650; text-transform: uppercase; letter-spacing: 0.04em;">Descripción del incidente</div><div style="font-size: 17px; line-height: 1.35;">Se atendió incendio de basura y maleza en lote baldío. Se sofocó con una línea de ataque y se enfrió la zona. No hubo lesionados.</div></div>
+<div style="padding: 12px; border-radius: 12px; background: #F1EEEA; display: flex; flex-direction: column; gap: 4px;"><div style="font-size: 13px; font-weight: 600; color: #5A5650; text-transform: uppercase; letter-spacing: 0.04em;">Personal de turno</div><div style="font-size: 17px; line-height: 1.35;">Ana Lucía Torres Vega · 10482<br>Mariana Villalobos Peña · 11237</div></div>
+<a href="#HojaIncidente" style="align-self: flex-start; font-size: 17px; font-weight: 600;">Ver hoja completa</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 12px 20px 28px;">
+<a href="#Papeleria" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 64px; border-radius: 14px; background: #B3261E; color: #FFFFFF; font-size: 21px; font-weight: 600; text-decoration: none;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14l-5-5 5-5"></path><path d="M4 9h10a6 6 0 0 1 0 12h-3"></path></svg>Regresar</a>
+<a href="#Papeleria" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 64px; border-radius: 14px; background: #2E6B3A; color: #FFFFFF; font-size: 21px; font-weight: 600; text-decoration: none;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Confirmar</a>
+</div>
+</div>
+</section>
+<section class="pantalla" id="DireccionMenu" aria-label="Menú de dirección">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="background: #B3261E; color: #FFFFFF; padding: 48px 16px 20px 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 40px; line-height: 1; text-transform: uppercase; padding-top: 6px;">Dirección</h1>
+<button type="button" aria-label="Notificaciones" style="flex-shrink: 0; width: 48px; height: 48px; border: none; border-radius: 999px; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"></path></svg></button>
+</div>
+<button type="button" style="margin: 16px 20px 0; height: 52px; border: none; border-radius: 14px; background: #1C1B19; color: #FFFFFF; display: flex; align-items: center; gap: 10px; padding: 0 14px 0 18px; font-family: inherit; text-align: left;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3.5 19a5.5 5.5 0 0 1 11 0"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M16 14.2a4.5 4.5 0 0 1 5 4.8"></path></svg>
+<span style="flex-grow: 1; font-size: 20px; font-weight: 600;">Administrar usuarios</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</button>
+<div style="margin: 12px 20px 0; padding: 12px 16px; border-radius: 14px; background: #1C1B19; color: #FFFFFF; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+<span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #D6CFC4;">Fecha</span><span style="font-size: 24px; font-weight: 600;">23/09/2026</span></span>
+<span style="padding: 8px 14px; border-radius: 999px; background: #B3261E; color: #FFFFFF; font-size: 18px; font-weight: 600;">Turno B</span>
+</div>
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 1px solid #8A847B; border-radius: 10px; background: transparent; color: #FFFFFF; font-family: inherit; font-size: 17px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>Cambiar fecha</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px 20px 0;">
+<h2 style="margin: 0 0 2px; font-size: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #5A5650;">Divisiones</h2>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"></path><path d="M5 21V9l7-5 7 5v12"></path><path d="M10 21v-5h4v5"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">División Estructural</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><circle cx="12" cy="12" r="3.5"></circle><path d="M6 6l3.5 3.5M18 6l-3.5 3.5M6 18l3.5-3.5M18 18l-3.5-3.5"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Rescate Acuático</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17h18"></path><path d="M5 17a7 7 0 0 1 14 0"></path><path d="M10 10.5V7h4v3.5"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Rescate Urbano</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Atención Prehospitalaria</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 8h-3l4 6H5l4-6H6z"></path><path d="M12 17v4"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Forestal</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5L21 21"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Investigadores de Incendios</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1"></path><path d="M9 13l2 2 4-4"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Inspectores (Subdirección Técnica)</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+</div>
+</div>
+</section>
+<section class="pantalla" id="DireccionDivision" aria-label="Turnos de la división">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="background: #B3261E; color: #FFFFFF; padding: 52px 20px 24px; display: flex; align-items: flex-start; gap: 6px;">
+<a href="#DireccionMenu" aria-label="Regresar al menú" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -10px; color: #FFFFFF;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; padding-top: 4px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 40px; line-height: 1; text-transform: uppercase;">División Estructural</h1>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 28px 20px;">
+<h2 style="margin: 0; font-size: 22px; font-weight: 600;">Escoge un turno</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+<a href="#DireccionPapeleria" style="height: 180px; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #1C1B19; text-decoration: none;">
+<span style="width: 84px; height: 84px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-size: 48px; font-weight: 700;">A</span>
+<span style="font-size: 22px; font-weight: 500;">Turno A</span>
+</a>
+<a href="#DireccionPapeleria" style="height: 180px; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #1C1B19; text-decoration: none;">
+<span style="width: 84px; height: 84px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-size: 48px; font-weight: 700;">B</span>
+<span style="font-size: 22px; font-weight: 500;">Turno B</span>
+</a>
+<a href="#DireccionPapeleria" style="height: 180px; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #1C1B19; text-decoration: none;">
+<span style="width: 84px; height: 84px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-size: 48px; font-weight: 700;">C</span>
+<span style="font-size: 22px; font-weight: 500;">Turno C</span>
+</a>
+<a href="#DireccionPapeleria" style="height: 180px; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #1C1B19; text-decoration: none;">
+<span style="width: 84px; height: 84px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-size: 48px; font-weight: 700;">D</span>
+<span style="font-size: 22px; font-weight: 500;">Turno D</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<section class="pantalla" id="DireccionPapeleria" aria-label="Papelería del turno">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="background: #B3261E; color: #FFFFFF; padding: 52px 20px 22px; display: flex; align-items: flex-start; gap: 6px;">
+<a href="#DireccionDivision" aria-label="Regresar a turnos" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -10px; color: #FFFFFF;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<div style="display: flex; flex-direction: column; gap: 4px; padding-top: 4px;">
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 36px; line-height: 1; text-transform: uppercase;">División Estructural</h1>
+<p style="margin: 0; font-size: 20px; font-weight: 500;">Papelería · 23/09/2026 · Turno B</p>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 20px 20px;">
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 52px; height: 52px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1"></path><path d="M12 9.5c.8 1.3 2.3 2 2.3 4a2.3 2.3 0 0 1-4.6 0c0-1 .6-1.6 1.1-2 0 .9.5 1.4 1.2 1.5 0-1.4-.5-2.3 0-3.5z"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 19px; font-weight: 600;">Hoja de incidente</span>
+<span style="font-size: 16px; color: #3D3A35;">#482917 · Carlos Mendoza Ruiz</span>
+</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 52px; height: 52px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1"></path><path d="M12 9.5c.8 1.3 2.3 2 2.3 4a2.3 2.3 0 0 1-4.6 0c0-1 .6-1.6 1.1-2 0 .9.5 1.4 1.2 1.5 0-1.4-.5-2.3 0-3.5z"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 19px; font-weight: 600;">Hoja de incidente</span>
+<span style="font-size: 16px; color: #3D3A35;">#735204 · Ana Lucía Torres Vega</span>
+</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 52px; height: 52px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 1 5.2 5.2 4 4 0 0 1-4.6.9L7.5 20.2a1.9 1.9 0 0 1-2.7-2.7l7.8-7.8a4 4 0 0 1 2.1-3.4z"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 19px; font-weight: 600;">Revisión mecánica</span>
+<span style="font-size: 16px; color: #3D3A35;">#528063 · Jorge Ramírez Soto</span>
+</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 52px; height: 52px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3.5 19a5.5 5.5 0 0 1 11 0"></path><path d="M15 12.5l2 2 4-4"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 19px; font-weight: 600;">Lista de asistencia</span>
+<span style="font-size: 16px; color: #3D3A35;">#614298 · Luis Fernando Castro</span>
+</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+
+<a href="#HojaIncidente" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 18px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 52px; height: 52px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 20H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v4"></path><path d="M8 8h5M8 12h4"></path><path d="M19.5 11.5l1.5 1.5-6 6H13.5V17.5z"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 19px; font-weight: 600;">Notas</span>
+<span style="font-size: 16px; color: #3D3A35;">#207815 · Mariana Villalobos Peña</span>
+</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+
+</div>
+</div>
+</section>
+</div></div>
+</main>
+</div>
+<script>
+(function(){
+ var ids=[].map.call(document.querySelectorAll('.pantalla'),function(s){return s.id});
+ function mostrar(){
+  var id=location.hash.slice(1); if(ids.indexOf(id)<0) id='Main';
+  document.querySelectorAll('.pantalla').forEach(function(s){s.classList.toggle('visible',s.id===id)});
+  document.querySelectorAll('.panel a[data-p]').forEach(function(a){
+   var on=a.getAttribute('data-p')===id; a.classList.toggle('activa',on); if(on)a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');});
+  document.getElementById('visor').scrollTop=0; window.scrollTo(0,0);
+ }
+ window.addEventListener('hashchange',mostrar); mostrar();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Menú de dirección · Bomberos de Ensenada · v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/frame.css">
+</head>
+<body class="preview">
+
+<section class="pantalla visible" id="DireccionMenu" aria-label="Menú de dirección">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="background: #B3261E; color: #FFFFFF; padding: 48px 16px 20px 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 40px; line-height: 1; text-transform: uppercase; padding-top: 6px;">Dirección</h1>
+<button type="button" aria-label="Notificaciones" style="flex-shrink: 0; width: 48px; height: 48px; border: none; border-radius: 999px; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"></path></svg></button>
+</div>
+<button type="button" style="margin: 16px 20px 0; height: 52px; border: none; border-radius: 14px; background: #1C1B19; color: #FFFFFF; display: flex; align-items: center; gap: 10px; padding: 0 14px 0 18px; font-family: inherit; text-align: left;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3.5 19a5.5 5.5 0 0 1 11 0"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M16 14.2a4.5 4.5 0 0 1 5 4.8"></path></svg>
+<span style="flex-grow: 1; font-size: 20px; font-weight: 600;">Administrar usuarios</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</button>
+<div style="margin: 12px 20px 0; padding: 12px 16px; border-radius: 14px; background: #1C1B19; color: #FFFFFF; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+<span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #D6CFC4;">Fecha</span><span style="font-size: 24px; font-weight: 600;">23/09/2026</span></span>
+<span style="padding: 8px 14px; border-radius: 999px; background: #B3261E; color: #FFFFFF; font-size: 18px; font-weight: 600;">Turno B</span>
+</div>
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border: 1px solid #8A847B; border-radius: 10px; background: transparent; color: #FFFFFF; font-family: inherit; font-size: 17px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>Cambiar fecha</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px 20px 0;">
+<h2 style="margin: 0 0 2px; font-size: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #5A5650;">Divisiones</h2>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"></path><path d="M5 21V9l7-5 7 5v12"></path><path d="M10 21v-5h4v5"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">División Estructural</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><circle cx="12" cy="12" r="3.5"></circle><path d="M6 6l3.5 3.5M18 6l-3.5 3.5M6 18l3.5-3.5M18 18l-3.5-3.5"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Rescate Acuático</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17h18"></path><path d="M5 17a7 7 0 0 1 14 0"></path><path d="M10 10.5V7h4v3.5"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Rescate Urbano</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Atención Prehospitalaria</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l6 8h-3l4 6H5l4-6H6z"></path><path d="M12 17v4"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Forestal</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5L21 21"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Investigadores de Incendios</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<a href="#DireccionDivision" style="display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px; border-radius: 14px; background: #F1EEEA; color: #1C1B19; text-decoration: none;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1"></path><path d="M9 13l2 2 4-4"></path></svg></span>
+<span style="flex-grow: 1; min-width: 0; font-size: 19px; font-weight: 600; line-height: 1.15;">Inspectores (Subdirección Técnica)</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+</div>
+</div>
+</section>
+
+</body>
+</html>

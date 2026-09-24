@@ -7,9 +7,43 @@ mecánica), "Administrar elementos" (roles Editor/Revisor por persona),
 "Papelería" como entrega por lote, y la vista de Dirección organizada por
 división → turno → fecha.
 
-Todavía no hay código aquí — esta carpeta arranca vacía a propósito.
 `primera-version/` sigue siendo la versión publicada y funcional; nada de
 ahí se toca mientras se construye esta.
+
+## Estructura
+
+    docs/
+      prototipo.html    el clic-through completo: barra lateral + marco de
+                         teléfono + las doce pantallas (generado)
+      screens/           una pantalla por archivo; cada una abre sola, con
+                          la pantalla ya visible (sin marco de teléfono)
+      css/
+        tokens.css        variables de color
+        base.css          reset y tipografía
+        nav.css           la barra lateral (sólo la usa prototipo.html)
+        frame.css         marco de teléfono + qué pantalla se ve
+      img/                imágenes reales (antes venían embebidas en base64)
+    manifest.json         qué grupo y qué archivo es cada pantalla
+    build.py               genera docs/prototipo.html
+
+Mismo patrón que `primera-version/`: las pantallas sueltas son la fuente, y
+`build.py` arma la hoja combinada a partir de `manifest.json`. Es la
+migración 1:1 del primer prototipo de un solo archivo que subió el equipo
+(`Prototipo_Bomberos_Ensenada.html`, de clic con teclas de hash) — el
+contenido de cada pantalla no cambió, sólo el acomodo de los archivos. Los
+433 `style="…"` inline que traía cada elemento **no se tocaron**: separar
+eso en clases reutilizables es una decisión de diseño aparte, no de
+estructura de archivos.
+
+- **Ver o ajustar una pantalla:** abre `docs/screens/<archivo>.html` en el
+  navegador.
+- **Regenerar el prototipo combinado:** `python3 build.py` (desde
+  `segunda-version/`). Escribe `docs/prototipo.html`.
+- **Agregar una pantalla:** crea el archivo en `docs/screens/` copiando la
+  estructura de otro (`<body class="preview">`, con la `<section
+  class="pantalla visible" id="…">` adentro), regístrala en
+  `manifest.json` (dentro del grupo que le toque) y vuelve a correr el
+  build.
 
 ## Qué le falta al diseño nuevo frente a lo que ya existe en `primera-version/app/`
 
@@ -49,7 +83,9 @@ Antes de dar por bueno el rediseño, hay que decidir qué de esto se recupera:
 
 - [ ] Decidir cuáles de los 6 puntos que faltan se recuperan y cuáles se
       dejan fuera a propósito (documentarlo aquí).
-- [ ] Estructura de carpetas para esta versión (¿se reutiliza el mismo
-      stack de `app/`, o cambia?).
-- [ ] Wireframes/mockups estáticos antes de tocar código, igual que se hizo
-      en la primera versión.
+- [x] Estructura de carpetas para esta versión — pantallas sueltas + css
+      compartido + `build.py`, igual que `primera-version/`.
+- [x] Wireframes/mockups estáticos antes de tocar código — el clic-through
+      de doce pantallas ya está, ver `docs/prototipo.html`.
+- [ ] ¿Se reutiliza el stack de `app/` (Node/Express/MySQL) para hacerlo
+      funcional, o cambia?

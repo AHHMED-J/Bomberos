@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hoja de incidente · Bomberos de Ensenada · v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/frame.css">
+</head>
+<body class="preview">
+
+<section class="pantalla visible" id="HojaIncidente" aria-label="Hoja de incidente">
+<div style="width: 390px; height: 4900px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+
+<div style="background: #B3261E; color: #FFFFFF; padding: 52px 20px 22px; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; align-items: center; gap: 6px;">
+<a href="#Inicio" aria-label="Regresar al menú" style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin-left: -10px; color: #FFFFFF;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 34px; line-height: 1; text-transform: uppercase;">Hoja de incidente</h1>
+</div>
+<p style="margin: 0; font-size: 17px;">Reporte de salida de incidente</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 28px; padding: 24px 20px 40px; flex-grow: 1;">
+
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Datos del servicio</h2>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="c5" style="font-size: 16px; font-weight: 600;">No. de incidente de C-5</label>
+<input id="c5" type="text" inputmode="numeric" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="fecha" style="font-size: 16px; font-weight: 600;">Fecha</label>
+<input id="fecha" type="text" value="[dd/mm/aa]" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="salida" style="font-size: 16px; font-weight: 600;">Hora de salida</label>
+<input id="salida" type="text" value="[hh:mm]" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="regreso" style="font-size: 16px; font-weight: 600;">Hora de regreso</label>
+<input id="regreso" type="text" value="[hh:mm]" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="unidad" style="font-size: 16px; font-weight: 600;">Unidad</label>
+<input id="unidad" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="turno" style="font-size: 16px; font-weight: 600;">Turno</label>
+<div style="position: relative;">
+<select id="turno" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 44px 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19; appearance: none; -webkit-appearance: none;"><option>Selecciona el turno</option><option>Único</option><option>[Otro turno]</option></select>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C1B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; right: 14px; top: 15px; pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="estacion" style="font-size: 16px; font-weight: 600;">Estación</label>
+<div style="position: relative;">
+<select id="estacion" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 44px 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19; appearance: none; -webkit-appearance: none;"><option>Selecciona la estación</option><option>[Estación 1]</option><option>[Estación 2]</option><option>3 - Valle Dorado</option></select>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C1B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; right: 14px; top: 15px; pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="tipo" style="font-size: 16px; font-weight: 600;">Tipo de servicio</label>
+<div style="position: relative;">
+<select id="tipo" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 44px 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19; appearance: none; -webkit-appearance: none;"><option>Selecciona el tipo de servicio</option><option>Búsqueda</option><option>Rescate</option><option>Incendio</option><option>Fuga de gas</option><option>Atención prehospitalaria</option><option>Otro</option></select>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1C1B19" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; right: 14px; top: 15px; pointer-events: none;"><path d="M6 9l6 6 6-6"></path></svg>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 16px; font-weight: 600;">Zona</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 12px; background: #EFEBE5;">
+<button type="button" aria-pressed="true" style="height: 46px; border: none; border-radius: 9px; background: #B3261E; color: #FFFFFF; font-family: inherit; font-size: 18px; font-weight: 600;">Rural</button>
+<button type="button" aria-pressed="false" style="height: 46px; border: none; border-radius: 9px; background: transparent; color: #1C1B19; font-family: inherit; font-size: 18px; font-weight: 500;">Urbana</button>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="despacho" style="font-size: 16px; font-weight: 600;">Despacho</label>
+<input id="despacho" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Lugar y propietario</h2>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="lugar" style="font-size: 16px; font-weight: 600;">Lugar del servicio</label>
+<input id="lugar" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 12px; border: 1px solid #1C1B19; background: transparent; color: #1C1B19; font-family: inherit; font-size: 16px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>Usar mi ubicación actual</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="propietario" style="font-size: 16px; font-weight: 600;">Nombre del propietario / arrendatario</label>
+<input id="propietario" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="telefono" style="font-size: 16px; font-weight: 600;">Teléfono de contacto</label>
+<input id="telefono" type="tel" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="domicilio" style="font-size: 16px; font-weight: 600;">Domicilio particular</label>
+<input id="domicilio" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="aseguradora" style="font-size: 16px; font-weight: 600;">Compañía aseguradora</label>
+<input id="aseguradora" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Descripción del incidente</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 12px; background: #EFEBE5;">
+<button type="button" aria-pressed="true" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 46px; border: none; border-radius: 9px; background: #B3261E; color: #FFFFFF; font-family: inherit; font-size: 18px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>Escribir</button>
+<button type="button" aria-pressed="false" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 46px; border: none; border-radius: 9px; background: transparent; color: #1C1B19; font-family: inherit; font-size: 18px; font-weight: 500;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path></svg>Con voz</button>
+</div>
+<label for="descripcion" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Descripción del incidente</label>
+<textarea id="descripcion" placeholder="Narra lo ocurrido y las acciones realizadas" style="height: 220px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 14px; font-family: inherit; font-size: 18px; line-height: 1.4; background: #FFFFFF; color: #1C1B19; resize: none;"></textarea>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Personal de turno</h2>
+<div style="display: flex; gap: 8px; font-size: 14px; font-weight: 600; color: #5A5650;"><span style="flex-grow: 1;">Nombre completo</span><span style="width: 110px;">No. empleado</span></div>
+<div style="display: flex; gap: 8px;">
+<input type="text" aria-label="Nombre completo, elemento 1" style="flex-grow: 1; min-width: 0; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<input type="text" inputmode="numeric" aria-label="Número de empleado, elemento 1" style="width: 110px; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 12px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<div style="display: flex; gap: 8px;">
+<input type="text" aria-label="Nombre completo, elemento 2" style="flex-grow: 1; min-width: 0; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<input type="text" inputmode="numeric" aria-label="Número de empleado, elemento 2" style="width: 110px; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 12px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 12px; border: 1px dashed #8A847B; background: transparent; color: #1C1B19; font-family: inherit; font-size: 16px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Agregar elemento</button>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="voluntarios" style="font-size: 16px; font-weight: 600;">Voluntarios</label>
+<input id="voluntarios" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Unidades de bomberos en apoyo</h2>
+<div style="display: flex; gap: 8px; font-size: 14px; font-weight: 600; color: #5A5650;"><span style="width: 110px;">No. unidad</span><span style="flex-grow: 1;">A cargo de</span></div>
+<div style="display: flex; gap: 8px;">
+<input type="text" aria-label="Número de unidad en apoyo" style="width: 110px; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 12px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<input type="text" aria-label="Unidad en apoyo a cargo de" style="flex-grow: 1; min-width: 0; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 12px; border: 1px dashed #8A847B; background: transparent; color: #1C1B19; font-family: inherit; font-size: 16px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Agregar unidad</button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Instituciones de apoyo</h2>
+<div style="display: flex; gap: 8px; font-size: 14px; font-weight: 600; color: #5A5650;"><span style="width: 110px;">No. unidad</span><span style="flex-grow: 1;">A cargo de</span></div>
+<div style="display: flex; gap: 8px;">
+<input type="text" aria-label="Número de unidad de la institución" style="width: 110px; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 12px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<input type="text" aria-label="Institución a cargo de" style="flex-grow: 1; min-width: 0; height: 52px; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 12px; border: 1px dashed #8A847B; background: transparent; color: #1C1B19; font-family: inherit; font-size: 16px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Agregar institución</button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Firmas del parte</h2>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 16px; font-weight: 600;">Firma del encargado en turno / quien formuló</span>
+<button type="button" style="height: 110px; border-radius: 12px; border: 1px solid #CFC8BD; background: #FFFFFF; color: #5A5650; font-family: inherit; font-size: 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 14px; gap: 8px;"><span style="width: 70%; height: 1px; background: #8A847B;"></span>Toca para firmar</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="recibe" style="font-size: 16px; font-weight: 600;">Nombre de quien recibe parte</label>
+<input id="recibe" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Croquis</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;">
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 52px; border-radius: 12px; border: 2px solid #B3261E; background: #FBEAE8; color: #8C1D17; font-family: inherit; font-size: 17px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="M13.5 6.5l4 4"></path></svg>Dibujar</button>
+<button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 52px; border-radius: 12px; border: 1px solid #CFC8BD; background: #FFFFFF; color: #1C1B19; font-family: inherit; font-size: 17px; font-weight: 600;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"></path><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"></path></svg>Generar con IA</button>
+</div>
+<div style="height: 260px; border-radius: 12px; border: 1px dashed #8A847B; background: #FAF8F5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 20px; box-sizing: border-box; text-align: center; color: #5A5650; font-size: 16px;">
+<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z"></path><path d="M9 3v15M15 6v15"></path></svg>
+Dibuja con el dedo el lugar, las unidades y los puntos de referencia
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Propietario y testigo</h2>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="firma-propietario" style="font-size: 16px; font-weight: 600;">Nombre y firma del propietario</label>
+<input id="firma-propietario" type="text" placeholder="Nombre" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<button type="button" style="height: 96px; border-radius: 12px; border: 1px solid #CFC8BD; background: #FFFFFF; color: #5A5650; font-family: inherit; font-size: 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12px; gap: 8px;"><span style="width: 70%; height: 1px; background: #8A847B;"></span>Toca para firmar</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="firma-testigo" style="font-size: 16px; font-weight: 600;">Nombre y firma del testigo</label>
+<input id="firma-testigo" type="text" placeholder="Nombre" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+<button type="button" style="height: 96px; border-radius: 12px; border: 1px solid #CFC8BD; background: #FFFFFF; color: #5A5650; font-family: inherit; font-size: 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12px; gap: 8px;"><span style="width: 70%; height: 1px; background: #8A847B;"></span>Toca para firmar</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<label for="terceros" style="font-size: 16px; font-weight: 600;">Propietarios daños a terceros</label>
+<input id="terceros" type="text" style="height: 52px; width: 100%; box-sizing: border-box; border: 1px solid #CFC8BD; border-radius: 12px; padding: 0 14px; font-family: inherit; font-size: 18px; background: #FFFFFF; color: #1C1B19;">
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">¿Requiere peritaje?</h2>
+<button type="button" aria-pressed="false" style="display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 12px; border: 1px solid #CFC8BD; background: #FFFFFF; color: #1C1B19; font-family: inherit; text-align: left;">
+<span style="flex-shrink: 0; width: 22px; height: 22px; margin-top: 2px; border-radius: 999px; border: 2px solid #8A847B; box-sizing: border-box;"></span>
+<span style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 18px; font-weight: 600;">Sí</span><span style="font-size: 15px; line-height: 1.35; color: #3D3A35;">Estoy de acuerdo en que el perito realice los trabajos de investigación.</span></span>
+</button>
+<button type="button" aria-pressed="true" style="display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 12px; border: 2px solid #B3261E; background: #FBEAE8; color: #1C1B19; font-family: inherit; text-align: left;">
+<span style="flex-shrink: 0; width: 22px; height: 22px; margin-top: 2px; border-radius: 999px; border: 7px solid #B3261E; box-sizing: border-box; background: #FFFFFF;"></span>
+<span style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 18px; font-weight: 600;">No</span><span style="font-size: 15px; line-height: 1.35; color: #3D3A35;">No requiero el trabajo de investigación por parte de la Dirección de Bomberos. Libero de toda responsabilidad al Departamento de Bomberos.</span></span>
+</button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 12px;">
+<a href="#Enviado" style="display: flex; align-items: center; justify-content: center; height: 60px; border-radius: 14px; background: #B3261E; color: #FFFFFF; font-size: 21px; font-weight: 600; text-decoration: none;">Enviar hoja de incidente</a>
+<a href="#Inicio" style="display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 12px; color: #1C1B19; font-size: 17px; font-weight: 600; text-decoration: underline;">Guardar como borrador</a>
+</div>
+
+</div>
+</div>
+</section>
+
+</body>
+</html>

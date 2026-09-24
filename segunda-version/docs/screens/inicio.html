@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Menú · Bomberos de Ensenada · v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/frame.css">
+</head>
+<body class="preview">
+
+<section class="pantalla visible" id="Inicio" aria-label="Menú">
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; font-family: 'Barlow', system-ui, sans-serif; color: #1C1B19;">
+<div style="background: #B3261E; color: #FFFFFF; padding: 56px 16px 28px 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+<h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 44px; line-height: 1; text-transform: uppercase; padding-top: 8px;">División Estructural</h1>
+<button type="button" aria-label="Notificaciones" style="flex-shrink: 0; width: 48px; height: 48px; border: none; border-radius: 999px; background: transparent; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"></path></svg></button>
+</div>
+<a href="#MisDocumentos" style="margin: 20px 20px 0; height: 52px; border-radius: 14px; background: #1C1B19; color: #FFFFFF; display: flex; align-items: center; gap: 10px; padding: 0 14px 0 18px; text-decoration: none;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+<span style="flex-grow: 1; font-size: 20px; font-weight: 600;">Mis documentos</span>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 16px 20px 28px;">
+<a href="#HojaIncidente" style="height: 230px; box-sizing: border-box; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 16px; text-align: center; text-decoration: none; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4V3h6v1"></path><path d="M12 9.5c.8 1.3 2.3 2 2.3 4a2.3 2.3 0 0 1-4.6 0c0-1 .6-1.6 1.1-2 0 .9.5 1.4 1.2 1.5 0-1.4-.5-2.3 0-3.5z"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Hoja de incidente</span>
+</a>
+<button type="button" style="height: 230px; box-sizing: border-box; border: none; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 16px; font-family: inherit; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3.5 19a5.5 5.5 0 0 1 11 0"></path><path d="M15 12.5l2 2 4-4"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Lista de asistencia</span>
+</button>
+<button type="button" style="height: 230px; box-sizing: border-box; border: none; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 16px; font-family: inherit; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 20H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v4"></path><path d="M8 8h5M8 12h4"></path><path d="M19.5 11.5l1.5 1.5-6 6H13.5V17.5z"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Notas</span>
+</button>
+<button type="button" style="height: 230px; box-sizing: border-box; border: none; border-radius: 24px; background: #F1EEEA; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 16px; font-family: inherit; color: #1C1B19;">
+<span style="width: 96px; height: 96px; border-radius: 999px; background: #B3261E; color: #FFFFFF; display: flex; align-items: center; justify-content: center;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0 5.2 5.2l-2.2-2.2-.4-2.4-2.4-.4z"></path><path d="M14.7 6.3a4 4 0 0 1 5.2 5.2 4 4 0 0 1-4.6.9L7.5 20.2a1.9 1.9 0 0 1-2.7-2.7l7.8-7.8a4 4 0 0 1 2.1-3.4z"></path></svg></span>
+<span style="font-size: 23px; font-weight: 500; line-height: 1.15;">Revisión mecánica</span>
+</button>
+</div>
+</div>
+</section>
+
+</body>
+</html>

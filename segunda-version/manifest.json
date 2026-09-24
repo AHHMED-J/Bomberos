@@ -1,0 +1,80 @@
+{
+  "titulo": "Prototipo · Bomberos de Ensenada · v2",
+  "grupos": [
+    {
+      "titulo": "Elemento",
+      "pantallas": [
+        {
+          "id": "Main",
+          "etiqueta": "Inicio de sesión",
+          "archivo": "main.html"
+        },
+        {
+          "id": "Inicio",
+          "etiqueta": "Menú",
+          "archivo": "inicio.html"
+        },
+        {
+          "id": "HojaIncidente",
+          "etiqueta": "Hoja de incidente",
+          "archivo": "hoja-incidente.html"
+        },
+        {
+          "id": "Enviado",
+          "etiqueta": "Hoja enviada",
+          "archivo": "enviado.html"
+        },
+        {
+          "id": "MisDocumentos",
+          "etiqueta": "Mis documentos",
+          "archivo": "mis-documentos.html"
+        }
+      ]
+    },
+    {
+      "titulo": "Encargado de turno",
+      "pantallas": [
+        {
+          "id": "InicioEncargado",
+          "etiqueta": "Menú del encargado",
+          "archivo": "inicio-encargado.html"
+        },
+        {
+          "id": "AdministrarElementos",
+          "etiqueta": "Administrar elementos",
+          "archivo": "administrar-elementos.html"
+        },
+        {
+          "id": "Papeleria",
+          "etiqueta": "Papelería",
+          "archivo": "papeleria.html"
+        },
+        {
+          "id": "RevisarHoja",
+          "etiqueta": "Revisar hoja",
+          "archivo": "revisar-hoja.html"
+        }
+      ]
+    },
+    {
+      "titulo": "Dirección",
+      "pantallas": [
+        {
+          "id": "DireccionMenu",
+          "etiqueta": "Menú de dirección",
+          "archivo": "direccion-menu.html"
+        },
+        {
+          "id": "DireccionDivision",
+          "etiqueta": "Turnos de la división",
+          "archivo": "direccion-division.html"
+        },
+        {
+          "id": "DireccionPapeleria",
+          "etiqueta": "Papelería del turno",
+          "archivo": "direccion-papeleria.html"
+        }
+      ]
+    }
+  ]
+}
