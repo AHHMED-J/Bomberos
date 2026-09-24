@@ -53,22 +53,11 @@
 .act { display: flex; flex-direction: column; gap: 28px; }
 .act__head { display: flex; flex-direction: column; gap: 9px; }
 .act__kicker {
-  display: flex;
-  align-items: center;
-  gap: 9px;
   margin: 0;
   font: 700 15px/1.2 var(--font-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--bd-muted);
-}
-.act__kicker::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--bd-accent);
-  flex-shrink: 0;
 }
 .act__head h2 { margin: 0; font-family: var(--font-display); font-size: 30px; font-weight: 600; letter-spacing: 0; }
 .act__lead { margin: 0; font-size: 22.5px; line-height: 1.6; color: var(--bd-muted); max-width: 72ch; text-wrap: pretty; }

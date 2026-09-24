@@ -37,7 +37,7 @@ HOJAS = ["tokens.css", "base.css", "components.css", "app.css", "mobile.css",
 # GitHub Pages cachea los .css diez minutos. Subir este número (a mano, cada
 # vez que cambie algún css/*.css) fuerza a que el navegador pida el archivo
 # de nuevo en vez de servir una versión vieja desde su caché.
-VERSION = "20260922g"
+VERSION = "20260923a"
 
 FUENTES = (
     "https://fonts.googleapis.com/css2"
@@ -107,9 +107,6 @@ def figura(pantalla: dict) -> str:
     etiqueta = f'\n            <span class="figure__rol">{esc(rol)}</span>' if rol else ""
     return f"""      <figure class="figure" id="{ancla(pantalla['figura'])}">
         <figcaption class="figure__caption">
-          <p class="figure__line">
-            <span class="figure__n">Figura {esc(pantalla['figura'])}</span>{etiqueta}
-          </p>
           <h3>{esc(pantalla['nombre'])}</h3>
           <p class="figure__uses">{esc(pantalla['casos'])}</p>
         </figcaption>{parrafos(pantalla.get("intro"), "figure__prosa")}
@@ -126,7 +123,10 @@ def figura(pantalla: dict) -> str:
 {a_tablet(cuerpo)}
             </div>
           </div>
-        </div>{parrafos(pantalla.get("nota"), "figure__prosa figure__prosa--pie")}
+        </div>
+        <p class="figure__line">
+          <span class="figure__n">Figura {esc(pantalla['figura'])}</span>{etiqueta}
+        </p>{parrafos(pantalla.get("nota"), "figure__prosa figure__prosa--pie")}
       </figure>"""
 
 
