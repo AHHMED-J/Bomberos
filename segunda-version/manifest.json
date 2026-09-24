@@ -2,13 +2,28 @@
   "titulo": "Prototipo · Bomberos de Ensenada · v2",
   "grupos": [
     {
-      "titulo": "Elemento",
+      "titulo": "Acceso",
       "pantallas": [
         {
-          "id": "Main",
-          "etiqueta": "Inicio de sesión",
-          "archivo": "main.html"
+          "id": "Acceso",
+          "etiqueta": "Acceso",
+          "archivo": "acceso.html"
         },
+        {
+          "id": "AltaCredencial",
+          "etiqueta": "Alta de credencial",
+          "archivo": "alta-credencial.html"
+        },
+        {
+          "id": "AccesoCompartido",
+          "etiqueta": "Acceso en equipo compartido",
+          "archivo": "acceso-compartido.html"
+        }
+      ]
+    },
+    {
+      "titulo": "Elemento",
+      "pantallas": [
         {
           "id": "Inicio",
           "etiqueta": "Menú",

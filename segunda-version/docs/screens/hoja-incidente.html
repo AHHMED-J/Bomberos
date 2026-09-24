@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="../css/tokens.css">
 <link rel="stylesheet" href="../css/base.css">
 <link rel="stylesheet" href="../css/frame.css">
+<link rel="stylesheet" href="../css/auth.css">
 </head>
 <body class="preview">
 
@@ -119,6 +120,19 @@
 </div>
 
 <div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
+<h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Evidencia fotográfica</h2>
+<div class="fotos">
+<div class="foto"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0l100 100M100 0L0 100"></path></svg></div>
+<div class="foto"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0l100 100M100 0L0 100"></path></svg></div>
+<button type="button" class="agregar" style="background: transparent; font-family: inherit;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5h3.5L8 6h8l1.5 2.5H21V19H3V8.5Z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+Agregar
+</button>
+</div>
+<p style="margin: 0; font-size: 14px; color: #5A5650;">Se toman desde la cámara del teléfono o se arrastran a este recuadro.</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
 <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Personal de turno</h2>
 <div style="display: flex; gap: 8px; font-size: 14px; font-weight: 600; color: #5A5650;"><span style="flex-grow: 1;">Nombre completo</span><span style="width: 110px;">No. empleado</span></div>
 <div style="display: flex; gap: 8px;">
@@ -158,9 +172,13 @@
 
 <div style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px; border-top: 1px solid #DDD7CE;">
 <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; text-transform: uppercase; color: #B3261E;">Firmas del parte</h2>
-<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
 <span style="font-size: 16px; font-weight: 600;">Firma del encargado en turno / quien formuló</span>
-<button type="button" style="height: 110px; border-radius: 12px; border: 1px solid #CFC8BD; background: #FFFFFF; color: #5A5650; font-family: inherit; font-size: 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 14px; gap: 8px;"><span style="width: 70%; height: 1px; background: #8A847B;"></span>Toca para firmar</button>
+<button type="button" class="btn-credencial">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4a8 8 0 0 0-8 8v3"></path><path d="M20 15v-3a8 8 0 0 0-4-6.9"></path><path d="M8 12a4 4 0 0 1 8 0v4"></path><path d="M12 12v6"></path><path d="M8 17v2"></path><path d="M16 19v1"></path></svg>
+Firmar con mi credencial
+</button>
+<p style="margin: 0; font-size: 14px; color: #5A5650;">Al firmar, el parte queda asociado a tu nombre y matrícula: es la misma credencial con la que entraste.</p>
 </div>
 <div style="display: flex; flex-direction: column; gap: 8px;">
 <label for="recibe" style="font-size: 16px; font-weight: 600;">Nombre de quien recibe parte</label>

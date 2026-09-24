@@ -22,7 +22,7 @@ RAIZ = Path(__file__).resolve().parent
 DOCS = RAIZ / "docs"
 SALIDA = DOCS / "prototipo.html"
 
-HOJAS = ["tokens.css", "base.css", "nav.css", "frame.css"]
+HOJAS = ["tokens.css", "base.css", "nav.css", "frame.css", "auth.css"]
 
 FUENTES = (
     "https://fonts.googleapis.com/css2"
@@ -63,7 +63,7 @@ def nav(datos: dict) -> str:
 SCRIPT = """(function(){
  var ids=[].map.call(document.querySelectorAll('.pantalla'),function(s){return s.id});
  function mostrar(){
-  var id=location.hash.slice(1); if(ids.indexOf(id)<0) id='Main';
+  var id=location.hash.slice(1); if(ids.indexOf(id)<0) id='Acceso';
   document.querySelectorAll('.pantalla').forEach(function(s){s.classList.toggle('visible',s.id===id)});
   document.querySelectorAll('.panel a[data-p]').forEach(function(a){
    var on=a.getAttribute('data-p')===id; a.classList.toggle('activa',on); if(on)a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');});
