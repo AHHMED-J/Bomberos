@@ -124,10 +124,9 @@ body {
 .action--ghost:hover { border-color: var(--bd-ink); color: var(--bd-ink); }
 
 /* --- Prosa ------------------------------------------------------------------ */
-.columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; }
-.columns p { margin: 0 0 14px; font-size: 23px; line-height: 1.7; color: var(--bd-muted); text-wrap: pretty; }
-.columns p:last-child { margin-bottom: 0; }
-.columns strong { color: var(--bd-ink); font-weight: 600; }
+.prose p { margin: 0 0 14px; font-size: 23px; line-height: 1.7; color: var(--bd-muted); text-wrap: pretty; }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--bd-ink); font-weight: 600; }
 
 /* --- Actores ----------------------------------------------------------------- */
 .actors { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }

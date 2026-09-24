@@ -1,42 +1,12 @@
 {
   "titulo": "Pantallas del Parte Digital",
   "cabecera": {
-    "eyebrow": "Avance de proyecto no. 1 · Así se vería la aplicación, en celular y en tablet",
-    "titulo": "Pantallas del parte digital",
-    "dek": "Hoy cada emergencia se documenta a mano. Los reportes se acumulan durante el turno y alguien tiene que llevar la papelería hasta la dirección de bomberos para entregarla. Estas son las pantallas de la aplicación que sustituye ese trámite.",
-    "meta": [
-      [
-        "Sistema",
-        "Parte digital · Bomberos de Ensenada"
-      ],
-      [
-        "Actores representados/roles",
-        [
-          "Bombero operativo",
-          "Jefe de turno",
-          "Personal de la Dirección"
-        ]
-      ],
-      [
-        "Cobertura",
-        "RF-01 a RF-10"
-      ]
-    ]
+    "titulo": "Pantallas del parte digital"
   },
   "secciones": [
     {
       "kicker": "Actor principal",
       "titulo": "Bombero operativo",
-      "lead": "Captura el parte durante la emergencia o al terminarla, desde su celular o desde el equipo compartido de la estación, adjunta la evidencia y firma el envío con su propia credencial. Concentra casi todo el sistema porque es quien genera la información.",
-      "rf": [
-        "RF-01",
-        "RF-02",
-        "RF-03",
-        "RF-04",
-        "RF-05",
-        "RF-06",
-        "RF-07"
-      ],
       "pantallas": [
         {
           "archivo": "acceso.html",
