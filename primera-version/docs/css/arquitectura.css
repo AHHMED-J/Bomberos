@@ -36,7 +36,7 @@
 
 .ai-figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 28px; }
 
-.ai-lead { margin: 0; font-size: 21px; line-height: 1.6; max-width: 70ch; text-wrap: pretty; }
+.ai-lead { margin: 0; font-size: 21px; line-height: 1.6; text-wrap: pretty; }
 
 .ai-tag {
   display: inline-block;

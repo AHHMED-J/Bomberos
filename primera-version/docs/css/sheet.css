@@ -29,7 +29,7 @@
   max-width: 18ch;
   text-wrap: balance;
 }
-.masthead__dek { margin: 0; font-size: 24.5px; line-height: 1.6; color: var(--bd-muted); max-width: 64ch; text-wrap: pretty; }
+.masthead__dek { margin: 0; font-size: 24.5px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
 .masthead__meta {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -60,7 +60,7 @@
   color: var(--bd-muted);
 }
 .act__head h2 { margin: 0; font-family: var(--font-display); font-size: 30px; font-weight: 600; letter-spacing: 0; }
-.act__lead { margin: 0; font-size: 22.5px; line-height: 1.6; color: var(--bd-muted); max-width: 72ch; text-wrap: pretty; }
+.act__lead { margin: 0; font-size: 22.5px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
 .act__rfs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 
 /* --- Lámina ------------------------------------------------------------------ */
@@ -69,7 +69,6 @@
 .figure__caption { display: flex; flex-direction: column; gap: 5px; }
 .figure__line { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .figure__rol {
-  margin-left: auto;
   padding: 5px 10px;
   border: 1px solid var(--bd-hair);
   border-radius: 3px;
@@ -80,10 +79,10 @@
 .figure__n { font: 700 15.5px/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--bd-ink); }
 .figure__cov { font: 400 15.5px/1.2 var(--font-mono); color: var(--bd-muted); }
 .figure__caption h3 { margin: 0; font-family: var(--font-display); font-size: 30.5px; font-weight: 600; }
-.figure__uses { margin: 0; max-width: 78ch; font-size: 20px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
+.figure__uses { margin: 0; font-size: 20px; line-height: 1.5; color: var(--bd-muted); text-wrap: pretty; }
 
 /* Prosa que explica una lámina, encima o debajo de ella. */
-.figure__prosa { display: flex; flex-direction: column; gap: 12px; max-width: 74ch; }
+.figure__prosa { display: flex; flex-direction: column; gap: 12px; }
 .figure__prosa p { margin: 0; font-size: 22.5px; line-height: 1.7; color: var(--bd-muted); text-wrap: pretty; }
 .figure__prosa--pie { padding-top: 4px; }
 
@@ -123,7 +122,7 @@
 
 /* --- Pie ---------------------------------------------------------------------- */
 .sheet-foot { display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--bd-hair); padding-top: 20px; }
-.sheet-foot p { margin: 0; font-size: 20px; line-height: 1.6; color: var(--bd-muted); max-width: 74ch; text-wrap: pretty; }
+.sheet-foot p { margin: 0; font-size: 20px; line-height: 1.6; color: var(--bd-muted); text-wrap: pretty; }
 .sheet-foot strong { color: var(--bd-ink); font-weight: 600; }
 
 /* Rango de iPad/tablet: menos aire a los costados que en escritorio. */

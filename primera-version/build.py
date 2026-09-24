@@ -37,7 +37,7 @@ HOJAS = ["tokens.css", "base.css", "components.css", "app.css", "mobile.css",
 # GitHub Pages cachea los .css diez minutos. Subir este número (a mano, cada
 # vez que cambie algún css/*.css) fuerza a que el navegador pida el archivo
 # de nuevo en vez de servir una versión vieja desde su caché.
-VERSION = "20260923a"
+VERSION = "20260923b"
 
 FUENTES = (
     "https://fonts.googleapis.com/css2"
