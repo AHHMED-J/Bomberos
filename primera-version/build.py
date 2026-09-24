@@ -190,10 +190,15 @@ NAV = """<nav class="sitenav">
     <a class="sitenav__link" aria-current="page" href="pantallas.html">Pantallas</a>
     <a class="sitenav__link" href="investigacion.html">Investigación</a>
     <a class="sitenav__link" href="arquitectura.html">Arquitectura</a>
-    <a class="sitenav__link" href="avance-proyecto-1.docx">Documento</a>
-    <a class="sitenav__link" href="https://github.com/AHHMED-J/Bomberos">Repositorio</a>
   </div>
 </nav>"""
+
+FOOTER = """<footer class="sitefoot">
+  <p class="sitefoot__links">
+    <a href="avance-proyecto-1.docx">Documento</a>
+    <a href="https://github.com/AHHMED-J/Bomberos">Repositorio</a>
+  </p>
+</footer>"""
 
 
 def pagina_sitio(datos: dict) -> str:
@@ -215,6 +220,10 @@ def pagina_sitio(datos: dict) -> str:
 {NAV}
 
 {hoja(datos)}
+
+<div class="sheetfoot-wrap">
+{FOOTER}
+</div>
 
 </body>
 </html>

@@ -292,6 +292,12 @@ body {
 .sitefoot { border-top: 2px solid var(--bd-ink); padding-top: 20px; display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; }
 .sitefoot p { margin: 0; font-size: 19.5px; line-height: 1.6; color: var(--bd-muted); max-width: 56ch; text-wrap: pretty; }
 .sitefoot a { color: var(--bd-accent); }
+.sitefoot__links { display: flex; gap: 24px; font: 500 19.5px/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* La hoja de pantallas no vive dentro de .site (usa el ancho de .sheet), así
+   que su pie de página necesita el mismo ancho máximo por su cuenta. Nombre
+   distinto a .pagefoot: esa clase ya la usan las pantallas mismas (app.css). */
+.sheetfoot-wrap { max-width: 1560px; margin: 0 auto; padding: 0 24px 96px; }
 
 /* Rango de iPad/tablet: menos aire a los costados que en escritorio, sin
    forzar todavía una sola columna. Las miniaturas de la galería (.shot,
