@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CFP · Captura rápida del parte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../2-segunda-version/docs/css/tokens.css">
+<link rel="stylesheet" href="../../2-segunda-version/docs/css/base.css">
+<link rel="stylesheet" href="css/cfp.css">
+</head>
+<body>
+<div class="escritorio">
+
+<!-- Panel de prueba: lo usa quien conduce la prueba, no forma parte del parte. -->
+<aside class="panel" aria-label="Panel de prueba">
+  <p class="kicker">Acto II · Hito 1 · CFP</p>
+  <h2>Captura rápida del parte</h2>
+  <p class="pregunta">¿Se puede levantar y enviar un parte con los campos mínimos y 1 foto desde el celular en 60&nbsp;s o menos?</p>
+
+  <div class="campo">
+    <label for="participante">Participante</label>
+    <input id="participante" type="text" autocomplete="off" placeholder="Quién hace este intento">
+  </div>
+
+  <details class="escenario" open>
+    <summary>Escenario ficticio</summary>
+    <p>C-5 los despacha al incidente <strong>26-118734</strong>: <strong>incendio de pastizal</strong> en un lote baldío de la calle Ámbar, colonia Valle Verde (zona <strong>urbana</strong>).</p>
+    <p>Se quemaron unos 300&nbsp;m² de maleza, sin lesionados. Se controló en 20 minutos con agua de la Unidad 12. No se localizó al propietario del lote.</p>
+    <p class="chico">Para la foto, fotografíen cualquier cosa: lo que se mide es el paso, no la imagen.</p>
+  </details>
+
+  <p class="chico">Perfil simulado (se usa para autollenar): Jalife Burgueño, Ahhmed · 376285 · Unidad 12 · Estación Central · Turno A.</p>
+
+  <dl class="cronos" aria-live="off">
+    <div id="fila-lugar"><dt>Fase 1 · En el lugar</dt><dd id="t-lugar">0:00</dd></div>
+    <div id="fila-estacion"><dt>Fase 2 · En la estación</dt><dd id="t-estacion">0:00</dd></div>
+    <div class="total"><dt>Total</dt><dd id="t-total">0:00</dd></div>
+  </dl>
+
+  <h3>Intentos</h3>
+  <div class="tabla-envoltura">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Participante</th><th>Lugar</th><th>Estación</th><th>Total</th><th>Fotos</th></tr>
+      </thead>
+      <tbody id="intentos"></tbody>
+    </table>
+  </div>
+  <p id="sin-intentos" class="chico">Todavía no hay intentos enviados.</p>
+  <div class="acciones-panel">
+    <button type="button" id="descargar-csv" class="btn-secundario">Descargar CSV</button>
+    <button type="button" id="borrar-intentos" class="enlace-boton">Borrar todos los intentos</button>
+  </div>
+</aside>
+
+<!-- El parte: misma estructura y etiquetas que hoja-incidente.html de la v2. -->
+<main class="telefono">
+  <header class="barra">
+    <h1>Hoja de incidente</h1>
+    <p>Reporte de salida de incidente</p>
+  </header>
+
+  <section id="vista-inicio" class="vista" hidden>
+    <p>No hay un parte en curso.</p>
+    <p id="aviso-participante" class="error-texto" hidden>Escribe el nombre del participante en el panel de prueba (en el celular está abajo) antes de empezar.</p>
+    <button type="button" id="nuevo-parte" class="btn-primario">Nuevo parte</button>
+  </section>
+
+  <section id="vista-guardado" class="vista" hidden>
+    <h2>Borrador guardado</h2>
+    <p id="guardado-texto"></p>
+    <div id="guardado-pendientes"></div>
+    <button type="button" id="continuar" class="btn-primario">Continuar el parte</button>
+    <button type="button" id="descartar" class="enlace-boton">Descartar este parte</button>
+  </section>
+
+  <section id="vista-enviado" class="vista" hidden>
+    <h2>Hoja enviada</h2>
+    <dl id="enviado-resumen" class="resumen"></dl>
+    <button type="button" id="otro-parte" class="btn-primario">Nuevo parte</button>
+  </section>
+
+  <form id="parte" class="cuerpo" novalidate hidden>
+
+    <section class="seccion">
+      <h2>Datos del servicio</h2>
+      <div class="registro">
+        <div class="botones-registro">
+          <button type="button" id="btn-llegada" class="btn-registro">
+            <span class="titulo">Llegada</span>
+            <span id="llegada-marca" class="marca">Hora y ubicación</span>
+          </button>
+          <button type="button" id="btn-regreso" class="btn-registro">
+            <span class="titulo">Regreso</span>
+            <span id="regreso-marca" class="marca">Registrar hora</span>
+          </button>
+        </div>
+        <p id="ubicacion-estado" class="chico" aria-live="polite" hidden></p>
+      </div>
+      <div class="campo">
+        <label for="c5">No. de incidente de C-5 <span class="oblig">Obligatorio</span></label>
+        <input id="c5" name="c5" type="text" inputmode="numeric" autocomplete="off">
+      </div>
+      <div class="campo">
+        <label for="fecha">Fecha</label>
+        <input id="fecha" name="fecha" type="date">
+      </div>
+      <div class="tres">
+        <div class="campo">
+          <label for="salida">Hora de salida</label>
+          <input id="salida" name="salida" type="text" class="hora" inputmode="numeric" maxlength="5" placeholder="hh:mm" autocomplete="off" data-siguiente="llegada">
+        </div>
+        <div class="campo">
+          <label for="llegada">Hora de llegada</label>
+          <input id="llegada" name="llegada" type="text" class="hora" inputmode="numeric" maxlength="5" placeholder="hh:mm" autocomplete="off" data-siguiente="regreso">
+        </div>
+        <div class="campo">
+          <label for="regreso">Hora de regreso</label>
+          <input id="regreso" name="regreso" type="text" class="hora" inputmode="numeric" maxlength="5" placeholder="hh:mm" autocomplete="off" data-siguiente="unidad">
+        </div>
+      </div>
+      <div class="campo">
+        <label for="unidad">Unidad</label>
+        <input id="unidad" name="unidad" type="text">
+      </div>
+      <div class="campo">
+        <label for="turno">Turno</label>
+        <select id="turno" name="turno">
+          <option value="">Selecciona el turno</option>
+          <option>A</option><option>B</option><option>C</option><option>D</option><option>Único</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="estacion">Estación</label>
+        <select id="estacion" name="estacion">
+          <option value="">Selecciona la estación</option>
+          <option>Estación Central</option><option>Estación Maneadero</option><option>Estación Valle Dorado</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="tipo">Tipo de servicio <span class="oblig">Obligatorio</span></label>
+        <select id="tipo" name="tipo">
+          <option value="">Selecciona el tipo de servicio</option>
+          <option>Incendio estructural</option><option>Fuga de gas</option><option>Incendio de pastizal</option>
+          <option>Incendio forestal</option><option>Rescate vehicular</option><option>Rescate urbano</option>
+          <option>Búsqueda y salvamento</option><option>Atención prehospitalaria</option><option>Inspección</option>
+          <option>Investigación de incendio</option>
+        </select>
+      </div>
+      <fieldset class="campo">
+        <legend>Zona</legend>
+        <div class="segmentado">
+          <label><input type="radio" name="zona" value="Rural" checked><span>Rural</span></label>
+          <label><input type="radio" name="zona" value="Urbana"><span>Urbana</span></label>
+        </div>
+      </fieldset>
+      <div class="campo">
+        <label for="despacho">Despacho</label>
+        <input id="despacho" name="despacho" type="text">
+      </div>
+    </section>
+
+    <section class="seccion">
+      <h2>Lugar y propietario</h2>
+      <div class="campo">
+        <label for="lugar">Lugar del servicio <span class="oblig">Obligatorio</span></label>
+        <input id="lugar" name="lugar" type="text" autocomplete="off">
+      </div>
+      <div class="campo">
+        <label for="propietario">Nombre del propietario / arrendatario</label>
+        <input id="propietario" name="propietario" type="text">
+      </div>
+      <div class="campo">
+        <label for="telefono">Teléfono de contacto</label>
+        <input id="telefono" name="telefono" type="tel">
+      </div>
+      <div class="campo">
+        <label for="domicilio">Domicilio particular</label>
+        <input id="domicilio" name="domicilio" type="text">
+      </div>
+      <div class="campo">
+        <label for="aseguradora">Compañía aseguradora</label>
+        <input id="aseguradora" name="aseguradora" type="text">
+      </div>
+    </section>
+
+    <section class="seccion">
+      <h2>Descripción del incidente</h2>
+      <div class="campo">
+        <label for="descripcion">Descripción del incidente <span class="oblig">Obligatorio</span></label>
+        <textarea id="descripcion" name="descripcion" rows="5"></textarea>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <h2>Evidencia fotográfica</h2>
+      <span class="etiqueta">Fotos <span class="oblig">Obligatorio</span></span>
+      <div id="fotos" class="fotos"></div>
+      <input id="foto-input" class="oculto" type="file" accept="image/*" capture="environment">
+    </section>
+
+    <section class="seccion">
+      <h2>Personal de turno</h2>
+      <div class="encabezado-filas"><span>Nombre completo</span><span>No. empleado</span></div>
+      <div data-filas="personal" class="filas"></div>
+      <button type="button" class="btn-punteado" data-agregar="personal">Agregar elemento</button>
+      <div class="campo">
+        <label for="voluntarios">Voluntarios</label>
+        <input id="voluntarios" name="voluntarios" type="text">
+      </div>
+    </section>
+
+    <section class="seccion">
+      <h2>Unidades de bomberos en apoyo</h2>
+      <div class="encabezado-filas"><span>No. unidad</span><span>A cargo de</span></div>
+      <div data-filas="apoyo" class="filas"></div>
+      <button type="button" class="btn-punteado" data-agregar="apoyo">Agregar unidad</button>
+    </section>
+
+    <section class="seccion">
+      <h2>Instituciones de apoyo</h2>
+      <div class="encabezado-filas"><span>No. unidad</span><span>A cargo de</span></div>
+      <div data-filas="instituciones" class="filas"></div>
+      <button type="button" class="btn-punteado" data-agregar="instituciones">Agregar institución</button>
+    </section>
+
+    <section class="seccion">
+      <h2>Firmas del parte</h2>
+      <button type="button" class="btn-desactivado" disabled>Firmar con mi credencial</button>
+      <div class="campo">
+        <label for="recibe">Nombre de quien recibe parte</label>
+        <input id="recibe" name="recibe" type="text">
+      </div>
+    </section>
+
+    <section class="seccion">
+      <h2>Croquis</h2>
+      <div class="dos">
+        <button type="button" class="btn-desactivado" disabled>Dibujar</button>
+        <button type="button" class="btn-desactivado" disabled>Generar con IA</button>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <h2>Propietario y testigo</h2>
+      <div class="campo">
+        <label for="firma-propietario">Nombre del propietario</label>
+        <input id="firma-propietario" name="firma_propietario" type="text">
+      </div>
+      <div class="campo">
+        <label for="firma-testigo">Nombre del testigo</label>
+        <input id="firma-testigo" name="firma_testigo" type="text">
+      </div>
+      <div class="campo">
+        <label for="terceros">Propietarios daños a terceros</label>
+        <input id="terceros" name="terceros" type="text">
+      </div>
+    </section>
+
+    <section class="seccion">
+      <h2>¿Requiere peritaje?</h2>
+      <label class="opcion"><input type="radio" name="peritaje" value="Sí"><span><strong>Sí</strong> Estoy de acuerdo en que el perito realice los trabajos de investigación.</span></label>
+      <label class="opcion"><input type="radio" name="peritaje" value="No" checked><span><strong>No</strong> No requiero el trabajo de investigación por parte de la Dirección de Bomberos. Libero de toda responsabilidad al Departamento de Bomberos.</span></label>
+    </section>
+
+    <section class="seccion acciones">
+      <div id="errores" class="errores" role="alert" hidden></div>
+      <button type="button" id="enviar" class="btn-primario">Enviar hoja de incidente</button>
+      <button type="button" id="guardar" class="enlace-boton">Guardar y continuar después</button>
+    </section>
+  </form>
+</main>
+
+<!-- Guía: lo que explica el parte, fuera de la pantalla del celular. -->
+<aside class="guia" aria-label="Guía del parte">
+  <h2>Guía del parte</h2>
+  <dl>
+    <dt>Llegada</dt><dd>Escribe la hora de llegada y el lugar (dirección o coordenadas).</dd>
+    <dt>Regreso</dt><dd>Escribe la hora de regreso.</dd>
+    <dt>Horas</dt><dd>Sólo dígitos, 24 h: <code>0230</code> → <code>02:30</code>.</dd>
+    <dt>Se llenan solos</dt><dd>Fecha, unidad, turno, estación y personal de turno.</dd>
+    <dt>Fuera del CFP</dt><dd>Firma con credencial y croquis.</dd>
+    <dt>Envío</dt><dd>Simulado: el parte se queda en este dispositivo.</dd>
+  </dl>
+</aside>
+</div>
+
+<template id="fila-personal">
+  <div class="fila">
+    <input type="text" name="personal_nombre" data-etiqueta="Nombre completo">
+    <input type="text" name="personal_empleado" inputmode="numeric" data-etiqueta="Número de empleado" class="angosto">
+  </div>
+</template>
+<template id="fila-apoyo">
+  <div class="fila">
+    <input type="text" name="apoyo_unidad" data-etiqueta="Número de unidad en apoyo" class="angosto">
+    <input type="text" name="apoyo_cargo" data-etiqueta="Unidad en apoyo a cargo de">
+  </div>
+</template>
+<template id="fila-instituciones">
+  <div class="fila">
+    <input type="text" name="institucion_unidad" data-etiqueta="Número de unidad de la institución" class="angosto">
+    <input type="text" name="institucion_cargo" data-etiqueta="Institución a cargo de">
+  </div>
+</template>
+
+<!-- El orden importa: ver la cabecera de js/base.js. -->
+<script src="js/almacen.js"></script>
+<script src="js/base.js"></script>
+<script src="js/cronometro.js"></script>
+<script src="js/parte.js"></script>
+<script src="js/evidencia.js"></script>
+<script src="js/intentos.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
