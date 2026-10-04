@@ -1,12 +1,12 @@
 name: Publicar GitHub Pages
 
-# Despliega primera-version/docs/ (el sitio ya no vive en la raíz del repo,
+# Despliega 1-primera-version/docs/ (el sitio ya no vive en la raíz del repo,
 # así que "Deploy from a branch" no puede apuntar aquí — necesita Actions).
 on:
   push:
     branches: [main]
     paths:
-      - "primera-version/docs/**"
+      - "1-primera-version/docs/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -32,10 +32,10 @@ jobs:
       - name: Preparar Pages
         uses: actions/configure-pages@v5
 
-      - name: Subir primera-version/docs/ como artefacto
+      - name: Subir 1-primera-version/docs/ como artefacto
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "primera-version/docs"
+          path: "1-primera-version/docs"
 
       - name: Publicar
         id: deployment

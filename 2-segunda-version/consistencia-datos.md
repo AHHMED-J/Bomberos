@@ -1,9 +1,9 @@
 # Alineación de datos de ejemplo con la base de datos real
 
-Fuente de verdad: `primera-version/app/db/schema.sql` + `seed.sql` (la
+Fuente de verdad: `1-primera-version/app/db/schema.sql` + `seed.sql` (la
 base de datos del prototipo funcional). No se modificó ningún archivo de
 esa carpeta — sólo se leyeron para copiar sus datos reales a las
-pantallas de `segunda-version/`.
+pantallas de `2-segunda-version/`.
 
 ## Cambios en base de datos
 

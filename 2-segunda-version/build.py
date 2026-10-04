@@ -10,7 +10,7 @@ Escribe un archivo, generado: no se edita a mano.
                          cambia de una a otra por el hash de la URL.
 
 La fuente son docs/screens/, docs/css/ y manifest.json — el mismo patrón
-que build.py en primera-version/. Cada archivo de docs/screens/ se abre
+que build.py en 1-primera-version/. Cada archivo de docs/screens/ se abre
 también solo, sin pasar por este script, con la pantalla ya visible.
 """
 

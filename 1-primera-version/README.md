@@ -3,7 +3,7 @@
 > Esta es la primera versión completa del proyecto: mockups, prototipo
 > funcional e investigación de usuarios. Se congela aquí tal cual quedó;
 > el trabajo nuevo (rediseño a partir del PDF de pantallas más reciente)
-> vive en [`../segunda-version/`](../segunda-version/).
+> vive en [`../2-segunda-version/`](../2-segunda-version/).
 
 Mockups de baja fidelidad de la aplicación **web** del sistema de parte digital
 para el H. Cuerpo de Bomberos de Ensenada, derivados de los casos de uso en UML
@@ -52,7 +52,7 @@ línea de JavaScript.
 - **Ver o ajustar una pantalla:** abre `docs/screens/<nombre>.html` en el
   navegador. Toma su estilo de `docs/css/`, así que un cambio en un componente
   se ve en todas.
-- **Regenerar la hoja:** `python3 build.py` (desde `primera-version/`). Escribe
+- **Regenerar la hoja:** `python3 build.py` (desde `1-primera-version/`). Escribe
   `docs/pantallas.html` y `dist/pantallas-parte-digital.html` (un solo archivo
   con el CSS incrustado). La encuesta con el personal mostró que 6 de 7
   preferían la app de celular sobre la web de escritorio, así que ya no se
@@ -73,13 +73,13 @@ línea de JavaScript.
 
 ## Publicar en GitHub Pages
 
-Desde que el sitio vive en `primera-version/docs/` (no en la raíz del repo),
+Desde que el sitio vive en `1-primera-version/docs/` (no en la raíz del repo),
 GitHub Pages se despliega con un workflow de GitHub Actions en vez de
 "Deploy from a branch" — ver `.github/workflows/pages.yml` en la raíz del
 repo. Basta con:
 
 1. `git push`
-2. El workflow corre solo y publica `primera-version/docs/` en
+2. El workflow corre solo y publica `1-primera-version/docs/` en
    https://ahhmed-j.github.io/Bomberos/ en un par de minutos.
 
 No hay build de verdad: el workflow sólo copia los archivos tal cual. Si algo
