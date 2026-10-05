@@ -15,8 +15,10 @@ el orden en que fueron saliendo:
   división, Papelería, Administrar elementos, vista por Dirección). Ver su
   propio [README](2-segunda-version/README.md) para qué falta y por dónde va.
 - **[`3-ACTO 2/`](3-ACTO%202/)** — Acto II de la unidad de Prototipado (macro-proceso
-  de St. Gallen): una carpeta por entregable. Por ahora está el
-  [CFP](3-ACTO%202/1-CFP/README.md) (¿se puede capturar el parte en ≤ 60 s?).
+  de St. Gallen): una carpeta por entregable. Van el
+  [CFP](3-ACTO%202/1-CFP/README.md) (¿se puede capturar el parte en ≤ 60 s?),
+  las ideas del Dark Horse y el
+  [Funky Prototype](3-ACTO%202/3-Funky-Prototype/README.md) (parte multijugador).
 
 ## Cómo se publica el sitio
 

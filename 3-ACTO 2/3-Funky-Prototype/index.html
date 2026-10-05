@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Funky Prototype · Parte multijugador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../2-segunda-version/docs/css/tokens.css">
+<link rel="stylesheet" href="../../2-segunda-version/docs/css/base.css">
+<link rel="stylesheet" href="../1-CFP/css/cfp.css">
+<link rel="stylesheet" href="css/funky.css">
+</head>
+<body>
+
+<header class="encabezado">
+  <h1>Parte multijugador</h1>
+  <button type="button" id="reiniciar" class="btn-secundario">Reiniciar</button>
+</header>
+
+<main id="telefonos" class="telefonos"></main>
+
+<!-- Un teléfono. Se clona uno por usuario. -->
+<template id="tpl-dispositivo">
+  <div class="dispositivo">
+    <p class="quien"><span class="punto"></span><span class="rol"></span></p>
+    <div class="marco">
+      <div class="visor">
+        <header class="barra">
+          <h1>Hoja de incidente</h1>
+          <div class="unidos"></div>
+          <button type="button" class="salir solo-otros" data-accion="salir" hidden>Salir</button>
+        </header>
+        <section class="vista v-sin-parte" hidden>
+          <button type="button" class="btn-primario solo-jefe" data-accion="nuevo">Nuevo parte</button>
+          <p class="vacio solo-otros">Sin parte en curso</p>
+        </section>
+        <section class="vista v-invitacion" hidden>
+          <div class="invitacion">
+            <p class="inv-titulo">Parte en curso</p>
+            <p class="inv-detalle">Unidad 12 · Jefe de turno</p>
+            <button type="button" class="btn-primario" data-accion="unirse">Unirse</button>
+          </div>
+        </section>
+        <div class="v-parte" hidden></div>
+        <section class="vista v-enviado" hidden>
+          <h2>Hoja enviada</h2>
+        </section>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- El parte compartido: mismas secciones y etiquetas que el CFP. -->
+<template id="tpl-parte">
+  <form class="cuerpo" novalidate>
+    <div class="botones-registro solo-jefe">
+      <button type="button" class="btn-registro" data-accion="llegada">
+        <span class="titulo">Llegada</span>
+        <span class="marca" data-marca="llegada" data-vacio="Hora y ubicación">Hora y ubicación</span>
+      </button>
+      <button type="button" class="btn-registro" data-accion="regreso">
+        <span class="titulo">Regreso</span>
+        <span class="marca" data-marca="regreso" data-vacio="Registrar hora">Registrar hora</span>
+      </button>
+    </div>
+
+    <section class="seccion" data-seccion="servicio">
+      <div class="seccion-cab"><h2>Datos del servicio</h2><span class="presentes"></span></div>
+      <div class="campo">
+        <label data-para="c5">No. de incidente de C-5 <span class="oblig">Obligatorio</span></label>
+        <input data-campo="c5" type="text" inputmode="numeric" autocomplete="off">
+      </div>
+      <div class="tres">
+        <div class="campo">
+          <label data-para="salida">Hora de salida</label>
+          <input data-campo="salida" type="text" inputmode="numeric" maxlength="5" placeholder="hh:mm" autocomplete="off">
+        </div>
+        <div class="campo">
+          <label data-para="llegada">Hora de llegada</label>
+          <input data-campo="llegada" type="text" inputmode="numeric" maxlength="5" placeholder="hh:mm" autocomplete="off">
+        </div>
+        <div class="campo">
+          <label data-para="regreso">Hora de regreso</label>
+          <input data-campo="regreso" type="text" inputmode="numeric" maxlength="5" placeholder="hh:mm" autocomplete="off">
+        </div>
+      </div>
+      <div class="campo">
+        <label data-para="tipo">Tipo de servicio <span class="oblig">Obligatorio</span></label>
+        <select data-campo="tipo">
+          <option value="">Selecciona el tipo de servicio</option>
+          <option>Incendio estructural</option><option>Fuga de gas</option><option>Incendio de pastizal</option>
+          <option>Incendio forestal</option><option>Rescate vehicular</option><option>Rescate urbano</option>
+          <option>Búsqueda y salvamento</option><option>Atención prehospitalaria</option><option>Inspección</option>
+          <option>Investigación de incendio</option>
+        </select>
+      </div>
+      <fieldset class="campo">
+        <legend>Zona</legend>
+        <div class="segmentado">
+          <label><input type="radio" name="zona" data-campo="zona" value="Rural"><span>Rural</span></label>
+          <label><input type="radio" name="zona" data-campo="zona" value="Urbana"><span>Urbana</span></label>
+        </div>
+      </fieldset>
+    </section>
+
+    <section class="seccion" data-seccion="lugar">
+      <div class="seccion-cab"><h2>Lugar y propietario</h2><span class="presentes"></span></div>
+      <div class="campo">
+        <label data-para="lugar">Lugar del servicio <span class="oblig">Obligatorio</span></label>
+        <input data-campo="lugar" type="text" autocomplete="off">
+      </div>
+      <div class="campo">
+        <label data-para="propietario">Nombre del propietario / arrendatario</label>
+        <input data-campo="propietario" type="text">
+      </div>
+      <div class="campo">
+        <label data-para="telefono">Teléfono de contacto</label>
+        <input data-campo="telefono" type="tel">
+      </div>
+    </section>
+
+    <section class="seccion" data-seccion="descripcion">
+      <div class="seccion-cab"><h2>Descripción del incidente</h2><span class="presentes"></span></div>
+      <div class="campo">
+        <label data-para="descripcion">Descripción del incidente <span class="oblig">Obligatorio</span></label>
+        <textarea data-campo="descripcion" rows="5"></textarea>
+      </div>
+    </section>
+
+    <section class="seccion" data-seccion="fotos">
+      <div class="seccion-cab"><h2>Evidencia fotográfica</h2><span class="presentes"></span></div>
+      <span class="etiqueta">Fotos <span class="oblig">Obligatorio</span></span>
+      <div class="fotos"></div>
+      <input class="oculto" type="file" accept="image/*" capture="environment" data-foto>
+    </section>
+
+    <section class="seccion" data-seccion="personal">
+      <div class="seccion-cab"><h2>Personal de turno</h2></div>
+      <div class="personas"></div>
+    </section>
+
+    <section class="seccion" data-seccion="apoyo">
+      <div class="seccion-cab"><h2>Apoyo</h2><span class="presentes"></span></div>
+      <div class="encabezado-filas"><span>No. unidad</span><span>A cargo de</span></div>
+      <div class="fila">
+        <input data-campo="apoyo_unidad" type="text" class="angosto" aria-label="Número de unidad en apoyo">
+        <input data-campo="apoyo_cargo" type="text" aria-label="Unidad en apoyo a cargo de">
+      </div>
+      <div class="encabezado-filas"><span>Institución</span><span>A cargo de</span></div>
+      <div class="fila">
+        <input data-campo="institucion" type="text" class="angosto" aria-label="Institución de apoyo">
+        <input data-campo="institucion_cargo" type="text" aria-label="Institución a cargo de">
+      </div>
+    </section>
+
+    <section class="seccion" data-seccion="testigo">
+      <div class="seccion-cab"><h2>Propietario y testigo</h2><span class="presentes"></span></div>
+      <div class="campo">
+        <label data-para="testigo">Nombre del testigo</label>
+        <input data-campo="testigo" type="text">
+      </div>
+      <div class="campo">
+        <label data-para="terceros">Propietarios daños a terceros</label>
+        <input data-campo="terceros" type="text">
+      </div>
+    </section>
+
+    <section class="seccion acciones solo-jefe">
+      <p class="faltan" hidden></p>
+      <button type="button" class="btn-primario" data-accion="enviar">Enviar hoja de incidente</button>
+    </section>
+  </form>
+</template>
+
+<script src="js/funky.js"></script>
+</body>
+</html>

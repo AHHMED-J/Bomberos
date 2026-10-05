@@ -1,0 +1,135 @@
+/* funky.css — tres teléfonos lado a lado. El parte usa los estilos del
+   CFP (../1-CFP/css/cfp.css); aquí sólo va lo propio del multijugador. */
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 16px 0;
+}
+.encabezado h1 { margin: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 30px; text-transform: uppercase; }
+.encabezado .btn-secundario { padding: 0 20px; }
+
+.telefonos {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  padding: 20px 16px 32px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+.dispositivo { flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; scroll-snap-align: center; }
+.quien { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 600; }
+.punto { display: inline-block; flex-shrink: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--c, var(--color)); }
+
+.marco {
+  width: 372px;
+  padding: 8px;
+  border-radius: 40px;
+  background: var(--tinta);
+  box-shadow: 0 24px 48px rgba(28, 27, 25, .22);
+}
+.visor {
+  width: 356px;
+  height: min(760px, calc(100vh - 140px));
+  border-radius: 32px;
+  overflow-y: auto;
+  background: #FFFFFF;
+  scrollbar-width: none;
+}
+.visor::-webkit-scrollbar { display: none; }
+.visor .barra { position: sticky; top: 0; z-index: 2; padding: 26px 18px 14px; }
+.visor .barra h1 { font-size: 30px; }
+.salir {
+  position: absolute;
+  top: 24px;
+  right: 16px;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, .7);
+  border-radius: 999px;
+  background: transparent;
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.salir[hidden] { display: none; }
+
+/* Quiénes están en el parte. */
+.unidos { display: flex; gap: 6px; min-height: 28px; }
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #FFFFFF;
+  border-radius: 50%;
+  background: var(--c);
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.vacio { margin-top: 48px !important; text-align: center; color: var(--gris); }
+.invitacion { display: flex; flex-direction: column; gap: 6px; padding: 18px; border: 2px solid var(--rojo); border-radius: 14px; }
+.invitacion .btn-primario { margin-top: 10px; }
+.inv-titulo { font-size: 20px !important; font-weight: 600; }
+.inv-detalle { color: var(--gris); }
+.v-enviado h2 { margin-top: 48px; text-align: center; }
+
+/* Dónde está cada quien: sección (etiquetas y barra de colores) y campo
+   (anillos de color e iniciales). */
+.seccion[data-seccion] { position: relative; margin-left: -12px; padding-left: 12px; }
+.seccion[data-seccion]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  height: calc(100% - 24px);
+  border-radius: 2px;
+  background: var(--barra, transparent);
+}
+.seccion[data-seccion]:first-of-type::before { height: 100%; }
+.seccion-cab { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.presentes { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+.presente { padding: 3px 10px; border-radius: 999px; background: var(--c); color: #FFFFFF; font-size: 13px; font-weight: 600; white-space: nowrap; }
+
+.en-campo:is(input, select, textarea, .fotos, .segmentado) { box-shadow: var(--anillos); border-color: transparent !important; }
+.fotos.en-campo, .segmentado.en-campo { border-radius: 12px; }
+.iniciales { display: inline-flex; gap: 3px; margin-left: 8px; vertical-align: 1px; }
+.iniciales span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--c);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+}
+.fila .iniciales { align-self: center; margin-left: 0; }
+
+.personas { display: flex; flex-direction: column; gap: 8px; }
+.persona { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border: 1px solid #CFC8BD; border-radius: 12px; font-size: 17px; }
+
+.seccion[data-seccion="apoyo"] .encabezado-filas span:first-child { flex-grow: 0; width: 110px; }
+.seccion[data-seccion="apoyo"] .encabezado-filas span:last-child { flex-grow: 1; width: auto; }
+
+.faltan { margin: 0; color: var(--rojo); font-weight: 600; }
+
+@media (max-width: 1240px) {
+  .telefonos { justify-content: flex-start; }
+}
+@media (max-width: 420px) {
+  .marco { width: calc(100vw - 32px); }
+  .visor { width: 100%; }
+}
