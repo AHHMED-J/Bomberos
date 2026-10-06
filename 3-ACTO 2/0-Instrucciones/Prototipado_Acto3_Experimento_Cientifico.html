@@ -1,0 +1,457 @@
+<title>El experimento científico — Prototipado en Tres Actos</title>
+<style>
+  :root{
+    --bg:#F5F6F8;
+    --surface:#FFFFFF;
+    --surface-2:#EEF1F5;
+    --ink:#0F2238;
+    --ink-soft:#48586E;
+    --ink-faint:#7C8AA0;
+    --line:#DADFE7;
+    --accent:#D9540A;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#FBE6D8;
+    --navy:#0D2542;
+    --navy-2:#0A1D35;
+    --navy-ink:#EAF1FB;
+    --navy-ink-soft:#A9BEDA;
+    --blueprint-line:rgba(72,138,196,0.20);
+    --mono-bg:#0D2542;
+    --mono-ink:#BFE8C9;
+    --mono-key:#6FB7FF;
+    --shadow:0 1px 2px rgba(15,34,56,0.06), 0 8px 24px rgba(15,34,56,0.08);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0B1826;
+      --surface:#12233A;
+      --surface-2:#0F1E32;
+      --ink:#EAF1FB;
+      --ink-soft:#B7C6DC;
+      --ink-faint:#7E93B0;
+      --line:#233A56;
+      --accent:#FF8A44;
+      --accent-ink:#0B1826;
+      --accent-soft:#2A2013;
+      --navy:#060F1C;
+      --navy-2:#040A14;
+      --navy-ink:#EAF1FB;
+      --navy-ink-soft:#9FB6D6;
+      --blueprint-line:rgba(111,183,255,0.16);
+      --mono-bg:#060F1C;
+      --mono-ink:#9BE3AC;
+      --mono-key:#7EC2FF;
+      --shadow:0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B1826;
+    --surface:#12233A;
+    --surface-2:#0F1E32;
+    --ink:#EAF1FB;
+    --ink-soft:#B7C6DC;
+    --ink-faint:#7E93B0;
+    --line:#233A56;
+    --accent:#FF8A44;
+    --accent-ink:#0B1826;
+    --accent-soft:#2A2013;
+    --navy:#060F1C;
+    --navy-2:#040A14;
+    --navy-ink:#EAF1FB;
+    --navy-ink-soft:#9FB6D6;
+    --blueprint-line:rgba(111,183,255,0.16);
+    --mono-bg:#060F1C;
+    --mono-ink:#9BE3AC;
+    --mono-key:#7EC2FF;
+    --shadow:0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    color-scheme: dark;
+  }
+
+  * { box-sizing:border-box; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Public Sans","Arial",sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3{
+    font-family:"Big Shoulders Display","Arial Narrow",sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+    text-wrap:balance;
+    margin:0;
+    color:var(--ink);
+  }
+  .mono{ font-family:"IBM Plex Mono",ui-monospace,monospace; }
+  p{ margin:0; }
+  ul{ margin:0; padding:0; list-style:none; }
+  img{ max-width:100%; }
+
+  .wrap{ max-width:900px; margin:0 auto; padding-inline:20px; }
+  @media (min-width:760px){ .wrap{ padding-inline:40px; } }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:
+      linear-gradient(var(--blueprint-line) 1px, transparent 1px) 0 0/40px 40px,
+      linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px) 0 0/40px 40px,
+      var(--navy);
+    color:var(--navy-ink);
+    padding-block:64px 56px;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:600;
+  }
+  .hero .eyebrow{ color:#FFAE7A; }
+  .hero h1{
+    font-size:clamp(2.4rem,6vw,3.6rem);
+    margin-top:10px;
+    color:#FFFFFF;
+  }
+  .hero .lede{
+    margin-top:18px;
+    max-width:60ch;
+    font-size:1.08rem;
+    color:var(--navy-ink-soft);
+  }
+  .hero .course-tag{
+    margin-top:28px;
+    display:inline-flex;
+    gap:10px;
+    align-items:center;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:0.82rem;
+    color:var(--navy-ink-soft);
+    border:1px solid rgba(255,255,255,0.18);
+    padding:8px 14px;
+    border-radius:999px;
+  }
+
+  .arc{
+    margin-top:44px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:stretch;
+  }
+  .arc-step{
+    flex:1 1 220px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:14px;
+    padding:16px 18px;
+  }
+  .arc-step .num{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:0.75rem;
+    color:var(--accent);
+    font-weight:600;
+  }
+  .arc-step h3{ font-size:1.1rem; color:#fff; margin-top:6px; }
+  .arc-step p{ font-size:0.88rem; color:var(--navy-ink-soft); margin-top:6px; }
+  .arc-arrow{
+    display:flex; align-items:center; justify-content:center;
+    color:var(--accent); font-size:1.4rem; padding-inline:2px;
+  }
+  @media (max-width:700px){ .arc-arrow{ display:none; } }
+
+  /* ---------- INTRO ---------- */
+  .intro{ padding-block:48px; }
+  .intro h2{ font-size:1.6rem; }
+  .intro .lede{ margin-top:14px; font-size:1.02rem; color:var(--ink-soft); max-width:68ch; }
+  /* ---------- ACT SECTIONS ---------- */
+  .act{ padding-block:56px; border-top:1px solid var(--line); }
+  .act.paper{ background:var(--bg); }
+  .act.blueprint{
+    background:
+      linear-gradient(var(--blueprint-line) 1px, transparent 1px) 0 0/32px 32px,
+      linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px) 0 0/32px 32px,
+      var(--surface-2);
+  }
+  .act.terminal{ background:var(--bg); }
+
+  .act-head{ display:flex; flex-direction:column; gap:8px; max-width:70ch; }
+  .act-head h2{ font-size:clamp(1.7rem,4vw,2.3rem); }
+  .act-head .lede{ color:var(--ink-soft); font-size:1rem; margin-top:4px; }
+
+  .refbox{
+    margin-top:20px;
+    background:var(--accent-soft);
+    border-radius:10px;
+    padding:12px 16px;
+    font-size:0.86rem;
+    color:var(--ink-soft);
+  }
+  .refbox b{ color:var(--ink); }
+
+  .steps{ margin-top:32px; display:flex; flex-direction:column; gap:16px; }
+  .step{ display:flex; gap:16px; align-items:flex-start; }
+  .step .badge{
+    flex:0 0 auto;
+    width:34px; height:34px;
+    border-radius:50%;
+    background:var(--accent);
+    color:var(--accent-ink);
+    display:flex; align-items:center; justify-content:center;
+    font-family:"IBM Plex Mono",monospace;
+    font-weight:600; font-size:0.92rem;
+  }
+  .step .body{ padding-top:4px; }
+  .step .body h4{ font-family:"Public Sans"; font-weight:700; font-size:1rem; margin:0 0 4px; }
+  .step .body p{ color:var(--ink-soft); font-size:0.95rem; }
+
+  p.slide-ref{
+    margin-top:8px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:0.74rem;
+    color:var(--ink-faint);
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:3px 9px;
+  }
+  .slide-ref .deck{ color:var(--accent); font-weight:600; }
+  .step .body p.slide-ref,
+  .layer p.slide-ref{ font-size:0.74rem; color:var(--ink-faint); }
+
+  .panel-row{
+    margin-top:32px;
+    max-width:70ch;
+  }
+  .panel{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:20px 22px;
+    box-shadow:var(--shadow);
+  }
+  .panel h4{ font-family:"IBM Plex Mono",monospace; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); }
+  .panel .deliver{ margin-top:10px; font-size:0.96rem; color:var(--ink); }
+
+  /* Milestone track (Act II) */
+  .track{
+    margin-top:32px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:stretch;
+  }
+  .chip{
+    flex:1 1 140px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 14px;
+    box-shadow:var(--shadow);
+  }
+  .chip .tag{ font-family:"IBM Plex Mono",monospace; font-size:0.7rem; color:var(--accent); font-weight:600; }
+  .chip .label{ font-weight:700; font-size:0.92rem; margin-top:4px; }
+  .chip .sub{ font-size:0.78rem; color:var(--ink-faint); margin-top:3px; }
+  .track-arrow{ display:flex; align-items:center; color:var(--ink-faint); font-size:1.1rem; }
+  @media (max-width:700px){ .track-arrow{ display:none; } }
+
+  .callout{
+    margin-top:24px;
+    border:1px dashed var(--line);
+    border-radius:12px;
+    padding:18px 20px;
+    background:var(--surface);
+  }
+  .callout .k{ font-family:"IBM Plex Mono",monospace; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); }
+  .callout p{ margin-top:8px; font-size:0.95rem; color:var(--ink-soft); }
+
+  /* Act III specifics */
+  .layers{ margin-top:32px; display:flex; flex-direction:column; gap:10px; }
+  .layer{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 20px;
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+    box-shadow:var(--shadow);
+  }
+  .layer .badge{ background:var(--navy); color:var(--navy-ink); }
+  .layer h4{ font-size:1rem; margin:0; }
+  .layer p{ font-size:0.9rem; color:var(--ink-soft); margin-top:4px; }
+
+  .formula{
+    margin-top:28px;
+    background:var(--navy);
+    color:var(--navy-ink);
+    border-radius:14px;
+    padding:28px 26px;
+    text-align:center;
+  }
+  .formula .eq{ font-family:"Big Shoulders Display"; font-weight:800; font-size:clamp(1.8rem,5vw,2.6rem); letter-spacing:0.02em; }
+  .formula .eq .op{ color:#FFAE7A; padding-inline:8px; }
+  .formula .legend{
+    margin-top:18px;
+    display:flex; gap:22px; flex-wrap:wrap; justify-content:center;
+  }
+  .formula .legend div{ font-size:0.82rem; color:var(--navy-ink-soft); }
+  .formula .legend b{ color:#fff; font-family:"IBM Plex Mono",monospace; }
+
+  .code{
+    margin-top:24px;
+    background:var(--mono-bg);
+    border-radius:12px;
+    padding:18px 20px;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:0.85rem;
+    color:var(--mono-ink);
+    overflow-x:auto;
+  }
+  .code .k{ color:var(--mono-key); }
+  .code .c{ color:#8FA3BF; }
+
+  .source{ margin-top:28px; font-size:0.8rem; color:var(--ink-faint); }
+
+  /* ---------- CLOSING ---------- */
+  .closing{
+    background:var(--navy-2);
+    color:var(--navy-ink);
+    padding-block:64px;
+  }
+  .closing h2{ color:#fff; font-size:clamp(1.8rem,4.5vw,2.4rem); max-width:26ch; }
+  .closing .lede{ margin-top:14px; color:var(--navy-ink-soft); max-width:66ch; font-size:1rem; }
+
+  .flow{
+    margin-top:36px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .flow .card{
+    flex:1 1 260px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:14px;
+    padding:20px;
+  }
+  .flow .card .eyebrow{ color:#FFAE7A; }
+  .flow .card h3{ color:#fff; font-size:1.15rem; margin-top:8px; }
+  .flow .card p{ color:var(--navy-ink-soft); font-size:0.9rem; margin-top:8px; }
+
+  .note{ margin-top:28px; font-size:0.86rem; color:var(--navy-ink-soft); max-width:68ch; }
+
+  a{ color:inherit; text-decoration:none; }
+
+  .arc.mini{ margin-top:36px; }
+  .arc-step.current{
+    border-color:var(--accent);
+    background:rgba(217,84,10,0.12);
+  }
+  .arc-step.dim{ opacity:0.5; }
+  .arc-step.dim h3{ color:var(--navy-ink-soft); }
+
+  .continuity{
+    margin-top:24px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 18px;
+    font-size:0.86rem;
+    color:var(--ink-soft);
+  }
+  .continuity b{ color:var(--ink); }
+
+  .filenav{
+    margin-top:40px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:0.82rem;
+    color:var(--ink-faint);
+  }
+  .filenav a{ color:var(--accent); font-weight:600; }
+  .filenav a:hover{ text-decoration:underline; }
+</style>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Tecnologías Emergentes para el Desarrollo de Soluciones — Ingeniería en Software</div>
+    <h1>El experimento científico</h1>
+    <p class="lede">Objetivo: tratar el Funky/Functional Prototype del Acto II como una hipótesis, no como un producto terminado — y diseñar cómo se probaría en producción real, con datos.</p>
+    <div class="course-tag">◆ Unidad 1.5 — Prototipado · Acto III de III</div>
+
+    <div class="arc mini">
+      <div class="arc-step dim"><div class="num">ACTO I</div><h3>Boceto y validación</h3><p>Papel, espectro de fidelidad, prueba guerrilla.</p></div>
+      <div class="arc-arrow">→</div>
+      <div class="arc-step dim"><div class="num">ACTO II</div><h3>El macro-proceso</h3><p>CFP, Dark Horse, Funky — el roadmap de St. Gallen.</p></div>
+      <div class="arc-arrow">→</div>
+      <div class="arc-step current"><div class="num">ACTO III</div><h3>El experimento científico</h3><p>Modelo Fogg, prueba A/B, Feature Flags.</p></div>
+      </div>
+  </div>
+</section>
+
+<section class="act terminal">
+  <div class="wrap">
+    <div class="act-head"><div class="eyebrow">Basado en Prototipado 3</div></div>
+
+    <div class="continuity"><b>Acto III de III — cierre de la secuencia.</b> Toma el Funky/Functional Prototype del Acto II como punto de partida y lo trata como una hipótesis a validar con datos.</div>
+
+    <div class="refbox"><b>Cita de la clase (Erin Weigel):</b> "Diseña como si tuvieras razón, prueba como si estuvieras equivocado."</div>
+
+    <div class="steps">
+      <div class="step"><div class="badge">1</div><div class="body"><h4>Especificar el stack de 3 capas</h4><p>Accesibilidad, usabilidad y estética — en ese orden de prioridad. Un fallo en las dos primeras invalida cualquier lectura de datos en la tercera.</p><p class="slide-ref">→ <span class="deck">Prototipado 3</span> · diapositiva 5</p></div></div>
+      <div class="step"><div class="badge">2</div><div class="body"><h4>Aplicar el Modelo Fogg (B = M × A × P)</h4><p>Definan el comportamiento objetivo y un elemento concreto de diseño o código para Motivación, Habilidad y Prompt.</p><p class="slide-ref">→ <span class="deck">Prototipado 3</span> · diapositivas 9–10</p></div></div>
+      <div class="step"><div class="badge">3</div><div class="body"><h4>Diseñar la prueba A/B</h4><p>Hipótesis, Hipótesis Nula (H₀), qué ve el grupo de control vs. el de tratamiento, % de tráfico, y qué resultado los obligaría a rechazar H₀.</p><p class="slide-ref">→ <span class="deck">Prototipado 3</span> · diapositivas 11–12</p></div></div>
+      <div class="step"><div class="badge">4</div><div class="body"><h4>Plan de Feature Flag</h4><p>Nombre del flag, criterio para activarlo al 100% de usuarios, y la condición de "kill switch" para apagarlo de inmediato.</p><p class="slide-ref">→ <span class="deck">Prototipado 3</span> · diapositiva 13</p></div></div>
+    </div>
+
+    <div class="layers">
+      <div class="layer"><div class="badge">A</div><div><h4>Accesibilidad — ¿es posible?</h4><p>Un requisito concreto: tiempo de carga, código semántico, soporte de lector de pantalla en el elemento clave.</p><p class="slide-ref">→ <span class="deck">Prototipado 3</span> · diapositiva 6</p></div></div>
+      <div class="layer"><div class="badge">U</div><div><h4>Usabilidad — ¿es fácil? (Ley de Jakob)</h4><p>Un patrón de interfaz estándar que van a respetar en vez de inventar uno propio, y por qué.</p><p class="slide-ref">→ <span class="deck">Prototipado 3</span> · diapositiva 7</p></div></div>
+      <div class="layer"><div class="badge">E</div><div><h4>Estética — ¿es claro? (la forma sigue a la función)</h4><p>Qué elemento debe destacar más en la pantalla, y con qué técnica: contraste, tamaño o color.</p><p class="slide-ref">→ <span class="deck">Prototipado 3</span> · diapositiva 8</p></div></div>
+    </div>
+
+    <div class="formula">
+      <div class="eq">B <span class="op">=</span> M <span class="op">×</span> A <span class="op">×</span> P</div>
+      <div class="legend">
+        <div><b>B</b> · Behavior — la acción deseada</div>
+        <div><b>M</b> · Motivación del usuario</div>
+        <div><b>A</b> · Habilidad — qué tan fácil es hacerlo</div>
+        <div><b>P</b> · Prompt — el gatillo que lo detona</div>
+      </div>
+    </div>
+
+    <div class="code">
+<span class="c">// Ficha de experimento — ejemplo de estructura</span><br>
+<span class="k">feature_flag</span>: "enable_new_checkout"<br>
+<span class="k">hipotesis</span>: "El botón de pago en 1 clic sube la conversión"<br>
+<span class="k">H0</span>: "El nuevo checkout no cambia la tasa de conversión"<br>
+<span class="k">split</span>: A 50% (control) / B 50% (tratamiento)<br>
+<span class="k">metrica_decision</span>: "tasa de conversión a 7 días"<br>
+<span class="k">kill_switch</span>: "si errores de pago suben &gt; 1% → apagar flag"
+    </div>
+
+    <div class="panel-row" style="margin-top:32px;">
+      <div class="panel">
+        <h4>Entregable</h4>
+        <p class="deliver">"Ficha de Experimento" de una página: las 3 capas, el Modelo Fogg aplicado, el diseño de la prueba A/B con H₀, el plan de Feature Flag, y un cierre de máximo 150 palabras sobre por qué su código es una hipótesis y no una verdad.</p>
+      </div>
+    </div>
+
+    <p class="source">Fuentes de la clase: Modelo de Comportamiento de Fogg (B=MAP) · Erin Weigel · práctica de Feature Flags y pruebas A/B en ingeniería de producto.</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="filenav"><a href="Prototipado_Acto2_Macro_Proceso.html">← Acto II — El macro-proceso en acción</a><span>Fin de la secuencia</span></div>
+</div>
