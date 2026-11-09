@@ -19,6 +19,12 @@ el orden en que fueron saliendo:
   [CFP](3-ACTO%202/1-CFP/README.md) (¿se puede capturar el parte en ≤ 60 s?),
   las ideas del Dark Horse y el
   [Funky Prototype](3-ACTO%202/3-Funky-Prototype/README.md) (parte multijugador).
+- **[`4-tercera-version/`](4-tercera-version/)** — los requerimientos y
+  límites definitivos para terminar la app: acceso con número de empleado,
+  firma en trazo con huella o PIN, sellado SHA-256, croquis sobre mapa y
+  dictado con IA. Si algo de las carpetas anteriores lo contradice, manda
+  esta. Ver
+  [`requerimientos-y-limites.md`](4-tercera-version/requerimientos-y-limites.md).
 
 ## Cómo se publica el sitio
 

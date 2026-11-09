@@ -81,8 +81,9 @@ Antes de dar por bueno el rediseño, hay que decidir qué de esto se recupera:
 
 ## Próximos pasos
 
-- [ ] Decidir cuáles de los 6 puntos que faltan se recuperan y cuáles se
-      dejan fuera a propósito (documentarlo aquí).
+- [x] Decidir cuáles de los 6 puntos que faltan se recuperan y cuáles se
+      dejan fuera a propósito — quedó decidido en la tercera versión, ver
+      [`../4-tercera-version/requerimientos-y-limites.md`](../4-tercera-version/requerimientos-y-limites.md).
 - [x] Estructura de carpetas para esta versión — pantallas sueltas + css
       compartido + `build.py`, igual que `1-primera-version/`.
 - [x] Wireframes/mockups estáticos antes de tocar código — el clic-through
