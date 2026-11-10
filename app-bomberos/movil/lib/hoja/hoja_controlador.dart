@@ -80,7 +80,7 @@ class HojaControlador extends Notifier<Parte?> {
   void llegada() => escribir('hora_llegada', horaDe(reloj()));
   void regreso() => escribir('hora_regreso', horaDe(reloj()));
   void agregarFoto() => _actualizar((p) => p.copiar(fotos: p.fotos + 1));
-  void croquis(bool dibujado) => _actualizar((p) => p.copiar(croquisDibujado: dibujado));
+  void croquis(String rutaPng) => _actualizar((p) => p.copiar(croquisPng: rutaPng));
   void firmas(Firmas Function(Firmas) f) => _actualizar((p) => p.copiar(firmas: f(p.firmas)));
 
   // ---------- Dictado ----------

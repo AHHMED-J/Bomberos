@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:bomberos_parte/croquis/almacen_croquis.dart';
 import 'package:bomberos_parte/datos/repositorio_local.dart';
 import 'package:bomberos_parte/datos/repositorio_remoto.dart';
 import 'package:bomberos_parte/servicios/firma/servicio_firma.dart';
@@ -9,6 +10,7 @@ import 'package:bomberos_parte/servicios/ia/servicio_llenado_campos.dart';
 import 'package:bomberos_parte/servicios/ia/servicio_resumen.dart';
 import 'package:bomberos_parte/servicios/ia/servicio_transcripcion.dart';
 import 'package:bomberos_parte/servicios/proveedores.dart';
+import 'package:bomberos_parte/servicios/ubicacion.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 
@@ -36,7 +38,12 @@ class GrabadoraPrueba implements GrabadoraAudio {
 }
 
 /// Sobrescrituras comunes: todo falso y sin retardos.
-List<Override> overridesDePrueba({GrabadoraAudio? grabadora, RepositorioLocal? local}) => [
+List<Override> overridesDePrueba({
+  GrabadoraAudio? grabadora,
+  RepositorioLocal? local,
+  AlmacenCroquis? croquis,
+  ServicioUbicacion? ubicacion,
+}) => [
   grabadoraProvider.overrideWithValue(grabadora ?? GrabadoraPrueba()),
   transcripcionProvider.overrideWithValue(FalsoTranscripcion(retardo: Duration.zero)),
   llenadoCamposProvider.overrideWithValue(FalsoLlenadoCampos(retardo: Duration.zero)),
@@ -44,6 +51,9 @@ List<Override> overridesDePrueba({GrabadoraAudio? grabadora, RepositorioLocal? l
   repositorioLocalProvider.overrideWithValue(local ?? RepositorioMemoria()),
   repositorioRemotoProvider.overrideWithValue(RemotoFalso(retardo: Duration.zero)),
   firmaProvider.overrideWithValue(FirmaSimulada(retardo: Duration.zero)),
+  ubicacionProvider.overrideWithValue(ubicacion ?? UbicacionFija()),
+  teselasMapaProvider.overrideWithValue(false),
+  almacenCroquisProvider.overrideWithValue(croquis ?? AlmacenCroquisMemoria()),
 ];
 
 /// Espera (en el bucle de eventos) a que se cumpla una condición.

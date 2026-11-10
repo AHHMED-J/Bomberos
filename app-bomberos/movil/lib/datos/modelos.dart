@@ -205,7 +205,7 @@ class Parte {
     required this.creadoEn,
     this.campos = const {},
     this.fotos = 0,
-    this.croquisDibujado = false,
+    this.croquisPng,
     this.firmas = const Firmas(),
     this.modo = ModoCaptura.dictado,
     this.segActivo = 0,
@@ -224,7 +224,9 @@ class Parte {
   final DateTime creadoEn;
   final Map<String, ValorCampo> campos;
   final int fotos;
-  final bool croquisDibujado;
+
+  /// Ruta relativa del PNG del croquis en el teléfono («croquis/…png»), o null si no hay captura.
+  final String? croquisPng;
   final Firmas firmas;
 
   /// A/B: qué grupo le tocó a este parte. TODO(experimento): sorteo al crear.
@@ -248,7 +250,7 @@ class Parte {
     EstadoParte? estado,
     Map<String, ValorCampo>? campos,
     int? fotos,
-    bool? croquisDibujado,
+    String? croquisPng,
     Firmas? firmas,
     ModoCaptura? modo,
     int? segActivo,
@@ -267,7 +269,7 @@ class Parte {
     creadoEn: creadoEn,
     campos: campos ?? this.campos,
     fotos: fotos ?? this.fotos,
-    croquisDibujado: croquisDibujado ?? this.croquisDibujado,
+    croquisPng: croquisPng ?? this.croquisPng,
     firmas: firmas ?? this.firmas,
     modo: modo ?? this.modo,
     segActivo: segActivo ?? this.segActivo,
@@ -312,7 +314,7 @@ class Parte {
     'creado_en': creadoEn.toIso8601String(),
     'campos': campos.map((k, v) => MapEntry(k, v.aJson())),
     'fotos': fotos,
-    'croquis_dibujado': croquisDibujado,
+    'croquis_png': croquisPng,
     'firmas': firmas.aJson(),
     'modo': modo.name,
     'seg_activo': segActivo,
@@ -334,7 +336,7 @@ class Parte {
       (k, v) => MapEntry(k, ValorCampo.deJson(v as Map<String, dynamic>)),
     ),
     fotos: j['fotos'] as int? ?? 0,
-    croquisDibujado: j['croquis_dibujado'] as bool? ?? false,
+    croquisPng: j['croquis_png'] as String?, // «croquis_dibujado» (versión anterior) ya no se usa
     firmas: Firmas.deJson(j['firmas'] as Map<String, dynamic>? ?? {}),
     modo: ModoCaptura.values.byName(j['modo'] as String? ?? 'dictado'),
     segActivo: j['seg_activo'] as int? ?? 0,

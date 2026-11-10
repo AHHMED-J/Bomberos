@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../acceso/sesion.dart';
 import '../compartido/campo_con_estado.dart';
-import '../compartido/lienzo_firma.dart';
 import '../compartido/tema.dart';
+import '../croquis/seccion_croquis.dart';
 import '../compartido/widgets.dart';
 import '../datos/catalogo_campos.dart';
 import '../datos/modelos.dart';
@@ -30,8 +30,6 @@ class PantallaHoja extends ConsumerStatefulWidget {
 }
 
 class _PantallaHojaState extends ConsumerState<PantallaHoja> {
-  late final ControlFirma _croquis = ControlFirma();
-
   /// Botón lateral, llamada o cambio de app a media grabación: se detiene y se usa lo grabado
   /// (si no hay señal, queda guardado para enviarlo después). Así no se pierde el dictado.
   late final AppLifecycleListener _ciclo = AppLifecycleListener(
@@ -46,17 +44,11 @@ class _PantallaHojaState extends ConsumerState<PantallaHoja> {
   void initState() {
     super.initState();
     _ciclo; // se crea con la pantalla
-    // TODO: guardar los trazos del croquis; hoy sólo se marca que se dibujó.
-    _croquis.addListener(() {
-      final p = ref.read(hojaProvider);
-      if (!_croquis.vacio && p != null && !p.croquisDibujado) ref.read(hojaProvider.notifier).croquis(true);
-    });
   }
 
   @override
   void dispose() {
     _ciclo.dispose();
-    _croquis.dispose();
     super.dispose();
   }
 
@@ -287,16 +279,8 @@ class _PantallaHojaState extends ConsumerState<PantallaHoja> {
                 campo('instituciones_apoyo'),
 
                 // ---------- Croquis ----------
-                TituloSeccion(
-                  SeccionHoja.croquis.titulo,
-                  extra: const ChipBomberos('Generar con IA · después', tono: TonoChip.neutro),
-                ),
-                LienzoFirma(
-                  control: _croquis,
-                  alto: 160,
-                  soloLectura: !editable,
-                  ayuda: 'Dibuja con el dedo el lugar, las unidades y los puntos de referencia',
-                ),
+                TituloSeccion(SeccionHoja.croquis.titulo),
+                SeccionCroquis(parte: parte, editable: editable),
 
                 // ---------- Firmas y envío ----------
                 const TituloSeccion('Firmas'),

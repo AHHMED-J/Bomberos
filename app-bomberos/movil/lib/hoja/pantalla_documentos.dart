@@ -78,6 +78,8 @@ class PantallaDocumentos extends ConsumerWidget {
                               );
                               if (ok == true) {
                                 await ref.read(repositorioLocalProvider).borrar(p.id);
+                                final croquis = p.croquisPng;
+                                if (croquis != null) await ref.read(almacenCroquisProvider).borrar(croquis);
                                 ref.invalidate(misDocumentosProvider);
                               }
                             },

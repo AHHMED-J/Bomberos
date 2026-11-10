@@ -6,6 +6,8 @@
 	<string>Se usa Face ID para entrar y firmar los partes con la llave guardada en el chip seguro.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Se usa el micrófono para dictar el parte. El audio se borra apenas se transcribe.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Se usa tu ubicación para mostrar en el croquis dónde estás. Sólo queda guardada si haces una captura.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Se conecta al servidor de prueba en la red local.</string>
 	<key>NSAppTransportSecurity</key>

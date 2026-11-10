@@ -3,6 +3,7 @@
 // En pruebas se sustituye con ProviderScope(overrides: [...]).
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../croquis/almacen_croquis.dart';
 import '../datos/api_cliente.dart';
 import '../datos/repositorio_local.dart';
 import '../datos/repositorio_remoto.dart';
@@ -13,6 +14,7 @@ import 'grabadora_real.dart';
 import 'ia/servicio_llenado_campos.dart';
 import 'ia/servicio_resumen.dart';
 import 'ia/servicio_transcripcion.dart';
+import 'ubicacion.dart';
 
 class ConfigNotifier extends Notifier<Config> {
   @override
@@ -73,6 +75,17 @@ final firmaProvider = Provider<ServicioFirma>((ref) {
 
 /// Se sustituye en main.dart por RepositorioSqlite ya abierto.
 final repositorioLocalProvider = Provider<RepositorioLocal>((ref) => RepositorioMemoria());
+
+// ---------- Croquis ----------
+
+/// GPS real del iPhone. En pruebas: UbicacionFija.
+final ubicacionProvider = Provider<ServicioUbicacion>((ref) => UbicacionReal());
+
+/// Teselas de OpenStreetMap en el mapa del croquis. En pruebas se apaga (no hay internet).
+final teselasMapaProvider = Provider<bool>((ref) => true);
+
+/// PNG del croquis en la carpeta de la app. En pruebas: en memoria.
+final almacenCroquisProvider = Provider<AlmacenCroquis>((ref) => AlmacenCroquisArchivos());
 
 /// Un solo servidor falso para toda la sesión, así lo que envía quien elabora le llega al capitán.
 final _remotoFalsoProvider = Provider<RemotoFalso>((ref) => RemotoFalso());
