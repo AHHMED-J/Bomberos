@@ -32,9 +32,20 @@ class PantallaHoja extends ConsumerStatefulWidget {
 class _PantallaHojaState extends ConsumerState<PantallaHoja> {
   late final ControlFirma _croquis = ControlFirma();
 
+  /// Botón lateral, llamada o cambio de app a media grabación: se detiene y se usa lo grabado
+  /// (si no hay señal, queda guardado para enviarlo después). Así no se pierde el dictado.
+  late final AppLifecycleListener _ciclo = AppLifecycleListener(
+    onHide: () {
+      if (ref.read(dictadoProvider).fase == FaseDictado.grabando) {
+        ref.read(dictadoProvider.notifier).detenerYUsar();
+      }
+    },
+  );
+
   @override
   void initState() {
     super.initState();
+    _ciclo; // se crea con la pantalla
     // TODO: guardar los trazos del croquis; hoy sólo se marca que se dibujó.
     _croquis.addListener(() {
       final p = ref.read(hojaProvider);
@@ -44,6 +55,7 @@ class _PantallaHojaState extends ConsumerState<PantallaHoja> {
 
   @override
   void dispose() {
+    _ciclo.dispose();
     _croquis.dispose();
     super.dispose();
   }

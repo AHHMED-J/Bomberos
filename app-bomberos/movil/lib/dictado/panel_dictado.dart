@@ -187,6 +187,8 @@ Widget? panelDictado(BuildContext context, WidgetRef ref, EstadoDictado e, Parte
                 ChipBomberos('$ent entendidos', tono: TonoChip.verde),
                 ChipBomberos('$rev por revisar', tono: TonoChip.ambar),
                 ChipBomberos('$fal faltan', tono: TonoChip.rojo),
+                if (const {'falso', 'fijo-sin-ia'}.contains(e.resultado?.modelo))
+                  const ChipBomberos('Ejemplo · sin IA', tono: TonoChip.oscuro),
               ],
             ),
             const SizedBox(height: 10),

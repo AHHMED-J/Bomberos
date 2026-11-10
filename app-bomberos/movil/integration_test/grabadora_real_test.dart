@@ -16,14 +16,20 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('graba m4a real, lo borra del disco y el servidor lo puede leer', (tester) async {
+    void paso(String m) => stdout.writeln('PASO: $m');
     final g = GrabadoraReal();
+    paso('permiso');
     expect(await g.pedirPermiso(), PermisoMicrofono.concedido);
 
     final niveles = <NivelAudio>[];
     final sub = g.niveles.listen(niveles.add);
+    paso('iniciar');
     await g.iniciar();
+    paso('grabando');
     await Future<void>.delayed(const Duration(seconds: 3));
+    paso('detener');
     final audio = await g.detener();
+    paso('detenido');
     await sub.cancel();
 
     expect(audio.duracion.inMilliseconds, greaterThan(2500));

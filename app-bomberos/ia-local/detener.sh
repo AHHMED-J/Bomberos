@@ -1,6 +1,10 @@
 #!/bin/zsh
 # Apaga la IA local y libera la memoria.
 BASE=~/.bomberos-ia
+if [[ -f $BASE/servidor.pid ]]; then
+  kill "$(cat $BASE/servidor.pid)" 2>/dev/null && echo "servidor (3100) detenido"
+  rm -f $BASE/servidor.pid
+fi
 if [[ -f $BASE/whisper-server.pid ]]; then
   kill "$(cat $BASE/whisper-server.pid)" 2>/dev/null && echo "whisper-server detenido"
   rm -f $BASE/whisper-server.pid

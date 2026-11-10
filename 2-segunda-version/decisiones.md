@@ -250,3 +250,8 @@ Resultados con voz sintética y casos ficticios: IA 2 sola 31/32; de audio a cam
 - Límite: la grabación se detiene sola a los 175 s, porque el servidor rechaza más de 180 s. Los errores `audio_muy_largo` y `audio_ilegible` se muestran en la pantalla D6 con su motivo.
 - Para probar sin micrófono está el interruptor «Micrófono simulado» en Depuración.
 - Probado en el simulador con el micrófono de la Mac: el m4a es válido, no queda en disco y el servidor lo lee. **Falta probarlo en un iPhone con un dictado real.**
+
+### Resguardo de 10 años descartado (10 de noviembre)
+
+- La segunda versión **no** incluye el resguardo de 10 años de la v1 (`archivo.resguardo_hasta` ni la pantalla de Archivo con los vencidos). Se quitó de los pendientes.
+- Se mantiene la huella SHA-256 del contenido, que va dentro de la firma del Capitán al validar (pantalla C3).

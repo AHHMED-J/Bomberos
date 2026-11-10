@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Esqueleto de la app</title>
-<meta name="description" content="Qué se construyó en app-bomberos/: app iOS en Flutter, API de prueba y dónde se conectan las dos IAs.">
+<title>App del parte digital</title>
+<meta name="description" content="Qué hay en app-bomberos/: app iOS en Flutter con micrófono real, API de prueba y las dos IAs corriendo en la Mac.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=Barlow:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <style>
@@ -64,9 +64,34 @@ h2{font-size:30px;color:var(--rojo)}
 .col li{padding:5px 0;border-bottom:1px solid var(--linea);font-size:15px}
 .col li:last-child{border-bottom:0}
 .cmd{display:grid;gap:8px;margin-top:14px}
-.cmd div{display:flex;gap:10px;align-items:center;background:var(--tinta);color:var(--fondo);border-radius:12px;padding:10px 14px;font:14px/1.4 ui-monospace,Menlo,monospace;overflow-x:auto}
+.cmd div{display:flex;gap:10px;align-items:center;background:var(--tinta);color:var(--fondo);border-radius:12px;padding:10px 14px;font:14px/1.4 ui-monospace,Menlo,monospace;overflow-x:auto;white-space:nowrap}
 .cmd div b{font-family:'Barlow Condensed';font-size:20px;color:var(--ambar);flex:none}
 code{font-family:ui-monospace,Menlo,monospace;font-size:.9em}
+.cifras{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.cifra{background:var(--crema);border-radius:14px;padding:14px}
+.cifra .n{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:44px;line-height:1;color:var(--tinta)}
+.cifra .n small{font-size:22px;color:var(--gris)}
+.cifra .l{font-size:14px;color:var(--gris);margin-top:4px}
+.medidor{height:8px;border-radius:4px;background:var(--linea);margin-top:10px;overflow:hidden}
+.medidor i{display:block;height:100%;border-radius:4px;background:var(--verde)}
+.ojo{margin-top:12px;background:var(--ambar-f);border-radius:14px;padding:12px 14px;font-size:15px}
+.ojo b{color:var(--ambar)}
+.como{font-size:24px;color:var(--rojo);margin:22px 0 4px}
+.nota-pasos{color:var(--gris);font-size:15px;margin:0 0 6px}
+.fase{margin:14px 0 8px}
+.cuando{display:inline-block;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.c-una{background:var(--azul-f);color:var(--azul)} .c-cada{background:var(--verde-f);color:var(--verde)}
+.c-fin{background:var(--rojo-f);color:var(--rojo)} .c-opc{background:var(--crema);color:var(--gris)}
+.pasos{list-style:none;margin:0;padding:0;display:grid;gap:8px;grid-template-columns:minmax(0,1fr)}
+.paso{display:flex;gap:12px;background:var(--crema);border-radius:14px;padding:12px 14px}
+.paso>div{min-width:0;flex:1}
+.pn{flex:none;width:32px;height:32px;border-radius:50%;background:var(--tinta);color:var(--fondo);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:19px}
+.paso b{font-family:'Barlow Condensed',sans-serif;font-size:20px;text-transform:uppercase}
+.term{display:inline-block;margin-left:6px;padding:1px 9px;border-radius:999px;background:var(--tarjeta);color:var(--gris);font-size:12px;font-weight:600;vertical-align:3px}
+.paso p{margin:6px 0 0;font-size:15px;color:var(--gris)}
+.paso p code{color:var(--tinta)}
+code.linea{display:block;margin-top:6px;padding:8px 12px;border-radius:10px;background:#1C1B19;color:#EFE9DE;font-size:13px;white-space:nowrap;overflow-x:auto}
+code.linea.varias{white-space:pre;line-height:1.55}
 footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
 
 /* Clases de los SVG (usan los mismos tokens: claro y oscuro) */
@@ -133,15 +158,15 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
 
 <header class="cab"><div class="in">
   <span class="kicker">Parte digital · Bomberos de Ensenada · UABC FIAD</span>
-  <h1>Esqueleto de la app</h1>
+  <h1>App del parte digital</h1>
   <div class="kpis">
-    <span class="kpi">iOS · Flutter</span><span class="kpi">API de prueba · Node</span><span class="kpi">2 IAs: sólo enchufes</span><span class="kpi">24 pruebas ✓</span><span class="kpi">Compila en iOS ✓</span>
+    <span class="kpi">iOS · Flutter</span><span class="kpi">API de prueba · Node</span><span class="kpi">2 IAs locales ✓</span><span class="kpi">Micrófono real ✓</span><span class="kpi">30 + 17 pruebas ✓</span><span class="kpi">Compila en iOS ✓</span>
   </div>
 </div></header>
 
 <div class="pagina">
 <nav class="indice" aria-label="Secciones">
-  <a href="#mapa">1 · Pantallas</a><a href="#arq">2 · Arquitectura</a><a href="#dictado">3 · Dictado</a><a href="#carpetas">4 · Carpetas</a><a href="#firma">5 · Firma</a><a href="#estado">6 · Estado</a><a href="#ia">7 · Enchufes IA</a>
+  <a href="#mapa">1 · Pantallas</a><a href="#arq">2 · Arquitectura</a><a href="#dictado">3 · Dictado</a><a href="#carpetas">4 · Carpetas</a><a href="#firma">5 · Firma</a><a href="#estado">6 · Estado</a><a href="#ia">7 · IA local</a><a href="#eval">8 · Evaluación</a>
 </nav>
 
 <!-- 1 · MAPA DE PANTALLAS -->
@@ -250,9 +275,9 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
   <div class="tit"><span class="num">2</span>
     <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="3" y="9" width="8" height="12" rx="2" fill="none" style="stroke:var(--rojo)" stroke-width="2"/><rect x="19" y="5" width="8" height="20" rx="2" fill="none" style="stroke:var(--rojo)" stroke-width="2"/><path d="M11 15h8" style="stroke:var(--rojo)" stroke-width="2"/></svg>
     <h2>Arquitectura</h2></div>
-  <p class="sub">Teléfono ↔ servidor ↔ dos IAs pendientes.</p>
+  <p class="sub">Teléfono ↔ servidor ↔ dos IAs en la Mac. Nada sale a internet.</p>
   <div class="lienzo">
-  <svg viewBox="0 0 1000 380" role="img" aria-label="Teléfono con SQLite y chip seguro, servidor Express y dos IAs pendientes">
+  <svg viewBox="0 0 1000 380" role="img" aria-label="Teléfono con micrófono, SQLite y chip seguro; servidor Express con clave; Whisper y Ollama en la Mac">
     <!-- teléfono -->
     <rect x="40" y="20" width="200" height="340" rx="30" class="s-fondo s-borde" stroke-width="3"/>
     <rect x="40" y="20" width="200" height="60" rx="30" class="s-rojo"/><rect x="40" y="55" width="200" height="25" class="s-rojo"/>
@@ -260,7 +285,7 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
     <g class="t" font-size="14">
       <rect x="60" y="95" width="160" height="34" rx="8" class="s-crema"/><text x="72" y="117">Flutter · Riverpod</text>
       <rect x="60" y="137" width="160" height="34" rx="8" class="s-crema"/><text x="72" y="159">go_router · 20 pantallas</text>
-      <rect x="60" y="179" width="160" height="34" rx="8" class="s-ambar-f"/><text x="72" y="201">Servicios Falso*</text>
+      <rect x="60" y="179" width="160" height="34" rx="8" class="s-verde-f"/><text x="72" y="201">🎙 record · m4a 16 kHz</text>
     </g>
     <!-- sqlite -->
     <g transform="translate(66 228)">
@@ -288,22 +313,24 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
       <rect x="410" y="106" width="194" height="30" rx="7" class="s-crema"/><text x="422" y="126">/api/acceso</text>
       <rect x="410" y="142" width="194" height="30" rx="7" class="s-crema"/><text x="422" y="162">/api/partes</text>
       <rect x="410" y="178" width="194" height="30" rx="7" class="s-crema"/><text x="422" y="198">/api/revision</text>
-      <rect x="410" y="214" width="194" height="30" rx="7" class="s-ambar-f"/><text x="422" y="234">/api/ia/*  · JSON fijo</text>
+      <rect x="410" y="214" width="194" height="30" rx="7" class="s-verde-f"/><text x="422" y="234">/api/ia/*  · 🔑 clave local</text>
     </g>
-    <text x="507" y="286" class="t t-g" text-anchor="middle">datos en memoria · sin BD</text>
-    <!-- IAs -->
-    <path d="M622 229 C680 229 690 110 744 110" class="fl-p" marker-end="url(#pf)"/>
-    <path d="M622 229 C680 229 690 270 744 270" class="fl-p" marker-end="url(#pf)"/>
-    <rect x="750" y="50" width="220" height="120" rx="16" class="caja-p"/>
-    <text x="860" y="88" class="t t-c" font-size="20" text-anchor="middle">IA 1 · Voz → texto</text>
-    <text x="860" y="112" class="t" text-anchor="middle">Whisper large-v3</text>
-    <text x="860" y="132" class="t t-g" text-anchor="middle">Colab o la Mac</text>
-    <rect x="808" y="142" width="104" height="20" rx="10" class="s-ambar"/><text x="860" y="156" class="t t-b" font-size="11" text-anchor="middle" style="fill:var(--tarjeta)">PENDIENTE</text>
-    <rect x="750" y="210" width="220" height="120" rx="16" class="caja-p"/>
-    <text x="860" y="248" class="t t-c" font-size="20" text-anchor="middle">IA 2 · Llenado</text>
-    <text x="860" y="272" class="t" text-anchor="middle">casillas + resumen</text>
-    <text x="860" y="292" class="t t-g" text-anchor="middle">mismo servicio</text>
-    <rect x="808" y="302" width="104" height="20" rx="10" class="s-ambar"/><text x="860" y="316" class="t" font-size="11" text-anchor="middle" style="fill:var(--tarjeta)">PENDIENTE</text>
+    <text x="507" y="270" class="t t-g" text-anchor="middle">IA_MODO = fijo | local</text><text x="507" y="290" class="t t-g" text-anchor="middle">datos en memoria · sin BD</text>
+    <!-- IAs (en la Mac, sólo 127.0.0.1) -->
+    <rect x="732" y="22" width="256" height="336" rx="20" fill="none" class="s-borde" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="860" y="44" class="t t-g" text-anchor="middle">Mac del equipo · 127.0.0.1</text>
+    <path d="M622 229 C680 229 690 120 744 120" class="fl" marker-end="url(#pf)"/>
+    <path d="M622 229 C680 229 690 270 744 270" class="fl" marker-end="url(#pf)"/>
+    <rect x="750" y="60" width="220" height="120" rx="16" class="s-fondo" style="stroke:var(--verde)" stroke-width="2.5"/>
+    <text x="860" y="96" class="t t-c" font-size="20" text-anchor="middle">IA 1 · Voz → texto</text>
+    <text x="860" y="120" class="t" text-anchor="middle">Whisper large-v3</text>
+    <text x="860" y="140" class="t t-g" text-anchor="middle">whisper.cpp · :8178</text>
+    <rect x="808" y="150" width="104" height="20" rx="10" class="s-verde"/><text x="860" y="164" font-size="11" class="t t-c" text-anchor="middle" style="fill:var(--tarjeta)">✓ LISTA</text>
+    <rect x="750" y="210" width="220" height="120" rx="16" class="s-fondo" style="stroke:var(--verde)" stroke-width="2.5"/>
+    <text x="860" y="246" class="t t-c" font-size="20" text-anchor="middle">IA 2 · Llenado</text>
+    <text x="860" y="270" class="t" text-anchor="middle">qwen2.5:14b + reglas</text>
+    <text x="860" y="290" class="t t-g" text-anchor="middle">Ollama · :11434 · + resumen</text>
+    <rect x="808" y="300" width="104" height="20" rx="10" class="s-verde"/><text x="860" y="314" font-size="11" class="t t-c" text-anchor="middle" style="fill:var(--tarjeta)">✓ LISTA</text>
   </svg>
   </div>
   <p class="desliza">Desliza el dibujo →</p>
@@ -348,12 +375,12 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
     <path d="M684 28 C640 2 340 2 296 25" class="fl" marker-end="url(#pf)"/><text x="493" y="1" class="t t-g" text-anchor="middle">Dictar más (suma, marca «Corregido»)</text>
     <!-- ramas -->
     <path d="M73 170 V244" class="fl" marker-end="url(#pf)"/><text x="82" y="212" class="t t-g">sin permiso</text>
-    <path d="M283 170 V244" class="fl" marker-end="url(#pf)"/><text x="292" y="212" class="t t-g">&lt; 2 s</text>
+    <path d="M283 170 V244" class="fl" marker-end="url(#pf)"/><text x="292" y="212" class="t t-g">&lt; 2 s o silencio</text><text x="292" y="228" class="t t-g">corte solo a 175 s</text>
     <path d="M478 186 V244" class="fl" marker-end="url(#pf)"/><text x="470" y="218" class="t t-g" text-anchor="end">sin red</text>
     <path d="M508 246 V190" class="fl" marker-end="url(#pf)"/><text x="516" y="218" class="t t-g">vuelve la señal</text>
     <rect x="600" y="262" width="380" height="96" rx="14" class="s-crema"/>
     <g class="t" font-size="14">
-      <circle cx="622" cy="286" r="6" class="s-verde"/><text x="636" y="291">Audio se borra al transcribir</text>
+      <circle cx="622" cy="286" r="6" class="s-verde"/><text x="636" y="291">Audio: fuera del disco al detener, borrado al transcribir</text>
       <circle cx="622" cy="312" r="6" class="s-ambar"/><text x="636" y="317">Sin red: SQLite y reenvío</text>
       <circle cx="622" cy="338" r="6" class="s-rojo"/><text x="636" y="343">Servidor rechaza sin confirmar (422)</text>
     </g>
@@ -375,8 +402,9 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
     <div class="carpeta" style="--c:var(--azul)"><b><svg viewBox="0 0 20 20"><path d="M4 10l4 4 8-9" fill="none" style="stroke:var(--azul)" stroke-width="2.5"/></svg>revision</b><span>Bandeja, devolver, validar</span><code>R1–R4 C1–C3</code></div>
     <div class="carpeta" style="--c:var(--verde)"><b><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1" class="s-verde"/><rect x="11" y="3" width="6" height="6" rx="1" class="s-verde"/><rect x="3" y="11" width="6" height="6" rx="1" class="s-verde"/><rect x="11" y="11" width="6" height="6" rx="1" class="s-verde"/></svg>compartido</b><span>Tema, campo, chip, onda, firma</span><code>tokens de Figma</code></div>
     <div class="carpeta" style="--c:var(--azul)"><b><svg viewBox="0 0 20 20"><ellipse cx="10" cy="5" rx="6" ry="2.5" fill="none" style="stroke:var(--azul)" stroke-width="2"/><path d="M4 5v10c0 3 12 3 12 0V5" fill="none" style="stroke:var(--azul)" stroke-width="2"/></svg>datos</b><span>Modelo, catálogo, SQLite, API</span><code>modo + seg_activo (A/B)</code></div>
-    <div class="carpeta" style="--c:var(--ambar)"><b><svg viewBox="0 0 20 20"><path d="M7 3v5M13 3v5M5 8h10v3a5 5 0 0 1-10 0z" fill="none" style="stroke:var(--ambar)" stroke-width="2"/><path d="M10 16v2" style="stroke:var(--ambar)" stroke-width="2"/></svg>servicios</b><span>IA, grabadora, firma, bandera</span><code>proveedores.dart</code></div>
-    <div class="carpeta" style="--c:var(--tinta)"><b><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="6" rx="1.5" fill="none" style="stroke:var(--tinta)" stroke-width="2"/><rect x="3" y="11" width="14" height="6" rx="1.5" fill="none" style="stroke:var(--tinta)" stroke-width="2"/></svg>servidor/</b><span>Express en memoria, 4 rutas</span><code>CONTRATOS-IA.md</code></div>
+    <div class="carpeta" style="--c:var(--ambar)"><b><svg viewBox="0 0 20 20"><path d="M7 3v5M13 3v5M5 8h10v3a5 5 0 0 1-10 0z" fill="none" style="stroke:var(--ambar)" stroke-width="2"/><path d="M10 16v2" style="stroke:var(--ambar)" stroke-width="2"/></svg>servicios</b><span>IA, micrófono real, firma, bandera</span><code>grabadora_real.dart</code></div>
+    <div class="carpeta" style="--c:var(--tinta)"><b><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="6" rx="1.5" fill="none" style="stroke:var(--tinta)" stroke-width="2"/><rect x="3" y="11" width="14" height="6" rx="1.5" fill="none" style="stroke:var(--tinta)" stroke-width="2"/></svg>servidor/</b><span>Express en memoria · IA fija o local</span><code>src/ia/ · CONTRATOS-IA.md</code></div>
+    <div class="carpeta" style="--c:var(--verde)"><b><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="10" rx="2" fill="none" style="stroke:var(--verde)" stroke-width="2"/><path d="M7 17h6M10 14v3" style="stroke:var(--verde)" stroke-width="2"/></svg>ia-local/</b><span>Configurar, iniciar, detener, evaluar</span><code>README.md</code></div>
   </div>
 </section>
 
@@ -443,27 +471,91 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
   <div class="semaforo">
     <div class="col"><h3><span class="luz" style="background:var(--verde)"></span>Hecho</h3><ul>
       <li>Navegación de todos los roles</li><li>Hoja completa + validación</li><li>Dictado D1–D8, G5, G6</li><li>Firma: chip seguro o simulada</li>
-      <li>Partes en progreso en SQLite</li><li>API de prueba + contratos IA</li><li>24 pruebas, compila en iOS</li></ul></div>
+      <li>Partes en progreso en SQLite</li><li>Micrófono real (<code>record</code>)</li><li>IA local: Whisper + qwen2.5</li><li>30 pruebas app + 17 servidor</li></ul></div>
     <div class="col"><h3><span class="luz" style="background:var(--ambar)"></span>Simulado</h3><ul>
-      <li>Micrófono (cuenta segundos)</li><li>IA: Falso* o JSON fijo</li><li>Sin señal: interruptor</li><li>Cámara y ubicación</li><li>Servidor en memoria</li></ul></div>
+      <li>IA fija (pruebas, sin modelos)</li><li>Sin señal: interruptor</li><li>Cámara y ubicación</li><li>Servidor en memoria</li></ul></div>
     <div class="col"><h3><span class="luz" style="background:var(--rojo)"></span>Falta</h3><ul>
-      <li>Whisper y modelo de llenado</li><li>Micrófono real (<code>record</code>)</li><li>MySQL y sello de 10 años</li><li>Sorteo A/B y PDF</li><li>Probar en un iPhone</li></ul></div>
+      <li>Dictado real en un iPhone</li><li>Medir con audios de bomberos</li><li>Base de datos (MySQL)</li><li>Sorteo A/B y PDF</li></ul></div>
   </div>
-  <div class="cmd" aria-label="Cómo correrlo">
-    <div><b>1</b>cd app-bomberos/servidor &amp;&amp; npm install &amp;&amp; npm start</div>
-    <div><b>2</b>cd app-bomberos/movil &amp;&amp; flutter run --dart-define=SERVIDOR_URL=http://IP-DE-LA-MAC:3100</div>
-    <div><b>3</b>flutter test</div>
-  </div>
+  <h3 class="como">Cómo correrlo · en este orden</h3>
+  <p class="nota-pasos">Todos los comandos se escriben desde la carpeta del repo (<code>Bomberos/</code>). La Mac y el iPhone deben estar en la misma red Wi-Fi.</p>
+
+  <div class="fase"><span class="cuando c-una">Una sola vez</span></div>
+  <ol class="pasos">
+    <li class="paso"><span class="pn">0</span><div>
+      <b>Preparar la IA y el servidor</b>
+      <code class="linea">cd app-bomberos/ia-local &amp;&amp; ./configurar.sh</code>
+      <code class="linea">cd ../servidor &amp;&amp; npm install</code>
+      <p><code>configurar.sh</code> crea <code>servidor/.env</code> con una clave al azar y el modo IA local. La clave no se muestra y nunca va al repo. <code>npm install</code> descarga las librerías del servidor.</p>
+    </div></li>
+  </ol>
+
+  <div class="fase"><span class="cuando c-cada">Atajo · todo de una vez</span></div>
+  <ol class="pasos">
+    <li class="paso"><span class="pn">⚡</span><div>
+      <b>Un solo comando</b> <span class="term">iPhone por cable, desbloqueado y en la misma Wi-Fi</span>
+      <code class="linea">cd app-bomberos/ia-local &amp;&amp; ./correr-app.sh</code>
+      <p>Hace los pasos 1 a 4 solo: enciende las IAs y el servidor, detecta la IP e instala la app con la clave. Instala la versión <i>release</i>, que se abre desde el inicio del iPhone sin la Mac conectada (sin la pantalla negra de depuración). Al terminar, paso 5.</p>
+    </div></li>
+  </ol>
+
+  <div class="fase"><span class="cuando c-cada">Cada vez que vayan a probar · a mano</span></div>
+  <ol class="pasos">
+    <li class="paso"><span class="pn">1</span><div>
+      <b>Encender las dos IAs</b> <span class="term">Terminal 1</span>
+      <code class="linea">cd app-bomberos/ia-local &amp;&amp; ./iniciar.sh</code>
+      <p>Arranca Whisper (voz → texto) y carga qwen2.5 en Ollama (llenado y resumen). Tarda unos segundos. Ollama debe estar abierto.</p>
+    </div></li>
+    <li class="paso"><span class="pn">2</span><div>
+      <b>Encender el servidor</b> <span class="term">Terminal 1 · se queda abierta</span>
+      <code class="linea">cd ../servidor &amp;&amp; npm start</code>
+      <p>Es el puente entre el iPhone y las IAs (puerto 3100). Deja esta terminal abierta: si la cierras, la app ya no llega a la IA.</p>
+    </div></li>
+    <li class="paso"><span class="pn">3</span><div>
+      <b>Saber la IP de la Mac</b> <span class="term">Terminal 2</span>
+      <code class="linea">ipconfig getifaddr en0</code>
+      <p>Da algo como <code>192.168.1.20</code>. Es la dirección que usará el iPhone en el siguiente paso.</p>
+    </div></li>
+    <li class="paso"><span class="pn">4</span><div>
+      <b>Instalar y abrir la app en el iPhone</b> <span class="term">Terminal 2</span>
+      <code class="linea">cd app-bomberos/movil</code>
+      <code class="linea varias">flutter run --release \
+  --dart-define=IA=servidor \
+  --dart-define=SERVIDOR_URL=http://IP-DEL-PASO-3:3100 \
+  --dart-define-from-file=../servidor/.env</code>
+      <p>Con el iPhone conectado por cable y desbloqueado. <code>IA=servidor</code> usa la IA de verdad (sin esto la app usa respuestas de ejemplo). <code>SERVIDOR_URL</code> le dice dónde está la Mac. <code>--dart-define-from-file</code> toma la clave directo del <code>.env</code>, sin copiarla ni mostrarla. La primera vez que toques «Dictar», iOS pide permiso para el micrófono.</p>
+    </div></li>
+  </ol>
+
+  <div class="fase"><span class="cuando c-fin">Al terminar</span></div>
+  <ol class="pasos">
+    <li class="paso"><span class="pn">5</span><div>
+      <b>Apagar todo</b> <span class="term">Terminal 1</span>
+      <code class="linea">Ctrl + C</code>
+      <code class="linea">cd ../ia-local &amp;&amp; ./detener.sh</code>
+      <p><code>Ctrl + C</code> apaga el servidor. <code>detener.sh</code> apaga Whisper y saca qwen2.5 de la memoria (libera unos 12 GB de RAM).</p>
+    </div></li>
+  </ol>
+
+  <div class="fase"><span class="cuando c-opc">Opcional · revisar que nada se rompió</span></div>
+  <ol class="pasos">
+    <li class="paso"><span class="pn">✓</span><div>
+      <b>Correr las pruebas</b>
+      <code class="linea">cd app-bomberos/movil &amp;&amp; flutter test</code>
+      <code class="linea">cd ../servidor &amp;&amp; npm test</code>
+      <p>No necesitan la IA encendida ni el iPhone. Deben terminar en «All tests passed» y «fail 0».</p>
+    </div></li>
+  </ol>
 </section>
 
 <!-- 7 · DÓNDE SE ENCHUFA CADA IA -->
 <section id="ia">
   <div class="tit"><span class="num">7</span>
     <svg viewBox="0 0 30 30" aria-hidden="true"><path d="M10 4v7M20 4v7M7 11h16v5a8 8 0 0 1-16 0z" fill="none" style="stroke:var(--rojo)" stroke-width="2"/><path d="M15 24v4" style="stroke:var(--rojo)" stroke-width="2"/></svg>
-    <h2>Enchufes de la IA</h2></div>
-  <p class="sub">Una bandera cambia lo falso por lo real.</p>
+    <h2>IA local conectada</h2></div>
+  <p class="sub">El modelo propone, las reglas verifican, el bombero confirma.</p>
   <div class="lienzo">
-  <svg viewBox="0 0 1000 380" role="img" aria-label="Puntos TODO(IA): interfaces, implementaciones falsas y del servidor, endpoints y modelos">
+  <svg viewBox="0 0 1000 380" role="img" aria-label="Del controlador del dictado a las interfaces, al servidor y a los modelos locales">
     <!-- controlador -->
     <rect x="20" y="150" width="150" height="80" rx="14" class="s-fondo" style="stroke:var(--tinta)" stroke-width="2"/>
     <text x="95" y="184" class="t t-c" font-size="17" text-anchor="middle">Dictado</text>
@@ -486,11 +578,11 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
     </g>
     <!-- falso / servidor por fila -->
     <g class="t" font-size="12">
-      <rect x="450" y="44" width="110" height="24" rx="12" class="s-ambar-f"/><text x="505" y="61" text-anchor="middle">Falso* · hoy</text>
+      <rect x="450" y="44" width="110" height="24" rx="12" class="s-ambar-f"/><text x="505" y="61" text-anchor="middle">Falso* · pruebas</text>
       <rect x="450" y="74" width="110" height="24" rx="12" class="s-azul-f"/><text x="505" y="91" text-anchor="middle">Servidor*</text>
-      <rect x="450" y="166" width="110" height="24" rx="12" class="s-ambar-f"/><text x="505" y="183" text-anchor="middle">Falso* · hoy</text>
+      <rect x="450" y="166" width="110" height="24" rx="12" class="s-ambar-f"/><text x="505" y="183" text-anchor="middle">Falso* · pruebas</text>
       <rect x="450" y="196" width="110" height="24" rx="12" class="s-azul-f"/><text x="505" y="213" text-anchor="middle">Servidor*</text>
-      <rect x="450" y="288" width="110" height="24" rx="12" class="s-ambar-f"/><text x="505" y="305" text-anchor="middle">Falso* · hoy</text>
+      <rect x="450" y="288" width="110" height="24" rx="12" class="s-ambar-f"/><text x="505" y="305" text-anchor="middle">Falso* · pruebas</text>
       <rect x="450" y="318" width="110" height="24" rx="12" class="s-azul-f"/><text x="505" y="335" text-anchor="middle">Servidor*</text>
     </g>
     <path d="M410 68 H446" class="fl"/><path d="M410 190 H446" class="fl"/><path d="M410 312 H446" class="fl"/>
@@ -500,15 +592,15 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
       <path d="M560 208 H616" class="fl" marker-end="url(#pf)"/><rect x="620" y="192" width="184" height="32" rx="8" class="s-crema"/><text x="630" y="213">/api/ia/llenar-campos</text>
       <path d="M560 330 H616" class="fl" marker-end="url(#pf)"/><rect x="620" y="314" width="184" height="32" rx="8" class="s-crema"/><text x="630" y="335">/api/ia/resumen</text>
     </g>
-    <!-- TODO pins -->
+    <!-- modelos -->
     <g>
-      <path d="M804 86 H830" class="fl-p" marker-end="url(#pf)"/><path d="M804 208 H830" class="fl-p" marker-end="url(#pf)"/><path d="M804 330 H830" class="fl-p" marker-end="url(#pf)"/>
-      <rect x="836" y="58" width="150" height="56" rx="12" class="caja-p"/><text x="911" y="82" class="t t-c" font-size="15" text-anchor="middle" style="fill:var(--rojo)">TODO(IA)</text><text x="911" y="101" class="t t-g" text-anchor="middle">Whisper large-v3</text>
-      <rect x="836" y="180" width="150" height="56" rx="12" class="caja-p"/><text x="911" y="204" class="t t-c" font-size="15" text-anchor="middle" style="fill:var(--rojo)">TODO(IA)</text><text x="911" y="223" class="t t-g" text-anchor="middle">modelo de llenado</text>
-      <rect x="836" y="302" width="150" height="56" rx="12" class="caja-p"/><text x="911" y="326" class="t t-c" font-size="15" text-anchor="middle" style="fill:var(--rojo)">TODO(IA)</text><text x="911" y="345" class="t t-g" text-anchor="middle">mismo modelo</text>
+      <path d="M804 86 H830" class="fl" marker-end="url(#pf)"/><path d="M804 208 H830" class="fl" marker-end="url(#pf)"/><path d="M804 330 H830" class="fl" marker-end="url(#pf)"/>
+      <rect x="836" y="58" width="150" height="56" rx="12" class="s-verde-f" style="stroke:var(--verde)" stroke-width="2"/><text x="911" y="82" class="t t-c" font-size="15" text-anchor="middle">Whisper large-v3</text><text x="911" y="101" class="t t-g" text-anchor="middle">audio se borra</text>
+      <rect x="836" y="180" width="150" height="56" rx="12" class="s-verde-f" style="stroke:var(--verde)" stroke-width="2"/><text x="911" y="204" class="t t-c" font-size="15" text-anchor="middle">qwen2.5 + reglas</text><text x="911" y="223" class="t t-g" text-anchor="middle">cita literal o se descarta</text>
+      <rect x="836" y="302" width="150" height="56" rx="12" class="s-verde-f" style="stroke:var(--verde)" stroke-width="2"/><text x="911" y="326" class="t t-c" font-size="15" text-anchor="middle">qwen2.5</text><text x="911" y="345" class="t t-g" text-anchor="middle">sin nombres ni teléfonos</text>
     </g>
     <text x="95" y="268" class="t t-g" text-anchor="middle">lib/servicios/ia/</text>
-    <text x="705" y="140" class="t t-g" text-anchor="middle">servidor/src/rutas/ia.js</text>
+    <text x="705" y="140" class="t t-g" text-anchor="middle">servidor/src/rutas/ia.js</text><text x="705" y="156" class="t t-g" text-anchor="middle">🔑 X-Clave-Local o sesión</text>
   </svg>
   </div>
   <p class="desliza">Desliza el dibujo →</p>
@@ -516,10 +608,31 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
     <span class="chip"><i style="background:var(--ambar)"></i>campo + estado + confianza</span>
     <span class="chip"><i style="background:var(--rojo)"></i>corregido lleva valor anterior</span>
     <span class="chip"><i style="background:var(--azul)"></i>contrato: servidor/CONTRATOS-IA.md</span>
+    <span class="chip"><i style="background:var(--verde)"></i>negación, nombres, lugar → siempre «revisar»</span>
   </div>
 </section>
 
-<footer>app-bomberos/ · noviembre 2026 · textos y datos de ejemplo</footer>
+<!-- 8 · EVALUACIÓN -->
+<section id="eval">
+  <div class="tit"><span class="num">8</span>
+    <svg viewBox="0 0 30 30" aria-hidden="true"><path d="M5 25V14M12 25V8M19 25V11M26 25V4" style="stroke:var(--rojo)" stroke-width="3" stroke-linecap="round"/></svg>
+    <h2>Evaluación</h2></div>
+  <p class="sub">10 casos ficticios · voz sintética de la Mac · M4 Pro · 10 nov 2026.</p>
+  <div class="cifras">
+    <div class="cifra"><div class="n">30<small>/32</small></div><div class="l">Audio → campos correctos</div><div class="medidor" role="img" aria-label="30 de 32"><i style="width:93.75%"></i></div></div>
+    <div class="cifra"><div class="n">31<small>/32</small></div><div class="l">Sólo IA 2, con texto exacto</div><div class="medidor" role="img" aria-label="31 de 32"><i style="width:96.9%"></i></div></div>
+    <div class="cifra"><div class="n">0</div><div class="l">Valores inventados</div></div>
+    <div class="cifra"><div class="n">0</div><div class="l">Negaciones perdidas («no hubo lesionados»)</div></div>
+    <div class="cifra"><div class="n">1.8<small> s</small></div><div class="l">Whisper por cada 10 s de audio</div></div>
+    <div class="cifra"><div class="n">3–35<small> s</small></div><div class="l">Llenado de campos</div></div>
+  </div>
+  <div class="leyenda">
+    <span class="chip">✓ sin clave → 401</span><span class="chip">✓ silencio → 422</span><span class="chip">✓ audio borrado 10/10</span><span class="chip">✓ resumen sin datos del propietario</span><span class="chip">gemma3:12b inventó 1 → se eligió qwen2.5</span>
+  </div>
+  <p class="ojo"><b>Ojo:</b> voz limpia y casos escritos por el mismo equipo que hizo las reglas. Falta medir con dictados reales (sirena, radio, prisa) antes de la prueba A/B.</p>
+</section>
+
+<footer>app-bomberos/ · actualizado el 10 de noviembre de 2026 · datos de ejemplo y casos ficticios</footer>
 </div>
 </body>
 </html>

@@ -10,7 +10,8 @@ app.use((req, _res, next) => {
   next();
 });
 
-app.get('/api/salud', (_req, res) => res.json({ ok: true, firmas_simuladas: firma.ACEPTA_SIMULADAS }));
+app.get('/api/salud', (_req, res) =>
+  res.json({ ok: true, firmas_simuladas: firma.ACEPTA_SIMULADAS, ia_modo: require('./src/ia/config').modo }));
 app.use('/api/acceso', require('./src/rutas/acceso'));
 app.use('/api/partes', require('./src/rutas/partes'));
 app.use('/api/revision', require('./src/rutas/revision'));

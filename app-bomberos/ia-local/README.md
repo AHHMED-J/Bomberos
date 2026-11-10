@@ -19,6 +19,21 @@ iPhone ──audio──▶ servidor (3100) ──▶ whisper-server (127.0.0.1:
 
 ## Uso
 
+**Lo más fácil (un solo comando):** con el iPhone conectado por cable, desbloqueado y en la misma Wi-Fi que la Mac:
+
+```bash
+cd app-bomberos/ia-local
+./correr-app.sh          # enciende IAs + servidor (modo local), detecta la IP e instala la app con la clave
+./detener.sh             # al terminar: apaga servidor, Whisper y saca el modelo de la memoria
+```
+
+`correr-app.sh` instala la versión *release* (se abre desde el inicio del iPhone sin la Mac conectada;
+la IA sí necesita la Mac encendida y en la misma red). `./correr-app.sh --depurar` instala la de depuración.
+
+La app usa la IA real **por defecto**. Si una respuesta viene de ejemplo, el panel muestra «Ejemplo · sin IA».
+
+Paso a paso, si se quiere hacer a mano:
+
 ```bash
 cd app-bomberos/ia-local
 ./configurar.sh          # una sola vez: crea servidor/.env (IA_MODO=local + clave al azar, permisos 600)
@@ -35,9 +50,11 @@ Para volver a respuestas fijas sin modelos: `IA_MODO=fijo` en `servidor/.env` (o
 ```bash
 flutter run --dart-define=IA=servidor \
             --dart-define=SERVIDOR_URL=http://<ip-de-la-mac>:3100 \
-            --dart-define=CLAVE_LOCAL=$(grep ^CLAVE_LOCAL= ../servidor/.env | cut -d= -f2)
+            --dart-define-from-file=../servidor/.env   # toma CLAVE_LOCAL del .env sin mostrarla
 ```
 
+- No pases la clave con `$(grep …)`: si la variable sale vacía, la app se instala sin clave y el servidor responde 401.
+  `--dart-define-from-file` la lee directo del `.env`.
 - La clave sólo viaja como `X-Clave-Local` a `/api/ia/*`. Si la app entró con sesión real del servidor,
   basta el `Bearer` y no hace falta la clave.
 - La app espera hasta 120 s en las rutas de IA (el resto, 20 s).
@@ -50,7 +67,7 @@ flutter run --dart-define=IA=servidor \
   ```bash
   xcrun simctl privacy <id-simulador> grant microphone mx.edu.uabc.bomberosParte   # sólo simulador
   flutter test integration_test/grabadora_real_test.dart -d <id> \
-    --dart-define=SERVIDOR_URL=http://<ip>:3100 --dart-define=CLAVE_LOCAL=…
+    --dart-define=SERVIDOR_URL=http://<ip>:3100 --dart-define-from-file=../servidor/.env
   ```
 
 ## Seguridad (lo que NO entra al repo)

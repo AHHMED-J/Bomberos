@@ -17,7 +17,8 @@ enum Fuente {
 class Config {
   const Config({
     this.urlServidor = const String.fromEnvironment('SERVIDOR_URL', defaultValue: 'http://localhost:3100'),
-    this.ia = const String.fromEnvironment('IA') == 'servidor' ? Fuente.servidor : Fuente.falsa,
+    // IA real por defecto. Sólo `--dart-define=IA=falsa` usa los textos de ejemplo (sin servidor).
+    this.ia = const String.fromEnvironment('IA') == 'falsa' ? Fuente.falsa : Fuente.servidor,
     this.datos = const String.fromEnvironment('DATOS') == 'servidor' ? Fuente.servidor : Fuente.falsa,
     this.sinConexionSimulada = false,
     this.microfonoBloqueadoSimulado = false,
@@ -28,7 +29,7 @@ class Config {
 
   final String urlServidor;
 
-  /// TODO(IA): cuando existan los modelos reales, basta con poner IA=servidor.
+  /// servidor = Whisper + qwen2.5 en la Mac (ia-local/correr-app.sh). falsa = textos de ejemplo.
   final Fuente ia;
   final Fuente datos;
 

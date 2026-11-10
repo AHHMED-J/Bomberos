@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 
@@ -27,6 +27,17 @@ abstract interface class RepositorioLocal {
 
   /// Se llama apenas se transcribe: el audio no se conserva.
   Future<void> borrarAudio(int id);
+}
+
+/// Lee un parte guardado. Si no se puede (formato viejo o dañado) devuelve null y lo avisa,
+/// en vez de tumbar todo el almacenamiento local. No imprime el contenido: puede traer datos personales.
+Parte? leerParteGuardado(Object? json) {
+  try {
+    return Parte.deJson(jsonDecode(json as String) as Map<String, dynamic>);
+  } catch (e) {
+    debugPrint('Se saltó un parte guardado que no se pudo leer (${e.runtimeType}).');
+    return null;
+  }
 }
 
 /// SQLite con sqflite. El parte completo va como JSON; las columnas sueltas sirven para listar y
@@ -68,13 +79,18 @@ class RepositorioSqlite implements RepositorioLocal {
   @override
   Future<List<Parte>> partes() async {
     final filas = await _db.query('parte_local', orderBy: 'actualizado_en DESC');
-    return [for (final f in filas) Parte.deJson(jsonDecode(f['json'] as String) as Map<String, dynamic>)];
+    final out = <Parte>[];
+    for (final f in filas) {
+      final p = leerParteGuardado(f['json']);
+      if (p != null) out.add(p);
+    }
+    return out;
   }
 
   @override
   Future<Parte?> parte(String id) async {
     final f = await _db.query('parte_local', where: 'id = ?', whereArgs: [id]);
-    return f.isEmpty ? null : Parte.deJson(jsonDecode(f.first['json'] as String) as Map<String, dynamic>);
+    return f.isEmpty ? null : leerParteGuardado(f.first['json']);
   }
 
   @override

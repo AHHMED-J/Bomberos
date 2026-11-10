@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'grabadora_audio.dart';
 
@@ -12,6 +13,9 @@ import 'grabadora_audio.dart';
 /// Privacidad: el archivo vive en la carpeta temporal de la app sólo mientras se graba.
 /// Al detener se lee a memoria y se BORRA del disco; al cancelar se borra sin leerlo.
 /// Si la app se cerró a media grabación, los restos se borran al iniciar la siguiente.
+///
+/// Mientras graba, la pantalla no se apaga: el bombero dicta sin tocarla y el bloqueo automático
+/// (30 s o 1 min) mandaba la app a segundo plano a media grabación.
 class GrabadoraReal implements GrabadoraAudio {
   GrabadoraReal({AudioRecorder? grabador}) : _rec = grabador ?? AudioRecorder();
 
@@ -48,6 +52,7 @@ class GrabadoraReal implements GrabadoraAudio {
     await _borrarRestos(dir);
     _ruta = '${dir.path}/$_prefijo${DateTime.now().millisecondsSinceEpoch}.m4a';
     await _rec.start(config, path: _ruta!);
+    await _pantallaEncendida(true);
     _inicio = DateTime.now();
     _reloj
       ..reset()
@@ -61,6 +66,7 @@ class GrabadoraReal implements GrabadoraAudio {
   @override
   Future<AudioGrabado> detener() async {
     _reloj.stop();
+    await _pantallaEncendida(false);
     await _amp?.cancel();
     _amp = null;
     final ruta = await _rec.stop() ?? _ruta;
@@ -82,6 +88,7 @@ class GrabadoraReal implements GrabadoraAudio {
   @override
   Future<void> cancelar() async {
     _reloj.stop();
+    await _pantallaEncendida(false);
     await _amp?.cancel();
     _amp = null;
     await _rec.cancel(); // `record` también borra el archivo
@@ -95,9 +102,22 @@ class GrabadoraReal implements GrabadoraAudio {
     await _ctrl.close();
   }
 
+  /// Si el plugin falla, se graba igual: sólo se pierde lo de mantener la pantalla encendida.
+  static Future<void> _pantallaEncendida(bool si) async {
+    try {
+      await WakelockPlus.toggle(enable: si);
+    } catch (e) {
+      debugPrint('No se pudo ${si ? 'mantener' : 'liberar'} la pantalla encendida: $e');
+    }
+  }
+
   static Future<void> _borrarRestos(Directory dir) async {
-    await for (final f in dir.list()) {
-      if (f is File && f.uri.pathSegments.last.startsWith(_prefijo)) await _borrar(f);
+    try {
+      await for (final f in dir.list()) {
+        if (f is File && f.uri.pathSegments.last.startsWith(_prefijo)) await _borrar(f);
+      }
+    } catch (e) {
+      debugPrint('No se pudo revisar la carpeta temporal: $e'); // no impide grabar
     }
   }
 

@@ -182,8 +182,9 @@ class Firmas {
     'requiere_peritaje': requierePeritaje,
   };
   factory Firmas.deJson(Map<String, dynamic> j) => Firmas(
-    elaboro: j['elaboro'] as String?,
-    elaboroSimulada: j['elaboro_simulada'] as bool? ?? false,
+    // `encargado*` = nombres anteriores al 10-nov-2026; siguen guardados en teléfonos de prueba.
+    elaboro: (j['elaboro'] ?? j['encargado']) as String?,
+    elaboroSimulada: (j['elaboro_simulada'] ?? j['encargado_simulada']) as bool? ?? false,
     propietarioNombre: j['propietario_nombre'] as String? ?? '',
     propietarioTrazo: j['propietario_trazo'] as String?,
     testigoNombre: j['testigo_nombre'] as String? ?? '',
@@ -325,8 +326,8 @@ class Parte {
     id: j['id'] as String,
     folio: j['folio'] as String,
     estado: EstadoParte.values.byName(j['estado'] as String),
-    elaboroId: j['elaboro_id'] as String,
-    elaboroNombre: j['elaboro_nombre'] as String? ?? '',
+    elaboroId: (j['elaboro_id'] ?? j['encargado_id']) as String,
+    elaboroNombre: (j['elaboro_nombre'] ?? j['encargado_nombre']) as String? ?? '',
     division: j['division'] as String? ?? '',
     creadoEn: DateTime.tryParse(j['creado_en'] as String? ?? '') ?? DateTime.now(),
     campos: (j['campos'] as Map<String, dynamic>? ?? {}).map(

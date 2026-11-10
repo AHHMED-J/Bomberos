@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../datos/api_cliente.dart';
 import '../datos/catalogo_campos.dart';
 import '../datos/modelos.dart';
 import '../hoja/hoja_controlador.dart';
@@ -203,7 +204,7 @@ class DictadoControlador extends Notifier<EstadoDictado> {
       return;
     } catch (e) {
       // Falló la red a medio camino: el audio se queda en el teléfono para reintentar.
-      if (idLocal == null) await _guardarSinConexion(audio, mensaje: 'No se pudo enviar: $e');
+      if (idLocal == null) await _guardarSinConexion(audio, mensaje: 'No se pudo enviar. ${explicarError(e)}');
       return;
     }
     // El audio se borra apenas se transcribe (decisión del 8 de noviembre).
@@ -228,7 +229,7 @@ class DictadoControlador extends Notifier<EstadoDictado> {
       );
     } catch (e) {
       // La transcripción ya existe; se puede reintentar el llenado sin volver a grabar.
-      state = state.copiar(fase: FaseDictado.inactivo, mensaje: 'No se pudo ordenar el dictado: $e');
+      state = state.copiar(fase: FaseDictado.inactivo, mensaje: 'No se pudo ordenar el dictado. ${explicarError(e)}');
     }
   }
 
@@ -264,3 +265,25 @@ class DictadoControlador extends Notifier<EstadoDictado> {
 }
 
 final dictadoProvider = NotifierProvider<DictadoControlador, EstadoDictado>(DictadoControlador.new);
+
+/// Errores comunes de la IA local en palabras claras (el audio se queda en el teléfono para reintentar).
+String explicarError(Object e) {
+  if (e is ErrorApi) {
+    switch (e.codigo) {
+      case 'sin_autorizacion':
+        return 'La app se instaló sin la clave de la IA: reinstálala con CLAVE_LOCAL (ver ia-local/README.md).';
+      case 'whisper_apagado':
+      case 'ollama_apagado':
+        return 'La IA de la Mac está apagada: corre ia-local/iniciar.sh.';
+      case 'modelo_no_descargado':
+        return 'Falta descargar el modelo en la Mac: ollama pull qwen2.5:14b.';
+    }
+    return 'El servidor respondió ${e.estado} (${e.codigo}).';
+  }
+  if (e is TimeoutException) return 'La IA tardó demasiado en responder.';
+  final t = e.toString();
+  if (t.contains('SocketException') || t.contains('ClientException') || t.contains('Connection')) {
+    return 'No se llegó a la Mac: revisa que el servidor esté encendido (npm start) y que estén en la misma Wi-Fi.';
+  }
+  return t;
+}
