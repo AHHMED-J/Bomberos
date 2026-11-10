@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Esqueleto de la app</title>
+<meta name="description" content="Qué se construyó en app-bomberos/: app iOS en Flutter, API de prueba y dónde se conectan las dos IAs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=Barlow:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --rojo:#B3261E;--rojo-f:#FBE0DD;--tinta:#1C1B19;--fondo:#E6E1D9;--tarjeta:#FFFFFF;--crema:#F6F3EE;--gris:#5A5650;--linea:#CFC8BD;
+  --verde:#2E6B3A;--verde-f:#DDEBDD;--ambar:#7A5A00;--ambar-f:#FFF1C9;--azul:#173F73;--azul-f:#DCE7F5;--sobre-rojo:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --rojo:#E2675E;--rojo-f:#4A2321;--tinta:#EFE9DE;--fondo:#181715;--tarjeta:#24221F;--crema:#2E2B27;--gris:#B3ACA1;--linea:#4A453E;
+    --verde:#7CC48A;--verde-f:#1F3324;--ambar:#E8C25A;--ambar-f:#3A3018;--azul:#8DB4EA;--azul-f:#1C2A3D;--sobre-rojo:#1C1B19;
+  }
+}
+:root[data-theme="dark"]{
+  --rojo:#E2675E;--rojo-f:#4A2321;--tinta:#EFE9DE;--fondo:#181715;--tarjeta:#24221F;--crema:#2E2B27;--gris:#B3ACA1;--linea:#4A453E;
+  --verde:#7CC48A;--verde-f:#1F3324;--ambar:#E8C25A;--ambar-f:#3A3018;--azul:#8DB4EA;--azul-f:#1C2A3D;--sobre-rojo:#1C1B19;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--fondo);color:var(--tinta);font-family:'Barlow',system-ui,sans-serif;font-size:17px;line-height:1.45}
+.pagina{max-width:1080px;margin:0 auto;padding:0 16px 80px}
+header.cab{background:var(--rojo);color:var(--sobre-rojo);padding:48px 16px 34px;margin-bottom:24px}
+header.cab .in{max-width:1080px;margin:0 auto}
+.kicker{font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+h1,h2,h3{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;line-height:1.05;margin:0}
+h1{font-size:clamp(38px,7vw,64px);margin-top:6px}
+.kpis{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.kpi{background:rgba(255,255,255,.16);border-radius:999px;padding:6px 14px;font-weight:600;font-size:15px}
+nav.indice{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+nav.indice a{padding:7px 13px;border-radius:999px;background:var(--tinta);color:var(--fondo);text-decoration:none;font-size:14px;font-weight:600}
+nav.indice a:focus-visible{outline:3px solid #E8B20E;outline-offset:2px}
+section{background:var(--tarjeta);border-radius:20px;padding:24px 22px;margin-bottom:18px}
+.tit{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.num{flex:none;width:42px;height:42px;border-radius:50%;background:var(--rojo);color:var(--sobre-rojo);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed';font-weight:700;font-size:23px}
+.tit svg{flex:none;width:30px;height:30px}
+h2{font-size:30px;color:var(--rojo)}
+.sub{color:var(--gris);font-size:15px;margin:-4px 0 12px 54px}
+.lienzo{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px;background:var(--crema);padding:10px}
+.lienzo svg{display:block;width:100%;min-width:760px;height:auto}
+.lienzo.angosto svg{min-width:560px}
+.desliza{display:none;font-size:13px;color:var(--gris);margin-top:6px}
+@media (max-width:700px){.desliza{display:block}.sub{margin-left:0}section{padding:20px 14px}}
+.leyenda{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 11px;border-radius:999px;font-size:13px;font-weight:600;background:var(--crema);color:var(--gris)}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.carpeta{background:var(--crema);border-radius:14px;padding:12px 14px;border-top:5px solid var(--c,var(--rojo))}
+.carpeta b{font-family:'Barlow Condensed';font-size:21px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.carpeta b svg{width:20px;height:20px}
+.carpeta span{display:block;font-size:14px;color:var(--gris)}
+.carpeta code{font-size:12px;color:var(--gris)}
+.semaforo{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.col{border-radius:14px;padding:14px;background:var(--crema)}
+.col h3{font-size:22px;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.col h3 .luz{width:16px;height:16px;border-radius:50%}
+.col ul{list-style:none;margin:0;padding:0}
+.col li{padding:5px 0;border-bottom:1px solid var(--linea);font-size:15px}
+.col li:last-child{border-bottom:0}
+.cmd{display:grid;gap:8px;margin-top:14px}
+.cmd div{display:flex;gap:10px;align-items:center;background:var(--tinta);color:var(--fondo);border-radius:12px;padding:10px 14px;font:14px/1.4 ui-monospace,Menlo,monospace;overflow-x:auto}
+.cmd div b{font-family:'Barlow Condensed';font-size:20px;color:var(--ambar);flex:none}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.9em}
+footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
+
+/* Clases de los SVG (usan los mismos tokens: claro y oscuro) */
+.s-fondo{fill:var(--tarjeta)} .s-borde{stroke:var(--linea)} .s-crema{fill:var(--crema)}
+.s-linea{fill:var(--linea)} .s-tinta{fill:var(--tinta)} .s-gris{fill:var(--gris)}
+.s-rojo{fill:var(--rojo)} .s-verde{fill:var(--verde)} .s-ambar{fill:var(--ambar)} .s-azul{fill:var(--azul)}
+.s-rojo-f{fill:var(--rojo-f)} .s-verde-f{fill:var(--verde-f)} .s-ambar-f{fill:var(--ambar-f)} .s-azul-f{fill:var(--azul-f)}
+.t{font-family:'Barlow',sans-serif;fill:var(--tinta);font-size:13px}
+.t-c{font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase}
+.t-g{fill:var(--gris);font-size:11px}
+.t-b{fill:var(--sobre-rojo)}
+.fl{fill:none;stroke:var(--gris);stroke-width:1.8}
+.fl-r{fill:none;stroke:var(--rojo);stroke-width:2}
+.fl-p{fill:none;stroke:var(--gris);stroke-width:1.6;stroke-dasharray:5 4}
+.caja-p{fill:var(--ambar-f);stroke:var(--ambar);stroke-width:2;stroke-dasharray:7 5}
+.trazo-r{stroke:var(--rojo)} .trazo-v{stroke:var(--verde)} .trazo-a{stroke:var(--azul)} .trazo-m{stroke:var(--ambar)}
+</style>
+</head>
+<body>
+
+<!-- Piezas reutilizables de los dibujos: teléfono mini y flecha -->
+<svg viewBox="0 0 1 1" width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="pf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--gris)"/></marker>
+    <marker id="pfr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--rojo)"/></marker>
+    <symbol id="tel" viewBox="0 0 60 100">
+      <rect x="1" y="1" width="58" height="98" rx="9" class="s-fondo s-borde" stroke-width="2"/>
+      <path d="M1 10 a9 9 0 0 1 9 -9 h40 a9 9 0 0 1 9 9 v12 h-58z" style="fill:var(--cab,var(--rojo))"/>
+      <rect x="8" y="9" width="28" height="5" rx="2" fill="#fff" opacity=".85"/>
+      <rect x="8" y="30" width="44" height="7" rx="3" class="s-linea"/>
+      <rect x="8" y="42" width="44" height="7" rx="3" class="s-linea"/>
+      <rect x="8" y="54" width="30" height="7" rx="3" class="s-linea"/>
+      <rect x="8" y="66" width="44" height="7" rx="3" class="s-linea"/>
+    </symbol>
+    <symbol id="tel-fab" viewBox="0 0 60 100">
+      <use href="#tel" width="60" height="100"/>
+      <rect x="30" y="80" width="24" height="12" rx="6" class="s-rojo"/>
+      <circle cx="37" cy="86" r="2.5" fill="#fff"/>
+    </symbol>
+    <symbol id="tel-panel" viewBox="0 0 60 100">
+      <use href="#tel" width="60" height="100"/>
+      <path d="M2 64 h56 v26 a8 8 0 0 1 -8 8 h-40 a8 8 0 0 1 -8 -8z" style="fill:var(--panel,var(--crema))" class="s-borde" stroke-width="1"/>
+      <g style="stroke:var(--rojo)" stroke-width="2" stroke-linecap="round">
+        <path d="M14 76v6M19 73v12M24 75v8M29 71v16M34 74v10M39 76v6M44 73v12"/>
+      </g>
+    </symbol>
+    <symbol id="tel-ok" viewBox="0 0 60 100">
+      <rect x="1" y="1" width="58" height="98" rx="9" class="s-fondo s-borde" stroke-width="2"/>
+      <circle cx="30" cy="42" r="14" style="fill:var(--ok,var(--verde))"/>
+      <path d="M23 42 l5 5 l9 -10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="10" y="66" width="40" height="6" rx="3" class="s-linea"/>
+      <rect x="10" y="80" width="40" height="10" rx="4" class="s-rojo"/>
+    </symbol>
+    <symbol id="tel-marcas" viewBox="0 0 60 100">
+      <use href="#tel" width="60" height="100"/>
+      <rect x="8" y="30" width="44" height="7" rx="3" class="s-verde-f"/><circle cx="48" cy="33.5" r="2.5" class="s-verde"/>
+      <rect x="8" y="42" width="44" height="7" rx="3" class="s-ambar-f"/><circle cx="48" cy="45.5" r="2.5" class="s-ambar"/>
+      <rect x="8" y="54" width="44" height="7" rx="3" class="s-rojo-f"/><circle cx="48" cy="57.5" r="2.5" class="s-rojo"/>
+      <rect x="2" y="78" width="56" height="20" rx="6" class="s-crema"/>
+      <rect x="6" y="82" width="22" height="11" rx="4" class="s-fondo s-borde"/><rect x="32" y="82" width="22" height="11" rx="4" class="s-rojo"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="cab"><div class="in">
+  <span class="kicker">Parte digital · Bomberos de Ensenada · UABC FIAD</span>
+  <h1>Esqueleto de la app</h1>
+  <div class="kpis">
+    <span class="kpi">iOS · Flutter</span><span class="kpi">API de prueba · Node</span><span class="kpi">2 IAs: sólo enchufes</span><span class="kpi">24 pruebas ✓</span><span class="kpi">Compila en iOS ✓</span>
+  </div>
+</div></header>
+
+<div class="pagina">
+<nav class="indice" aria-label="Secciones">
+  <a href="#mapa">1 · Pantallas</a><a href="#arq">2 · Arquitectura</a><a href="#dictado">3 · Dictado</a><a href="#carpetas">4 · Carpetas</a><a href="#firma">5 · Firma</a><a href="#estado">6 · Estado</a><a href="#ia">7 · Enchufes IA</a>
+</nav>
+
+<!-- 1 · MAPA DE PANTALLAS -->
+<section id="mapa">
+  <div class="tit"><span class="num">1</span>
+    <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="8" y="3" width="14" height="24" rx="3" fill="none" style="stroke:var(--rojo)" stroke-width="2"/><rect x="11" y="7" width="8" height="2" class="s-rojo"/></svg>
+    <h2>Mapa de pantallas</h2></div>
+  <p class="sub">Todo navega con datos de ejemplo.</p>
+  <div class="lienzo">
+  <svg viewBox="0 0 1000 605" role="img" aria-label="Mapa de pantallas por rol con flechas de navegación">
+    <!-- etiquetas de fila -->
+    <g class="t t-c" font-size="15">
+      <text x="14" y="70" style="fill:var(--gris)">Acceso</text>
+      <text x="14" y="205" style="fill:var(--rojo)">Elaboró</text>
+      <text x="14" y="340" style="fill:var(--ambar)">Dictado</text>
+      <text x="14" y="475" style="fill:var(--azul)">Capitán</text>
+    </g>
+    <!-- fila 1: acceso -->
+    <g style="--cab:var(--gris)">
+      <use href="#tel" x="120" y="20" width="56" height="94"/><use href="#tel" x="250" y="20" width="56" height="94"/><use href="#tel" x="380" y="20" width="56" height="94"/>
+    </g>
+    <use href="#tel" x="510" y="20" width="56" height="94" style="--cab:var(--tinta)"/>
+    <g class="t" text-anchor="middle">
+      <text x="148" y="130">A1 Face ID</text><text x="278" y="130">A2 Alta</text><text x="408" y="130">A4 Cambié</text><text x="538" y="130">Depuración</text>
+      <text x="538" y="144" class="t-g">sólo debug</text>
+    </g>
+    <path d="M178 60 H246" class="fl" marker-end="url(#pf)"/>
+    <path d="M160 18 C200 -6 380 -6 404 16" class="fl" marker-end="url(#pf)"/>
+    <path d="M176 40 C300 0 480 0 508 40" class="fl-p" marker-end="url(#pf)"/>
+    <!-- fila 2: quien elaboró -->
+    <use href="#tel" x="120" y="155" width="56" height="94"/>
+    <use href="#tel" x="250" y="155" width="56" height="94"/>
+    <use href="#tel-fab" x="380" y="155" width="56" height="94"/>
+    <use href="#tel" x="510" y="155" width="56" height="94"/>
+    <use href="#tel" x="640" y="155" width="56" height="94"/>
+    <use href="#tel-ok" x="770" y="155" width="56" height="94"/>
+    <use href="#tel" x="900" y="155" width="56" height="94"/>
+    <g class="t" text-anchor="middle">
+      <text x="148" y="265">E1 Inicio</text><text x="278" y="265">E6·G4 Docs</text><text x="408" y="265">P2 Hoja</text><text x="538" y="265">P4 Faltan</text>
+      <text x="668" y="265">P5 Firmas</text><text x="798" y="265">P6 Enviado</text><text x="928" y="265">P7 Devuelta</text>
+    </g>
+    <path d="M148 136 V152" class="fl" marker-end="url(#pf)"/>
+    <path d="M178 200 H246" class="fl" marker-end="url(#pf)"/>
+    <path d="M308 200 H376" class="fl" marker-end="url(#pf)"/>
+    <path d="M438 200 H506" class="fl" marker-end="url(#pf)"/>
+    <path d="M568 200 H636" class="fl" marker-end="url(#pf)"/>
+    <path d="M698 200 H766" class="fl" marker-end="url(#pf)"/>
+    <text x="798" y="280" class="t t-g" text-anchor="middle" style="fill:var(--azul)">→ R2 Bandeja</text>
+    <text x="928" y="280" class="t t-g" text-anchor="middle">corrige → P4</text>
+    <!-- fila 3: dictado -->
+    <g style="--cab:var(--ambar)">
+      <use href="#tel" x="250" y="290" width="56" height="94"/>
+      <use href="#tel-fab" x="380" y="290" width="56" height="94"/>
+      <use href="#tel-panel" x="510" y="290" width="56" height="94"/>
+      <use href="#tel-panel" x="640" y="290" width="56" height="94" style="--panel:var(--ambar-f)"/>
+      <use href="#tel-marcas" x="770" y="290" width="56" height="94"/>
+      <use href="#tel" x="900" y="290" width="56" height="94"/>
+    </g>
+    <g class="t" text-anchor="middle">
+      <text x="278" y="400">G5 WhatsApp</text><text x="408" y="400">D1 Dictar</text><text x="538" y="400">D2 Grabando</text>
+      <text x="668" y="400">D4 Procesando</text><text x="798" y="400">D5 Revisar</text><text x="928" y="400">G6 2.º dictado</text>
+    </g>
+    <path d="M408 271 V288" class="fl-r" marker-end="url(#pfr)"/>
+    <path d="M378 336 H310" class="fl" marker-end="url(#pf)"/>
+    <path d="M438 336 H506" class="fl" marker-end="url(#pf)"/>
+    <path d="M568 336 H636" class="fl" marker-end="url(#pf)"/>
+    <path d="M698 336 H766" class="fl" marker-end="url(#pf)"/>
+    <path d="M828 336 H896" class="fl" marker-end="url(#pf)"/>
+    <!-- fila 4: capitán -->
+    <g style="--cab:var(--azul)">
+      <use href="#tel" x="120" y="425" width="56" height="94"/>
+      <use href="#tel" x="250" y="425" width="56" height="94"/>
+      <use href="#tel" x="380" y="425" width="56" height="94"/>
+      <use href="#tel-panel" x="510" y="425" width="56" height="94"/>
+      <use href="#tel" x="640" y="425" width="56" height="94"/>
+      <use href="#tel" x="770" y="425" width="56" height="94"/>
+      <use href="#tel-ok" x="900" y="425" width="56" height="94"/>
+    </g>
+    <g class="t" text-anchor="middle">
+      <text x="148" y="535">R1 Inicio</text><text x="278" y="535">R2 Bandeja</text><text x="408" y="535">R3 Revisar</text><text x="538" y="535">R4 Devolver</text>
+      <text x="668" y="535">C1 Face ID</text><text x="798" y="535">C2 Firma</text><text x="928" y="535">C3 Sellado</text>
+    </g>
+    <path d="M178 470 H246" class="fl" marker-end="url(#pf)"/>
+    <path d="M308 470 H376" class="fl" marker-end="url(#pf)"/>
+    <path d="M438 470 H506" class="fl" marker-end="url(#pf)"/>
+    <path d="M444 542 C470 584 606 584 632 542" class="fl" marker-end="url(#pf)"/>
+    <path d="M698 470 H766" class="fl" marker-end="url(#pf)"/>
+    <path d="M828 470 H896" class="fl" marker-end="url(#pf)"/>
+    <text x="538" y="596" class="t t-g" text-anchor="middle">Validar</text>
+    <text x="538" y="550" class="t t-g" text-anchor="middle" style="fill:var(--rojo)">→ P7 Devuelta</text>
+    <text x="278" y="550" class="t t-g" text-anchor="middle">llega de P6</text>
+  </svg>
+  </div>
+  <p class="desliza">Desliza el dibujo →</p>
+  <div class="leyenda">
+    <span class="chip"><i style="background:var(--rojo)"></i>Editor (elabora)</span>
+    <span class="chip"><i style="background:var(--ambar)"></i>Dictado</span>
+    <span class="chip"><i style="background:var(--azul)"></i>Capitán</span>
+    <span class="chip">→ salta a otro rol</span>
+    <span class="chip">Sin multijugador · sin Dirección</span>
+  </div>
+</section>
+
+<!-- 2 · ARQUITECTURA -->
+<section id="arq">
+  <div class="tit"><span class="num">2</span>
+    <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="3" y="9" width="8" height="12" rx="2" fill="none" style="stroke:var(--rojo)" stroke-width="2"/><rect x="19" y="5" width="8" height="20" rx="2" fill="none" style="stroke:var(--rojo)" stroke-width="2"/><path d="M11 15h8" style="stroke:var(--rojo)" stroke-width="2"/></svg>
+    <h2>Arquitectura</h2></div>
+  <p class="sub">Teléfono ↔ servidor ↔ dos IAs pendientes.</p>
+  <div class="lienzo">
+  <svg viewBox="0 0 1000 380" role="img" aria-label="Teléfono con SQLite y chip seguro, servidor Express y dos IAs pendientes">
+    <!-- teléfono -->
+    <rect x="40" y="20" width="200" height="340" rx="30" class="s-fondo s-borde" stroke-width="3"/>
+    <rect x="40" y="20" width="200" height="60" rx="30" class="s-rojo"/><rect x="40" y="55" width="200" height="25" class="s-rojo"/>
+    <text x="140" y="62" class="t t-c t-b" font-size="20" text-anchor="middle">App iOS</text>
+    <g class="t" font-size="14">
+      <rect x="60" y="95" width="160" height="34" rx="8" class="s-crema"/><text x="72" y="117">Flutter · Riverpod</text>
+      <rect x="60" y="137" width="160" height="34" rx="8" class="s-crema"/><text x="72" y="159">go_router · 20 pantallas</text>
+      <rect x="60" y="179" width="160" height="34" rx="8" class="s-ambar-f"/><text x="72" y="201">Servicios Falso*</text>
+    </g>
+    <!-- sqlite -->
+    <g transform="translate(66 228)">
+      <ellipse cx="30" cy="8" rx="28" ry="8" class="s-azul-f" style="stroke:var(--azul)" stroke-width="2"/>
+      <path d="M2 8 v42 a28 8 0 0 0 56 0 v-42" class="s-azul-f" style="stroke:var(--azul)" stroke-width="2"/>
+      <ellipse cx="30" cy="8" rx="28" ry="8" class="s-azul-f" style="stroke:var(--azul)" stroke-width="2"/>
+      <text x="30" y="40" class="t" font-size="12" text-anchor="middle">SQLite</text>
+      <text x="30" y="76" class="t t-g" text-anchor="middle">en progreso</text>
+    </g>
+    <!-- chip seguro -->
+    <g transform="translate(150 230)">
+      <rect x="0" y="0" width="56" height="56" rx="8" class="s-verde-f" style="stroke:var(--verde)" stroke-width="2"/>
+      <path d="M8 -6v6M20 -6v6M32 -6v6M44 -6v6M8 56v6M20 56v6M32 56v6M44 56v6" style="stroke:var(--verde)" stroke-width="2"/>
+      <path d="M20 26v-6a8 8 0 0 1 16 0v6" fill="none" style="stroke:var(--verde)" stroke-width="2.5"/><rect x="16" y="26" width="24" height="16" rx="3" class="s-verde"/>
+      <text x="28" y="80" class="t t-g" text-anchor="middle">chip seguro</text>
+    </g>
+    <!-- flechas teléfono-servidor -->
+    <path d="M246 170 H386" class="fl" marker-end="url(#pf)" marker-start="url(#pf)"/>
+    <text x="316" y="160" class="t" text-anchor="middle">JSON</text>
+    <text x="316" y="190" class="t t-g" text-anchor="middle">:3100</text>
+    <!-- servidor -->
+    <rect x="392" y="60" width="230" height="250" rx="16" class="s-fondo" style="stroke:var(--tinta)" stroke-width="2.5"/>
+    <text x="507" y="92" class="t t-c" font-size="20" text-anchor="middle">Servidor Express</text>
+    <g class="t" font-size="13">
+      <rect x="410" y="106" width="194" height="30" rx="7" class="s-crema"/><text x="422" y="126">/api/acceso</text>
+      <rect x="410" y="142" width="194" height="30" rx="7" class="s-crema"/><text x="422" y="162">/api/partes</text>
+      <rect x="410" y="178" width="194" height="30" rx="7" class="s-crema"/><text x="422" y="198">/api/revision</text>
+      <rect x="410" y="214" width="194" height="30" rx="7" class="s-ambar-f"/><text x="422" y="234">/api/ia/*  · JSON fijo</text>
+    </g>
+    <text x="507" y="286" class="t t-g" text-anchor="middle">datos en memoria · sin BD</text>
+    <!-- IAs -->
+    <path d="M622 229 C680 229 690 110 744 110" class="fl-p" marker-end="url(#pf)"/>
+    <path d="M622 229 C680 229 690 270 744 270" class="fl-p" marker-end="url(#pf)"/>
+    <rect x="750" y="50" width="220" height="120" rx="16" class="caja-p"/>
+    <text x="860" y="88" class="t t-c" font-size="20" text-anchor="middle">IA 1 · Voz → texto</text>
+    <text x="860" y="112" class="t" text-anchor="middle">Whisper large-v3</text>
+    <text x="860" y="132" class="t t-g" text-anchor="middle">Colab o la Mac</text>
+    <rect x="808" y="142" width="104" height="20" rx="10" class="s-ambar"/><text x="860" y="156" class="t t-b" font-size="11" text-anchor="middle" style="fill:var(--tarjeta)">PENDIENTE</text>
+    <rect x="750" y="210" width="220" height="120" rx="16" class="caja-p"/>
+    <text x="860" y="248" class="t t-c" font-size="20" text-anchor="middle">IA 2 · Llenado</text>
+    <text x="860" y="272" class="t" text-anchor="middle">casillas + resumen</text>
+    <text x="860" y="292" class="t t-g" text-anchor="middle">mismo servicio</text>
+    <rect x="808" y="302" width="104" height="20" rx="10" class="s-ambar"/><text x="860" y="316" class="t" font-size="11" text-anchor="middle" style="fill:var(--tarjeta)">PENDIENTE</text>
+  </svg>
+  </div>
+  <p class="desliza">Desliza el dibujo →</p>
+</section>
+
+<!-- 3 · MÁQUINA DEL DICTADO -->
+<section id="dictado">
+  <div class="tit"><span class="num">3</span>
+    <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="11" y="3" width="8" height="15" rx="4" class="s-rojo"/><path d="M7 14a8 8 0 0 0 16 0M15 22v5" fill="none" style="stroke:var(--rojo)" stroke-width="2"/></svg>
+    <h2>Dictado D1 → D8</h2></div>
+  <p class="sub">Nada entra sin «Confirmar».</p>
+  <div class="lienzo">
+  <svg viewBox="0 -40 1000 440" role="img" aria-label="Máquina de estados del dictado">
+    <g style="--cab:var(--ambar)">
+      <use href="#tel-fab" x="40" y="30" width="66" height="110"/>
+      <use href="#tel-panel" x="250" y="30" width="66" height="110"/>
+      <use href="#tel-panel" x="460" y="30" width="66" height="110" style="--panel:var(--azul-f)"/>
+      <use href="#tel-marcas" x="670" y="30" width="66" height="110"/>
+      <use href="#tel-fab" x="880" y="30" width="66" height="110"/>
+      <use href="#tel" x="40" y="250" width="66" height="110"/>
+      <use href="#tel" x="250" y="250" width="66" height="110"/>
+      <use href="#tel-panel" x="460" y="250" width="66" height="110" style="--panel:var(--ambar-f)"/>
+    </g>
+    <rect x="44" y="298" width="58" height="22" rx="5" class="s-crema"/><path d="M66 302 v8 M66 314 v1 M78 302 l-6 14" style="stroke:var(--gris)" stroke-width="2"/>
+    <rect x="254" y="300" width="58" height="18" rx="5" class="s-rojo-f"/>
+    <rect x="884" y="62" width="58" height="12" rx="3" class="s-ambar-f"/>
+    <g class="t" text-anchor="middle" font-size="14">
+      <text x="73" y="160" class="t-c">D1 Dictar</text><text x="283" y="160" class="t-c">D2 Grabando</text><text x="493" y="160" class="t-c">D4 Procesando</text>
+      <text x="703" y="160" class="t-c">D5 Marcas</text><text x="913" y="160" class="t-c">D8 Bloqueado</text>
+      <text x="73" y="380" class="t-c">D7 Sin micro</text><text x="283" y="380" class="t-c">D6 Silencio</text><text x="493" y="380" class="t-c">D3 Sin señal</text>
+    </g>
+    <g class="t t-g" text-anchor="middle">
+      <text x="703" y="176">Entendido · Revisar · Falta</text><text x="913" y="176">Enviar gris</text>
+      <text x="493" y="176">transcribe → ordena → resume</text>
+    </g>
+    <!-- flechas principales -->
+    <path d="M110 85 H244" class="fl-r" marker-end="url(#pfr)"/><text x="177" y="76" class="t" text-anchor="middle">Dictar</text>
+    <path d="M320 85 H454" class="fl-r" marker-end="url(#pfr)"/><text x="387" y="76" class="t" text-anchor="middle">Detener</text>
+    <path d="M530 85 H664" class="fl-r" marker-end="url(#pfr)"/><text x="597" y="76" class="t" text-anchor="middle">listo</text>
+    <path d="M740 85 H874" class="fl" marker-end="url(#pf)"/><text x="807" y="76" class="t" text-anchor="middle">cerrar</text>
+    <path d="M718 26 C660 -40 130 -40 76 24" class="fl-r" marker-end="url(#pfr)"/><text x="400" y="-28" class="t" text-anchor="middle" style="fill:var(--rojo)">✓ Confirmar</text>
+    <path d="M684 28 C640 2 340 2 296 25" class="fl" marker-end="url(#pf)"/><text x="493" y="1" class="t t-g" text-anchor="middle">Dictar más (suma, marca «Corregido»)</text>
+    <!-- ramas -->
+    <path d="M73 170 V244" class="fl" marker-end="url(#pf)"/><text x="82" y="212" class="t t-g">sin permiso</text>
+    <path d="M283 170 V244" class="fl" marker-end="url(#pf)"/><text x="292" y="212" class="t t-g">&lt; 2 s</text>
+    <path d="M478 186 V244" class="fl" marker-end="url(#pf)"/><text x="470" y="218" class="t t-g" text-anchor="end">sin red</text>
+    <path d="M508 246 V190" class="fl" marker-end="url(#pf)"/><text x="516" y="218" class="t t-g">vuelve la señal</text>
+    <rect x="600" y="262" width="380" height="96" rx="14" class="s-crema"/>
+    <g class="t" font-size="14">
+      <circle cx="622" cy="286" r="6" class="s-verde"/><text x="636" y="291">Audio se borra al transcribir</text>
+      <circle cx="622" cy="312" r="6" class="s-ambar"/><text x="636" y="317">Sin red: SQLite y reenvío</text>
+      <circle cx="622" cy="338" r="6" class="s-rojo"/><text x="636" y="343">Servidor rechaza sin confirmar (422)</text>
+    </g>
+  </svg>
+  </div>
+  <p class="desliza">Desliza el dibujo →</p>
+</section>
+
+<!-- 4 · CARPETAS -->
+<section id="carpetas">
+  <div class="tit"><span class="num">4</span>
+    <svg viewBox="0 0 30 30" aria-hidden="true"><path d="M3 8h9l3 3h12v14H3z" fill="none" style="stroke:var(--rojo)" stroke-width="2"/></svg>
+    <h2>Carpetas</h2></div>
+  <p class="sub"><code>app-bomberos/movil/lib/</code> · una carpeta por función.</p>
+  <div class="grid">
+    <div class="carpeta" style="--c:var(--gris)"><b><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="none" style="stroke:var(--gris)" stroke-width="2"/><path d="M7 9a3 3 0 0 1 6 0v2" fill="none" style="stroke:var(--gris)" stroke-width="2"/></svg>acceso</b><span>Face ID, alta, sesión, depuración</span><code>A1 A2 A4</code></div>
+    <div class="carpeta" style="--c:var(--rojo)"><b><svg viewBox="0 0 20 20"><rect x="4" y="2" width="12" height="16" rx="2" fill="none" style="stroke:var(--rojo)" stroke-width="2"/><path d="M7 7h6M7 11h6" style="stroke:var(--rojo)" stroke-width="2"/></svg>hoja</b><span>Inicio, documentos, hoja, enviar</span><code>E1 E6 P2 P4 P5 P6 P7</code></div>
+    <div class="carpeta" style="--c:var(--ambar)"><b><svg viewBox="0 0 20 20"><rect x="7" y="2" width="6" height="10" rx="3" class="s-ambar"/><path d="M4 9a6 6 0 0 0 12 0" fill="none" style="stroke:var(--ambar)" stroke-width="2"/></svg>dictado</b><span>Máquina de estados y paneles</span><code>D1–D8 G5 G6</code></div>
+    <div class="carpeta" style="--c:var(--azul)"><b><svg viewBox="0 0 20 20"><path d="M4 10l4 4 8-9" fill="none" style="stroke:var(--azul)" stroke-width="2.5"/></svg>revision</b><span>Bandeja, devolver, validar</span><code>R1–R4 C1–C3</code></div>
+    <div class="carpeta" style="--c:var(--verde)"><b><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1" class="s-verde"/><rect x="11" y="3" width="6" height="6" rx="1" class="s-verde"/><rect x="3" y="11" width="6" height="6" rx="1" class="s-verde"/><rect x="11" y="11" width="6" height="6" rx="1" class="s-verde"/></svg>compartido</b><span>Tema, campo, chip, onda, firma</span><code>tokens de Figma</code></div>
+    <div class="carpeta" style="--c:var(--azul)"><b><svg viewBox="0 0 20 20"><ellipse cx="10" cy="5" rx="6" ry="2.5" fill="none" style="stroke:var(--azul)" stroke-width="2"/><path d="M4 5v10c0 3 12 3 12 0V5" fill="none" style="stroke:var(--azul)" stroke-width="2"/></svg>datos</b><span>Modelo, catálogo, SQLite, API</span><code>modo + seg_activo (A/B)</code></div>
+    <div class="carpeta" style="--c:var(--ambar)"><b><svg viewBox="0 0 20 20"><path d="M7 3v5M13 3v5M5 8h10v3a5 5 0 0 1-10 0z" fill="none" style="stroke:var(--ambar)" stroke-width="2"/><path d="M10 16v2" style="stroke:var(--ambar)" stroke-width="2"/></svg>servicios</b><span>IA, grabadora, firma, bandera</span><code>proveedores.dart</code></div>
+    <div class="carpeta" style="--c:var(--tinta)"><b><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="6" rx="1.5" fill="none" style="stroke:var(--tinta)" stroke-width="2"/><rect x="3" y="11" width="14" height="6" rx="1.5" fill="none" style="stroke:var(--tinta)" stroke-width="2"/></svg>servidor/</b><span>Express en memoria, 4 rutas</span><code>CONTRATOS-IA.md</code></div>
+  </div>
+</section>
+
+<!-- 5 · FIRMA -->
+<section id="firma">
+  <div class="tit"><span class="num">5</span>
+    <svg viewBox="0 0 30 30" aria-hidden="true"><path d="M4 22c4-10 6 4 9-4s4 6 8 0 4 2 5 2" fill="none" style="stroke:var(--rojo)" stroke-width="2.2" stroke-linecap="round"/></svg>
+    <h2>Firma con el chip</h2></div>
+  <p class="sub">La llave privada nunca sale del teléfono.</p>
+  <div class="lienzo">
+  <svg viewBox="0 0 1000 250" role="img" aria-label="Flujo de firma: llave en chip seguro, Face ID, reto con hash, firma, servidor verifica">
+    <!-- 1 chip -->
+    <g transform="translate(40 40)">
+      <rect width="120" height="120" rx="18" class="s-verde-f" style="stroke:var(--verde)" stroke-width="2.5"/>
+      <path d="M44 62v-12a16 16 0 0 1 32 0v12" fill="none" style="stroke:var(--verde)" stroke-width="4"/><rect x="36" y="60" width="48" height="34" rx="6" class="s-verde"/>
+      <text x="60" y="150" class="t t-c" font-size="16" text-anchor="middle">Llave en el chip</text>
+      <text x="60" y="168" class="t t-g" text-anchor="middle">ECDSA P-256</text>
+    </g>
+    <!-- 2 face id -->
+    <g transform="translate(240 40)">
+      <rect width="120" height="120" rx="18" class="s-fondo s-borde" stroke-width="2.5"/>
+      <path d="M30 42v-12h12M78 30h12v12M90 78v12H78M42 90H30V78" fill="none" style="stroke:var(--tinta)" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="48" cy="54" r="4" class="s-tinta"/><circle cx="72" cy="54" r="4" class="s-tinta"/><path d="M48 74c6 6 18 6 24 0" fill="none" style="stroke:var(--tinta)" stroke-width="3.5" stroke-linecap="round"/>
+      <text x="60" y="150" class="t t-c" font-size="16" text-anchor="middle">Face ID</text>
+      <text x="60" y="168" class="t t-g" text-anchor="middle">cada firma</text>
+    </g>
+    <!-- 3 reto -->
+    <g transform="translate(440 40)">
+      <rect width="120" height="120" rx="18" class="s-ambar-f" style="stroke:var(--ambar)" stroke-width="2.5"/>
+      <text x="60" y="52" class="t" font-size="13" text-anchor="middle" style="font-family:ui-monospace,Menlo,monospace">a91f…:</text>
+      <text x="60" y="76" class="t" font-size="13" text-anchor="middle" style="font-family:ui-monospace,Menlo,monospace;fill:var(--ambar)">sha256(</text>
+      <text x="60" y="96" class="t" font-size="13" text-anchor="middle" style="font-family:ui-monospace,Menlo,monospace;fill:var(--ambar)">parte)</text>
+      <text x="60" y="150" class="t t-c" font-size="16" text-anchor="middle">Reto</text>
+      <text x="60" y="168" class="t t-g" text-anchor="middle">azar + hash · 1 uso</text>
+    </g>
+    <!-- 4 firma -->
+    <g transform="translate(640 40)">
+      <rect width="120" height="120" rx="18" class="s-fondo s-borde" stroke-width="2.5"/>
+      <path d="M18 76c10-26 16 8 24-8s10 14 20 0 12 4 18 4 10-4 20-2" fill="none" style="stroke:var(--rojo)" stroke-width="3.5" stroke-linecap="round"/>
+      <text x="60" y="150" class="t t-c" font-size="16" text-anchor="middle">Firma</text>
+      <text x="60" y="168" class="t t-g" text-anchor="middle">base64</text>
+    </g>
+    <!-- 5 servidor -->
+    <g transform="translate(840 40)">
+      <rect width="120" height="120" rx="18" class="s-fondo" style="stroke:var(--tinta)" stroke-width="2.5"/>
+      <circle cx="60" cy="56" r="26" class="s-verde"/><path d="M47 56l9 9 17-18" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="60" y="104" class="t" font-size="12" text-anchor="middle">llave pública</text>
+      <text x="60" y="150" class="t t-c" font-size="16" text-anchor="middle">Servidor verifica</text>
+      <text x="60" y="168" class="t t-g" text-anchor="middle">contenido igual</text>
+    </g>
+    <path d="M164 100 H234" class="fl" marker-end="url(#pf)"/><path d="M364 100 H434" class="fl" marker-end="url(#pf)"/>
+    <path d="M564 100 H634" class="fl" marker-end="url(#pf)"/><path d="M764 100 H834" class="fl" marker-end="url(#pf)"/>
+    <text x="500" y="236" class="t t-g" text-anchor="middle">Sin Face ID (simulador) → firma «SIMULADA», marcada en pantalla · Capitán: credencial + trazo</text>
+  </svg>
+  </div>
+  <p class="desliza">Desliza el dibujo →</p>
+</section>
+
+<!-- 6 · ESTADO -->
+<section id="estado">
+  <div class="tit"><span class="num">6</span>
+    <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="9" y="2" width="12" height="26" rx="5" fill="none" style="stroke:var(--tinta)" stroke-width="2"/><circle cx="15" cy="8" r="3" class="s-rojo"/><circle cx="15" cy="15" r="3" class="s-ambar"/><circle cx="15" cy="22" r="3" class="s-verde"/></svg>
+    <h2>Hecho y pendiente</h2></div>
+  <div class="semaforo">
+    <div class="col"><h3><span class="luz" style="background:var(--verde)"></span>Hecho</h3><ul>
+      <li>Navegación de todos los roles</li><li>Hoja completa + validación</li><li>Dictado D1–D8, G5, G6</li><li>Firma: chip seguro o simulada</li>
+      <li>Partes en progreso en SQLite</li><li>API de prueba + contratos IA</li><li>24 pruebas, compila en iOS</li></ul></div>
+    <div class="col"><h3><span class="luz" style="background:var(--ambar)"></span>Simulado</h3><ul>
+      <li>Micrófono (cuenta segundos)</li><li>IA: Falso* o JSON fijo</li><li>Sin señal: interruptor</li><li>Cámara y ubicación</li><li>Servidor en memoria</li></ul></div>
+    <div class="col"><h3><span class="luz" style="background:var(--rojo)"></span>Falta</h3><ul>
+      <li>Whisper y modelo de llenado</li><li>Micrófono real (<code>record</code>)</li><li>MySQL y sello de 10 años</li><li>Sorteo A/B y PDF</li><li>Probar en un iPhone</li></ul></div>
+  </div>
+  <div class="cmd" aria-label="Cómo correrlo">
+    <div><b>1</b>cd app-bomberos/servidor &amp;&amp; npm install &amp;&amp; npm start</div>
+    <div><b>2</b>cd app-bomberos/movil &amp;&amp; flutter run --dart-define=SERVIDOR_URL=http://IP-DE-LA-MAC:3100</div>
+    <div><b>3</b>flutter test</div>
+  </div>
+</section>
+
+<!-- 7 · DÓNDE SE ENCHUFA CADA IA -->
+<section id="ia">
+  <div class="tit"><span class="num">7</span>
+    <svg viewBox="0 0 30 30" aria-hidden="true"><path d="M10 4v7M20 4v7M7 11h16v5a8 8 0 0 1-16 0z" fill="none" style="stroke:var(--rojo)" stroke-width="2"/><path d="M15 24v4" style="stroke:var(--rojo)" stroke-width="2"/></svg>
+    <h2>Enchufes de la IA</h2></div>
+  <p class="sub">Una bandera cambia lo falso por lo real.</p>
+  <div class="lienzo">
+  <svg viewBox="0 0 1000 380" role="img" aria-label="Puntos TODO(IA): interfaces, implementaciones falsas y del servidor, endpoints y modelos">
+    <!-- controlador -->
+    <rect x="20" y="150" width="150" height="80" rx="14" class="s-fondo" style="stroke:var(--tinta)" stroke-width="2"/>
+    <text x="95" y="184" class="t t-c" font-size="17" text-anchor="middle">Dictado</text>
+    <text x="95" y="204" class="t t-g" text-anchor="middle">Controlador</text>
+    <!-- interfaces -->
+    <g class="t" font-size="13">
+      <rect x="220" y="40" width="190" height="56" rx="12" class="s-fondo s-borde" stroke-width="2"/><text x="315" y="64" text-anchor="middle" class="t-c" font-size="15">Transcripción</text><text x="315" y="83" text-anchor="middle" class="t-g">interfaz</text>
+      <rect x="220" y="162" width="190" height="56" rx="12" class="s-fondo s-borde" stroke-width="2"/><text x="315" y="186" text-anchor="middle" class="t-c" font-size="15">Llenado de campos</text><text x="315" y="205" text-anchor="middle" class="t-g">interfaz</text>
+      <rect x="220" y="284" width="190" height="56" rx="12" class="s-fondo s-borde" stroke-width="2"/><text x="315" y="308" text-anchor="middle" class="t-c" font-size="15">Resumen</text><text x="315" y="327" text-anchor="middle" class="t-g">interfaz</text>
+    </g>
+    <path d="M170 175 C200 175 190 68 216 68" class="fl" marker-end="url(#pf)"/>
+    <path d="M170 190 H216" class="fl" marker-end="url(#pf)"/>
+    <path d="M170 205 C200 205 190 312 216 312" class="fl" marker-end="url(#pf)"/>
+    <!-- interruptor -->
+    <g transform="translate(430 4)">
+      <rect width="150" height="30" rx="15" class="s-crema" style="stroke:var(--tinta)" stroke-width="1.5"/>
+      <circle cx="133" cy="15" r="11" class="s-rojo"/>
+      <text x="62" y="20" class="t" font-size="12" text-anchor="middle">falso ⇄ servidor</text>
+      <text x="162" y="20" class="t t-g">Config.ia</text>
+    </g>
+    <!-- falso / servidor por fila -->
+    <g class="t" font-size="12">
+      <rect x="450" y="44" width="110" height="24" rx="12" class="s-ambar-f"/><text x="505" y="61" text-anchor="middle">Falso* · hoy</text>
+      <rect x="450" y="74" width="110" height="24" rx="12" class="s-azul-f"/><text x="505" y="91" text-anchor="middle">Servidor*</text>
+      <rect x="450" y="166" width="110" height="24" rx="12" class="s-ambar-f"/><text x="505" y="183" text-anchor="middle">Falso* · hoy</text>
+      <rect x="450" y="196" width="110" height="24" rx="12" class="s-azul-f"/><text x="505" y="213" text-anchor="middle">Servidor*</text>
+      <rect x="450" y="288" width="110" height="24" rx="12" class="s-ambar-f"/><text x="505" y="305" text-anchor="middle">Falso* · hoy</text>
+      <rect x="450" y="318" width="110" height="24" rx="12" class="s-azul-f"/><text x="505" y="335" text-anchor="middle">Servidor*</text>
+    </g>
+    <path d="M410 68 H446" class="fl"/><path d="M410 190 H446" class="fl"/><path d="M410 312 H446" class="fl"/>
+    <!-- endpoints -->
+    <g class="t" font-size="11" style="font-family:ui-monospace,Menlo,monospace">
+      <path d="M560 86 H616" class="fl" marker-end="url(#pf)"/><rect x="620" y="70" width="184" height="32" rx="8" class="s-crema"/><text x="630" y="91">/api/ia/transcribir</text>
+      <path d="M560 208 H616" class="fl" marker-end="url(#pf)"/><rect x="620" y="192" width="184" height="32" rx="8" class="s-crema"/><text x="630" y="213">/api/ia/llenar-campos</text>
+      <path d="M560 330 H616" class="fl" marker-end="url(#pf)"/><rect x="620" y="314" width="184" height="32" rx="8" class="s-crema"/><text x="630" y="335">/api/ia/resumen</text>
+    </g>
+    <!-- TODO pins -->
+    <g>
+      <path d="M804 86 H830" class="fl-p" marker-end="url(#pf)"/><path d="M804 208 H830" class="fl-p" marker-end="url(#pf)"/><path d="M804 330 H830" class="fl-p" marker-end="url(#pf)"/>
+      <rect x="836" y="58" width="150" height="56" rx="12" class="caja-p"/><text x="911" y="82" class="t t-c" font-size="15" text-anchor="middle" style="fill:var(--rojo)">TODO(IA)</text><text x="911" y="101" class="t t-g" text-anchor="middle">Whisper large-v3</text>
+      <rect x="836" y="180" width="150" height="56" rx="12" class="caja-p"/><text x="911" y="204" class="t t-c" font-size="15" text-anchor="middle" style="fill:var(--rojo)">TODO(IA)</text><text x="911" y="223" class="t t-g" text-anchor="middle">modelo de llenado</text>
+      <rect x="836" y="302" width="150" height="56" rx="12" class="caja-p"/><text x="911" y="326" class="t t-c" font-size="15" text-anchor="middle" style="fill:var(--rojo)">TODO(IA)</text><text x="911" y="345" class="t t-g" text-anchor="middle">mismo modelo</text>
+    </g>
+    <text x="95" y="268" class="t t-g" text-anchor="middle">lib/servicios/ia/</text>
+    <text x="705" y="140" class="t t-g" text-anchor="middle">servidor/src/rutas/ia.js</text>
+  </svg>
+  </div>
+  <p class="desliza">Desliza el dibujo →</p>
+  <div class="leyenda">
+    <span class="chip"><i style="background:var(--ambar)"></i>campo + estado + confianza</span>
+    <span class="chip"><i style="background:var(--rojo)"></i>corregido lleva valor anterior</span>
+    <span class="chip"><i style="background:var(--azul)"></i>contrato: servidor/CONTRATOS-IA.md</span>
+  </div>
+</section>
+
+<footer>app-bomberos/ · noviembre 2026 · textos y datos de ejemplo</footer>
+</div>
+</body>
+</html>

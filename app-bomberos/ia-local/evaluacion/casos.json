@@ -1,0 +1,109 @@
+{
+  "nota": "Casos FICTICIOS para medir la IA. Ningún nombre, domicilio ni teléfono es real.",
+  "casos": [
+    {
+      "id": "01-pastizal-basico",
+      "dictado": "Incendio de pastizal en El Sauzal, calle López Mateos. Salimos a las 14:05 y llegamos a las 14:20. Unidad E7 de la estación 3. Se sofocó el fuego con pitón de niebla. No hubo lesionados.",
+      "esperado": {
+        "tipo_servicio": "Incendio de pastizal",
+        "hora_salida": "14:05",
+        "hora_llegada": "14:20",
+        "unidad": { "contiene": ["E7"] },
+        "lugar_servicio": { "contiene": ["Sauzal", "Mateos"] },
+        "descripcion": { "contiene": ["pitón de niebla"], "no_contiene_sin_no": ["hubo lesionados"] }
+      }
+    },
+    {
+      "id": "02-negacion-lesionados",
+      "dictado": "Fuga de gas en una casa habitación de la colonia Chapultepec. No hubo lesionados ni personas atrapadas. Se cerró la válvula del tanque estacionario y se ventiló el lugar.",
+      "esperado": {
+        "tipo_servicio": "Fuga de gas",
+        "lugar_servicio": { "contiene": ["Chapultepec"] },
+        "descripcion": { "contiene": ["válvula"], "no_contiene_sin_no": ["hubo lesionados"] }
+      },
+      "estado_minimo": { "descripcion": "revisar" }
+    },
+    {
+      "id": "03-correccion-mismo-audio",
+      "dictado": "Incendio estructural en avenida Reforma. Llegamos a las 9:10, perdón, corrijo, llegamos a las 9:15. Se controló el fuego a las 9:50 con línea de una y media pulgadas.",
+      "esperado": {
+        "tipo_servicio": "Incendio estructural",
+        "hora_llegada": "09:15",
+        "hora_control_fuego": "09:50",
+        "lugar_servicio": { "contiene": ["Reforma"] }
+      }
+    },
+    {
+      "id": "04-segundo-audio-suma",
+      "actuales": {
+        "tipo_servicio": { "valor": "Incendio de pastizal", "confirmado": true },
+        "hora_llegada": { "valor": "14:20", "confirmado": true },
+        "lugar_servicio": { "valor": "El Sauzal, calle López Mateos", "confirmado": true }
+      },
+      "dictado": "Agrego que el propietario es el señor Ramiro Ficticio Pérez, su teléfono es 646 555 0101. Nos apoyó la pipa 07.",
+      "esperado": {
+        "propietario": { "contiene": ["Ramiro"] },
+        "telefono_propietario": "6465550101",
+        "unidades_apoyo": { "contiene": ["07"] }
+      },
+      "no_debe_cambiar": ["tipo_servicio", "hora_llegada", "lugar_servicio"]
+    },
+    {
+      "id": "05-segundo-audio-corrige",
+      "actuales": {
+        "tipo_servicio": { "valor": "Incendio de pastizal", "confirmado": true },
+        "hora_llegada": { "valor": "14:20", "confirmado": true }
+      },
+      "dictado": "Corrijo la hora de llegada, no fue a las 14:20, llegamos a las 14:35.",
+      "esperado": { "hora_llegada": "14:35" },
+      "estado_minimo": { "hora_llegada": "corregido" },
+      "no_debe_cambiar": ["tipo_servicio"]
+    },
+    {
+      "id": "06-vehicular-rural",
+      "dictado": "Incendio vehicular en la carretera a Maneadero, zona rural. Un automóvil sedán. Se usó extintor y agua. Nos apoyó Protección Civil y Cruz Roja.",
+      "esperado": {
+        "tipo_servicio": "Incendio vehicular",
+        "zona": "Rural",
+        "lugar_servicio": { "contiene": ["Maneadero"] },
+        "instituciones_apoyo": { "contiene": ["Protección Civil", "Cruz Roja"] }
+      }
+    },
+    {
+      "id": "07-poca-informacion",
+      "dictado": "Salimos a un servicio en Valle Dorado.",
+      "esperado": { "lugar_servicio": { "contiene": ["Valle Dorado"] } },
+      "no_debe_aparecer": ["tipo_servicio", "hora_llegada", "propietario", "descripcion"]
+    },
+    {
+      "id": "08-c5-y-personal",
+      "dictado": "Incidente de C-5 número ENS-26-118843. Rescate en la colonia Ruiz. Iban el bombero Ficticio Uno y el bombero Ficticio Dos en la unidad R1. Regresamos a la base a las 11:40.",
+      "esperado": {
+        "no_incidente_c5": { "contiene": ["118843"] },
+        "tipo_servicio": "Rescate",
+        "lugar_servicio": { "contiene": ["Ruiz"] },
+        "personal_turno": { "contiene": ["Ficticio Uno", "Ficticio Dos"] },
+        "hora_regreso": "11:40"
+      }
+    },
+    {
+      "id": "09-sin-propietario",
+      "dictado": "Incendio de pastizal en un terreno baldío de la colonia Juárez. No se localizó al propietario. Se controló a las 16:10.",
+      "esperado": {
+        "tipo_servicio": "Incendio de pastizal",
+        "lugar_servicio": { "contiene": ["Juárez"] },
+        "hora_control_fuego": "16:10"
+      },
+      "no_debe_aparecer": ["propietario", "telefono_propietario"]
+    },
+    {
+      "id": "10-ruido-de-relleno",
+      "dictado": "Este, pues, eh, fue un incendio de pastizal, o sea, por el Sauzal, más o menos, y ya, este, llegamos como a las tres y diez de la tarde.",
+      "esperado": {
+        "tipo_servicio": "Incendio de pastizal",
+        "lugar_servicio": { "contiene": ["Sauzal"] }
+      },
+      "opcionales": ["hora_llegada"]
+    }
+  ]
+}

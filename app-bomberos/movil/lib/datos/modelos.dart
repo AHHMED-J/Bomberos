@@ -1,0 +1,345 @@
+// Modelo de datos del parte en el teléfono.
+// Se guarda como JSON en SQLite (ver repositorio_local.dart) y se manda igual al servidor.
+
+/// Roles de la app. Dirección NO está en la app (es la web, otro proyecto).
+enum Rol {
+  /// Cualquier bombero con permiso Editor en su división. Quien crea un parte es
+  /// quien lo elabora (`elaboroId`): no es un rol aparte, es una condición de ese parte.
+  editor,
+
+  /// Capitán = encargado de turno = Revisor: valida o devuelve los partes de su división.
+  capitan,
+}
+
+class Usuario {
+  const Usuario({
+    required this.id,
+    required this.nombre,
+    required this.matricula,
+    required this.rango,
+    required this.rol,
+    required this.division,
+    required this.estacion,
+  });
+  final String id;
+  final String nombre;
+  final String matricula;
+  final String rango;
+  final Rol rol;
+  final String division;
+  final String estacion;
+
+  String get inicial => nombre.isEmpty ? '?' : nombre.substring(0, 1);
+}
+
+enum EstadoParte { enProgreso, enviado, devuelto, validado }
+
+/// Experimento A/B: teclado contra dictado. El sorteo todavía no existe.
+enum ModoCaptura { teclado, dictado }
+
+/// Cómo dejó la IA un campo. `null` = no lo tocó la IA.
+enum EstadoIa { entendido, revisar, falta, corregido }
+
+enum OrigenCampo { manual, auto, dictado }
+
+/// El valor de una casilla de la hoja, con su rastro de dictado.
+class ValorCampo {
+  const ValorCampo({
+    this.valor = '',
+    this.origen = OrigenCampo.manual,
+    this.estadoIa,
+    this.confianza,
+    this.valorAnterior,
+    this.confirmado = true,
+  });
+
+  final String valor;
+  final OrigenCampo origen;
+  final EstadoIa? estadoIa;
+
+  /// 0..1 según el modelo de llenado.
+  final double? confianza;
+
+  /// Sólo en correcciones: lo que había antes del segundo dictado. Nada se borra sin confirmar.
+  final String? valorAnterior;
+
+  /// Lo manual nace confirmado; lo dictado nace sin confirmar.
+  final bool confirmado;
+
+  bool get vacio => valor.trim().isEmpty;
+
+  /// Bloquea el envío: propuesta de la IA que el bombero no ha confirmado.
+  bool get pendienteDeConfirmar => origen == OrigenCampo.dictado && !confirmado && estadoIa != EstadoIa.falta;
+
+  ValorCampo copiar({
+    String? valor,
+    OrigenCampo? origen,
+    EstadoIa? estadoIa,
+    bool quitarEstadoIa = false,
+    double? confianza,
+    String? valorAnterior,
+    bool quitarValorAnterior = false,
+    bool? confirmado,
+  }) => ValorCampo(
+    valor: valor ?? this.valor,
+    origen: origen ?? this.origen,
+    estadoIa: quitarEstadoIa ? null : (estadoIa ?? this.estadoIa),
+    confianza: confianza ?? this.confianza,
+    valorAnterior: quitarValorAnterior ? null : (valorAnterior ?? this.valorAnterior),
+    confirmado: confirmado ?? this.confirmado,
+  );
+
+  Map<String, dynamic> aJson() => {
+    'valor': valor,
+    'origen': origen.name,
+    'estado_ia': estadoIa?.name,
+    'confianza': confianza,
+    'valor_anterior': valorAnterior,
+    'confirmado': confirmado,
+  };
+
+  factory ValorCampo.deJson(Map<String, dynamic> j) => ValorCampo(
+    valor: j['valor'] as String? ?? '',
+    origen: OrigenCampo.values.byName(j['origen'] as String? ?? 'manual'),
+    estadoIa: j['estado_ia'] == null ? null : EstadoIa.values.byName(j['estado_ia'] as String),
+    confianza: (j['confianza'] as num?)?.toDouble(),
+    valorAnterior: j['valor_anterior'] as String?,
+    confirmado: j['confirmado'] as bool? ?? true,
+  );
+}
+
+class NotaDevolucion {
+  const NotaDevolucion({required this.texto, required this.seccion, required this.revisor, required this.fecha});
+  final String texto;
+  final String seccion;
+  final String revisor;
+  final DateTime fecha;
+
+  Map<String, dynamic> aJson() => {
+    'texto': texto,
+    'seccion': seccion,
+    'revisor': revisor,
+    'fecha': fecha.toIso8601String(),
+  };
+  factory NotaDevolucion.deJson(Map<String, dynamic> j) => NotaDevolucion(
+    texto: j['texto'] as String,
+    seccion: j['seccion'] as String,
+    revisor: j['revisor'] as String,
+    fecha: DateTime.parse(j['fecha'] as String),
+  );
+}
+
+/// Firmas del parte. Quien elabora el parte firma con su llave (credencial); propietario y testigo con trazo.
+class Firmas {
+  const Firmas({
+    this.elaboro,
+    this.elaboroSimulada = false,
+    this.propietarioNombre = '',
+    this.propietarioTrazo,
+    this.testigoNombre = '',
+    this.testigoTrazo,
+    this.requierePeritaje,
+  });
+
+  /// Firma ECDSA (base64) del reto que lleva el SHA-256 del contenido.
+  final String? elaboro;
+
+  /// true si la firma vino del respaldo simulado (sin Face ID real).
+  final bool elaboroSimulada;
+  final String propietarioNombre;
+
+  /// Trazo del dedo serializado (ver LienzoFirma.serializar).
+  final String? propietarioTrazo;
+  final String testigoNombre;
+  final String? testigoTrazo;
+  final bool? requierePeritaje;
+
+  Firmas copiar({
+    String? elaboro,
+    bool? elaboroSimulada,
+    String? propietarioNombre,
+    String? propietarioTrazo,
+    String? testigoNombre,
+    String? testigoTrazo,
+    bool? requierePeritaje,
+  }) => Firmas(
+    elaboro: elaboro ?? this.elaboro,
+    elaboroSimulada: elaboroSimulada ?? this.elaboroSimulada,
+    propietarioNombre: propietarioNombre ?? this.propietarioNombre,
+    propietarioTrazo: propietarioTrazo ?? this.propietarioTrazo,
+    testigoNombre: testigoNombre ?? this.testigoNombre,
+    testigoTrazo: testigoTrazo ?? this.testigoTrazo,
+    requierePeritaje: requierePeritaje ?? this.requierePeritaje,
+  );
+
+  Map<String, dynamic> aJson() => {
+    'elaboro': elaboro,
+    'elaboro_simulada': elaboroSimulada,
+    'propietario_nombre': propietarioNombre,
+    'propietario_trazo': propietarioTrazo,
+    'testigo_nombre': testigoNombre,
+    'testigo_trazo': testigoTrazo,
+    'requiere_peritaje': requierePeritaje,
+  };
+  factory Firmas.deJson(Map<String, dynamic> j) => Firmas(
+    elaboro: j['elaboro'] as String?,
+    elaboroSimulada: j['elaboro_simulada'] as bool? ?? false,
+    propietarioNombre: j['propietario_nombre'] as String? ?? '',
+    propietarioTrazo: j['propietario_trazo'] as String?,
+    testigoNombre: j['testigo_nombre'] as String? ?? '',
+    testigoTrazo: j['testigo_trazo'] as String?,
+    requierePeritaje: j['requiere_peritaje'] as bool?,
+  );
+}
+
+/// Un parte (Hoja de incidente). Lo llena UNA persona: no hay multijugador.
+class Parte {
+  const Parte({
+    required this.id,
+    required this.folio,
+    required this.estado,
+    required this.elaboroId,
+    required this.elaboroNombre,
+    required this.division,
+    required this.creadoEn,
+    this.campos = const {},
+    this.fotos = 0,
+    this.croquisDibujado = false,
+    this.firmas = const Firmas(),
+    this.modo = ModoCaptura.dictado,
+    this.segActivo = 0,
+    this.ultimaActividad,
+    this.nota,
+    this.enviadoEn,
+    this.sello,
+  });
+
+  final String id;
+  final String folio;
+  final EstadoParte estado;
+  final String elaboroId;
+  final String elaboroNombre;
+  final String division;
+  final DateTime creadoEn;
+  final Map<String, ValorCampo> campos;
+  final int fotos;
+  final bool croquisDibujado;
+  final Firmas firmas;
+
+  /// A/B: qué grupo le tocó a este parte. TODO(experimento): sorteo al crear.
+  final ModoCaptura modo;
+
+  /// Tiempo activo en segundos; los huecos de más de 30 s cuentan 30 s (como en el CFP).
+  final int segActivo;
+  final DateTime? ultimaActividad;
+  final NotaDevolucion? nota;
+  final DateTime? enviadoEn;
+
+  /// SHA-256 del sello del revisor (sólo validados).
+  final String? sello;
+
+  static const huecoMaximo = Duration(seconds: 30);
+
+  String valor(String campoId) => campos[campoId]?.valor ?? '';
+  ValorCampo campo(String campoId) => campos[campoId] ?? const ValorCampo();
+
+  Parte copiar({
+    EstadoParte? estado,
+    Map<String, ValorCampo>? campos,
+    int? fotos,
+    bool? croquisDibujado,
+    Firmas? firmas,
+    ModoCaptura? modo,
+    int? segActivo,
+    DateTime? ultimaActividad,
+    NotaDevolucion? nota,
+    bool quitarNota = false,
+    DateTime? enviadoEn,
+    String? sello,
+  }) => Parte(
+    id: id,
+    folio: folio,
+    estado: estado ?? this.estado,
+    elaboroId: elaboroId,
+    elaboroNombre: elaboroNombre,
+    division: division,
+    creadoEn: creadoEn,
+    campos: campos ?? this.campos,
+    fotos: fotos ?? this.fotos,
+    croquisDibujado: croquisDibujado ?? this.croquisDibujado,
+    firmas: firmas ?? this.firmas,
+    modo: modo ?? this.modo,
+    segActivo: segActivo ?? this.segActivo,
+    ultimaActividad: ultimaActividad ?? this.ultimaActividad,
+    nota: quitarNota ? null : (nota ?? this.nota),
+    enviadoEn: enviadoEn ?? this.enviadoEn,
+    sello: sello ?? this.sello,
+  );
+
+  /// Suma tiempo activo con tope de 30 s por hueco.
+  Parte conActividad(DateTime ahora) {
+    var suma = segActivo;
+    final ultima = ultimaActividad;
+    if (ultima != null) {
+      var hueco = ahora.difference(ultima);
+      if (hueco.isNegative) hueco = Duration.zero;
+      if (hueco > huecoMaximo) hueco = huecoMaximo;
+      suma += hueco.inSeconds;
+    }
+    return copiar(segActivo: suma, ultimaActividad: ahora);
+  }
+
+  /// Contenido canónico que se firma (su SHA-256 va en el reto).
+  Map<String, dynamic> contenidoParaFirmar() => {
+    'folio': folio,
+    'campos': {for (final e in (campos.entries.toList()..sort((a, b) => a.key.compareTo(b.key)))) e.key: e.value.valor},
+    'fotos': fotos,
+    'propietario': firmas.propietarioNombre,
+    'testigo': firmas.testigoNombre,
+    'propietario_trazo': firmas.propietarioTrazo,
+    'testigo_trazo': firmas.testigoTrazo,
+    'requiere_peritaje': firmas.requierePeritaje,
+  };
+
+  Map<String, dynamic> aJson() => {
+    'id': id,
+    'folio': folio,
+    'estado': estado.name,
+    'elaboro_id': elaboroId,
+    'elaboro_nombre': elaboroNombre,
+    'division': division,
+    'creado_en': creadoEn.toIso8601String(),
+    'campos': campos.map((k, v) => MapEntry(k, v.aJson())),
+    'fotos': fotos,
+    'croquis_dibujado': croquisDibujado,
+    'firmas': firmas.aJson(),
+    'modo': modo.name,
+    'seg_activo': segActivo,
+    'ultima_actividad': ultimaActividad?.toIso8601String(),
+    'nota': nota?.aJson(),
+    'enviado_en': enviadoEn?.toIso8601String(),
+    'sello': sello,
+  };
+
+  factory Parte.deJson(Map<String, dynamic> j) => Parte(
+    id: j['id'] as String,
+    folio: j['folio'] as String,
+    estado: EstadoParte.values.byName(j['estado'] as String),
+    elaboroId: j['elaboro_id'] as String,
+    elaboroNombre: j['elaboro_nombre'] as String? ?? '',
+    division: j['division'] as String? ?? '',
+    creadoEn: DateTime.tryParse(j['creado_en'] as String? ?? '') ?? DateTime.now(),
+    campos: (j['campos'] as Map<String, dynamic>? ?? {}).map(
+      (k, v) => MapEntry(k, ValorCampo.deJson(v as Map<String, dynamic>)),
+    ),
+    fotos: j['fotos'] as int? ?? 0,
+    croquisDibujado: j['croquis_dibujado'] as bool? ?? false,
+    firmas: Firmas.deJson(j['firmas'] as Map<String, dynamic>? ?? {}),
+    modo: ModoCaptura.values.byName(j['modo'] as String? ?? 'dictado'),
+    segActivo: j['seg_activo'] as int? ?? 0,
+    ultimaActividad: j['ultima_actividad'] == null ? null : DateTime.parse(j['ultima_actividad'] as String),
+    nota: j['nota'] == null ? null : NotaDevolucion.deJson(j['nota'] as Map<String, dynamic>),
+    enviadoEn: j['enviado_en'] == null ? null : DateTime.parse(j['enviado_en'] as String),
+    sello: j['sello'] as String?,
+  );
+}

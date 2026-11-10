@@ -1,0 +1,18 @@
+{
+  "name": "parte-digital-servidor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "API JSON de prueba para la app iOS del parte digital (Bomberos de Ensenada). Datos en memoria; IA fija o local (whisper.cpp + Ollama).",
+  "main": "servidor.js",
+  "scripts": {
+    "start": "node servidor.js",
+    "check": "node --check servidor.js && node --check src/datos.js && node --check src/firma.js && node --check src/validacion.js && node --check src/rutas/acceso.js && node --check src/rutas/partes.js && node --check src/rutas/revision.js && node --check src/rutas/ia.js && node --check src/ia/config.js && node --check src/ia/audio.js && node --check src/ia/whisper.js && node --check src/ia/ollama.js && node --check src/ia/texto.js && node --check src/ia/llenado.js && node --check src/ia/resumen.js && node --check src/ia/glosario.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "^4.22.3"
+  }
+}

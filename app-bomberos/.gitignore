@@ -1,0 +1,27 @@
+# --- Secretos y configuración local: NUNCA al repo ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Modelos de IA (pesan GB; viven fuera del repo en ~/.bomberos-ia/) ---
+*.bin
+*.gguf
+*.safetensors
+*.mlmodelc/
+modelos/
+
+# --- Audio y textos de prueba (pueden contener datos personales) ---
+*.wav
+*.m4a
+*.mp3
+*.aac
+*.caf
+*.ogg
+ia-local/audios/
+ia-local/resultados/
+tmp/
+
+# --- Registros ---
+*.log
