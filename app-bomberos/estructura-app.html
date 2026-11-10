@@ -31,10 +31,8 @@ header.cab .in{max-width:1080px;margin:0 auto}
 .kicker{font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
 h1,h2,h3{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;line-height:1.05;margin:0}
 h1{font-size:clamp(38px,7vw,64px);margin-top:6px}
-.kpis{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.kpi{background:rgba(255,255,255,.16);border-radius:999px;padding:6px 14px;font-weight:600;font-size:15px}
 nav.indice{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
-nav.indice a{padding:7px 13px;border-radius:999px;background:var(--tinta);color:var(--fondo);text-decoration:none;font-size:14px;font-weight:600}
+nav.indice a{padding:7px 13px;border-radius:4px;background:var(--tinta);color:var(--fondo);text-decoration:none;font-size:14px;font-weight:600}
 nav.indice a:focus-visible{outline:3px solid #E8B20E;outline-offset:2px}
 section{background:var(--tarjeta);border-radius:20px;padding:24px 22px;margin-bottom:18px}
 .tit{display:flex;align-items:center;gap:12px;margin-bottom:12px}
@@ -159,9 +157,6 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
 <header class="cab"><div class="in">
   <span class="kicker">Parte digital · Bomberos de Ensenada · UABC FIAD</span>
   <h1>App del parte digital</h1>
-  <div class="kpis">
-    <span class="kpi">iOS · Flutter</span><span class="kpi">API de prueba · Node</span><span class="kpi">2 IAs locales ✓</span><span class="kpi">Micrófono real ✓</span><span class="kpi">30 + 17 pruebas ✓</span><span class="kpi">Compila en iOS ✓</span>
-  </div>
 </div></header>
 
 <div class="pagina">
@@ -471,11 +466,12 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
   <div class="semaforo">
     <div class="col"><h3><span class="luz" style="background:var(--verde)"></span>Hecho</h3><ul>
       <li>Navegación de todos los roles</li><li>Hoja completa + validación</li><li>Dictado D1–D8, G5, G6</li><li>Firma: chip seguro o simulada</li>
-      <li>Partes en progreso en SQLite</li><li>Micrófono real (<code>record</code>)</li><li>IA local: Whisper + qwen2.5</li><li>30 pruebas app + 17 servidor</li></ul></div>
-    <div class="col"><h3><span class="luz" style="background:var(--ambar)"></span>Simulado</h3><ul>
-      <li>IA fija (pruebas, sin modelos)</li><li>Sin señal: interruptor</li><li>Cámara y ubicación</li><li>Servidor en memoria</li></ul></div>
+      <li>Partes en progreso en SQLite</li><li>Micrófono real (<code>record</code>)</li><li>IA local: Whisper + qwen2.5</li><li>Dictado desde audio probado en el iPhone ✓</li><li>Croquis: mapa en vivo + Captura (PNG)</li><li>43 pruebas app + 17 servidor</li></ul></div>
+    <div class="col"><h3><span class="luz" style="background:var(--ambar)"></span>Simulado</h3>
+      <p class="nota-pasos">La pantalla funciona, pero detrás hay una pieza de mentira en lugar de la real.</p><ul>
+      <li>IA fija: respuestas de ejemplo para pruebas sin modelos (chip «Ejemplo · sin IA»)</li><li>Sin señal: un interruptor en Depuración, no un detector de red</li><li>Cámara: «Agregar» suma una foto de ejemplo</li><li>«Usar mi ubicación actual» del Lugar: escribe un texto de ejemplo (el croquis sí usa el GPS real)</li><li>Servidor: guarda los partes en memoria; se borran al apagarlo</li></ul></div>
     <div class="col"><h3><span class="luz" style="background:var(--rojo)"></span>Falta</h3><ul>
-      <li>Dictado real en un iPhone</li><li>Medir con audios de bomberos</li><li>Base de datos (MySQL)</li><li>Sorteo A/B y PDF</li></ul></div>
+      <li>Medir con audios de bomberos</li><li>Base de datos (MySQL)</li><li>Subir fotos y croquis al servidor</li><li>Sorteo A/B y PDF</li></ul></div>
   </div>
   <h3 class="como">Cómo correrlo · en este orden</h3>
   <p class="nota-pasos">Todos los comandos se escriben desde la carpeta del repo (<code>Bomberos/</code>). La Mac y el iPhone deben estar en la misma red Wi-Fi.</p>

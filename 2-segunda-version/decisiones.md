@@ -255,3 +255,24 @@ Resultados con voz sintética y casos ficticios: IA 2 sola 31/32; de audio a cam
 
 - La segunda versión **no** incluye el resguardo de 10 años de la v1 (`archivo.resguardo_hasta` ni la pantalla de Archivo con los vencidos). Se quitó de los pendientes.
 - Se mantiene la huella SHA-256 del contenido, que va dentro de la firma del Capitán al validar (pantalla C3).
+
+### Croquis: ubicación en tiempo real y «Captura» (10 de noviembre)
+
+- Se descarta «Generar con IA» para el croquis.
+- La sección Croquis muestra un mapa con la ubicación del bombero **en tiempo real** (punto azul, precisión en metros y botón para volver a centrar). Usa `geolocator` y sólo pide permiso «mientras se usa la app».
+- El botón **«Captura»** congela lo que se ve en el mapa y abre el modo captura:
+  - La pantalla se oscurece y la imagen se agranda un poco.
+  - Arriba de la imagen, fuera de ella, están el lápiz, el color actual (se cambia ahí mismo), deshacer y rehacer.
+  - Abajo está «Terminar captura».
+- Con el lápiz apagado se puede pellizcar para hacer zoom, pero sólo **dentro del mismo recuadro**.
+- El PNG se guarda **siempre en el tamaño original** de la captura, con o sin zoom: el tamaño del mapa en la hoja por la densidad de la pantalla (unos 1068 × 594 en un iPhone con densidad 3).
+- Al terminar, la hoja muestra la captura guardada. Si se presiona «Captura» otra vez, vuelve el mapa en vivo y la nueva captura reemplaza a la anterior. Es una propuesta (pantalla K5 del Figma): hay que confirmarla con el equipo.
+- El PNG vive en la carpeta de la app (`croquis/`). El parte guarda sólo la ruta relativa (`croquis_png`). Si se elimina el parte en progreso, también se borra su croquis.
+- **Mapa:** se usan teselas de OpenStreetMap con `flutter_map`, sin clave ni cuenta. Al pedirlas, el servidor de OSM ve **la zona** que se está mirando, pero no la posición exacta ni el parte.
+  - Para el prototipo es aceptable.
+  - Para producción hay que decidirlo con la Dirección: servidor de teselas propio, mapas sin conexión o Apple Maps.
+  - La política de uso de OSM no permite tráfico alto con sus servidores públicos.
+- **Pendiente:**
+  - Subir el PNG al servidor junto con el parte. Hoy tampoco se suben las fotos.
+  - Decidir si la huella del croquis entra en lo que se firma.
+  - Probar en el iPhone con GPS real.
