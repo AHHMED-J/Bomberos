@@ -3,8 +3,12 @@
 #   enciende Whisper + qwen2.5, el servidor en modo local, detecta la IP de la Mac
 #   e instala la app con la clave (sin mostrarla).
 #
-# Uso:  ./correr-app.sh             → versión «release»: se abre desde el inicio del iPhone sin la Mac conectada
-#       ./correr-app.sh --depurar   → versión de depuración (recarga en caliente, pero sólo abre desde la Mac)
+# Uso:  ./correr-app.sh                 → versión «release»: se abre desde el inicio del iPhone sin la Mac conectada
+#       ./correr-app.sh --depurar       → versión de depuración (recarga en caliente, pero sólo abre desde la Mac)
+#       ./correr-app.sh --dispositivo ID → elige el iPhone si hay más de uno conectado (o un simulador)
+#
+# Los partes viven en el servidor de la Mac (DATOS=servidor): dos teléfonos con la app ven lo mismo
+# (uno entra como bombero y envía; el otro como Capitán y lo ve en su bandeja).
 # Al terminar: ./detener.sh
 set -e
 AQUI=${0:A:h}
@@ -14,7 +18,15 @@ BASE=~/.bomberos-ia
 mkdir -p $BASE/registros
 
 MODO=--release
-[[ "$1" == "--depurar" ]] && MODO=--debug
+ELEGIDO=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --depurar) MODO=--debug ;;
+    --dispositivo) ELEGIDO="$2"; shift ;;
+    *) echo "Opción desconocida: $1"; exit 1 ;;
+  esac
+  shift
+done
 
 # 1 · Clave y modo local
 [[ -f $SERVIDOR/.env ]] || $AQUI/configurar.sh
@@ -44,11 +56,22 @@ IP=$(ipconfig getifaddr en0 || ipconfig getifaddr en1 || true)
 echo "La app hablará con http://$IP:3100 (el iPhone debe estar en la misma Wi-Fi)"
 
 # 5 · iPhone conectado
-DISPOSITIVO=$(cd $MOVIL && flutter devices --machine 2>/dev/null | python3 -c '
+if [[ -n "$ELEGIDO" ]]; then
+  DISPOSITIVO=$ELEGIDO
+else
+  IPHONES=$(cd $MOVIL && flutter devices --machine 2>/dev/null | python3 -c '
 import json,sys
-d=[x for x in json.load(sys.stdin) if x.get("targetPlatform","").startswith("ios") and not x.get("emulator")]
-print(d[0]["id"] if d else "")')
-[[ -n "$DISPOSITIVO" ]] || { echo "No veo un iPhone conectado por cable y desbloqueado."; exit 1; }
+for x in json.load(sys.stdin):
+    if x.get("targetPlatform","").startswith("ios") and not x.get("emulator"):
+        print(x["id"] + "\t" + x["name"])')
+  [[ -n "$IPHONES" ]] || { echo "No veo un iPhone conectado por cable y desbloqueado."; exit 1; }
+  if [[ $(echo "$IPHONES" | wc -l) -gt 1 ]]; then
+    echo "Hay más de un iPhone conectado. Elige uno con --dispositivo:"
+    echo "$IPHONES" | sed 's/^/  /'
+    exit 1
+  fi
+  DISPOSITIVO=$(echo "$IPHONES" | cut -f1)
+fi
 
 echo "Desbloquea el iPhone y déjalo así hasta que abra la app (si está bloqueado, se instala pero no abre)."
 
@@ -58,5 +81,6 @@ CLAVE=$(grep '^CLAVE_LOCAL=' $SERVIDOR/.env | cut -d= -f2)
 cd $MOVIL
 exec flutter run $MODO -d "$DISPOSITIVO" \
   --dart-define=IA=servidor \
+  --dart-define=DATOS=servidor \
   --dart-define=SERVIDOR_URL=http://$IP:3100 \
   --dart-define=CLAVE_LOCAL=$CLAVE
