@@ -81,11 +81,15 @@ Antes de dar por bueno el rediseño, hay que decidir qué de esto se recupera:
 
 ## Próximos pasos
 
-- [ ] Decidir cuáles de los 6 puntos que faltan se recuperan y cuáles se
-      dejan fuera a propósito (documentarlo aquí).
+- [x] Decidir cuáles de los 6 puntos que faltan se recuperan y cuáles se
+      dejan fuera a propósito — los seis se recuperan, ver
+      [`decisiones.md`](decisiones.md).
 - [x] Estructura de carpetas para esta versión — pantallas sueltas + css
       compartido + `build.py`, igual que `1-primera-version/`.
 - [x] Wireframes/mockups estáticos antes de tocar código — el clic-through
       de doce pantallas ya está, ver `docs/prototipo.html`.
-- [ ] ¿Se reutiliza el stack de `app/` (Node/Express/MySQL) para hacerlo
-      funcional, o cambia?
+- [x] ¿Se reutiliza el stack de `app/` (Node/Express/MySQL) para hacerlo
+      funcional, o cambia? — se reutiliza, con Socket.IO para el parte
+      multijugador; ver [`decisiones.md`](decisiones.md).
+- [ ] Los pendientes antes de programar el hito 4, al final de
+      [`decisiones.md`](decisiones.md).

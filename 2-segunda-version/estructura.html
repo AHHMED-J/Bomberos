@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estructura del proyecto · Parte digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--rojo:#B3261E;--tinta:#1C1B19;--fondo:#E6E1D9;--gris:#5A5650;--crema:#F1EEEA;--verde:#2E6B3A;--ambar:#7A5A00;--ambar-f:#FFF1C9;--linea:#DDD7CE}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);font-family:'Barlow',system-ui,sans-serif;font-size:18px;line-height:1.5}
+.pagina{max-width:1040px;margin:0 auto;padding:0 16px 80px}
+header.cab{background:var(--rojo);color:#fff;padding:56px 16px 40px;margin-bottom:32px}
+header.cab .in{max-width:1040px;margin:0 auto}
+.kicker{font-size:15px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+h1,h2,h3{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;line-height:1.05;margin:0}
+h1{font-size:clamp(40px,7vw,68px);margin-top:8px}
+header.cab p{max-width:62ch;font-size:20px;margin:14px 0 0}
+nav.indice{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 32px}
+nav.indice a{padding:8px 14px;border-radius:999px;background:var(--tinta);color:#fff;text-decoration:none;font-size:15px;font-weight:600}
+nav.indice a:focus-visible{outline:3px solid #E8B20E;outline-offset:2px}
+section{background:#fff;border-radius:20px;padding:28px 24px;margin-bottom:20px}
+h2{font-size:34px;color:var(--rojo);margin-bottom:6px}
+h3{font-size:22px;margin:22px 0 8px}
+p{margin:8px 0}
+.gris{color:var(--gris)}
+.chico{font-size:15px}
+.aviso{display:flex;gap:12px;padding:14px 16px;border-radius:14px;background:var(--ambar-f);color:#4A3800;margin:16px 0}
+.aviso b{display:block}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-top:14px}
+.card{background:var(--crema);border-radius:16px;padding:16px}
+.card h3{margin:0 0 6px;font-size:21px}
+.card p{font-size:16px;margin:4px 0}
+.chip{display:inline-block;padding:3px 12px;border-radius:999px;font-size:14px;font-weight:600;background:#E4E1DC;color:#3D3A35;margin:2px 4px 2px 0}
+.chip.v{background:#DDEBDD;color:#1F4D28}.chip.r{background:#FBE0DD;color:#8C1D17}.chip.a{background:var(--ambar-f);color:var(--ambar)}.chip.az{background:#DCE7F5;color:#173F73}
+table{width:100%;border-collapse:collapse;font-size:16px;margin-top:12px}
+th,td{padding:10px 8px;border-bottom:1px solid var(--linea);text-align:left;vertical-align:top}
+th{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--gris)}
+.tabla{overflow-x:auto}
+.capas{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.capa{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center;padding:14px 16px;border-radius:14px;background:var(--crema)}
+.capa b{font-family:'Barlow Condensed';text-transform:uppercase;font-size:22px;color:var(--rojo)}
+.capa.proto{border:2px dashed var(--ambar);background:#FFFAEA}
+.arbol{background:var(--tinta);color:#EFE9DE;border-radius:14px;padding:18px 20px;font:15px/1.6 ui-monospace,Menlo,monospace;overflow-x:auto;white-space:pre;margin-top:12px}
+.arbol .c{color:#9B958A}
+.hitos{display:grid;gap:10px;margin-top:14px}
+.hito{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;padding:14px 16px;border-radius:14px;background:var(--crema)}
+.hito .n{width:44px;height:44px;border-radius:50%;background:var(--rojo);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed';font-weight:700;font-size:24px}
+.hito.pr .n{background:var(--ambar)}
+.hito .t{font-weight:600}
+.hito .d{font-size:15px;color:var(--gris)}
+ul.simple{margin:8px 0;padding-left:22px}
+ul.simple li{margin:4px 0}
+@media (max-width:640px){.capa{grid-template-columns:1fr}.hito{grid-template-columns:44px 1fr}.hito .chip{grid-column:2}section{padding:22px 16px}}
+</style>
+</head>
+<body>
+<header class="cab"><div class="in">
+<span class="kicker">Parte digital · Bomberos de Ensenada · UABC FIAD</span>
+<h1>Estructura del proyecto</h1>
+<p>Cómo está pensado el sistema hasta hoy: capas, roles, pantallas, datos y hitos. Es un documento de trabajo; lo que está sin decidir se marca como pendiente.</p>
+</div></header>
+
+<div class="pagina">
+<nav class="indice" aria-label="Secciones">
+<a href="#idea">La idea</a><a href="#capas">Capas</a><a href="#roles">Roles y permisos</a><a href="#pantallas">Pantallas</a><a href="#datos">Datos</a><a href="#carpetas">Carpetas</a><a href="#hitos">Hitos</a><a href="#pendientes">Pendientes</a>
+</nav>
+
+<section id="idea">
+<h2>La idea en breve</h2>
+<p>El personal de bomberos llena a mano la <b>Hoja de incidente</b> (y otros formatos) y alguien la lleva en papel a la Dirección. El sistema la captura desde el celular, la firma con la credencial del teléfono, la revisa el encargado de la división y queda sellada y archivada <b>10 años</b>.</p>
+<p>Lo que sostiene el diseño, según la investigación: tiene que ser <b>tan rápido como mandar un WhatsApp</b> (meta: ~60 s con campos mínimos y 1 foto), funcionar <b>sólo con celular</b>, con letra grande, y respetar la jerarquía real (turno, estación, división).</p>
+<div class="aviso"><span aria-hidden="true">⚠️</span><div><b>El multijugador no va en producción.</b>Por temas legales, el parte compartido entre varios celulares queda sólo como prototipo y experimento (hitos 4 y 5). La versión final es captura individual: una persona llena la hoja. Las partes marcadas con borde punteado abajo existen únicamente en el prototipo.</div></div>
+</section>
+
+<section id="capas">
+<h2>Capas del sistema</h2>
+<p class="gris">Se reutiliza el prototipo de <code>1-primera-version/app/</code>: Node, Express, EJS y MySQL.</p>
+<div class="capas">
+<div class="capa"><b>Celular</b><div>Páginas EJS armadas en el servidor + JavaScript propio sólo en la Hoja de incidente (ubicación, fotos, cronómetro, borrador local). Diseño de la v2: Barlow, rojo #B3261E, botones de 60 px.</div></div>
+<div class="capa"><b>Acceso y firma</b><div>Huella o PIN del teléfono (WebAuthn); el servidor guarda sólo la llave pública. Respaldo: código de un solo uso que da la Dirección. Requiere HTTPS.</div></div>
+<div class="capa"><b>Servidor</b><div>Express: rutas por rol, permisos por división, sellado SHA-256, generación del PDF, bitácora de cambios.</div></div>
+<div class="capa"><b>Sin señal</b><div>Lo escrito se guarda en el celular y se reenvía al volver la conexión, con indicador «sin conexión».</div></div>
+<div class="capa"><b>Base de datos</b><div>MySQL: 17 tablas de v1 + cambios (ver Datos). Los partes sellados viven aquí y en el archivo de 10 años.</div></div>
+<div class="capa proto"><b>Sólo prototipo</b><div>Socket.IO (sincronización entre celulares), presencia por colores, «gana el último» con aviso, pasar el mando, sorteo A/B y el interruptor <code>enable_parte_multijugador</code>.</div></div>
+</div>
+<p class="chico gris">Hosting de pruebas: Railway o Render (HTTPS automático). Hosting de producción: se decide con la Dirección, porque son documentos oficiales con resguardo legal.</p>
+</section>
+
+<section id="roles">
+<h2>Roles y permisos</h2>
+<p>No hay «admin y usuario». Cada persona tiene un <b>rango</b> real y, aparte, un <b>permiso por división</b>. La Dirección es un permiso global.</p>
+<div class="grid">
+<div class="card"><h3>Elemento</h3><span class="chip v">Editor en su división</span>
+<p>Crea hojas, las llena, las firma y las envía. Ve sus propios documentos y los que le devolvieron.</p></div>
+<div class="card"><h3>Encargado del parte</h3><span class="chip">No es permiso aparte</span>
+<p>Es el Editor que creó la hoja: botones Llegada, Regreso y Enviar, y firma con su credencial.</p>
+<p class="chico gris">En producción es simplemente quien llena la hoja. El traspaso de mando es sólo de prototipo.</p></div>
+<div class="card"><h3>Revisor</h3><span class="chip az">Revisor en una división</span>
+<p>Ve sólo las hojas de su división. Valida (se sella) o devuelve con nota. Da permisos Editor/Revisor a su gente.</p></div>
+<div class="card"><h3>Dirección</h3><span class="chip r">Permiso global</span>
+<p>Busca y abre cualquier hoja, cuida el archivo de 10 años, da de alta al personal y genera códigos de alta.</p></div>
+</div>
+</section>
+
+<section id="pantallas">
+<h2>Mapa de pantallas</h2>
+<p class="gris">34 pantallas dibujadas en Figma, una sección por rol. Con borde = sólo prototipo.</p>
+<div class="tabla"><table>
+<thead><tr><th>Sección</th><th>Pantallas</th><th>Llega a producción</th></tr></thead>
+<tbody>
+<tr><td><b>Acceso</b> · todos</td><td>Acceso con credencial · Alta de credencial · Equipo compartido (QR) · Cambié de teléfono</td><td><span class="chip v">Sí</span></td></tr>
+<tr><td><b>Elemento</b> · Editor</td><td>Menú · Hoja con presencia · Sin conexión · Mis documentos · Invitación «Parte en curso» · Dos en el mismo campo</td><td><span class="chip a">Parcial</span> las 4 últimas dependen del multijugador salvo Sin conexión y Mis documentos</td></tr>
+<tr><td><b>Encargado</b></td><td>Nuevo parte · Hoja completa · Faltan campos · Firmas · Enviado (copia PDF) · Hoja devuelta · Pasar el mando</td><td><span class="chip a">Parcial</span> todo menos Pasar el mando</td></tr>
+<tr><td><b>Revisor</b></td><td>Menú · Bandeja · Revisar hoja · Devolver con nota · Validado y sellado · Administrar elementos</td><td><span class="chip v">Sí</span></td></tr>
+<tr><td><b>Dirección</b></td><td>Menú · Partes (buscar y filtrar) · Detalle con trazabilidad · Archivo · Personal · Código de alta · Experimento A/B</td><td><span class="chip a">Parcial</span> menos Experimento A/B</td></tr>
+<tr><td><b>Hito 6</b></td><td>Menú con 4 documentos · Papelería por lote · Dirección por división · Exportar reporte</td><td><span class="chip v">Sí</span> cuando existan los otros documentos</td></tr>
+</tbody></table></div>
+<h3>Todavía sin dibujar</h3>
+<p>Una revisión botón por botón encontró acciones sin pantalla: hoja en sólo lectura, notificaciones, perfil y cerrar sesión, agregar y editar personas, elegir personal de turno, los tres estados del croquis, el botón «Firmar con mi credencial», errores de acceso, credencial registrada y la confirmación del QR en el teléfono propio. Más las secundarias: filtros, pestañas vacías, pantallas sin resultados y la autorización de baja.</p>
+</section>
+
+<section id="datos">
+<h2>Datos</h2>
+<p>La base de v1 (<code>schema.sql</code>) se copia para el hito 4 y se ajusta; <code>1-primera-version/</code> queda congelada.</p>
+<div class="grid">
+<div class="card"><h3>Va a producción</h3>
+<ul class="simple"><li><code>parte.hora_llegada</code> (la escribe el botón Llegada)</li><li>Rangos (catálogo) + <code>permiso</code> por división + <code>es_direccion</code></li><li><code>firma.nombre</code> para propietario y testigo (sin cuenta)</li><li><code>revision.paso</code> con las secciones de la hoja v2</li><li>Bitácora <code>parte_cambio</code> por campo</li></ul></div>
+<div class="card"><h3>Sólo prototipo</h3>
+<ul class="simple"><li><code>parte.modo</code> (individual / multijugador)</li><li><code>parte.seg_activo</code> (tiempo activo del experimento)</li><li><code>parte_personal.unido_en</code></li><li>Tabla <code>bandera</code> (feature flag)</li></ul></div>
+</div>
+<p class="chico gris">Sin tabla todavía: Lista de asistencia, Notas y Revisión mecánica (se definen después del hito 5, con sus formatos en papel).</p>
+</section>
+
+<section id="carpetas">
+<h2>Carpetas del repositorio</h2>
+<div class="arbol">Bomberos/
+├─ 1-primera-version/   <span class="c">congelada: mockups, app Node/MySQL, investigación</span>
+│   ├─ app/             <span class="c">backend que se reutiliza</span>
+│   └─ investigacion/   <span class="c">entrevista, encuesta, mapeo de requisitos</span>
+├─ 2-segunda-version/   <span class="c">rediseño en curso (este documento)</span>
+│   ├─ docs/screens/    <span class="c">12 pantallas v2</span>
+│   ├─ decisiones.md    <span class="c">decisiones de arquitectura y alcance</span>
+│   └─ estructura.html  <span class="c">esta página</span>
+└─ 3-ACTO 2/            <span class="c">CFP · Dark Horse · Funky · Roadmap · Siemens</span></div>
+<p class="chico gris">Pantallas por rol: archivo de Figma «Parte digital · Pantallas por rol».</p>
+</section>
+
+<section id="hitos">
+<h2>Hitos</h2>
+<div class="hitos">
+<div class="hito"><span class="n">1</span><div><div class="t">CFP · captura rápida</div><div class="d">Hecho. Falta correr las pruebas de tiempo (mediana ~60 s).</div></div><span class="chip a">Sin evidencia</span></div>
+<div class="hito"><span class="n">2</span><div><div class="t">Dark Horse</div><div class="d">Hecho. Idea elegida: parte multijugador.</div></div><span class="chip v">Hecho</span></div>
+<div class="hito pr"><span class="n">3</span><div><div class="t">Funky Prototype</div><div class="d">Tres teléfonos en una página. Hecho.</div></div><span class="chip v">Hecho</span></div>
+<div class="hito pr"><span class="n">4</span><div><div class="t">Functional Prototype</div><div class="d">Servidor real. Planeado con sincronización entre celulares; hay que replantearlo (ver pendientes).</div></div><span class="chip a">Por replantear</span></div>
+<div class="hito pr"><span class="n">5</span><div><div class="t">X-is-finished</div><div class="d">Hoja de incidente terminada, usada por un turno real. El roadmap dice «multijugador»: no llega a producción.</div></div><span class="chip a">Por replantear</span></div>
+<div class="hito"><span class="n">6</span><div><div class="t">Final Prototype</div><div class="d">Cuatro documentos, vista de Dirección, archivo de 10 años. Captura individual, sin multijugador.</div></div><span class="chip">Futuro</span></div>
+</div>
+</section>
+
+<section id="pendientes">
+<h2>Pendientes por decidir</h2>
+<ul class="simple">
+<li><b>¿Cómo se replantea el hito 4?</b> Recomendación: prototipo funcional de la captura individual (CFP + servidor, credencial, firma, bandeja y sellado), y el multijugador como experimento aparte sólo si la clase lo exige por la Ficha entregada.</li>
+<li><b>Prueba A/B:</b> ya no puede decidir nada del producto (no se podrá activar para todos).</li>
+<li><b>¿El revisor firma con credencial al validar?</b> Hoy el sello no lleva su firma.</li>
+<li><b>Formatos en papel</b> de los cuatro documentos, para cerrar el esquema.</li>
+<li><b>Para el Capitán:</b> lista real de rangos y qué rangos validan en cada división.</li>
+<li><b>Para la Dirección:</b> dónde vivirá producción, quién entrega los códigos de alta, artículos del reglamento y aviso de privacidad. Aquí conviene preguntar también el alcance legal exacto de la restricción al multijugador.</li>
+<li>Las pruebas de tiempo del CFP con 5 personas o más.</li>
+</ul>
+</section>
+</div>
+</body>
+</html>
