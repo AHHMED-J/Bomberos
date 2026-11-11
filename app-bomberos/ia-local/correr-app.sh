@@ -6,6 +6,8 @@
 # Uso:  ./correr-app.sh                 → versión «release»: se abre desde el inicio del iPhone sin la Mac conectada
 #       ./correr-app.sh --depurar       → versión de depuración (recarga en caliente, pero sólo abre desde la Mac)
 #       ./correr-app.sh --dispositivo ID → elige el iPhone si hay más de uno conectado (o un simulador)
+#       ./correr-app.sh --preparar-bd   → antes de encender: instala dependencias, crea la base de MySQL
+#                                         y carga los datos de ejemplo (no borra nada; se puede repetir)
 #
 # Los partes viven en el servidor de la Mac (DATOS=servidor): dos teléfonos con la app ven lo mismo
 # (uno entra como bombero y envía; el otro como Capitán y lo ve en su bandeja).
@@ -19,10 +21,12 @@ mkdir -p $BASE/registros
 
 MODO=--release
 ELEGIDO=""
+PREPARAR_BD=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --depurar) MODO=--debug ;;
     --dispositivo) ELEGIDO="$2"; shift ;;
+    --preparar-bd) PREPARAR_BD=1 ;;
     *) echo "Opción desconocida: $1"; exit 1 ;;
   esac
   shift
@@ -31,6 +35,11 @@ done
 # 1 · Clave y modo local
 [[ -f $SERVIDOR/.env ]] || $AQUI/configurar.sh
 grep -q '^IA_MODO=local' $SERVIDOR/.env || { echo "servidor/.env no está en IA_MODO=local"; exit 1; }
+
+# 1.5 · Base de datos (sólo con --preparar-bd). MySQL debe estar encendido y servidor/.env con sus DB_…
+if [[ -n "$PREPARAR_BD" ]]; then
+  (cd $SERVIDOR && npm install --silent && npm run db:crear && npm run datos-prueba)
+fi
 
 # 2 · Las dos IAs
 if ! lsof -nP -iTCP:8178 -sTCP:LISTEN >/dev/null 2>&1; then $AQUI/iniciar.sh; else echo "Whisper ya está encendido"; fi

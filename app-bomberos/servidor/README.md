@@ -19,7 +19,8 @@ npm run datos-prueba      # carga los usuarios y partes de ejemplo
 
 En la Mac, `ia-local/configurar.sh` ya crea el `.env` (con la clave de la
 IA); ahí solo falta llenar los datos de MySQL y correr los dos últimos
-comandos.
+comandos. `ia-local/correr-app.sh --preparar-bd` hace `npm install` y esos
+dos comandos antes de encender todo.
 
 Cada quien tiene su propio `.env` (no se sube al repo) y su propia base: lo
 que se crea en una compu no aparece en otra.
