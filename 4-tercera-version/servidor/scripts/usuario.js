@@ -1,72 +1,100 @@
 // Lo que hace Dirección con los usuarios, mientras no exista su página web.
 //
-//   npm run usuario -- alta <no_empleado> "<nombre>" [--revisor] [--division "<nombre>"]
-//   npm run usuario -- restablecer <no_empleado>
+//   npm run usuario -- alta <matrícula> "<nombre>" [--capitan] [--rango "<rango>"] [--division "<división>"] [--estacion "<estación>"]
+//   npm run usuario -- codigo <matrícula>
+//   npm run usuario -- restablecer <matrícula>
 //
-// Las dos imprimen una contraseña nueva para entregársela en persona.
-// Restablecer es lo que se hace cuando alguien olvida su contraseña.
+// alta        crea al usuario e imprime su contraseña y un código de alta.
+// codigo      imprime otro código de alta, para registrar otro celular.
+// restablecer le da una contraseña nueva a quien olvidó la suya.
 
 'use strict';
 
 require('dotenv').config({ quiet: true });
 
 const crypto = require('node:crypto');
+const bcrypt = require('bcryptjs');
 
 const db = require('../src/db');
-const c = require('../src/confirmacion');
+const { DIVISION } = require('../src/datos');
 
 // Sin letras ni números que se confundan al dictarlos (l, 1, o, 0, i).
 const LETRAS = 'abcdefghjkmnpqrstuvwxyz23456789';
 
-function contrasenaNueva() {
+function alAzar(largo) {
   let texto = '';
-  for (let i = 0; i < 10; i++) texto += LETRAS[crypto.randomInt(LETRAS.length)];
+  for (let i = 0; i < largo; i++) texto += LETRAS[crypto.randomInt(LETRAS.length)];
   return texto;
 }
 
-async function idDivision(nombre) {
-  if (!nombre) return null;
-  await db.ejecutar('INSERT IGNORE INTO division (nombre) VALUES (?)', [nombre]);
-  return (await db.fila('SELECT id FROM division WHERE nombre = ?', [nombre])).id;
+async function codigoNuevo(usuarioId) {
+  const codigo = alAzar(5).toUpperCase();
+  await db.ejecutar('INSERT INTO codigo_alta (codigo, usuario_id) VALUES (?, ?)', [codigo, usuarioId]);
+  return codigo;
 }
 
-async function darDeAlta({ noEmpleado, nombre, revisor = false, division = null }) {
-  const contrasena = contrasenaNueva();
-  const { insertId } = await db.ejecutar(
-    `INSERT INTO usuario (no_empleado, nombre, puede_revisar, division_id, contrasena_hash)
-     VALUES (?, ?, ?, ?, ?)`,
-    [noEmpleado, nombre, revisor ? 1 : 0, await idDivision(division), await c.hashContrasena(contrasena)],
+async function darDeAlta({ matricula, nombre, capitan = false, rango, division = DIVISION, estacion = 'Central' }) {
+  const id = `u-${matricula}`;
+  const contrasena = alAzar(10);
+  await db.ejecutar(
+    `INSERT INTO usuario (id, nombre, matricula, rango, rol, division, estacion, contrasena_hash)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      id,
+      nombre,
+      matricula,
+      rango || (capitan ? 'Capitán' : 'Bombero'),
+      capitan ? 'capitan' : 'editor',
+      division,
+      estacion,
+      await bcrypt.hash(contrasena, 12),
+    ],
   );
-  return { id: insertId, contrasena };
+  return { id, contrasena, codigo: await codigoNuevo(id) };
 }
 
-async function restablecer(noEmpleado) {
-  const usuario = await db.fila('SELECT id FROM usuario WHERE no_empleado = ?', [noEmpleado]);
-  if (!usuario) throw new Error(`No existe el número de empleado ${noEmpleado}.`);
+async function usuarioDe(matricula) {
+  const usuario = await db.fila('SELECT id FROM usuario WHERE matricula = ?', [matricula]);
+  if (!usuario) throw new Error(`No existe el número de empleado ${matricula}.`);
+  return usuario;
+}
 
-  const contrasena = contrasenaNueva();
-  await db.ejecutar('UPDATE usuario SET contrasena_hash = ? WHERE id = ?', [
-    await c.hashContrasena(contrasena),
-    usuario.id,
-  ]);
+async function restablecer(matricula) {
+  const usuario = await usuarioDe(matricula);
+  const contrasena = alAzar(10);
+  await db.ejecutar('UPDATE usuario SET contrasena_hash = ? WHERE id = ?', [await bcrypt.hash(contrasena, 12), usuario.id]);
   return { contrasena };
 }
 
-async function main(argumentos) {
-  const [orden, noEmpleado, nombre] = argumentos;
-  const posicionDivision = argumentos.indexOf('--division');
-  const division = posicionDivision >= 0 ? argumentos[posicionDivision + 1] : null;
+function opcion(argumentos, nombre) {
+  const posicion = argumentos.indexOf(nombre);
+  return posicion >= 0 ? argumentos[posicion + 1] : undefined;
+}
 
-  if (orden === 'alta' && noEmpleado && nombre) {
-    const { contrasena } = await darDeAlta({ noEmpleado, nombre, revisor: argumentos.includes('--revisor'), division });
-    console.log(`Alta de ${noEmpleado} (${nombre}). Contraseña para entregarle: ${contrasena}`);
-  } else if (orden === 'restablecer' && noEmpleado) {
-    const { contrasena } = await restablecer(noEmpleado);
-    console.log(`Contraseña de ${noEmpleado} restablecida. Contraseña nueva: ${contrasena}`);
+async function main(argumentos) {
+  const [orden, matricula, nombre] = argumentos;
+
+  if (orden === 'alta' && matricula && nombre) {
+    const r = await darDeAlta({
+      matricula,
+      nombre,
+      capitan: argumentos.includes('--capitan'),
+      rango: opcion(argumentos, '--rango'),
+      division: opcion(argumentos, '--division'),
+      estacion: opcion(argumentos, '--estacion'),
+    });
+    console.log(`Alta de ${matricula} (${nombre}).`);
+    console.log(`  Contraseña: ${r.contrasena}`);
+    console.log(`  Código de alta para su celular: ${r.codigo}`);
+  } else if (orden === 'codigo' && matricula) {
+    console.log(`Código de alta para ${matricula}: ${await codigoNuevo((await usuarioDe(matricula)).id)}`);
+  } else if (orden === 'restablecer' && matricula) {
+    console.log(`Contraseña nueva de ${matricula}: ${(await restablecer(matricula)).contrasena}`);
   } else {
     console.log('Uso:');
-    console.log('  npm run usuario -- alta <no_empleado> "<nombre>" [--revisor] [--division "<nombre>"]');
-    console.log('  npm run usuario -- restablecer <no_empleado>');
+    console.log('  npm run usuario -- alta <matrícula> "<nombre>" [--capitan] [--rango "…"] [--division "…"] [--estacion "…"]');
+    console.log('  npm run usuario -- codigo <matrícula>');
+    console.log('  npm run usuario -- restablecer <matrícula>');
     process.exitCode = 1;
   }
 }
@@ -80,4 +108,4 @@ if (require.main === module) {
     .finally(() => db.cerrar());
 }
 
-module.exports = { darDeAlta, restablecer, idDivision };
+module.exports = { darDeAlta, restablecer, codigoNuevo };

@@ -1,19 +1,11 @@
-# Servidor de la tercera versión · acceso y firma
+# Servidor de la tercera versión
 
-API JSON (Node.js + Express 5 + MySQL) para la app de celulares:
+Hace lo mismo que [`app-bomberos/servidor`](../../app-bomberos/servidor/)
+—las mismas rutas y las mismas respuestas—, pero guarda en MySQL en lugar
+de en memoria. La app (`app-bomberos/movil`) funciona con él sin cambiarle
+nada: solo hay que apuntarla a este servidor.
 
-- Entrada manual con número de empleado y contraseña.
-- Entrada con la biometría (huella o cara) o el PIN del celular.
-- Firma del parte por el autor (Enviar) y por el revisor (Validar),
-  confirmada de la misma forma.
-
-La huella, la cara y el PIN los revisa el celular. Lo que llega al servidor
-es una firma hecha con una llave que vive en el chip seguro del celular
-(Secure Enclave o Android Keystore) y que el celular solo deja usar después
-de reconocer a su dueño. El servidor la comprueba con la llave pública.
-
-Es otro servidor que el de `app-bomberos/servidor/` (el prototipo con datos en
-memoria): este guarda todo en MySQL.
+Node.js, Express 5 y MySQL.
 
 ## Correrlo
 
@@ -22,47 +14,80 @@ cd 4-tercera-version/servidor
 npm install
 cp .env.example .env      # y ajusta los datos de MySQL
 npm run db:crear          # crea la base bomberos_v3 y sus tablas
-npm run datos-prueba      # dos usuarios y un parte en borrador para probar
-npm start                 # http://localhost:3000
+npm run datos-prueba      # los mismos usuarios, código y partes de ejemplo de la app
+npm start                 # puerto 3100, el mismo que usa la app
 ```
 
 ```bash
 npm run probar            # prueba de punta a punta (usa la base de .env)
-npm run usuario -- alta 4521 "Nombre Apellido" [--revisor] [--division "Estructural"]
-npm run usuario -- restablecer 4521
+npm run usuario -- alta 380999 "Apellido, Nombre" [--capitan] [--division "División Estructural"]
+npm run usuario -- codigo 380999        # otro código, para otro celular
+npm run usuario -- restablecer 380999   # contraseña nueva
 ```
 
 `db:crear` no borra nada: si las tablas ya existen, las deja como están.
 
 ## Rutas
 
-| Ruta | Sesión | Manda | Recibe |
-|---|---|---|---|
-| `POST /api/acceso/entrar` | no | `noEmpleado`, `contrasena` | `token`, `usuario` |
-| `POST /api/acceso/dispositivo` | sí | `plataforma` (`android`/`ios`), `llavePublica` (EC P-256, base64 o PEM) | `dispositivoId`, `claveDispositivo` |
-| `POST /api/acceso/reto` | no | `claveDispositivo` | `retoId`, `mensaje`, `usuario` |
-| `POST /api/acceso/desbloquear` | no | `claveDispositivo`, `retoId`, `firma` | `token`, `usuario` |
-| `POST /api/acceso/salir` | sí | — | `ok` |
-| `POST /api/partes/:id/reto` | sí, con celular | `accion` (`enviar`/`validar`) | `retoId`, `mensaje`, `folio` |
-| `POST /api/partes/:id/firmar` | sí, con celular | `accion`, `retoId`, `firma` | `estado` |
+Las que ya usa la app:
 
-La sesión va en `Authorization: Bearer <token>`. "Con celular" quiere decir
-que la sesión salió de `desbloquear`, o de `entrar` seguido de `dispositivo`.
+| Ruta | Para qué |
+|---|---|
+| `GET /api/salud` | Saber si el servidor está arriba. |
+| `GET /api/acceso/codigo/:codigo` | A quién pertenece un código de alta. |
+| `POST /api/acceso/alta` | Registrar la llave pública del celular con el código. |
+| `POST /api/acceso/reto` | Pedir el reto para entrar. |
+| `POST /api/acceso/verificar` | Mandar la firma del reto y recibir la sesión. |
+| `POST /api/partes/folio` | Un folio nuevo. |
+| `GET /api/partes?usuario=…` | Los partes de un usuario. |
+| `POST /api/partes/:folio/reto` | El reto para firmar el parte (lleva el hash de su contenido). |
+| `POST /api/partes/:folio/enviar` | Revisar el parte, comprobar la firma y mandarlo a revisión. |
+| `GET /api/revision/bandeja?division=…` | Los partes de una división. |
+| `POST /api/revision/:folio/devolver` | Devolverlo con una nota. |
+| `POST /api/revision/:folio/validar` | Firma del revisor (llave del celular + trazo) y sello. |
+| `POST /api/ia/transcribir`, `/llenar-campos`, `/resumen` | Dictado y resumen. |
 
-`firma` es la firma ECDSA (SHA-256, en base64) que hace el celular sobre el
-texto exacto de `mensaje`. Con `biometric_signature` es `createSignature` con
-`payload: mensaje`.
+Una más, de las notas de la tercera versión. La app todavía no tiene esa
+pantalla:
 
-Los errores llegan como `{ "error": "CODIGO", "mensaje": "texto para el usuario" }`.
+| Ruta | Para qué |
+|---|---|
+| `POST /api/acceso/entrar` | Entrada manual: `no_empleado` (la matrícula) y `contrasena`. Devuelve `token` y `usuario`. |
+
+## Qué se toma de `app-bomberos/servidor`
+
+Para no tener dos copias que se desfasen, [`src/de-la-app.js`](src/de-la-app.js)
+carga directo de esa carpeta:
+
+- `src/validacion.js`: la revisión del parte y el contenido que se firma,
+  que tiene que coincidir byte a byte con la app.
+- `src/rutas/ia.js` y `src/ia/`: las rutas de la IA, con su configuración en
+  `app-bomberos/servidor/.env`.
+
+Por eso este servidor necesita que `app-bomberos/` esté en el repo.
+
+## Diferencias con el servidor de la app
+
+- Los datos sobreviven a un reinicio: usuarios, códigos, llaves, sesiones,
+  retos, partes y firmas están en MySQL.
+- Un usuario puede tener varias llaves. Dar de alta otro celular no quita la
+  anterior.
+- Un parte ya enviado o validado no se puede volver a enviar (`ya_enviado`).
+- Solo valida un usuario con rol `capitan`, y nunca quien llenó el parte
+  (`no_es_revisor`, `es_su_parte`).
+- Cada firma queda guardada en `firma_parte`: quién, con qué reto, la firma
+  del celular y, en la del revisor, su trazo.
+- Los folios nuevos llevan el año en curso.
 
 ## Archivos
 
-    src/server.js          arma Express y responde los errores
+    src/server.js          arma Express
     src/db.js              conexión a MySQL (filas, fila, ejecutar, transaccion)
-    src/confirmacion.js    llaves, firmas, mensaje del reto y hash canónico
-    src/retos.js           crear y cumplir retos
-    src/sesion.js          tokens de sesión y filtros de Express
-    src/rutas/acceso.js    entrar, registrar el celular, desbloquear, salir
-    src/rutas/partes.js    reto y firma del parte, con las reglas de revisión
+    src/datos.js           usuarios, llaves, sesiones, partes y folios en MySQL
+    src/firma.js           retos y verificación de firmas
+    src/de-la-app.js       lo que se carga de app-bomberos/servidor
+    src/rutas/acceso.js    código, alta, reto, verificar y entrada manual
+    src/rutas/partes.js    folio, lista, reto y enviar
+    src/rutas/revision.js  bandeja, devolver y validar
     db/schema.sql          las tablas
-    scripts/               crear la base, datos de prueba, usuarios y la prueba
+    scripts/               crear la base, datos de ejemplo, usuarios y la prueba

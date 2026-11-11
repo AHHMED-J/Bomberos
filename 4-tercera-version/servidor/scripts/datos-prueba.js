@@ -1,54 +1,49 @@
-// Datos para probar la app en un celular: un elemento, un revisor de la
-// misma división y un parte en borrador del elemento. Solo para la base de
-// desarrollo.
+// Carga en MySQL los mismos datos de ejemplo que app-bomberos/servidor tiene
+// en memoria (src/datos.js): sus usuarios, el código de alta 4F2K9 y sus
+// partes. Así la app ve lo mismo con cualquiera de los dos servidores.
 //
 //   npm run datos-prueba
 //
-// Se puede correr varias veces: los usuarios se crean una sola vez y cada
-// corrida agrega un parte nuevo en borrador.
+// Se puede correr varias veces: lo que ya existe no se toca. A cada usuario
+// le pone la contraseña prueba<matrícula> para la entrada manual.
 
 'use strict';
 
 require('dotenv').config({ quiet: true });
 
+const path = require('node:path');
+const bcrypt = require('bcryptjs');
+
 const db = require('../src/db');
-const c = require('../src/confirmacion');
-const { idDivision } = require('./usuario');
+const datos = require('../src/datos');
 
-// Un PNG de 1×1 en lugar de la firma en trazo, que todavía no se puede subir
-// desde la app (RF-13).
-const TRAZO_DE_PRUEBA =
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-
-const USUARIOS = [
-  { noEmpleado: '1001', nombre: 'Elemento de prueba', contrasena: 'prueba1001', revisor: 0 },
-  { noEmpleado: '2001', nombre: 'Revisor de prueba', contrasena: 'prueba2001', revisor: 1 },
-];
+const deLaApp = require(path.join(__dirname, '..', '..', '..', 'app-bomberos', 'servidor', 'src', 'datos'));
 
 async function main() {
-  const division = await idDivision('Prueba');
-
-  for (const u of USUARIOS) {
+  for (const u of deLaApp.usuarios) {
     await db.ejecutar(
-      `INSERT IGNORE INTO usuario (no_empleado, nombre, puede_revisar, division_id, contrasena_hash, firma_trazo)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [u.noEmpleado, u.nombre, u.revisor, division, await c.hashContrasena(u.contrasena), TRAZO_DE_PRUEBA],
+      `INSERT IGNORE INTO usuario (id, nombre, matricula, rango, rol, division, estacion, contrasena_hash)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [u.id, u.nombre, u.matricula, u.rango, u.rol, u.division, u.estacion, await bcrypt.hash(`prueba${u.matricula}`, 12)],
     );
   }
 
-  const autor = await db.fila("SELECT id FROM usuario WHERE no_empleado = '1001'");
-  const { total } = await db.fila('SELECT COUNT(*) AS total FROM parte');
-  const folio = `PRUEBA-${String(total + 1).padStart(4, '0')}`;
-  const { insertId } = await db.ejecutar(
-    'INSERT INTO parte (folio, division_id, datos, elaboro_id) VALUES (?, ?, ?, ?)',
-    [folio, division, JSON.stringify({ tipo: 'Incendio de casa habitación', lugar: 'Calle de prueba 123' }), autor.id],
-  );
+  for (const [codigo, c] of deLaApp.codigosAlta) {
+    await db.ejecutar('INSERT IGNORE INTO codigo_alta (codigo, usuario_id) VALUES (?, ?)', [codigo, c.usuarioId]);
+  }
+
+  let nuevos = 0;
+  for (const parte of deLaApp.partes.values()) {
+    if (!(await datos.partePorFolio(parte.folio))) {
+      await datos.guardarParte(parte);
+      nuevos++;
+    }
+  }
 
   console.log('Usuarios (número de empleado / contraseña):');
-  for (const u of USUARIOS) {
-    console.log(`  ${u.noEmpleado} / ${u.contrasena}   ${u.nombre}${u.revisor ? ' (puede revisar)' : ''}`);
-  }
-  console.log(`Parte en borrador del 1001: id ${insertId}, folio ${folio}`);
+  for (const u of deLaApp.usuarios) console.log(`  ${u.matricula} / prueba${u.matricula}   ${u.nombre} (${u.rol})`);
+  console.log(`Códigos de alta: ${[...deLaApp.codigosAlta.keys()].join(', ')}`);
+  console.log(`Partes de ejemplo nuevos: ${nuevos}`);
 }
 
 main()

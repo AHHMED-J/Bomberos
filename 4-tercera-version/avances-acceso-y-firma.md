@@ -1,140 +1,128 @@
-# Avances · Acceso y firma con la biometría o el PIN del celular
+# Avances · Servidor de la tercera versión
 
-Tercera versión de BomberosApp · 10 de noviembre de 2026
+BomberosApp · 10 de noviembre de 2026
 
 ## 1. Notas de la tercera versión
 
 Se agregaron a las notas de requerimientos:
 
 - La única forma de entrar a mano es con el número de empleado y la
-  contraseña. Así se entra la primera vez en cada celular.
+  contraseña.
 - Después, para abrir la app basta con la biometría del celular (huella o
   cara) o con el PIN del celular. La app no tiene un PIN propio.
 - Para firmar un parte también se pide la biometría o el PIN del celular.
   El celular los verifica; la app nunca los ve ni los guarda.
 
-## 2. Servidor de acceso y firma
+## 2. Servidor con base de datos
 
 Carpeta [`servidor/`](servidor/). Node.js, Express 5 y MySQL.
 
+El servidor que ya estaba en el repositorio (`app-bomberos/servidor`) guarda
+todo en memoria: al reiniciarlo se pierden las llaves, las sesiones y los
+partes. Este servidor contesta **las mismas rutas con las mismas
+respuestas**, pero guarda en MySQL. La app funciona con él sin cambiarle
+nada.
+
 ### Cómo se confirma la identidad
 
-1. La app crea un par de llaves en el chip seguro del celular (Secure
-   Enclave en iPhone, Android Keystore en Android) y manda al servidor solo
-   la llave pública.
-2. Para entrar o firmar, el servidor manda un **reto**: un mensaje único que
-   dice qué se va a hacer, quién, desde qué celular y, si es un parte, cuál y
-   con qué contenido.
+1. La app crea un par de llaves en el chip seguro del celular y manda al
+   servidor solo la llave pública.
+2. Para entrar o firmar, el servidor manda un **reto**: un texto al azar
+   que, si es para un parte, lleva el hash SHA-256 de su contenido.
 3. El celular pide la huella, la cara o el PIN del teléfono, y solo entonces
    deja usar la llave para firmar el reto.
 4. El servidor comprueba la firma con la llave pública guardada.
 
-Cada reto vale 2 minutos y se puede usar una sola vez.
+Cada reto vale 5 minutos y se puede usar una sola vez. Ahora los retos están
+en la base, así que siguen valiendo una sola vez aunque el servidor se
+reinicie.
 
-### Entrada manual
+### Lo que hace, ruta por ruta
 
-- Número de empleado y contraseña.
-- La contraseña se guarda con bcrypt.
-- Si el número o la contraseña están mal, el mensaje es el mismo:
-  "Número de empleado o contraseña incorrectos".
+| Ruta | Para qué |
+|---|---|
+| `GET /api/acceso/codigo/:codigo` | A quién pertenece un código de alta. |
+| `POST /api/acceso/alta` | Registrar la llave pública del celular con el código. |
+| `POST /api/acceso/reto` | Pedir el reto para entrar. |
+| `POST /api/acceso/verificar` | Mandar la firma del reto y recibir la sesión. |
+| `POST /api/acceso/entrar` | **Nueva.** Entrada manual con número de empleado y contraseña. |
+| `POST /api/partes/folio` | Un folio nuevo. |
+| `GET /api/partes?usuario=…` | Los partes de un usuario. |
+| `POST /api/partes/:folio/reto` | El reto para firmar el parte. |
+| `POST /api/partes/:folio/enviar` | Revisar el parte, comprobar la firma y mandarlo a revisión. |
+| `GET /api/revision/bandeja` | Los partes de una división. |
+| `POST /api/revision/:folio/devolver` | Devolverlo con una nota. |
+| `POST /api/revision/:folio/validar` | Firma del revisor (llave del celular + trazo) y sello SHA-256. |
+| `POST /api/ia/…` | Dictado, llenado de campos y resumen. |
 
-### Registro del celular
+### Lo que se reutiliza del servidor de la app
 
-- Después de entrar con contraseña, la app registra la llave pública de ese
-  celular.
-- Se acepta la llave EC P-256 en base64 o en PEM, que es el formato que
-  entrega `biometric_signature`, el paquete que usa la app.
-- El servidor le entrega al celular una clave propia. En la base se guarda
-  solo su hash SHA-256.
-- Un usuario puede tener más de un celular registrado.
+No se copió código: se carga directo de `app-bomberos/servidor`.
 
-### Entrar con la biometría o el PIN del celular
+- La revisión del parte antes de enviarlo y el contenido que se firma, que
+  tiene que coincidir byte a byte con la app.
+- Las rutas de la IA, con su misma configuración.
 
-1. El celular pide un reto con su clave.
-2. El celular firma el reto.
-3. El servidor comprueba la firma y abre una sesión de 12 horas.
+### Lo que agrega
 
-### Firma del parte
-
-El parte lo firman dos personas por separado, con el mismo mecanismo:
-
-| Quién | Acción | Qué pasa |
-|---|---|---|
-| Quien lo llenó | **Enviar** | El parte pasa a revisión. |
-| El revisor | **Validar** | El parte queda validado y enviado a Dirección. |
-
-- El reto lleva el folio del parte y el hash SHA-256 de su contenido. El
-  revisor firma el contenido junto con la firma del autor.
-- Al firmar, el servidor vuelve a sacar el hash. Si el parte cambió entre el
-  reto y la firma, la firma no entra.
-- Cada firma guarda:
-  - una copia de la firma en trazo de ese momento,
-  - el celular con que se hizo,
-  - el reto,
-  - la firma criptográfica.
-
-  Con eso se puede volver a comprobar después, y si el usuario cambia su
-  trazo, los partes anteriores no cambian.
-- Si un parte devuelto se vuelve a enviar, la firma anterior del autor queda
-  anulada, pero no se borra.
-
-Reglas de las notas que revisa el servidor:
-
-- Solo quien llenó el parte lo puede enviar.
-- Solo valida quien Dirección habilitó como revisor.
-- Nadie revisa un parte que llenó él mismo.
-- El revisor tiene que ser de la división del parte.
-- Para firmar hay que tener la firma en trazo y un celular registrado.
+- **Entrada manual** con número de empleado y contraseña. La contraseña se
+  guarda con bcrypt. Si falla el número o la contraseña, el mensaje es el
+  mismo.
+- **Varios celulares por usuario.** Dar de alta otro celular no desactiva
+  el anterior.
+- **Reglas de revisión de las notas:**
+  - un parte enviado o validado no se puede volver a enviar, a menos que se
+    devuelva;
+  - solo valida un revisor;
+  - nadie valida un parte que llenó él mismo.
+- **Evidencia de cada firma.** Se guarda quién firmó, con qué reto, la
+  firma del celular y, en la del revisor, su trazo.
+- **Folios** con el año en curso, que no se repiten aunque dos celulares
+  pidan uno al mismo tiempo.
 
 ### Base de datos
 
 | Tabla | Qué guarda |
 |---|---|
-| `usuario` | Número de empleado, nombre, contraseña (bcrypt), si puede revisar, división y firma en trazo. |
-| `division` | Las divisiones. |
-| `dispositivo` | Los celulares de cada usuario: llave pública y hash de su clave. |
+| `usuario` | Id, nombre, matrícula (número de empleado), rango, rol, división, estación y contraseña (bcrypt). |
+| `codigo_alta` | Los códigos de un solo uso y cuándo se usaron. |
+| `llave` | Las llaves públicas de los celulares de cada usuario. |
 | `sesion` | Las sesiones abiertas (solo el hash del token). |
-| `reto` | Cada reto: acción, parte, hash del contenido, mensaje, vencimiento y cuándo se usó. |
+| `reto` | Cada reto, cuándo se creó y cuándo se usó. |
+| `parte` | El parte completo, tal como lo manda la app, con su estado, autor y división. |
 | `firma_parte` | Las firmas del autor y del revisor, con su evidencia. |
-| `parte` | Versión mínima, solo para probar la firma. |
-
-### Rutas
-
-| Ruta | Para qué |
-|---|---|
-| `POST /api/acceso/entrar` | Entrada manual con número de empleado y contraseña. |
-| `POST /api/acceso/dispositivo` | Registrar la llave pública del celular. |
-| `POST /api/acceso/reto` | Pedir el reto para entrar. |
-| `POST /api/acceso/desbloquear` | Mandar la firma del reto y recibir la sesión. |
-| `POST /api/acceso/salir` | Cerrar la sesión. |
-| `POST /api/partes/:id/reto` | Pedir el reto para Enviar o Validar un parte. |
-| `POST /api/partes/:id/firmar` | Mandar la firma y cambiar el estado del parte. |
+| `consecutivo` | El siguiente número de folio. |
 
 ### Scripts
 
 | Comando | Qué hace |
 |---|---|
 | `npm run db:crear` | Crea la base y sus tablas sin borrar nada. |
-| `npm run datos-prueba` | Crea un elemento, un revisor y un parte en borrador. |
-| `npm run usuario -- alta …` | Da de alta a un usuario e imprime su contraseña. Lo hace Dirección. |
-| `npm run usuario -- restablecer …` | Le da una contraseña nueva a quien olvidó la suya. |
+| `npm run datos-prueba` | Carga los mismos usuarios, código de alta y partes de ejemplo que trae el servidor de la app. |
+| `npm run usuario -- alta …` | Da de alta a un usuario e imprime su contraseña y su código de alta. Lo hace Dirección. |
+| `npm run usuario -- codigo …` | Otro código de alta, para otro celular. |
+| `npm run usuario -- restablecer …` | Contraseña nueva para quien olvidó la suya. |
 | `npm run probar` | Corre la prueba de punta a punta. |
 
 ## 3. Pruebas
 
-Las 25 pruebas de punta a punta pasan contra MySQL 8.0. Los celulares se
-simulan con llaves P-256 hechas en Node, iguales a las del chip seguro.
+Las 26 pruebas de punta a punta pasan contra MySQL 8.0. Hacen las mismas
+llamadas que hace la app. Los celulares se simulan con llaves P-256 hechas
+en Node, que entregan la llave y la firma en el mismo formato que la app.
 Cubren:
 
-- **Entrada manual:** contraseña equivocada y correcta.
-- **Registro del celular:** se rechaza una llave que no es P-256 y se acepta
-  una en PEM.
+- **Alta del celular:** código que no existe; a quién pertenece; registrar
+  la llave; el código no sirve dos veces.
 - **Entrar con el celular:** firma correcta; firma de otra llave; reto
-  reusado; reto vencido; reto sin firma; celular no registrado.
-- **Firma del autor y del revisor:** parte enviado y validado; el parte
-  cambió entre el reto y la firma; el autor intenta validar; alguien revisa
-  su propio parte; el autor intenta enviar dos veces.
-- **Evidencia:** las dos firmas se comprueban otra vez desde la base.
-- **Varios celulares:** registrar un segundo celular no desactiva el
-  primero.
-- **Sesión:** cerrar sesión.
+  reusado, desconocido y vencido; firma simulada del modo prueba.
+- **Varios celulares:** el segundo no desactiva al primero.
+- **Entrada manual:** contraseña equivocada y correcta.
+- **Enviar:** folios que no se repiten; parte con pendientes; contenido
+  cambiado después de firmar; firma de otra persona; envío correcto; doble
+  envío.
+- **Listas:** "mis partes" y la bandeja de la división.
+- **Revisión:** devolver con nota; corregir y volver a firmar; validar sin
+  trazo, sin ser revisor, siendo el autor o con la firma de otro; validar y
+  sellar.
+- **Evidencia:** las firmas quedan guardadas.
+- **IA:** las rutas contestan.

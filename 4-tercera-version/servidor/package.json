@@ -2,7 +2,7 @@
   "name": "bomberos-servidor",
   "version": "0.1.0",
   "private": true,
-  "description": "BomberosApp · servidor de la tercera versión: acceso y firma confirmada con la biometría o el PIN del celular",
+  "description": "BomberosApp · servidor de la tercera versión: las mismas rutas que app-bomberos/servidor, con MySQL",
   "type": "commonjs",
   "main": "src/server.js",
   "scripts": {
