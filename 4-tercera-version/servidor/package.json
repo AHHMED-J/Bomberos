@@ -1,0 +1,21 @@
+{
+  "name": "bomberos-servidor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BomberosApp · servidor de la tercera versión: acceso y firma confirmada con la biometría o el PIN del celular",
+  "type": "commonjs",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "db:crear": "node scripts/cargar-bd.js",
+    "datos-prueba": "node scripts/datos-prueba.js",
+    "usuario": "node scripts/usuario.js",
+    "probar": "node scripts/probar-flujo.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mysql2": "^3.15.3"
+  }
+}
