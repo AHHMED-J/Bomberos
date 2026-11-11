@@ -45,6 +45,37 @@ cd ../ia-local && ./detener.sh   # apaga Whisper y saca el modelo de la memoria
 
 Para volver a respuestas fijas sin modelos: `IA_MODO=fijo` en `servidor/.env` (o borrar el `.env`).
 
+### La base de datos
+
+El servidor guarda usuarios, firmas y partes en MySQL, así que tiene que estar instalado y encendido, y
+`servidor/.env` debe llevar sus datos (`DB_USER`, `DB_PASSWORD`; ver `servidor/README.md`). La primera
+vez, y cada vez que cambien las dependencias del servidor:
+
+```bash
+./correr-app.sh --preparar-bd   # npm install + crea la base + carga los datos de ejemplo, y luego lo de siempre
+```
+
+No borra nada y se puede repetir. Si MySQL no está listo, el servidor arranca y lo avisa: la IA contesta,
+pero entrar, enviar y validar fallan.
+
+### En Windows
+
+`iniciar.ps1` hace en un solo comando lo que aquí hacen `iniciar.sh` + `npm start`. No instala la app en
+el celular: eso sólo se puede desde la Mac.
+
+```powershell
+cd app-bomberos\ia-local
+.\iniciar.ps1                # enciende la IA (si IA_MODO=local) y el servidor; Ctrl+C apaga todo
+.\iniciar.ps1 -PrepararBd    # antes: npm install + crea la base + carga los datos de ejemplo
+```
+
+- Si `servidor\.env` no existe, lo crea con una clave al azar y deja `IA_MODO=fijo`; hay que abrirlo y
+  poner el usuario y la contraseña de MySQL.
+- Con `IA_MODO=fijo` no hace falta ningún modelo: sirve para probar acceso, firma, revisión y sello.
+- Con `IA_MODO=local` revisa que estén `ffmpeg`, `whisper-server` (whisper.cpp) y Ollama con su modelo, y
+  dice cuál falta. El modelo de Whisper va en `%USERPROFILE%\.bomberos-ia\modelos\ggml-large-v3.bin`.
+  Esta parte (encender Whisper y Ollama) todavía no se ha probado en una compu con los modelos instalados.
+
 ### Desde el iPhone
 
 ```bash
