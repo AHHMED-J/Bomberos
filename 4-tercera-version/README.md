@@ -81,10 +81,10 @@ cd app && flutter analyze && flutter test    # la app
 
 | Tema | Antes (v1 / v2) | Ahora (v3) |
 |---|---|---|
-| Acceso | Credencial del dispositivo, alta con código de un solo uso y acceso en equipo compartido con QR | Número de empleado y contraseña que entrega Administración. Sin equipo compartido. |
-| Permisos | El encargado asigna Editor o Revisor en "Administrar elementos" | Administración habilita quién revisa, firma y envía |
+| Acceso | Credencial del dispositivo, alta con código de un solo uso y acceso en equipo compartido con QR | Número de empleado y contraseña que entrega Dirección. Sin equipo compartido. |
+| Permisos | El encargado asigna Editor o Revisor en "Administrar elementos" | Dirección habilita quién revisa, firma y envía |
 | Firma | "Firmar con mi credencial" | Firma en trazo por usuario, confirmada con la biometría del celular o con la contraseña. Firman el autor y el revisor por separado. |
-| Entrega | Papelería: todo el lote del turno | Uno por uno: el revisor firma y lo envía directo a Administración |
+| Entrega | Papelería: todo el lote del turno | Uno por uno: el revisor firma y lo envía directo a Dirección |
 | Sellado | SHA-256, resguardo de 10 años y pantalla de Archivo | Solo SHA-256, al validar |
 | Croquis | Generado con IA a partir del texto, o dibujado a mano | Mapa por GPS, dirección o coordenadas, con dibujo encima |
 | Captura | Teclado, y un botón "Con voz" sin definir | Dictado: voz a texto y llenado de campos con confirmación |
@@ -102,8 +102,8 @@ cd app && flutter analyze && flutter test    # la app
    - si falta algo, lo **devuelve con nota** y se regresa al paso 2 (hay
      que volver a firmar);
    - si está bien, pone su firma (trazo + biometría o contraseña), el parte se
-     **sella** con SHA-256 y se **envía a Administración**.
-6. Administración lo consulta y puede comprobar que el sello coincide.
+     **sella** con SHA-256 y se **envía a Dirección**.
+6. Dirección lo consulta y puede comprobar que el sello coincide.
 
 El detalle de cada punto, con su ID, está en
 [`docs/requerimientos-y-limites.md`](docs/requerimientos-y-limites.md). Antes de
