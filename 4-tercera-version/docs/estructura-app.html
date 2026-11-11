@@ -452,7 +452,7 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
     </g>
     <path d="M164 100 H234" class="fl" marker-end="url(#pf)"/><path d="M364 100 H434" class="fl" marker-end="url(#pf)"/>
     <path d="M564 100 H634" class="fl" marker-end="url(#pf)"/><path d="M764 100 H834" class="fl" marker-end="url(#pf)"/>
-    <text x="500" y="236" class="t t-g" text-anchor="middle">Sin Face ID (simulador) → firma «SIMULADA», marcada en pantalla · Capitán: credencial + trazo</text>
+    <text x="500" y="236" class="t t-g" text-anchor="middle">Sin biometría → contraseña (o «SIMULADA» en depuración) · Autor y capitán: trazo de su cuenta</text>
   </svg>
   </div>
   <p class="desliza">Desliza el dibujo →</p>
@@ -465,13 +465,13 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
     <h2>Hecho y pendiente</h2></div>
   <div class="semaforo">
     <div class="col"><h3><span class="luz" style="background:var(--verde)"></span>Hecho</h3><ul>
-      <li>Navegación de todos los roles</li><li>Hoja completa + validación</li><li>Dictado D1–D8, G5, G6</li><li>Firma: chip seguro o simulada</li>
-      <li>Partes en progreso en SQLite</li><li>Micrófono real (<code>record</code>)</li><li>IA local: Whisper + qwen2.5</li><li>Dictado desde audio probado en el iPhone ✓</li><li>Croquis: mapa en vivo + Captura (PNG)</li><li>43 pruebas app + 17 servidor</li></ul></div>
+      <li>Navegación de todos los roles</li><li>Hoja completa + validación</li><li>Dictado D1–D8, G5, G6</li><li>Firma: biometría (chip seguro) o contraseña</li>
+      <li>Partes en progreso en SQLite</li><li>Micrófono real (<code>record</code>)</li><li>IA local: Whisper + qwen2.5</li><li>Dictado desde audio probado en el iPhone ✓</li><li>Croquis: mapa en vivo + Captura (PNG)</li><li>Acceso con número de empleado y contraseña</li><li>Mi cuenta: firma en trazo y cambio de contraseña</li><li>Revisión: devolver con nota o validar, con reglas</li><li>Sellado SHA-256 y verificar sello</li><li>Base de datos (MySQL)</li><li>44 pruebas app + 46 servidor (17 IA, 29 de punta a punta)</li></ul></div>
     <div class="col"><h3><span class="luz" style="background:var(--ambar)"></span>Simulado</h3>
       <p class="nota-pasos">La pantalla funciona, pero detrás hay una pieza de mentira en lugar de la real.</p><ul>
       <li>IA fija: respuestas de ejemplo para pruebas sin modelos (chip «Ejemplo · sin IA»)</li><li>Sin señal: un interruptor en Depuración, no un detector de red</li><li>Cámara: «Agregar» suma una foto de ejemplo</li><li>«Usar mi ubicación actual» del Lugar: escribe un texto de ejemplo (el croquis sí usa el GPS real)</li></ul></div>
     <div class="col"><h3><span class="luz" style="background:var(--rojo)"></span>Falta</h3><ul>
-      <li>Medir con audios de bomberos</li><li>Base de datos (MySQL)</li><li>Subir fotos y croquis al servidor</li><li>Sorteo A/B y PDF</li></ul></div>
+      <li>Medir con audios de bomberos</li><li>Subir fotos y croquis al servidor</li><li>Sorteo A/B y PDF</li></ul></div>
   </div>
   <h3 class="como">Cómo correrlo · en este orden</h3>
   <p class="nota-pasos">Todos los comandos se escriben desde la carpeta del repo (<code>Bomberos/</code>). La Mac y el iPhone deben estar en la misma red Wi-Fi.</p>
@@ -482,7 +482,9 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
       <b>Preparar la IA y el servidor</b>
       <code class="linea">cd 4-tercera-version/arrancar &amp;&amp; ./configurar.sh</code>
       <code class="linea">cd ../servidor &amp;&amp; npm install</code>
+      <code class="linea">npm run db:crear &amp;&amp; npm run datos-prueba</code>
       <p><code>configurar.sh</code> crea <code>servidor/.env</code> con una clave al azar y el modo IA local. La clave no se muestra y nunca va al repo. <code>npm install</code> descarga las librerías del servidor.</p>
+      <p>Antes de los dos últimos comandos, MySQL debe estar instalado y encendido (<code>brew install mysql</code> y <code>brew services start mysql</code>), y <code>servidor/.env</code> debe llevar sus datos (<code>DB_USER</code>, <code>DB_PASSWORD</code>; vienen en <code>.env.example</code>). <code>db:crear</code> crea la base y sus tablas; <code>datos-prueba</code> carga los usuarios de ejemplo (por ejemplo <code>376285</code> / <code>prueba376285</code>).</p>
     </div></li>
   </ol>
 
@@ -491,7 +493,7 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
     <li class="paso"><span class="pn">⚡</span><div>
       <b>Un solo comando</b> <span class="term">iPhone por cable, desbloqueado y en la misma Wi-Fi</span>
       <code class="linea">cd 4-tercera-version/arrancar &amp;&amp; ./correr-app.sh</code>
-      <p>Hace los pasos 1 a 4 solo: enciende las IAs y el servidor, detecta la IP e instala la app con la clave. Instala la versión <i>release</i>, que se abre desde el inicio del iPhone sin la Mac conectada (sin la pantalla negra de depuración). Al terminar, paso 5.</p>
+      <p>Hace los pasos 1 a 4 solo: enciende las IAs y el servidor, detecta la IP e instala la app con la clave. Instala la versión <i>release</i>, que se abre desde el inicio del iPhone sin la Mac conectada (sin la pantalla negra de depuración). Al terminar, paso 5. La primera vez, <code>./correr-app.sh --preparar-bd</code> además crea la base y carga los usuarios de ejemplo.</p>
     </div></li>
   </ol>
 
@@ -499,13 +501,13 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
   <ol class="pasos">
     <li class="paso"><span class="pn">1</span><div>
       <b>Encender las dos IAs</b> <span class="term">Terminal 1</span>
-      <code class="linea">cd 4-tercera-version/ia-local &amp;&amp; ./iniciar.sh</code>
+      <code class="linea">cd 4-tercera-version/ia-local &amp;&amp; ./iniciar-ia.sh</code>
       <p>Arranca Whisper (voz → texto) y carga qwen2.5 en Ollama (llenado y resumen). Tarda unos segundos. Ollama debe estar abierto.</p>
     </div></li>
     <li class="paso"><span class="pn">2</span><div>
       <b>Encender el servidor</b> <span class="term">Terminal 1 · se queda abierta</span>
       <code class="linea">cd ../servidor &amp;&amp; npm start</code>
-      <p>Es el puente entre el iPhone y las IAs (puerto 3100). Deja esta terminal abierta: si la cierras, la app ya no llega a la IA.</p>
+      <p>Es el puente entre el iPhone, la base de datos y las IAs (puerto 3100). MySQL debe estar encendido. Deja esta terminal abierta: si la cierras, la app ya no llega al servidor.</p>
     </div></li>
     <li class="paso"><span class="pn">3</span><div>
       <b>Saber la IP de la Mac</b> <span class="term">Terminal 2</span>
@@ -517,9 +519,10 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
       <code class="linea">cd 4-tercera-version/app</code>
       <code class="linea varias">flutter run --release \
   --dart-define=IA=servidor \
+  --dart-define=DATOS=servidor \
   --dart-define=SERVIDOR_URL=http://IP-DEL-PASO-3:3100 \
   --dart-define-from-file=../servidor/.env</code>
-      <p>Con el iPhone conectado por cable y desbloqueado. <code>IA=servidor</code> usa la IA de verdad (sin esto la app usa respuestas de ejemplo). <code>SERVIDOR_URL</code> le dice dónde está la Mac. <code>--dart-define-from-file</code> toma la clave directo del <code>.env</code>, sin copiarla ni mostrarla. La primera vez que toques «Dictar», iOS pide permiso para el micrófono.</p>
+      <p>Con el iPhone conectado por cable y desbloqueado. <code>IA=servidor</code> usa la IA de verdad (sin esto la app usa respuestas de ejemplo). <code>DATOS=servidor</code> usa los usuarios y partes de la base (sin esto la app los simula por dentro). <code>SERVIDOR_URL</code> le dice dónde está la Mac. <code>--dart-define-from-file</code> toma la clave directo del <code>.env</code>, sin copiarla ni mostrarla. La primera vez que toques «Dictar», iOS pide permiso para el micrófono.</p>
     </div></li>
   </ol>
 
@@ -628,7 +631,7 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
   <p class="ojo"><b>Ojo:</b> voz limpia y casos escritos por el mismo equipo que hizo las reglas. Falta medir con dictados reales (sirena, radio, prisa) antes de la prueba A/B.</p>
 </section>
 
-<footer>4-tercera-version/ · actualizado el 10 de noviembre de 2026 · datos de ejemplo y casos ficticios</footer>
+<footer>4-tercera-version/ · actualizado el 11 de noviembre de 2026 · datos de ejemplo y casos ficticios</footer>
 </div>
 </body>
 </html>
