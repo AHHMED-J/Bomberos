@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../acceso/confirmar_identidad.dart';
 import '../acceso/sesion.dart';
 import '../compartido/lienzo_firma.dart';
 import '../compartido/tema.dart';
@@ -81,7 +82,8 @@ class PantallaFaltan extends ConsumerWidget {
   }
 }
 
-/// P5 · Firmas: el elaboro firma con su credencial (Face ID) al enviar; propietario y testigo con el dedo.
+/// P5 · Firmas: quien elabora pone la firma en trazo de su cuenta y la confirma con la biometría del
+/// celular o con su contraseña al enviar; propietario y testigo firman con el dedo.
 class PantallaFirmas extends ConsumerStatefulWidget {
   const PantallaFirmas({super.key});
   @override
@@ -128,23 +130,25 @@ class _PantallaFirmasState extends ConsumerState<PantallaFirmas> {
     try {
       final remoto = ref.read(repositorioRemotoProvider);
       var p = ref.read(hojaProvider)!;
-      // 1) Reto con el SHA-256 del contenido  2) Face ID firma  3) el servidor verifica y revisa pendientes.
+      // 1) Reto con el SHA-256 del contenido  2) biometría del celular o contraseña
+      // 3) el servidor comprueba, revisa pendientes y pone en el parte la firma en trazo de la cuenta.
       final reto = await remoto.retoFirma(p);
-      final r = await ref.read(firmaProvider).firmar(reto, motivo: 'Firma el parte ${p.folio}');
-      if (!r.ok) {
-        if (mounted) avisar(context, r.cancelada ? 'Firma cancelada' : (r.error ?? 'No se pudo firmar'));
+      if (!mounted) return;
+      final c = await confirmarIdentidad(context, ref, reto, motivo: 'Firma el parte ${p.folio}');
+      if (c == null) {
+        if (mounted) avisar(context, 'Firma cancelada');
         return;
       }
-      hoja.firmas((f) => f.copiar(elaboro: r.firma, elaboroSimulada: r.simulada));
+      hoja.firmas((f) => f.copiar(elaboro: c.firma ?? 'contrasena', elaboroSimulada: c.simulada));
       p = ref.read(hojaProvider)!;
-      final enviado = await remoto.enviar(p, reto: reto, firma: r.firma!);
+      final enviado = await remoto.enviar(p, reto: reto, firma: c.firma, contrasena: c.contrasena);
       await ref.read(repositorioLocalProvider).borrar(p.id); // ya no es «en progreso»
       hoja.abrir(enviado);
       if (mounted) context.go('/inicio/hoja/enviado');
     } on EnvioRechazado catch (e) {
       setState(() => _rechazos = e.pendientes);
     } catch (e) {
-      if (mounted) avisar(context, 'No se pudo enviar (queda guardado en el teléfono): $e');
+      if (mounted) avisar(context, 'No se pudo enviar (queda guardado en el teléfono): ${mensajeDeError(e)}');
     } finally {
       if (mounted) setState(() => _enviando = false);
     }
@@ -162,15 +166,31 @@ class _PantallaFirmasState extends ConsumerState<PantallaFirmas> {
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
         children: [
           const TituloSeccion('Firma de quien elabora'),
-          Aviso(
-            tono: p.firmas.elaboro == null ? TonoAviso.gris : TonoAviso.verde,
-            icono: Icons.verified_user_outlined,
-            child: Text(
-              p.firmas.elaboro == null
-                  ? 'Firmas con tu credencial (Face ID) al presionar Enviar.\n${u.nombre} · ${u.matricula}'
-                  : 'Firmado con credencial${p.firmas.elaboroSimulada ? ' (simulada)' : ''}\n${u.nombre} · ${u.matricula}',
+          if (u.trazo == null)
+            Aviso(
+              tono: TonoAviso.rojo,
+              icono: Icons.draw_outlined,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Todavía no tienes tu firma. Súbela para poder firmar el parte.'),
+                  TextButton(
+                    key: const ValueKey('ir-a-mi-firma'),
+                    onPressed: () => context.push('/inicio/cuenta'),
+                    child: const Text('Subir mi firma'),
+                  ),
+                ],
+              ),
+            )
+          else ...[
+            FirmaGuardada(u.trazo!),
+            const SizedBox(height: 6),
+            Text(
+              '${u.nombre} · ${u.matricula}\n'
+              'Al enviar se pone esta firma y confirmas con la biometría de tu celular o con tu contraseña.',
+              style: Textos.chico,
             ),
-          ),
+          ],
           const TituloSeccion('Propietario y testigo'),
           const Text('Nombre del propietario', style: Textos.etiqueta),
           const SizedBox(height: 6),
@@ -211,7 +231,7 @@ class _PantallaFirmasState extends ConsumerState<PantallaFirmas> {
           const SizedBox(height: 20),
           FilledButton.icon(
             key: const ValueKey('firmar-y-enviar'),
-            onPressed: _enviando || peritaje == null ? null : _firmarYEnviar,
+            onPressed: _enviando || peritaje == null || u.trazo == null ? null : _firmarYEnviar,
             icon: _enviando
                 ? const SizedBox(
                     width: 18,

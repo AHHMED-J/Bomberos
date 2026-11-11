@@ -1,12 +1,13 @@
 // Lo que hace Dirección con los usuarios, mientras no exista su página web.
 //
 //   npm run usuario -- alta <matrícula> "<nombre>" [--capitan] [--rango "<rango>"] [--division "<división>"] [--estacion "<estación>"]
-//   npm run usuario -- codigo <matrícula>
 //   npm run usuario -- restablecer <matrícula>
 //
-// alta        crea al usuario e imprime su contraseña y un código de alta.
-// codigo      imprime otro código de alta, para registrar otro celular.
-// restablecer le da una contraseña nueva a quien olvidó la suya.
+// alta        crea al usuario e imprime la contraseña que se le entrega. Su
+//             usuario es su número de empleado (la matrícula). --capitan lo
+//             habilita para revisar.
+// restablecer para quien olvidó su contraseña: le da una nueva y borra la
+//             llave de su celular, para que la registre otra vez al entrar.
 
 'use strict';
 
@@ -27,12 +28,6 @@ function alAzar(largo) {
   return texto;
 }
 
-async function codigoNuevo(usuarioId) {
-  const codigo = alAzar(5).toUpperCase();
-  await db.ejecutar('INSERT INTO codigo_alta (codigo, usuario_id) VALUES (?, ?)', [codigo, usuarioId]);
-  return codigo;
-}
-
 async function darDeAlta({ matricula, nombre, capitan = false, rango, division = DIVISION, estacion = 'Central' }) {
   const id = `u-${matricula}`;
   const contrasena = alAzar(10);
@@ -50,19 +45,17 @@ async function darDeAlta({ matricula, nombre, capitan = false, rango, division =
       await bcrypt.hash(contrasena, 12),
     ],
   );
-  return { id, contrasena, codigo: await codigoNuevo(id) };
-}
-
-async function usuarioDe(matricula) {
-  const usuario = await db.fila('SELECT id FROM usuario WHERE matricula = ?', [matricula]);
-  if (!usuario) throw new Error(`No existe el número de empleado ${matricula}.`);
-  return usuario;
+  return { id, contrasena };
 }
 
 async function restablecer(matricula) {
-  const usuario = await usuarioDe(matricula);
+  const usuario = await db.fila('SELECT id FROM usuario WHERE matricula = ?', [matricula]);
+  if (!usuario) throw new Error(`No existe el número de empleado ${matricula}.`);
   const contrasena = alAzar(10);
-  await db.ejecutar('UPDATE usuario SET contrasena_hash = ? WHERE id = ?', [await bcrypt.hash(contrasena, 12), usuario.id]);
+  await db.ejecutar('UPDATE usuario SET contrasena_hash = ?, llave_publica = NULL WHERE id = ?', [
+    await bcrypt.hash(contrasena, 12),
+    usuario.id,
+  ]);
   return { contrasena };
 }
 
@@ -83,17 +76,12 @@ async function main(argumentos) {
       division: opcion(argumentos, '--division'),
       estacion: opcion(argumentos, '--estacion'),
     });
-    console.log(`Alta de ${matricula} (${nombre}).`);
-    console.log(`  Contraseña: ${r.contrasena}`);
-    console.log(`  Código de alta para su celular: ${r.codigo}`);
-  } else if (orden === 'codigo' && matricula) {
-    console.log(`Código de alta para ${matricula}: ${await codigoNuevo((await usuarioDe(matricula)).id)}`);
+    console.log(`Alta de ${nombre}. Usuario: ${matricula} · Contraseña: ${r.contrasena}`);
   } else if (orden === 'restablecer' && matricula) {
     console.log(`Contraseña nueva de ${matricula}: ${(await restablecer(matricula)).contrasena}`);
   } else {
     console.log('Uso:');
     console.log('  npm run usuario -- alta <matrícula> "<nombre>" [--capitan] [--rango "…"] [--division "…"] [--estacion "…"]');
-    console.log('  npm run usuario -- codigo <matrícula>');
     console.log('  npm run usuario -- restablecer <matrícula>');
     process.exitCode = 1;
   }
@@ -108,4 +96,4 @@ if (require.main === module) {
     .finally(() => db.cerrar());
 }
 
-module.exports = { darDeAlta, restablecer, codigoNuevo };
+module.exports = { darDeAlta, restablecer };

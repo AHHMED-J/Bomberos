@@ -1,5 +1,4 @@
-// Lo que las rutas leen y escriben en MySQL. Es el reemplazo de
-// app-bomberos/servidor/src/datos.js, que guarda todo en memoria.
+// Lo que las rutas leen y escriben en MySQL.
 
 'use strict';
 
@@ -10,16 +9,30 @@ const { sha256 } = require('./firma');
 
 const DIVISION = 'División Estructural';
 
-// La forma exacta en que la app espera a un usuario.
-const COLUMNAS_USUARIO = 'id, nombre, matricula, rango, rol, division, estacion';
-
-function usuarioPorId(id) {
-  return db.fila(`SELECT ${COLUMNAS_USUARIO} FROM usuario WHERE id = ?`, [String(id ?? '')]);
+// El renglón completo, con contrasena_hash y llave_publica. No sale del servidor.
+function usuarioCompleto(id) {
+  return db.fila('SELECT * FROM usuario WHERE id = ?', [String(id ?? '')]);
 }
 
-async function llavesDe(usuarioId) {
-  const filas = await db.filas('SELECT llave_publica FROM llave WHERE usuario_id = ?', [String(usuarioId ?? '')]);
-  return filas.map((fila) => fila.llave_publica);
+// Lo que la app sabe de un usuario: lo de siempre, más su firma en trazo y si
+// ya tiene registrada la llave de su celular.
+function usuarioPublico(u) {
+  return {
+    id: u.id,
+    nombre: u.nombre,
+    matricula: u.matricula,
+    rango: u.rango,
+    rol: u.rol,
+    division: u.division,
+    estacion: u.estacion,
+    trazo: u.trazo,
+    tiene_llave: Boolean(u.llave_publica),
+  };
+}
+
+async function usuarioPorId(id) {
+  const u = await usuarioCompleto(id);
+  return u ? usuarioPublico(u) : null;
 }
 
 async function abrirSesion(usuarioId) {
@@ -28,8 +41,14 @@ async function abrirSesion(usuarioId) {
   return token;
 }
 
-async function sesionValida(token) {
-  return Boolean(token && (await db.fila('SELECT 1 FROM sesion WHERE token_hash = ?', [sha256(token)])));
+// Filtro de Express para las rutas que son «de mi cuenta»: deja en
+// req.usuario el renglón completo de quien trae el token.
+async function exigirSesion(req, res, siguiente) {
+  const token = (/^Bearer (.+)$/.exec(req.get('authorization') || '') || [])[1];
+  const sesion = token ? await db.fila('SELECT usuario_id FROM sesion WHERE token_hash = ?', [sha256(token)]) : null;
+  req.usuario = sesion ? await usuarioCompleto(sesion.usuario_id) : null;
+  if (!req.usuario) return res.status(401).json({ error: 'sin_sesion' });
+  siguiente();
 }
 
 async function partePorFolio(folio) {
@@ -52,6 +71,22 @@ function guardarParte(parte, conexion = db) {
   );
 }
 
+function guardarFirma(conexion, { folio, usuarioId, rol, reto, confirmacion, firma, trazo }) {
+  return conexion.ejecutar(
+    'INSERT INTO firma_parte (folio, usuario_id, rol, reto, metodo, firma, simulada, trazo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [
+      folio,
+      usuarioId,
+      rol,
+      reto,
+      confirmacion.metodo,
+      confirmacion.metodo === 'biometria' ? firma : null,
+      confirmacion.simulada ? 1 : 0,
+      trazo,
+    ],
+  );
+}
+
 // PE-<año>-<consecutivo>. LAST_INSERT_ID(valor + 1) hace que dos peticiones
 // al mismo tiempo nunca reciban el mismo número.
 async function nuevoFolio() {
@@ -63,13 +98,14 @@ async function nuevoFolio() {
 
 module.exports = {
   DIVISION,
-  COLUMNAS_USUARIO,
+  usuarioCompleto,
+  usuarioPublico,
   usuarioPorId,
-  llavesDe,
   abrirSesion,
-  sesionValida,
+  exigirSesion,
   partePorFolio,
   partesDonde,
   guardarParte,
+  guardarFirma,
   nuevoFolio,
 };

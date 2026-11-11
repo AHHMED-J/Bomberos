@@ -1,4 +1,4 @@
-// Prueba de contrato contra app-bomberos/servidor corriendo de verdad.
+// Prueba de contrato contra 4-tercera-version/servidor corriendo de verdad (con `npm run datos-prueba`).
 // Se salta si no hay servidor:  SERVIDOR_URL=http://localhost:3100 flutter test test/servidor_contrato_test.dart
 import 'dart:io';
 import 'dart:typed_data';
@@ -55,6 +55,11 @@ void main() {
     final remoto = RemotoHttp(api);
     final firma = FirmaSimulada(retardo: Duration.zero);
     final base = partesServidorEjemplo().first;
+    // Quien elabora entra con su número de empleado y su contraseña, y sube su firma en trazo.
+    final autor = usuariosEjemplo.firstWhere((u) => u.id == base.elaboroId);
+    final dentro = await remoto.entrar(autor.matricula, 'prueba${autor.matricula}');
+    expect(dentro.id, autor.id);
+    expect((await remoto.guardarTrazo('10.0,40.0 30.0,12.0 55.0,48.0')).trazo, isNotNull);
     var p = Parte.deJson({...base.aJson(), 'folio': await remoto.nuevoFolio(), 'estado': 'enProgreso'});
     p = p.copiar(
       campos: {
@@ -82,6 +87,7 @@ void main() {
     p = p.copiar(firmas: p.firmas.copiar(elaboro: f));
     final enviado = await remoto.enviar(p, reto: reto, firma: f);
     expect(enviado.estado, EstadoParte.enviado);
+    expect(enviado.firmas.elaboroTrazo, isNotNull);
     expect((await remoto.bandeja(divisionEjemplo)).any((x) => x.folio == p.folio), isTrue);
   }, skip: skip);
 }

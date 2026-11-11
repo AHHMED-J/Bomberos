@@ -1,11 +1,13 @@
 # Servidor de la tercera versión
 
-Hace lo mismo que [`app-bomberos/servidor`](../../app-bomberos/servidor/)
-—las mismas rutas y las mismas respuestas—, pero guarda en MySQL en lugar
-de en memoria. La app (`app-bomberos/movil`) funciona con él sin cambiarle
-nada: solo hay que apuntarla a este servidor.
+El servidor de la app (`app-bomberos/movil`) para lo que pide la tercera
+versión: acceso con usuario y contraseña, firma, revisión y envío, y
+sellado. Guarda en MySQL. Node.js y Express 5.
 
-Node.js, Express 5 y MySQL.
+Las rutas de la IA (dictado, llenado de campos y resumen) y la revisión del
+parte se cargan tal cual de [`app-bomberos/servidor`](../../app-bomberos/servidor/),
+así que el croquis y la IA de la app siguen funcionando igual. Por eso este
+servidor necesita que `app-bomberos/` esté en el repo.
 
 ## Correrlo
 
@@ -14,80 +16,107 @@ cd 4-tercera-version/servidor
 npm install
 cp .env.example .env      # y ajusta los datos de MySQL
 npm run db:crear          # crea la base bomberos_v3 y sus tablas
-npm run datos-prueba      # los mismos usuarios, código y partes de ejemplo de la app
+npm run datos-prueba      # los usuarios y partes de ejemplo de la app
 npm start                 # puerto 3100, el mismo que usa la app
 ```
 
+`npm run datos-prueba` deja a cada usuario de ejemplo con la contraseña
+`prueba<matrícula>` (por ejemplo `376285` / `prueba376285`).
+
+`app-bomberos/ia-local/correr-app.sh` ya enciende este servidor.
+
 ```bash
 npm run probar            # prueba de punta a punta (usa la base de .env)
-npm run usuario -- alta 380999 "Apellido, Nombre" [--capitan] [--division "División Estructural"]
-npm run usuario -- codigo 380999        # otro código, para otro celular
-npm run usuario -- restablecer 380999   # contraseña nueva
 ```
 
-`db:crear` no borra nada: si las tablas ya existen, las deja como están.
+`db:crear` no borra nada: si las tablas ya existen, las deja como están. Si
+tenías la base de una versión anterior de este servidor, bórrala primero
+(`DROP DATABASE bomberos_v3`), porque la tabla `usuario` cambió.
+
+## Lo que hace Dirección
+
+Mientras no exista su página web:
+
+```bash
+npm run usuario -- alta 380999 "Apellido, Nombre" [--capitan] [--division "División Estructural"]
+npm run usuario -- restablecer 380999
+```
+
+- `alta` crea al usuario e imprime la contraseña que se le entrega. Su
+  usuario es su número de empleado (la matrícula). `--capitan` lo habilita
+  para revisar.
+- `restablecer` es para quien olvidó su contraseña: le da una nueva y borra
+  la llave de su celular, para que la registre otra vez al entrar.
+
+## Cómo funciona
+
+**Entrar.** Con el número de empleado y la contraseña. El usuario la puede
+cambiar desde la app.
+
+**Biometría.** Al entrar con contraseña, la app crea una llave en el chip
+seguro del celular y registra aquí la pública. Es una por usuario: si la
+cuenta ya tiene una, ese otro celular no se registra y confirma con la
+contraseña. Con la llave registrada se puede entrar con la biometría: el
+servidor manda un reto y el celular lo firma. La huella y la cara nunca
+llegan al servidor.
+
+**Firma.** Cada usuario sube su firma en trazo. Al Enviar (autor) y al
+Validar (revisor), el servidor pone en el parte una copia de esa firma. Para
+eso el usuario confirma que es él con la biometría de su celular o con su
+contraseña, sobre un reto que lleva el hash SHA-256 del contenido del parte.
+Un reto vale 5 minutos y una sola vez.
+
+**Revisión y envío.**
+
+- Un parte enviado no se vuelve a enviar, a menos que lo devuelvan.
+- Devuelto con nota, quien lo llenó lo corrige y vuelve a firmar.
+- Valida un capitán de la división del parte, y nunca quien lo llenó.
+- Al validar queda sellado y enviado a Dirección.
+
+**Sellado.** Al validar se saca el SHA-256 de todo el parte, siempre en el
+mismo orden: los datos, el número de fotos, lo que trae del croquis, y las
+firmas del autor y del revisor con sus trazos. `GET /api/partes/:folio/sello`
+lo vuelve a sacar y dice si coincide con el guardado. La app todavía no sube
+las imágenes de las fotos ni del croquis; cuando lo haga, entran al sello.
 
 ## Rutas
 
-Las que ya usa la app:
+| Ruta | Sesión | Manda | Recibe |
+|---|---|---|---|
+| `POST /api/acceso/entrar` | no | `no_empleado`, `contrasena` | `token`, `usuario` |
+| `POST /api/acceso/reto` | no | `usuario_id` | `reto` |
+| `POST /api/acceso/verificar` | no | `usuario_id`, `reto`, `firma` | `token`, `usuario` |
+| `POST /api/acceso/llave` | sí | `llave_publica` | `ok` |
+| `POST /api/acceso/contrasena` | sí | `actual`, `nueva` | `ok` |
+| `POST /api/acceso/trazo` | sí | `trazo` | `usuario` |
+| `POST /api/partes/folio` | no | — | `folio` |
+| `GET /api/partes?usuario=…` | no | — | `partes` |
+| `POST /api/partes/:folio/reto` | no | `contenido` | `reto`, `hash` |
+| `POST /api/partes/:folio/enviar` | no | `parte`, `reto`, y `firma` o `contrasena` | `parte` |
+| `GET /api/partes/:folio/sello` | no | — | `sello`, `calculado`, `coincide` |
+| `GET /api/revision/bandeja?division=…` | no | — | `partes` |
+| `POST /api/revision/:folio/devolver` | no | `nota`, `seccion`, `revisor_id` | `parte` |
+| `POST /api/revision/:folio/validar` | no | `reto`, `revisor_id`, y `firma` o `contrasena` | `parte` |
+| `POST /api/ia/…` | como en `app-bomberos/servidor` | | |
 
-| Ruta | Para qué |
-|---|---|
-| `GET /api/salud` | Saber si el servidor está arriba. |
-| `GET /api/acceso/codigo/:codigo` | A quién pertenece un código de alta. |
-| `POST /api/acceso/alta` | Registrar la llave pública del celular con el código. |
-| `POST /api/acceso/reto` | Pedir el reto para entrar. |
-| `POST /api/acceso/verificar` | Mandar la firma del reto y recibir la sesión. |
-| `POST /api/partes/folio` | Un folio nuevo. |
-| `GET /api/partes?usuario=…` | Los partes de un usuario. |
-| `POST /api/partes/:folio/reto` | El reto para firmar el parte (lleva el hash de su contenido). |
-| `POST /api/partes/:folio/enviar` | Revisar el parte, comprobar la firma y mandarlo a revisión. |
-| `GET /api/revision/bandeja?division=…` | Los partes de una división. |
-| `POST /api/revision/:folio/devolver` | Devolverlo con una nota. |
-| `POST /api/revision/:folio/validar` | Firma del revisor (llave del celular + trazo) y sello. |
-| `POST /api/ia/transcribir`, `/llenar-campos`, `/resumen` | Dictado y resumen. |
+La sesión va en `Authorization: Bearer <token>`. `usuario` trae `id`,
+`nombre`, `matricula`, `rango`, `rol`, `division`, `estacion`, `trazo` y
+`tiene_llave`. Los errores llegan como `{ "error": "codigo" }`.
 
-Una más, de las notas de la tercera versión. La app todavía no tiene esa
-pantalla:
-
-| Ruta | Para qué |
-|---|---|
-| `POST /api/acceso/entrar` | Entrada manual: `no_empleado` (la matrícula) y `contrasena`. Devuelve `token` y `usuario`. |
-
-## Qué se toma de `app-bomberos/servidor`
-
-Para no tener dos copias que se desfasen, [`src/de-la-app.js`](src/de-la-app.js)
-carga directo de esa carpeta:
-
-- `src/validacion.js`: la revisión del parte y el contenido que se firma,
-  que tiene que coincidir byte a byte con la app.
-- `src/rutas/ia.js` y `src/ia/`: las rutas de la IA, con su configuración en
-  `app-bomberos/servidor/.env`.
-
-Por eso este servidor necesita que `app-bomberos/` esté en el repo.
-
-## Diferencias con el servidor de la app
-
-- Los datos sobreviven a un reinicio: usuarios, códigos, llaves, sesiones,
-  retos, partes y firmas están en MySQL.
-- Un usuario puede tener varias llaves. Dar de alta otro celular no quita la
-  anterior.
-- Un parte ya enviado o validado no se puede volver a enviar (`ya_enviado`).
-- Solo valida un usuario con rol `capitan`, y nunca quien llenó el parte
-  (`no_es_revisor`, `es_su_parte`).
-- Cada firma queda guardada en `firma_parte`: quién, con qué reto, la firma
-  del celular y, en la del revisor, su trazo.
-- Los folios nuevos llevan el año en curso.
+Las rutas de partes y de revisión no piden sesión, igual que en
+`app-bomberos/servidor`: lo que protege la firma es la confirmación de cada
+envío y cada validación.
 
 ## Archivos
 
     src/server.js          arma Express
     src/db.js              conexión a MySQL (filas, fila, ejecutar, transaccion)
-    src/datos.js           usuarios, llaves, sesiones, partes y folios en MySQL
-    src/firma.js           retos y verificación de firmas
+    src/datos.js           usuarios, sesiones, partes, firmas y folios en MySQL
+    src/firma.js           retos y confirmación (biometría o contraseña)
+    src/sello.js           el sello SHA-256 del parte
     src/de-la-app.js       lo que se carga de app-bomberos/servidor
-    src/rutas/acceso.js    código, alta, reto, verificar y entrada manual
-    src/rutas/partes.js    folio, lista, reto y enviar
+    src/rutas/acceso.js    entrar, biometría, llave, contraseña y trazo
+    src/rutas/partes.js    folio, lista, reto, enviar y verificar sello
     src/rutas/revision.js  bandeja, devolver y validar
     db/schema.sql          las tablas
     scripts/               crear la base, datos de ejemplo, usuarios y la prueba

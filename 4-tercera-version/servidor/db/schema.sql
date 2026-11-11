@@ -1,13 +1,17 @@
 -- BomberosApp · tercera versión
--- Lo mismo que app-bomberos/servidor guarda en memoria (src/datos.js), en
--- MySQL: usuarios, códigos de alta, llaves, sesiones, retos y partes.
+-- Usuarios, sesiones, retos, partes y firmas.
 --
 --   npm run db:crear   (crea la base de DB_NAME y corre este archivo)
 --
 -- No borra nada: si una tabla ya existe, la deja como está.
 
 -- usuario · el id es el que usa la app (u-<matrícula>). La matrícula es el
--- número de empleado. rol: editor (elemento) o capitan (revisor).
+-- número de empleado, y con ella y su contraseña entra. Dirección lo da de
+-- alta y le entrega la contraseña; él la puede cambiar.
+-- rol: editor (elemento) o capitan (revisor).
+-- llave_publica: la del chip seguro de SU celular (uno por usuario), para
+-- confirmar con la biometría. NULL = confirma con su contraseña.
+-- trazo: su firma, que sube desde la app. Se copia a cada parte que firma.
 CREATE TABLE IF NOT EXISTS usuario (
   id              VARCHAR(40)  NOT NULL,
   nombre          VARCHAR(160) NOT NULL,
@@ -16,33 +20,12 @@ CREATE TABLE IF NOT EXISTS usuario (
   rol             ENUM('editor','capitan') NOT NULL DEFAULT 'editor',
   division        VARCHAR(80)  NOT NULL,
   estacion        VARCHAR(80)  NOT NULL,
-  contrasena_hash VARCHAR(72)  NULL,      -- bcrypt; para la entrada manual
+  contrasena_hash VARCHAR(72)  NOT NULL,   -- bcrypt
+  llave_publica   TEXT         NULL,
+  trazo           MEDIUMTEXT   NULL,
   creado_en       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_usuario_matricula (matricula)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- codigo_alta · el código de un solo uso que da Dirección
-CREATE TABLE IF NOT EXISTS codigo_alta (
-  codigo     VARCHAR(20) NOT NULL,
-  usuario_id VARCHAR(40) NOT NULL,
-  usado_en   DATETIME    NULL,
-  PRIMARY KEY (codigo),
-  KEY idx_codigo_usuario (usuario_id),
-  CONSTRAINT fk_codigo_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- llave · las llaves públicas de los celulares de cada usuario (PEM, o el
--- texto SIMULADA en modo prueba). La biometría y el PIN del teléfono se
--- quedan en el celular. Dar de alta otro celular no quita las anteriores.
-CREATE TABLE IF NOT EXISTS llave (
-  id            INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  usuario_id    VARCHAR(40)  NOT NULL,
-  llave_publica TEXT         NOT NULL,
-  creada_en     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY idx_llave_usuario (usuario_id),
-  CONSTRAINT fk_llave_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- sesion · se guarda el SHA-256 del token, nunca el token
@@ -79,17 +62,18 @@ CREATE TABLE IF NOT EXISTS parte (
   KEY idx_parte_division_estado (division, estado)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- firma_parte · la evidencia de cada firma: quién, con qué reto, la firma
--- del celular y, en la del revisor, su trazo.
+-- firma_parte · la evidencia de cada firma: quién, con qué reto, cómo la
+-- confirmó (biometría del celular o contraseña) y la copia de su trazo.
 CREATE TABLE IF NOT EXISTS firma_parte (
   id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
   folio      VARCHAR(20)  NOT NULL,
   usuario_id VARCHAR(40)  NOT NULL,
   rol        ENUM('autor','revisor') NOT NULL,
   reto       VARCHAR(120) NOT NULL,
-  firma      TEXT         NOT NULL,
+  metodo     ENUM('biometria','contrasena') NOT NULL,
+  firma      TEXT         NULL,          -- la firma del celular; NULL si fue con contraseña
   simulada   TINYINT(1)   NOT NULL DEFAULT 0,
-  trazo      MEDIUMTEXT   NULL,
+  trazo      MEDIUMTEXT   NOT NULL,
   firmada_en DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   KEY idx_firma_folio (folio),

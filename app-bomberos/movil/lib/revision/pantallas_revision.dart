@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../acceso/confirmar_identidad.dart';
 import '../acceso/sesion.dart';
 import '../compartido/lienzo_firma.dart';
 import '../compartido/tema.dart';
 import '../compartido/widgets.dart';
 import '../datos/catalogo_campos.dart';
 import '../datos/modelos.dart';
+import '../datos/repositorio_remoto.dart';
 import '../hoja/hoja_controlador.dart';
 import '../hoja/validacion_envio.dart';
 import 'revision_controlador.dart';
@@ -280,7 +282,8 @@ class PantallaValidar extends ConsumerStatefulWidget {
 
 class _PantallaValidarState extends ConsumerState<PantallaValidar> {
   bool _ocupado = false;
-  late final ControlFirma _trazo = ControlFirma(ref.read(trazoPerfilProvider));
+  /// Arranca con la firma de la cuenta del capitán; si dibuja otra, se actualiza al validar.
+  late final ControlFirma _trazo = ControlFirma(ref.read(sesionProvider).usuario?.trazo);
 
   @override
   void dispose() {
@@ -296,17 +299,34 @@ class _PantallaValidarState extends ConsumerState<PantallaValidar> {
     if (error != null) avisar(context, error);
   }
 
+  Future<void> _conContrasena() async {
+    final c = await pedirContrasena(context, motivo: 'Escribe tu contraseña para validar el parte.');
+    if (c == null || !mounted) return;
+    setState(() => _ocupado = true);
+    final error = await ref.read(revisionProvider.notifier).autenticarConContrasena(c);
+    if (!mounted) return;
+    setState(() => _ocupado = false);
+    if (error != null) avisar(context, error);
+  }
+
   Future<void> _firmarYValidar() async {
     if (_trazo.vacio) return avisar(context, 'Dibuja tu firma');
     final t = _trazo.serializar();
-    ref.read(trazoPerfilProvider.notifier).guardar(t);
     setState(() => _ocupado = true);
     try {
-      await ref.read(revisionProvider.notifier).validar(t);
+      // El servidor pone en el parte la firma de la cuenta: si dibujó otra, primero se guarda ahí.
+      if (t != ref.read(sesionProvider).usuario?.trazo) {
+        final error = await ref.read(sesionProvider.notifier).guardarTrazo(t);
+        if (error != null) {
+          if (mounted) avisar(context, error);
+          return;
+        }
+      }
+      await ref.read(revisionProvider.notifier).validar();
       final folio = ref.read(revisionProvider).parte!.folio;
       if (mounted) context.pushReplacement('/inicio/bandeja/parte/$folio/validado');
     } catch (e) {
-      if (mounted) avisar(context, 'No se pudo validar: $e');
+      if (mounted) avisar(context, 'No se pudo validar: ${mensajeDeError(e)}');
     } finally {
       if (mounted) setState(() => _ocupado = false);
     }
@@ -318,7 +338,7 @@ class _PantallaValidarState extends ConsumerState<PantallaValidar> {
     final p = s.parte!;
     final titulo = Encabezado(titulo: 'Validar parte', subtitulo: 'Parte C-5 ${p.valor('no_incidente_c5')}');
 
-    if (s.firma == null) {
+    if (!s.confirmado) {
       // C1 · se pide en CADA revisión.
       return Scaffold(
         appBar: titulo,
@@ -339,7 +359,7 @@ class _PantallaValidarState extends ConsumerState<PantallaValidar> {
                   Text('Confirma que eres tú', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600)),
                   SizedBox(height: 6),
                   Text(
-                    'Para abrir tu firma, usa Face ID, huella o el código de tu teléfono. Se pide en cada revisión.',
+                    'Para poner tu firma, usa la biometría de tu celular o tu contraseña. Se pide en cada revisión.',
                     style: Textos.chico,
                   ),
                 ],
@@ -350,13 +370,13 @@ class _PantallaValidarState extends ConsumerState<PantallaValidar> {
               key: const ValueKey('usar-face-id'),
               onPressed: _ocupado ? null : _autenticar,
               icon: const Icon(Icons.face),
-              label: const Text('Usar Face ID'),
+              label: const Text('Usar mi biometría'),
             ),
             const SizedBox(height: 10),
             OutlinedButton(
-              // TODO: llave con useDeviceCredentials para aceptar el código del teléfono.
-              onPressed: _ocupado ? null : _autenticar,
-              child: const Text('Usar el código del teléfono'),
+              key: const ValueKey('usar-contrasena'),
+              onPressed: _ocupado ? null : _conContrasena,
+              child: const Text('Usar mi contraseña'),
             ),
             const SizedBox(height: 10),
             OutlinedButton(
@@ -404,13 +424,17 @@ class _PantallaValidarState extends ConsumerState<PantallaValidar> {
               ],
             ),
           ),
+          if (p.firmas.elaboroTrazo != null) ...[
+            const TituloSeccion('Firma de quien elaboró'),
+            FirmaGuardada(p.firmas.elaboroTrazo!),
+          ],
           const TituloSeccion('Tu firma'),
-          LienzoFirma(control: _trazo, alto: 150, ayuda: 'Dibuja tu firma; se guarda en tu perfil'),
+          LienzoFirma(control: _trazo, alto: 150, ayuda: 'Dibuja tu firma; se guarda en tu cuenta'),
           const SizedBox(height: 6),
           Text(
             s.simulada
-                ? 'Credencial abierta (simulada). Firma guardada de tu perfil; si quieres cambiarla, vuelve a dibujarla.'
-                : 'Credencial abierta. Firma guardada de tu perfil; si quieres cambiarla, vuelve a dibujarla.',
+                ? 'Confirmado (simulado). Es la firma de tu cuenta; si quieres cambiarla, vuelve a dibujarla.'
+                : 'Confirmado. Es la firma de tu cuenta; si quieres cambiarla, vuelve a dibujarla.',
             style: Textos.chico,
           ),
           const SizedBox(height: 16),

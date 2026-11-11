@@ -104,3 +104,35 @@ class _PintorFirma extends CustomPainter {
   @override
   bool shouldRepaint(_PintorFirma old) => true;
 }
+
+/// Una firma ya guardada (la de la cuenta del usuario o la copia que quedó en un parte), sólo para verla.
+class FirmaGuardada extends StatefulWidget {
+  const FirmaGuardada(this.trazo, {super.key, this.alto = 150});
+  final String trazo;
+  final double alto;
+  @override
+  State<FirmaGuardada> createState() => _FirmaGuardadaState();
+}
+
+class _FirmaGuardadaState extends State<FirmaGuardada> {
+  late ControlFirma _control = ControlFirma(widget.trazo);
+
+  @override
+  void didUpdateWidget(FirmaGuardada anterior) {
+    super.didUpdateWidget(anterior);
+    if (anterior.trazo != widget.trazo) {
+      _control.dispose();
+      _control = ControlFirma(widget.trazo);
+    }
+  }
+
+  @override
+  void dispose() {
+    _control.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      LienzoFirma(control: _control, alto: widget.alto, ayuda: '', soloLectura: true);
+}

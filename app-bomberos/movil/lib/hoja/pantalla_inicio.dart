@@ -64,6 +64,12 @@ class PantallaInicio extends ConsumerWidget {
                       onPressed: () => avisar(context, 'Avisos: pendiente de diseñar'),
                     ),
                     IconButton(
+                      key: const ValueKey('mi-cuenta'),
+                      tooltip: 'Mi cuenta',
+                      icon: const Icon(Icons.account_circle_outlined, color: Colores.blanco),
+                      onPressed: () => context.push('/inicio/cuenta'),
+                    ),
+                    IconButton(
                       tooltip: 'Salir',
                       icon: const Icon(Icons.logout, color: Colores.blanco),
                       onPressed: () {

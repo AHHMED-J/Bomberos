@@ -1,13 +1,14 @@
-// Acceso. Las mismas rutas y respuestas que app-bomberos/servidor:
+// Acceso y cuenta del usuario.
 //
-//   GET  /api/acceso/codigo/:codigo   a quién pertenece un código de alta
-//   POST /api/acceso/alta             registra la llave pública del celular
-//   POST /api/acceso/reto             pide el reto para entrar
-//   POST /api/acceso/verificar        manda la firma del reto y recibe la sesión
+//   POST /api/acceso/entrar       número de empleado y contraseña → sesión
+//   POST /api/acceso/reto         pide el reto para entrar con la biometría
+//   POST /api/acceso/verificar    manda la firma del reto → sesión
 //
-// Y una más, de las notas de la tercera versión (la app todavía no la usa):
+// Con sesión (Authorization: Bearer <token>), sobre la propia cuenta:
 //
-//   POST /api/acceso/entrar           entrada manual: número de empleado y contraseña
+//   POST /api/acceso/llave        registra la llave pública de su celular
+//   POST /api/acceso/contrasena   cambia su contraseña
+//   POST /api/acceso/trazo        sube o actualiza su firma en trazo
 
 'use strict';
 
@@ -21,76 +22,72 @@ const { sesionesIa } = require('../de-la-app');
 
 const r = express.Router();
 
-async function codigoVigente(codigo) {
-  const fila = await db.fila('SELECT codigo, usuario_id FROM codigo_alta WHERE codigo = ? AND usado_en IS NULL', [
-    String(codigo || '').toUpperCase(),
-  ]);
-  return fila;
+const LARGO_MINIMO_CONTRASENA = 8;
+
+async function responderSesion(res, usuario, extra = {}) {
+  const token = await datos.abrirSesion(usuario.id);
+  sesionesIa.set(token, usuario.id); // para que las rutas de la IA reconozcan la sesión
+  res.json({ ok: true, ...extra, token, usuario: datos.usuarioPublico(usuario) });
 }
 
-async function sesionNueva(usuarioId) {
-  const token = await datos.abrirSesion(usuarioId);
-  sesionesIa.set(token, usuarioId);
-  return token;
-}
-
-r.get('/codigo/:codigo', async (req, res) => {
-  const c = await codigoVigente(req.params.codigo);
-  if (!c) return res.status(404).json({ error: 'codigo_invalido' });
-  res.json({ usuario: await datos.usuarioPorId(c.usuario_id) });
-});
-
-r.post('/alta', async (req, res) => {
-  const { codigo, llave_publica: llave } = req.body;
-  const c = await codigoVigente(codigo);
-  if (!c) return res.status(404).json({ error: 'codigo_invalido' });
-  if (!llave || typeof llave !== 'string') return res.status(400).json({ error: 'falta_llave_publica' });
-
-  // El código se gasta y la llave se guarda juntos. Las llaves anteriores
-  // del usuario se quedan: dar de alta otro celular no desactiva el primero.
-  const gastado = await db.transaccion(async (t) => {
-    const { affectedRows } = await t.ejecutar('UPDATE codigo_alta SET usado_en = NOW() WHERE codigo = ? AND usado_en IS NULL', [
-      c.codigo,
-    ]);
-    if (affectedRows === 1) {
-      await t.ejecutar('INSERT INTO llave (usuario_id, llave_publica) VALUES (?, ?)', [c.usuario_id, llave]);
-    }
-    return affectedRows === 1;
-  });
-  if (!gastado) return res.status(404).json({ error: 'codigo_invalido' });
-
-  res.json({ usuario: await datos.usuarioPorId(c.usuario_id) });
+// El número de empleado es la matrícula. El mensaje es el mismo si falla el
+// número o la contraseña.
+r.post('/entrar', async (req, res) => {
+  const usuario = await db.fila('SELECT * FROM usuario WHERE matricula = ?', [String(req.body.no_empleado ?? '').trim()]);
+  if (!usuario || !(await firma.contrasenaCorrecta(usuario, req.body.contrasena))) {
+    return res.status(401).json({ error: 'credenciales_incorrectas' });
+  }
+  await responderSesion(res, usuario);
 });
 
 r.post('/reto', async (req, res) => {
-  if (!(await datos.usuarioPorId(req.body.usuario_id))) return res.status(404).json({ error: 'usuario_desconocido' });
+  if (!(await datos.usuarioCompleto(req.body.usuario_id))) return res.status(404).json({ error: 'usuario_desconocido' });
   res.json({ reto: await firma.nuevoReto('acceso') });
 });
 
 r.post('/verificar', async (req, res) => {
   const { usuario_id: id, reto, firma: f } = req.body;
-  const u = await datos.usuarioPorId(id);
-  if (!u) return res.status(404).json({ error: 'usuario_desconocido' });
+  const usuario = await datos.usuarioCompleto(id);
+  if (!usuario) return res.status(404).json({ error: 'usuario_desconocido' });
   if (!String(reto || '').endsWith(':acceso')) return res.status(401).json({ error: 'reto_desconocido' });
 
-  const v = await firma.verificar({ reto, firma: f, llaves: await datos.llavesDe(u.id) });
+  const v = await firma.confirmar({ reto, firma: f, usuario });
   if (!v.ok) return res.status(401).json({ error: v.motivo });
-
-  res.json({ ok: true, simulada: v.simulada, token: await sesionNueva(u.id), usuario: u });
+  await responderSesion(res, usuario, { simulada: v.simulada });
 });
 
-// Entrada manual. El número de empleado es la matrícula. El mensaje es el
-// mismo si falla el número o la contraseña.
-r.post('/entrar', async (req, res) => {
-  const fila = await db.fila('SELECT id, contrasena_hash FROM usuario WHERE matricula = ?', [
-    String(req.body.no_empleado ?? '').trim(),
-  ]);
-  const contrasena = req.body.contrasena;
-  const coincide =
-    fila && fila.contrasena_hash && typeof contrasena === 'string' && (await bcrypt.compare(contrasena, fila.contrasena_hash));
-  if (!coincide) return res.status(401).json({ error: 'credenciales_incorrectas' });
+// Un celular por usuario. Si ya tiene uno registrado, este no se registra y
+// aquí confirma con su contraseña. (Cambiar de celular todavía no existe:
+// por ahora Dirección borra la llave con `npm run usuario -- restablecer`.)
+r.post('/llave', datos.exigirSesion, async (req, res) => {
+  const llave = req.body.llave_publica;
+  if (!llave || typeof llave !== 'string') return res.status(400).json({ error: 'falta_llave_publica' });
 
-  res.json({ ok: true, token: await sesionNueva(fila.id), usuario: await datos.usuarioPorId(fila.id) });
+  const { affectedRows } = await db.ejecutar('UPDATE usuario SET llave_publica = ? WHERE id = ? AND llave_publica IS NULL', [
+    llave,
+    req.usuario.id,
+  ]);
+  if (affectedRows !== 1) return res.status(409).json({ error: 'ya_tiene_celular' });
+  res.json({ ok: true });
+});
+
+r.post('/contrasena', datos.exigirSesion, async (req, res) => {
+  const { actual, nueva } = req.body;
+  if (!(await firma.contrasenaCorrecta(req.usuario, actual))) return res.status(401).json({ error: 'contrasena_incorrecta' });
+  if (typeof nueva !== 'string' || nueva.length < LARGO_MINIMO_CONTRASENA) {
+    return res.status(400).json({ error: 'contrasena_corta', minimo: LARGO_MINIMO_CONTRASENA });
+  }
+  await db.ejecutar('UPDATE usuario SET contrasena_hash = ? WHERE id = ?', [await bcrypt.hash(nueva, 12), req.usuario.id]);
+  res.json({ ok: true });
+});
+
+// Los partes ya firmados guardan su propia copia del trazo, así que
+// actualizarlo aquí no los cambia.
+r.post('/trazo', datos.exigirSesion, async (req, res) => {
+  const trazo = req.body.trazo;
+  if (!trazo || typeof trazo !== 'string') return res.status(400).json({ error: 'falta_trazo' });
+  await db.ejecutar('UPDATE usuario SET trazo = ? WHERE id = ?', [trazo, req.usuario.id]);
+  res.json({ ok: true, usuario: await datos.usuarioPorId(req.usuario.id) });
 });
 
 module.exports = r;

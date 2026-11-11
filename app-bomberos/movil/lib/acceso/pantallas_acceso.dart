@@ -11,7 +11,8 @@ import '../servicios/config.dart';
 import '../servicios/proveedores.dart';
 import 'sesion.dart';
 
-/// A1 · Acceso con la credencial del teléfono (llave del chip seguro + Face ID).
+/// A1 · Acceso con el número de empleado y la contraseña que entrega Dirección. Si este celular ya
+/// quedó registrado, también se puede entrar con su biometría.
 class PantallaAcceso extends ConsumerStatefulWidget {
   const PantallaAcceso({super.key});
   @override
@@ -19,11 +20,37 @@ class PantallaAcceso extends ConsumerStatefulWidget {
 }
 
 class _PantallaAccesoState extends ConsumerState<PantallaAcceso> {
+  final _noEmpleado = TextEditingController();
+  final _contrasena = TextEditingController();
   bool _ocupado = false;
+  bool _conBiometria = false;
 
-  Future<void> _entrar() async {
-    setState(() => _ocupado = true);
-    final error = await ref.read(sesionProvider.notifier).entrarConCredencial();
+  @override
+  void initState() {
+    super.initState();
+    _revisarTelefono();
+  }
+
+  @override
+  void dispose() {
+    _noEmpleado.dispose();
+    _contrasena.dispose();
+    super.dispose();
+  }
+
+  /// ¿Alguien ya entró en este teléfono y dejó registrada su biometría?
+  Future<void> _revisarTelefono() async {
+    final sesion = ref.read(sesionProvider.notifier);
+    await sesion.cargarTelefono();
+    final puede = await sesion.puedeEntrarConBiometria();
+    if (!mounted) return;
+    setState(() {
+      _conBiometria = puede;
+      if (_noEmpleado.text.isEmpty) _noEmpleado.text = sesion.usuarioDelTelefono?.matricula ?? '';
+    });
+  }
+
+  void _terminar(String? error) {
     if (!mounted) return;
     setState(() => _ocupado = false);
     if (error != null) {
@@ -31,6 +58,19 @@ class _PantallaAccesoState extends ConsumerState<PantallaAcceso> {
     } else {
       context.go('/inicio');
     }
+  }
+
+  Future<void> _entrar() async {
+    if (_noEmpleado.text.trim().isEmpty || _contrasena.text.isEmpty) {
+      return avisar(context, 'Escribe tu número de empleado y tu contraseña');
+    }
+    setState(() => _ocupado = true);
+    _terminar(await ref.read(sesionProvider.notifier).entrarConContrasena(_noEmpleado.text, _contrasena.text));
+  }
+
+  Future<void> _entrarConBiometria() async {
+    setState(() => _ocupado = true);
+    _terminar(await ref.read(sesionProvider.notifier).entrarConCredencial());
   }
 
   @override
@@ -53,8 +93,28 @@ class _PantallaAccesoState extends ConsumerState<PantallaAcceso> {
                 height: 1,
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 32),
+            TextField(
+              key: const ValueKey('no-empleado'),
+              controller: _noEmpleado,
+              autocorrect: false,
+              enableSuggestions: false,
+              textInputAction: TextInputAction.next,
+              decoration: const InputDecoration(labelText: 'Número de empleado'),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              key: const ValueKey('contrasena'),
+              controller: _contrasena,
+              obscureText: true,
+              onSubmitted: (_) {
+                if (!_ocupado) _entrar();
+              },
+              decoration: const InputDecoration(labelText: 'Contraseña'),
+            ),
+            const SizedBox(height: 18),
             FilledButton.icon(
+              key: const ValueKey('entrar'),
               onPressed: _ocupado ? null : _entrar,
               icon: _ocupado
                   ? const SizedBox(
@@ -62,12 +122,25 @@ class _PantallaAccesoState extends ConsumerState<PantallaAcceso> {
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colores.blanco),
                     )
-                  : const Icon(Icons.fingerprint),
-              label: const Text('Usar mi credencial'),
+                  : const Icon(Icons.login),
+              label: const Text('Entrar'),
             ),
+            if (_conBiometria) ...[
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                key: const ValueKey('entrar-biometria'),
+                onPressed: _ocupado ? null : _entrarConBiometria,
+                icon: const Icon(Icons.fingerprint),
+                label: const Text('Entrar con mi biometría'),
+              ),
+            ],
             const SizedBox(height: 18),
-            _Enlace('¿Primera vez? Da de alta tu credencial', () => context.push('/alta')),
-            _Enlace('Cambié de teléfono', () => context.push('/cambie-telefono')),
+            const Text(
+              'Tu usuario es tu número de empleado. La contraseña te la entrega Dirección; '
+              'si la olvidaste, acude a Dirección.',
+              textAlign: TextAlign.center,
+              style: Textos.chico,
+            ),
             if (kDebugMode) ...[
               const Divider(height: 32),
               OutlinedButton.icon(
@@ -98,138 +171,6 @@ class _Escudo extends StatelessWidget {
       child: const Icon(Icons.local_fire_department, size: 70, color: Colores.rojo),
     ),
   );
-}
-
-class _Enlace extends StatelessWidget {
-  const _Enlace(this.texto, this.alTocar);
-  final String texto;
-  final VoidCallback alTocar;
-  @override
-  Widget build(BuildContext context) => TextButton(
-    onPressed: alTocar,
-    child: Text(
-      texto,
-      textAlign: TextAlign.center,
-      style: const TextStyle(color: Colores.tinta, decoration: TextDecoration.underline, fontWeight: FontWeight.w600),
-    ),
-  );
-}
-
-/// Cinco casillas para el código de un solo uso (A2 y A4).
-class CampoCodigo extends StatelessWidget {
-  const CampoCodigo({super.key, required this.controlador, this.alCambiar});
-  final TextEditingController controlador;
-  final ValueChanged<String>? alCambiar;
-  @override
-  Widget build(BuildContext context) => TextField(
-    key: const ValueKey('codigo-alta'),
-    controller: controlador,
-    maxLength: 5,
-    textCapitalization: TextCapitalization.characters,
-    textAlign: TextAlign.center,
-    onChanged: alCambiar,
-    style: const TextStyle(fontSize: 30, letterSpacing: 22, fontWeight: FontWeight.w600),
-    decoration: const InputDecoration(counterText: '', hintText: '·····'),
-  );
-}
-
-/// A2 · Alta de credencial con el código de la Dirección.
-class PantallaAlta extends ConsumerStatefulWidget {
-  const PantallaAlta({super.key, this.cambioDeTelefono = false});
-
-  /// A4 reutiliza esta pantalla con su aviso.
-  final bool cambioDeTelefono;
-  @override
-  ConsumerState<PantallaAlta> createState() => _PantallaAltaState();
-}
-
-class _PantallaAltaState extends ConsumerState<PantallaAlta> {
-  final _codigo = TextEditingController();
-  Usuario? _dueno;
-  bool _ocupado = false;
-
-  Future<void> _consultar(String c) async {
-    if (c.length != 5) return setState(() => _dueno = null);
-    try {
-      final u = await ref.read(repositorioRemotoProvider).consultarCodigo(c);
-      if (mounted) setState(() => _dueno = u);
-    } catch (_) {
-      if (mounted) avisar(context, 'Código no válido');
-    }
-  }
-
-  Future<void> _registrar() async {
-    setState(() => _ocupado = true);
-    final error = await ref.read(sesionProvider.notifier).darDeAlta(_codigo.text);
-    if (!mounted) return;
-    setState(() => _ocupado = false);
-    if (error != null) return avisar(context, error);
-    context.go('/inicio');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Encabezado(titulo: widget.cambioDeTelefono ? 'Cambié de teléfono' : 'Alta de credencial'),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          if (widget.cambioDeTelefono) ...[
-            const Aviso(
-              icono: Icons.warning_amber_rounded,
-              child: Text(
-                'Tu credencial está en el teléfono anterior. Para usar este, pide un código nuevo a la Dirección.',
-              ),
-            ),
-            const SizedBox(height: 14),
-            const Text(
-              '1. Pide el código a la Dirección.\n2. Escríbelo aquí.\n3. Registra tu Face ID en este teléfono.',
-              style: TextStyle(fontSize: 16, height: 1.6),
-            ),
-            const SizedBox(height: 14),
-          ] else
-            const Padding(
-              padding: EdgeInsets.only(bottom: 14),
-              child: Text('Escribe el código de un solo uso que te dio la Dirección.', style: TextStyle(fontSize: 17)),
-            ),
-          CampoCodigo(controlador: _codigo, alCambiar: _consultar),
-          const SizedBox(height: 14),
-          if (_dueno != null)
-            Tarjeta(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'ESTE CÓDIGO ES DE',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colores.gris),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(_dueno!.nombre, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                  Text('${_dueno!.matricula} · ${_dueno!.rango} · Estación ${_dueno!.estacion}', style: Textos.chico),
-                ],
-              ),
-            ),
-          if (widget.cambioDeTelefono)
-            const Padding(
-              padding: EdgeInsets.only(top: 12),
-              child: Text('Al registrar este teléfono, la credencial anterior se desactiva.', style: Textos.chico),
-            ),
-          const SizedBox(height: 28),
-          FilledButton.icon(
-            onPressed: _dueno == null || _ocupado ? null : _registrar,
-            icon: const Icon(Icons.face),
-            label: Text(widget.cambioDeTelefono ? 'Continuar' : 'Registrar mi Face ID'),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'Se guarda sólo la llave pública, nunca tu cara ni tu huella.',
-            textAlign: TextAlign.center,
-            style: Textos.chico,
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 /// Sólo en modo debug: saltar entre roles y mover las banderas de Config.

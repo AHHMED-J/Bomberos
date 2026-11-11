@@ -20,16 +20,62 @@ class Usuario {
     required this.rol,
     required this.division,
     required this.estacion,
+    this.trazo,
+    this.tieneLlave = false,
   });
   final String id;
   final String nombre;
+
+  /// Número de empleado: con él y su contraseña entra a la app.
   final String matricula;
   final String rango;
   final Rol rol;
   final String division;
   final String estacion;
 
+  /// Su firma en trazo (ver LienzoFirma.serializar), guardada en el servidor. Se copia a cada parte que firma.
+  final String? trazo;
+
+  /// El servidor ya tiene la llave del chip seguro de su celular (uno por usuario).
+  final bool tieneLlave;
+
   String get inicial => nombre.isEmpty ? '?' : nombre.substring(0, 1);
+
+  Usuario copiar({String? trazo, bool? tieneLlave}) => Usuario(
+    id: id,
+    nombre: nombre,
+    matricula: matricula,
+    rango: rango,
+    rol: rol,
+    division: division,
+    estacion: estacion,
+    trazo: trazo ?? this.trazo,
+    tieneLlave: tieneLlave ?? this.tieneLlave,
+  );
+
+  Map<String, dynamic> aJson() => {
+    'id': id,
+    'nombre': nombre,
+    'matricula': matricula,
+    'rango': rango,
+    'rol': rol.name,
+    'division': division,
+    'estacion': estacion,
+    'trazo': trazo,
+    'tiene_llave': tieneLlave,
+  };
+
+  factory Usuario.deJson(Map<String, dynamic> j) => Usuario(
+    id: j['id'] as String,
+    nombre: j['nombre'] as String,
+    matricula: j['matricula'] as String,
+    rango: j['rango'] as String,
+    rol: Rol.values.byName(j['rol'] as String),
+    division: j['division'] as String,
+    estacion: j['estacion'] as String,
+    trazo: j['trazo'] as String?,
+    tieneLlave: j['tiene_llave'] as bool? ?? false,
+  );
 }
 
 enum EstadoParte { enProgreso, enviado, devuelto, validado }
@@ -129,11 +175,15 @@ class NotaDevolucion {
   );
 }
 
-/// Firmas del parte. Quien elabora el parte firma con su llave (credencial); propietario y testigo con trazo.
+/// Firmas del parte. Quien lo elabora y quien lo revisa ponen su firma en trazo (la de su cuenta) y la
+/// confirman con la biometría del celular o con su contraseña. Propietario y testigo firman con el dedo.
 class Firmas {
   const Firmas({
     this.elaboro,
     this.elaboroSimulada = false,
+    this.elaboroTrazo,
+    this.revisorNombre,
+    this.revisorTrazo,
     this.propietarioNombre = '',
     this.propietarioTrazo,
     this.testigoNombre = '',
@@ -141,11 +191,19 @@ class Firmas {
     this.requierePeritaje,
   });
 
-  /// Firma ECDSA (base64) del reto que lleva el SHA-256 del contenido.
+  /// Cómo confirmó quien elabora: la firma ECDSA (base64) del reto que lleva el SHA-256 del contenido,
+  /// o el texto «contrasena» si confirmó con su contraseña.
   final String? elaboro;
 
   /// true si la firma vino del respaldo simulado (sin Face ID real).
   final bool elaboroSimulada;
+
+  /// Copia del trazo de quien elabora. La pone el servidor al enviar.
+  final String? elaboroTrazo;
+
+  /// Nombre y copia del trazo del revisor. Los pone el servidor al validar.
+  final String? revisorNombre;
+  final String? revisorTrazo;
   final String propietarioNombre;
 
   /// Trazo del dedo serializado (ver LienzoFirma.serializar).
@@ -165,6 +223,9 @@ class Firmas {
   }) => Firmas(
     elaboro: elaboro ?? this.elaboro,
     elaboroSimulada: elaboroSimulada ?? this.elaboroSimulada,
+    elaboroTrazo: elaboroTrazo,
+    revisorNombre: revisorNombre,
+    revisorTrazo: revisorTrazo,
     propietarioNombre: propietarioNombre ?? this.propietarioNombre,
     propietarioTrazo: propietarioTrazo ?? this.propietarioTrazo,
     testigoNombre: testigoNombre ?? this.testigoNombre,
@@ -175,6 +236,9 @@ class Firmas {
   Map<String, dynamic> aJson() => {
     'elaboro': elaboro,
     'elaboro_simulada': elaboroSimulada,
+    'elaboro_trazo': elaboroTrazo,
+    'revisor_nombre': revisorNombre,
+    'revisor_trazo': revisorTrazo,
     'propietario_nombre': propietarioNombre,
     'propietario_trazo': propietarioTrazo,
     'testigo_nombre': testigoNombre,
@@ -185,6 +249,9 @@ class Firmas {
     // `encargado*` = nombres anteriores al 10-nov-2026; siguen guardados en teléfonos de prueba.
     elaboro: (j['elaboro'] ?? j['encargado']) as String?,
     elaboroSimulada: (j['elaboro_simulada'] ?? j['encargado_simulada']) as bool? ?? false,
+    elaboroTrazo: j['elaboro_trazo'] as String?,
+    revisorNombre: j['revisor_nombre'] as String?,
+    revisorTrazo: j['revisor_trazo'] as String?,
     propietarioNombre: j['propietario_nombre'] as String? ?? '',
     propietarioTrazo: j['propietario_trazo'] as String?,
     testigoNombre: j['testigo_nombre'] as String? ?? '',

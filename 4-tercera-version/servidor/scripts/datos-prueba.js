@@ -1,11 +1,10 @@
-// Carga en MySQL los mismos datos de ejemplo que app-bomberos/servidor tiene
-// en memoria (src/datos.js): sus usuarios, el código de alta 4F2K9 y sus
-// partes. Así la app ve lo mismo con cualquiera de los dos servidores.
+// Carga en MySQL los usuarios y los partes de ejemplo que la app ya trae
+// (los de app-bomberos/servidor/src/datos.js). A cada usuario le pone la
+// contraseña prueba<matrícula>.
 //
 //   npm run datos-prueba
 //
-// Se puede correr varias veces: lo que ya existe no se toca. A cada usuario
-// le pone la contraseña prueba<matrícula> para la entrada manual.
+// Se puede correr varias veces: lo que ya existe no se toca.
 
 'use strict';
 
@@ -28,10 +27,6 @@ async function main() {
     );
   }
 
-  for (const [codigo, c] of deLaApp.codigosAlta) {
-    await db.ejecutar('INSERT IGNORE INTO codigo_alta (codigo, usuario_id) VALUES (?, ?)', [codigo, c.usuarioId]);
-  }
-
   let nuevos = 0;
   for (const parte of deLaApp.partes.values()) {
     if (!(await datos.partePorFolio(parte.folio))) {
@@ -42,7 +37,6 @@ async function main() {
 
   console.log('Usuarios (número de empleado / contraseña):');
   for (const u of deLaApp.usuarios) console.log(`  ${u.matricula} / prueba${u.matricula}   ${u.nombre} (${u.rol})`);
-  console.log(`Códigos de alta: ${[...deLaApp.codigosAlta.keys()].join(', ')}`);
   console.log(`Partes de ejemplo nuevos: ${nuevos}`);
 }
 
