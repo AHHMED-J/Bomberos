@@ -39,6 +39,7 @@ Cada tema está escrito en un solo lugar; los demás documentos enlazan ahí.
 | Cómo se ve la app por dentro (pantallas y piezas) | [`docs/estructura-app.html`](docs/estructura-app.html) |
 | Cómo correr todo en Windows | [`docs/correr-en-windows.md`](docs/correr-en-windows.md) |
 | Cómo correr todo en la Mac y el iPhone | [`docs/correr-en-mac.md`](docs/correr-en-mac.md) |
+| Qué dirección del servidor ponerle a la app (`SERVIDOR_URL`) | [`docs/servidor-url.md`](docs/servidor-url.md) |
 | Cómo funciona el servidor: rutas, tablas, usuarios de ejemplo y comandos de Dirección | [`servidor/README.md`](servidor/README.md) |
 | Qué piden y contestan las rutas de la IA | [`servidor/CONTRATOS-IA.md`](servidor/CONTRATOS-IA.md) |
 | La IA real (Whisper y Ollama) y su evaluación | [`ia-local/README.md`](ia-local/README.md) |
