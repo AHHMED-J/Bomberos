@@ -168,5 +168,12 @@ Cubren:
   el croquis o las fotos.
 - **Dirección:** restablecer la contraseña.
 
-**App:** las pantallas quedaron escritas, pero falta compilarlas y correr
-`flutter analyze` y `flutter test`.
+**App:** `flutter analyze` no encuentra problemas y las 44 pruebas de
+`flutter test` pasan. Entre ellas hay una nueva: entrar con número de
+empleado y contraseña (uno que no existe no entra) y llegar a Mi cuenta.
+
+**App contra el servidor:** las 3 pruebas de contrato
+(`test/servidor_contrato_test.dart`) pasan con el servidor y MySQL
+encendidos: la IA, y entrar, subir la firma y enviar un parte firmado.
+
+Falta el recorrido a mano en un celular.

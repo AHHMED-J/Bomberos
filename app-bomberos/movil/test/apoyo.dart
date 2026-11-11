@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:bomberos_parte/acceso/memoria_telefono.dart';
 import 'package:bomberos_parte/croquis/almacen_croquis.dart';
 import 'package:bomberos_parte/datos/repositorio_local.dart';
 import 'package:bomberos_parte/datos/repositorio_remoto.dart';
@@ -54,6 +55,7 @@ List<Override> overridesDePrueba({
   ubicacionProvider.overrideWithValue(ubicacion ?? UbicacionFija()),
   teselasMapaProvider.overrideWithValue(false),
   almacenCroquisProvider.overrideWithValue(croquis ?? AlmacenCroquisMemoria()),
+  memoriaTelefonoProvider.overrideWithValue(MemoriaTelefonoMemoria()),
 ];
 
 /// Espera (en el bucle de eventos) a que se cumpla una condición.

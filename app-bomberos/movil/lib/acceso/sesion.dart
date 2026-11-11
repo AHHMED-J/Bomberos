@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../datos/modelos.dart';
 import '../datos/repositorio_remoto.dart';
@@ -27,32 +23,17 @@ class SesionNotifier extends Notifier<EstadoSesion> {
   EstadoSesion build() => const EstadoSesion();
 
   /// El usuario que ya entró con su contraseña en este teléfono (para ofrecerle la biometría).
-  /// Se guarda en la carpeta de la app; null = nadie ha entrado aquí.
+  /// Lo recuerda memoriaTelefonoProvider entre aperturas; null = nadie ha entrado aquí.
   Usuario? usuarioDelTelefono;
-
-  Future<File> _archivoTelefono() async => File('${(await getApplicationDocumentsDirectory()).path}/telefono.json');
 
   /// Lee quién usa este teléfono. Se llama al abrir la pantalla de acceso.
   Future<void> cargarTelefono() async {
-    if (usuarioDelTelefono != null) return;
-    try {
-      final archivo = await _archivoTelefono();
-      if (!await archivo.exists()) return;
-      usuarioDelTelefono = Usuario.deJson(jsonDecode(await archivo.readAsString()) as Map<String, dynamic>);
-    } catch (e) {
-      debugPrint('No se pudo leer telefono.json ($e)');
-    }
+    usuarioDelTelefono ??= await ref.read(memoriaTelefonoProvider).leer();
   }
 
   Future<void> _recordar(Usuario u) async {
     usuarioDelTelefono = u;
-    try {
-      // El trazo no hace falta aquí: llega del servidor cada vez que entra.
-      final sinTrazo = u.aJson()..remove('trazo');
-      await (await _archivoTelefono()).writeAsString(jsonEncode(sinTrazo));
-    } catch (e) {
-      debugPrint('No se pudo guardar telefono.json ($e)');
-    }
+    await ref.read(memoriaTelefonoProvider).guardar(u);
   }
 
   /// ¿Se puede ofrecer «Entrar con mi biometría» en este teléfono?

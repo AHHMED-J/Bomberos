@@ -3,6 +3,7 @@
 // En pruebas se sustituye con ProviderScope(overrides: [...]).
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../acceso/memoria_telefono.dart';
 import '../croquis/almacen_croquis.dart';
 import '../datos/api_cliente.dart';
 import '../datos/repositorio_local.dart';
@@ -86,6 +87,12 @@ final teselasMapaProvider = Provider<bool>((ref) => true);
 
 /// PNG del croquis en la carpeta de la app. En pruebas: en memoria.
 final almacenCroquisProvider = Provider<AlmacenCroquis>((ref) => AlmacenCroquisArchivos());
+
+// ---------- Acceso ----------
+
+/// Qué usuario ya entró con su contraseña en este teléfono (archivo en la carpeta de la app).
+/// En pruebas: en memoria.
+final memoriaTelefonoProvider = Provider<MemoriaTelefono>((ref) => MemoriaTelefonoArchivo());
 
 /// Un solo servidor falso para toda la sesión, así lo que envía quien elabora le llega al capitán.
 final _remotoFalsoProvider = Provider<RemotoFalso>((ref) => RemotoFalso());

@@ -15,7 +15,7 @@ void main() {
 
     await tester.pumpWidget(ProviderScope(overrides: overridesDePrueba(), child: const AppBomberos()));
     await tester.pumpAndSettle();
-    expect(find.text('Usar mi credencial'), findsOneWidget);
+    expect(find.byKey(const ValueKey('entrar')), findsOneWidget);
 
     await tester.ensureVisible(find.text('Depuración: entrar como…', skipOffstage: false));
     await tester.pumpAndSettle();
@@ -76,5 +76,32 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('usar-face-id')));
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('firmar-y-validar')), findsOneWidget);
+  });
+
+  testWidgets('Entra con número de empleado y contraseña, y llega a Mi cuenta', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(ProviderScope(overrides: overridesDePrueba(), child: const AppBomberos()));
+    await tester.pumpAndSettle();
+
+    // Un número de empleado que no existe no entra.
+    await tester.enterText(find.byKey(const ValueKey('no-empleado')), '000000');
+    await tester.enterText(find.byKey(const ValueKey('contrasena')), 'cualquiera');
+    await tester.tap(find.byKey(const ValueKey('entrar')));
+    await tester.pumpAndSettle();
+    expect(find.text('Número de empleado o contraseña incorrectos'), findsOneWidget);
+
+    // Con el de un usuario de ejemplo, sí.
+    await tester.enterText(find.byKey(const ValueKey('no-empleado')), '376285');
+    await tester.tap(find.byKey(const ValueKey('entrar')));
+    await tester.pumpAndSettle();
+    expect(find.text('DIVISIÓN ESTRUCTURAL'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('mi-cuenta')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('guardar-firma')), findsOneWidget);
+    expect(find.byKey(const ValueKey('cambiar-contrasena'), skipOffstage: false), findsOneWidget);
   });
 }
