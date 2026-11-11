@@ -11,7 +11,7 @@
 
 'use strict';
 
-require('dotenv').config({ quiet: true });
+require('../src/entorno');
 
 const crypto = require('node:crypto');
 const bcrypt = require('bcryptjs');

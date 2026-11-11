@@ -1,6 +1,6 @@
-// Carga en MySQL los usuarios y los partes de ejemplo que la app ya trae
-// (los de app-bomberos/servidor/src/datos.js). A cada usuario le pone la
-// contraseña prueba<matrícula>.
+// Carga en MySQL los usuarios y los partes de ejemplo (src/datos-ejemplo.js),
+// que son los mismos que trae la app. A cada usuario le pone la contraseña
+// prueba<matrícula>.
 //
 //   npm run datos-prueba
 //
@@ -8,18 +8,17 @@
 
 'use strict';
 
-require('dotenv').config({ quiet: true });
+require('../src/entorno');
 
-const path = require('node:path');
 const bcrypt = require('bcryptjs');
 
 const db = require('../src/db');
 const datos = require('../src/datos');
 
-const deLaApp = require(path.join(__dirname, '..', '..', '..', 'app-bomberos', 'servidor', 'src', 'datos'));
+const ejemplo = require('../src/datos-ejemplo');
 
 async function main() {
-  for (const u of deLaApp.usuarios) {
+  for (const u of ejemplo.usuarios) {
     await db.ejecutar(
       `INSERT IGNORE INTO usuario (id, nombre, matricula, rango, rol, division, estacion, contrasena_hash)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -28,7 +27,7 @@ async function main() {
   }
 
   let nuevos = 0;
-  for (const parte of deLaApp.partes.values()) {
+  for (const parte of ejemplo.partes.values()) {
     if (!(await datos.partePorFolio(parte.folio))) {
       await datos.guardarParte(parte);
       nuevos++;
@@ -36,7 +35,7 @@ async function main() {
   }
 
   console.log('Usuarios (número de empleado / contraseña):');
-  for (const u of deLaApp.usuarios) console.log(`  ${u.matricula} / prueba${u.matricula}   ${u.nombre} (${u.rol})`);
+  for (const u of ejemplo.usuarios) console.log(`  ${u.matricula} / prueba${u.matricula}   ${u.nombre} (${u.rol})`);
   console.log(`Partes de ejemplo nuevos: ${nuevos}`);
 }
 

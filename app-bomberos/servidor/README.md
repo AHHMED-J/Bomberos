@@ -1,37 +1,54 @@
-# Servidor de la tercera versión
+# Servidor del parte digital
 
-El servidor de la app (`app-bomberos/movil`) para lo que pide la tercera
-versión: acceso con usuario y contraseña, firma, revisión y envío, y
-sellado. Guarda en MySQL. Node.js y Express 5.
+El servidor de la app (`app-bomberos/movil`): acceso con usuario y
+contraseña, firma, revisión y envío, sellado, y las dos IAs (dictado y
+resumen, ver [`CONTRATOS-IA.md`](CONTRATOS-IA.md)). Node.js y Express 5.
 
-Las rutas de la IA (dictado, llenado de campos y resumen) y la revisión del
-parte se cargan tal cual de [`app-bomberos/servidor`](../../app-bomberos/servidor/),
-así que el croquis y la IA de la app siguen funcionando igual. Por eso este
-servidor necesita que `app-bomberos/` esté en el repo.
+Los usuarios, las firmas y los partes se guardan en **MySQL**, así que hace
+falta tenerlo instalado y prendido en la compu que corre el servidor.
+
+## Prepararlo (una sola vez)
+
+```bash
+cd app-bomberos/servidor
+npm install
+cp .env.example .env      # y pon el usuario y la contraseña de TU MySQL (DB_USER, DB_PASSWORD)
+npm run db:crear          # crea la base bomberos_v3 y sus tablas
+npm run datos-prueba      # carga los usuarios y partes de ejemplo
+```
+
+En la Mac, `ia-local/configurar.sh` ya crea el `.env` (con la clave de la
+IA); ahí solo falta llenar los datos de MySQL y correr los dos últimos
+comandos.
+
+Cada quien tiene su propio `.env` (no se sube al repo) y su propia base: lo
+que se crea en una compu no aparece en otra.
+
+`npm run datos-prueba` deja a cada usuario de ejemplo con la contraseña
+`prueba<matrícula>`:
+
+| Usuario | Contraseña | Quién |
+|---|---|---|
+| `380207` | `prueba380207` | Acevedo Carrillo, Verónica (bombero) |
+| `376285` | `prueba376285` | Jalife Burgueño, Ahhmed (bombero) |
+| `300112` | `prueba300112` | Cap. J. Navarro (capitán, revisor) |
 
 ## Correrlo
 
 ```bash
-cd 4-tercera-version/servidor
-npm install
-cp .env.example .env      # y ajusta los datos de MySQL
-npm run db:crear          # crea la base bomberos_v3 y sus tablas
-npm run datos-prueba      # los usuarios y partes de ejemplo de la app
-npm start                 # puerto 3100, el mismo que usa la app
+npm start                 # puerto 3100
 ```
 
-`npm run datos-prueba` deja a cada usuario de ejemplo con la contraseña
-`prueba<matrícula>` (por ejemplo `376285` / `prueba376285`).
-
-`app-bomberos/ia-local/correr-app.sh` ya enciende este servidor.
+`ia-local/correr-app.sh` lo enciende solo. Si MySQL no está listo, el
+servidor arranca y lo avisa en la terminal: la IA contesta, pero entrar,
+enviar y validar fallan hasta arreglarlo.
 
 ```bash
-npm run probar            # prueba de punta a punta (usa la base de .env)
+npm test                  # pruebas de la IA (no necesitan MySQL)
+npm run probar            # prueba de punta a punta del acceso, la firma y el sello (usa la base de .env)
 ```
 
-`db:crear` no borra nada: si las tablas ya existen, las deja como están. Si
-tenías la base de una versión anterior de este servidor, bórrala primero
-(`DROP DATABASE bomberos_v3`), porque la tabla `usuario` cambió.
+`db:crear` no borra nada: si las tablas ya existen, las deja como están.
 
 ## Lo que hace Dirección
 
@@ -97,26 +114,28 @@ las imágenes de las fotos ni del croquis; cuando lo haga, entran al sello.
 | `GET /api/revision/bandeja?division=…` | no | — | `partes` |
 | `POST /api/revision/:folio/devolver` | no | `nota`, `seccion`, `revisor_id` | `parte` |
 | `POST /api/revision/:folio/validar` | no | `reto`, `revisor_id`, y `firma` o `contrasena` | `parte` |
-| `POST /api/ia/…` | como en `app-bomberos/servidor` | | |
+| `POST /api/ia/transcribir`, `/llenar-campos`, `/resumen` | ver [`CONTRATOS-IA.md`](CONTRATOS-IA.md) | | |
 
 La sesión va en `Authorization: Bearer <token>`. `usuario` trae `id`,
 `nombre`, `matricula`, `rango`, `rol`, `division`, `estacion`, `trazo` y
 `tiene_llave`. Los errores llegan como `{ "error": "codigo" }`.
 
-Las rutas de partes y de revisión no piden sesión, igual que en
-`app-bomberos/servidor`: lo que protege la firma es la confirmación de cada
-envío y cada validación.
+Las rutas de partes y de revisión todavía no piden sesión: lo que protege la
+firma es la confirmación de cada envío y cada validación.
 
 ## Archivos
 
-    src/server.js          arma Express
+    servidor.js            arma Express y arranca
+    src/entorno.js         carga el .env
     src/db.js              conexión a MySQL (filas, fila, ejecutar, transaccion)
     src/datos.js           usuarios, sesiones, partes, firmas y folios en MySQL
+    src/datos-ejemplo.js   los usuarios y partes de ejemplo que carga datos-prueba
     src/firma.js           retos y confirmación (biometría o contraseña)
     src/sello.js           el sello SHA-256 del parte
-    src/de-la-app.js       lo que se carga de app-bomberos/servidor
+    src/validacion.js      la revisión del parte y el contenido que se firma (igual que en la app)
     src/rutas/acceso.js    entrar, biometría, llave, contraseña y trazo
     src/rutas/partes.js    folio, lista, reto, enviar y verificar sello
     src/rutas/revision.js  bandeja, devolver y validar
+    src/rutas/ia.js        las rutas de las dos IAs (y src/ia/, lo que hay detrás)
     db/schema.sql          las tablas
     scripts/               crear la base, datos de ejemplo, usuarios y la prueba

@@ -1,4 +1,4 @@
-// Prueba de contrato contra 4-tercera-version/servidor corriendo de verdad (con `npm run datos-prueba`).
+// Prueba de contrato contra app-bomberos/servidor corriendo de verdad (con `npm run datos-prueba`).
 // Se salta si no hay servidor:  SERVIDOR_URL=http://localhost:3100 flutter test test/servidor_contrato_test.dart
 import 'dart:io';
 import 'dart:typed_data';

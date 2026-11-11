@@ -1,67 +1,117 @@
-// Datos EN MEMORIA (se pierden al reiniciar). DATOS DE EJEMPLO: no son partes reales.
-// TODO(BD): pasar a MySQL con el esquema de 1-primera-version/app/db/schema.sql + cambios de decisiones.md.
+// Lo que las rutas leen y escriben en MySQL.
+
+'use strict';
+
+const crypto = require('node:crypto');
+
+const db = require('./db');
+const { sha256 } = require('./firma');
+
 const DIVISION = 'División Estructural';
 
-const usuarios = [
-  { id: 'u-380207', nombre: 'Acevedo Carrillo, Verónica', matricula: '380207', rango: 'Bombero', rol: 'editor', division: DIVISION, estacion: 'Central' },
-  { id: 'u-376285', nombre: 'Jalife Burgueño, Ahhmed', matricula: '376285', rango: 'Bombero', rol: 'editor', division: DIVISION, estacion: 'Central' },
-  { id: 'u-300112', nombre: 'Cap. J. Navarro', matricula: '300112', rango: 'Capitán', rol: 'capitan', division: DIVISION, estacion: 'Central' },
-];
+// Las sesiones abiertas desde que arrancó el servidor (token -> id del usuario). Las consulta
+// src/rutas/ia.js; las de verdad están en la tabla sesion.
+const sesiones = new Map();
 
-// Códigos de alta de un solo uso (los da la Dirección). Ejemplo: 4F2K9 → Verónica.
-const codigosAlta = new Map([['4F2K9', { usuarioId: 'u-380207', usado: false }]]);
+// El renglón completo, con contrasena_hash y llave_publica. No sale del servidor.
+function usuarioCompleto(id) {
+  return db.fila('SELECT * FROM usuario WHERE id = ?', [String(id ?? '')]);
+}
 
-// usuarioId -> llave pública PEM (o 'SIMULADA').
-const llaves = new Map();
-
-const m = (valor) => ({ valor, origen: 'manual', estado_ia: null, confianza: null, valor_anterior: null, confirmado: true });
-const a = (valor) => ({ ...m(valor), origen: 'auto' });
-const completo = (o) => ({
-  no_incidente_c5: m(o.c5 || 'ENS-26-118843'),
-  fecha: a(o.fecha || '24/10/2026'),
-  unidad: a('Pipa 04'),
-  turno: a('A'),
-  estacion: a('Central'),
-  hora_salida: m(o.salida || '21:30'),
-  hora_llegada: m(o.llegada || '21:41'),
-  hora_regreso: m(o.regreso || '23:05'),
-  tipo_servicio: m(o.tipo),
-  zona: m('Urbana'),
-  lugar_servicio: m(o.lugar),
-  descripcion: m(o.desc),
-  personal_turno: m('Jalife Burgueño, Ahhmed; Acevedo Carrillo, Verónica'),
-});
-const firmasEjemplo = { elaboro: 'SIMULADA:ejemplo', elaboro_simulada: true, propietario_nombre: '', propietario_trazo: null, testigo_nombre: '', testigo_trazo: null, requiere_peritaje: false };
-
-function parte(o) {
+// Lo que la app sabe de un usuario: lo de siempre, más su firma en trazo y si
+// ya tiene registrada la llave de su celular.
+function usuarioPublico(u) {
   return {
-    id: o.id, folio: o.folio, estado: o.estado, elaboro_id: o.elaboro.id, elaboro_nombre: o.elaboro.nombre,
-    division: DIVISION, creado_en: o.creado, campos: o.campos, fotos: o.fotos ?? 1, croquis_dibujado: false,
-    firmas: firmasEjemplo, modo: o.modo || 'dictado', seg_activo: o.seg ?? 120, ultima_actividad: null,
-    nota: o.nota || null, enviado_en: o.enviado || null, sello: o.sello || null,
+    id: u.id,
+    nombre: u.nombre,
+    matricula: u.matricula,
+    rango: u.rango,
+    rol: u.rol,
+    division: u.division,
+    estacion: u.estacion,
+    trazo: u.trazo,
+    tiene_llave: Boolean(u.llave_publica),
   };
 }
 
-const [vero, ahhmed, capitan] = usuarios;
-const partes = new Map(
-  [
-    parte({ id: 'srv-0150', folio: 'PE-2026-0150', estado: 'enviado', elaboro: ahhmed, creado: '2026-11-08T14:20:00', enviado: '2026-11-08T16:02:00', fotos: 2, seg: 112,
-      campos: completo({ tipo: 'Incendio de pastizal', lugar: 'Calle López Mateos, El Sauzal', desc: '(Ejemplo) Se sofocó el fuego con pitón de niebla. No hubo lesionados.', c5: 'ENS-26-118842', fecha: '08/11/2026', salida: '14:05', llegada: '14:20', regreso: '15:40' }) }),
-    parte({ id: 'srv-0143', folio: 'PE-2026-0143', estado: 'enviado', elaboro: vero, creado: '2026-09-06T21:30:00', enviado: '2026-09-06T23:05:00', modo: 'teclado', seg: 240,
-      campos: completo({ tipo: 'Fuga de gas', lugar: 'Calle Novena 88, Col. Bustamante', desc: '(Ejemplo) Fuga en conexión de tanque estacionario.', fecha: '06/09/2026' }) }),
-    parte({ id: 'srv-0147', folio: 'PE-2026-0147', estado: 'validado', elaboro: ahhmed, creado: '2026-10-20T09:00:00', fotos: 3,
-      sello: '9f2c0d8e5b1a4c7f9e2d3b6a8c1f0e4d7b5a2c9e8f1d3b6a4c7e0f2d5b8a1c3e',
-      campos: completo({ tipo: 'Incendio estructural', lugar: 'Av. Reforma 1520, Col. Carlos Pacheco', desc: '(Ejemplo) Incendio en cocina.' }) }),
-    parte({ id: 'srv-0142', folio: 'PE-2026-0142', estado: 'devuelto', elaboro: ahhmed, creado: '2026-11-07T14:05:00',
-      nota: { texto: 'Falta la hora de control del fuego.', seccion: 'Datos del servicio', revisor: capitan.nombre, fecha: '2026-11-08T08:10:00' },
-      campos: completo({ tipo: 'Incendio de pastizal', lugar: 'Ejido Chapultepec', desc: '(Ejemplo) Quema de pastizal controlada.', salida: '14:05', llegada: '14:16', regreso: '15:40' }) }),
-  ].map((p) => [p.folio, p]),
-);
+async function usuarioPorId(id) {
+  const u = await usuarioCompleto(id);
+  return u ? usuarioPublico(u) : null;
+}
 
-let siguienteFolio = 153;
-const nuevoFolio = () => `PE-2026-${String(siguienteFolio++).padStart(4, '0')}`;
+async function abrirSesion(usuarioId) {
+  const token = crypto.randomBytes(24).toString('hex');
+  await db.ejecutar('INSERT INTO sesion (token_hash, usuario_id) VALUES (?, ?)', [sha256(token), usuarioId]);
+  sesiones.set(token, usuarioId);
+  return token;
+}
 
-// Sesiones: token -> usuarioId. TODO: tokens firmados con vencimiento.
-const sesiones = new Map();
+// Filtro de Express para las rutas que son «de mi cuenta»: deja en
+// req.usuario el renglón completo de quien trae el token.
+async function exigirSesion(req, res, siguiente) {
+  const token = (/^Bearer (.+)$/.exec(req.get('authorization') || '') || [])[1];
+  const sesion = token ? await db.fila('SELECT usuario_id FROM sesion WHERE token_hash = ?', [sha256(token)]) : null;
+  req.usuario = sesion ? await usuarioCompleto(sesion.usuario_id) : null;
+  if (!req.usuario) return res.status(401).json({ error: 'sin_sesion' });
+  siguiente();
+}
 
-module.exports = { usuarios, codigosAlta, llaves, partes, nuevoFolio, sesiones, DIVISION };
+async function partePorFolio(folio) {
+  const fila = await db.fila('SELECT datos FROM parte WHERE folio = ?', [folio]);
+  return fila ? fila.datos : null;
+}
+
+async function partesDonde(condicion, valores) {
+  const filas = await db.filas(`SELECT datos FROM parte ${condicion} ORDER BY folio DESC`, valores);
+  return filas.map((fila) => fila.datos);
+}
+
+// Guarda el parte completo. Se usa con db o dentro de una transacción.
+function guardarParte(parte, conexion = db) {
+  return conexion.ejecutar(
+    `INSERT INTO parte (folio, estado, elaboro_id, division, datos) VALUES (?, ?, ?, ?, ?)
+     ON DUPLICATE KEY UPDATE estado = VALUES(estado), elaboro_id = VALUES(elaboro_id),
+                             division = VALUES(division), datos = VALUES(datos)`,
+    [parte.folio, parte.estado, parte.elaboro_id, parte.division || DIVISION, JSON.stringify(parte)],
+  );
+}
+
+function guardarFirma(conexion, { folio, usuarioId, rol, reto, confirmacion, firma, trazo }) {
+  return conexion.ejecutar(
+    'INSERT INTO firma_parte (folio, usuario_id, rol, reto, metodo, firma, simulada, trazo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [
+      folio,
+      usuarioId,
+      rol,
+      reto,
+      confirmacion.metodo,
+      confirmacion.metodo === 'biometria' ? firma : null,
+      confirmacion.simulada ? 1 : 0,
+      trazo,
+    ],
+  );
+}
+
+// PE-<año>-<consecutivo>. LAST_INSERT_ID(valor + 1) hace que dos peticiones
+// al mismo tiempo nunca reciban el mismo número.
+async function nuevoFolio() {
+  const { insertId } = await db.ejecutar(
+    "UPDATE consecutivo SET valor = LAST_INSERT_ID(valor + 1) WHERE nombre = 'folio'",
+  );
+  return `PE-${new Date().getFullYear()}-${String(insertId).padStart(4, '0')}`;
+}
+
+module.exports = {
+  DIVISION,
+  sesiones,
+  usuarioCompleto,
+  usuarioPublico,
+  usuarioPorId,
+  abrirSesion,
+  exigirSesion,
+  partePorFolio,
+  partesDonde,
+  guardarParte,
+  guardarFirma,
+  nuevoFolio,
+};

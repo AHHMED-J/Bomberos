@@ -5,11 +5,11 @@
 'use strict';
 
 const { sha256 } = require('./firma');
-const { contenidoParaFirmar } = require('./de-la-app').validacion;
+const { contenidoParaFirmar } = require('./validacion');
 
 // Lo que entra al sello:
 //   contenido  los datos de la hoja, el número de fotos, y el propietario y
-//              el testigo con sus trazos (lo mismo que firmaron autor y revisor)
+//              el testigo con sus trazos (lo mismo que confirmaron autor y revisor)
 //   croquis    lo que el parte trae del croquis
 //   firmas     del autor y del revisor: quién, cómo confirmó y la copia de su trazo
 //

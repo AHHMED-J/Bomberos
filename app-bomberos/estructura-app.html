@@ -310,7 +310,7 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
       <rect x="410" y="178" width="194" height="30" rx="7" class="s-crema"/><text x="422" y="198">/api/revision</text>
       <rect x="410" y="214" width="194" height="30" rx="7" class="s-verde-f"/><text x="422" y="234">/api/ia/*  · 🔑 clave local</text>
     </g>
-    <text x="507" y="270" class="t t-g" text-anchor="middle">IA_MODO = fijo | local</text><text x="507" y="290" class="t t-g" text-anchor="middle">datos en memoria · sin BD</text>
+    <text x="507" y="270" class="t t-g" text-anchor="middle">IA_MODO = fijo | local</text><text x="507" y="290" class="t t-g" text-anchor="middle">usuarios, firmas y partes en MySQL</text>
     <!-- IAs (en la Mac, sólo 127.0.0.1) -->
     <rect x="732" y="22" width="256" height="336" rx="20" fill="none" class="s-borde" stroke-width="2" stroke-dasharray="6 5"/>
     <text x="860" y="44" class="t t-g" text-anchor="middle">Mac del equipo · 127.0.0.1</text>
@@ -398,7 +398,7 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
     <div class="carpeta" style="--c:var(--verde)"><b><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1" class="s-verde"/><rect x="11" y="3" width="6" height="6" rx="1" class="s-verde"/><rect x="3" y="11" width="6" height="6" rx="1" class="s-verde"/><rect x="11" y="11" width="6" height="6" rx="1" class="s-verde"/></svg>compartido</b><span>Tema, campo, chip, onda, firma</span><code>tokens de Figma</code></div>
     <div class="carpeta" style="--c:var(--azul)"><b><svg viewBox="0 0 20 20"><ellipse cx="10" cy="5" rx="6" ry="2.5" fill="none" style="stroke:var(--azul)" stroke-width="2"/><path d="M4 5v10c0 3 12 3 12 0V5" fill="none" style="stroke:var(--azul)" stroke-width="2"/></svg>datos</b><span>Modelo, catálogo, SQLite, API</span><code>modo + seg_activo (A/B)</code></div>
     <div class="carpeta" style="--c:var(--ambar)"><b><svg viewBox="0 0 20 20"><path d="M7 3v5M13 3v5M5 8h10v3a5 5 0 0 1-10 0z" fill="none" style="stroke:var(--ambar)" stroke-width="2"/><path d="M10 16v2" style="stroke:var(--ambar)" stroke-width="2"/></svg>servicios</b><span>IA, micrófono real, firma, bandera</span><code>grabadora_real.dart</code></div>
-    <div class="carpeta" style="--c:var(--tinta)"><b><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="6" rx="1.5" fill="none" style="stroke:var(--tinta)" stroke-width="2"/><rect x="3" y="11" width="14" height="6" rx="1.5" fill="none" style="stroke:var(--tinta)" stroke-width="2"/></svg>servidor/</b><span>Express en memoria · IA fija o local</span><code>src/ia/ · CONTRATOS-IA.md</code></div>
+    <div class="carpeta" style="--c:var(--tinta)"><b><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="6" rx="1.5" fill="none" style="stroke:var(--tinta)" stroke-width="2"/><rect x="3" y="11" width="14" height="6" rx="1.5" fill="none" style="stroke:var(--tinta)" stroke-width="2"/></svg>servidor/</b><span>Express + MySQL · IA fija o local</span><code>src/ia/ · CONTRATOS-IA.md</code></div>
     <div class="carpeta" style="--c:var(--verde)"><b><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="10" rx="2" fill="none" style="stroke:var(--verde)" stroke-width="2"/><path d="M7 17h6M10 14v3" style="stroke:var(--verde)" stroke-width="2"/></svg>ia-local/</b><span>Configurar, iniciar, detener, evaluar</span><code>README.md</code></div>
   </div>
 </section>
@@ -469,7 +469,7 @@ footer{color:var(--gris);font-size:13px;text-align:center;margin-top:24px}
       <li>Partes en progreso en SQLite</li><li>Micrófono real (<code>record</code>)</li><li>IA local: Whisper + qwen2.5</li><li>Dictado desde audio probado en el iPhone ✓</li><li>Croquis: mapa en vivo + Captura (PNG)</li><li>43 pruebas app + 17 servidor</li></ul></div>
     <div class="col"><h3><span class="luz" style="background:var(--ambar)"></span>Simulado</h3>
       <p class="nota-pasos">La pantalla funciona, pero detrás hay una pieza de mentira en lugar de la real.</p><ul>
-      <li>IA fija: respuestas de ejemplo para pruebas sin modelos (chip «Ejemplo · sin IA»)</li><li>Sin señal: un interruptor en Depuración, no un detector de red</li><li>Cámara: «Agregar» suma una foto de ejemplo</li><li>«Usar mi ubicación actual» del Lugar: escribe un texto de ejemplo (el croquis sí usa el GPS real)</li><li>Servidor: guarda los partes en memoria; se borran al apagarlo</li></ul></div>
+      <li>IA fija: respuestas de ejemplo para pruebas sin modelos (chip «Ejemplo · sin IA»)</li><li>Sin señal: un interruptor en Depuración, no un detector de red</li><li>Cámara: «Agregar» suma una foto de ejemplo</li><li>«Usar mi ubicación actual» del Lugar: escribe un texto de ejemplo (el croquis sí usa el GPS real)</li></ul></div>
     <div class="col"><h3><span class="luz" style="background:var(--rojo)"></span>Falta</h3><ul>
       <li>Medir con audios de bomberos</li><li>Base de datos (MySQL)</li><li>Subir fotos y croquis al servidor</li><li>Sorteo A/B y PDF</li></ul></div>
   </div>

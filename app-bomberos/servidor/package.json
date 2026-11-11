@@ -1,18 +1,24 @@
 {
   "name": "parte-digital-servidor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "API JSON de prueba para la app iOS del parte digital (Bomberos de Ensenada). Datos en memoria; IA fija o local (whisper.cpp + Ollama).",
+  "description": "API JSON para la app del parte digital (Bomberos de Ensenada). Usuarios, firmas y partes en MySQL; IA fija o local (whisper.cpp + Ollama).",
   "main": "servidor.js",
   "scripts": {
     "start": "node servidor.js",
-    "check": "node --check servidor.js && node --check src/datos.js && node --check src/firma.js && node --check src/validacion.js && node --check src/rutas/acceso.js && node --check src/rutas/partes.js && node --check src/rutas/revision.js && node --check src/rutas/ia.js && node --check src/ia/config.js && node --check src/ia/audio.js && node --check src/ia/whisper.js && node --check src/ia/ollama.js && node --check src/ia/texto.js && node --check src/ia/llenado.js && node --check src/ia/resumen.js && node --check src/ia/glosario.js",
+    "db:crear": "node scripts/cargar-bd.js",
+    "datos-prueba": "node scripts/datos-prueba.js",
+    "usuario": "node scripts/usuario.js",
+    "probar": "node scripts/probar-flujo.js",
+    "check": "node --check servidor.js && node --check src/entorno.js && node --check src/db.js && node --check src/datos.js && node --check src/datos-ejemplo.js && node --check src/firma.js && node --check src/sello.js && node --check src/validacion.js && node --check src/rutas/acceso.js && node --check src/rutas/partes.js && node --check src/rutas/revision.js && node --check src/rutas/ia.js && node --check src/ia/config.js && node --check src/ia/audio.js && node --check src/ia/whisper.js && node --check src/ia/ollama.js && node --check src/ia/texto.js && node --check src/ia/llenado.js && node --check src/ia/resumen.js && node --check src/ia/glosario.js && node --check scripts/cargar-bd.js && node --check scripts/datos-prueba.js && node --check scripts/usuario.js && node --check scripts/probar-flujo.js",
     "test": "node --test test/*.test.js"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.12"
   },
   "dependencies": {
-    "express": "^4.22.3"
+    "bcryptjs": "^3.0.2",
+    "express": "^5.1.0",
+    "mysql2": "^3.15.3"
   }
 }

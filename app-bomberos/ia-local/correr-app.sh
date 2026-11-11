@@ -38,13 +38,8 @@ if ! lsof -nP -iTCP:8178 -sTCP:LISTEN >/dev/null 2>&1; then $AQUI/iniciar.sh; el
 # 3 · Servidor en modo local (puerto 3100)
 SALUD=$(curl -s -m 3 http://127.0.0.1:3100/api/salud || true)
 if [[ -z "$SALUD" ]]; then
-  # El servidor es el de la tercera versión: mismas rutas de IA (lee este mismo servidor/.env), con
-  # usuarios, firmas y partes en MySQL. Antes, una sola vez: cp .env.example .env, npm run db:crear
-  # y npm run datos-prueba (ver 4-tercera-version/servidor/README.md).
-  V3=$AQUI/../../4-tercera-version/servidor
-  [[ -f $V3/.env ]] || { echo "Falta $V3/.env. Sigue 4-tercera-version/servidor/README.md"; exit 1; }
-  (cd $V3 && [[ -d node_modules ]] || npm install --silent)
-  (cd $V3 && nohup node src/server.js >> $BASE/registros/servidor.log 2>&1 & echo $! > $BASE/servidor.pid)
+  (cd $SERVIDOR && [[ -d node_modules ]] || npm install --silent)
+  (cd $SERVIDOR && nohup node servidor.js >> $BASE/registros/servidor.log 2>&1 & echo $! > $BASE/servidor.pid)
   for i in {1..30}; do curl -s -m 1 http://127.0.0.1:3100/api/salud >/dev/null && break; sleep 0.5; done
   SALUD=$(curl -s -m 3 http://127.0.0.1:3100/api/salud || true)
 fi

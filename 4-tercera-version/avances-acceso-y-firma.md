@@ -58,15 +58,15 @@ el contenido cambió después, la firma no entra.
 
 | Qué | Dónde |
 |---|---|
-| Servidor (Node.js, Express 5, MySQL) | [`servidor/`](servidor/) |
+| Servidor (Node.js, Express 5, MySQL) | [`app-bomberos/servidor/`](../app-bomberos/servidor/) |
 | Pantalla de acceso | `app-bomberos/movil/lib/acceso/pantallas_acceso.dart` |
 | Mi cuenta: mi firma y cambiar contraseña | `app-bomberos/movil/lib/acceso/pantalla_cuenta.dart` |
 | Confirmar con biometría o contraseña | `app-bomberos/movil/lib/acceso/confirmar_identidad.dart` |
 | Firmar y enviar | `app-bomberos/movil/lib/hoja/pantallas_envio.dart` |
 | Firmar y validar | `app-bomberos/movil/lib/revision/` |
 
-El croquis y la IA de la app no se tocaron. El servidor carga las rutas de
-la IA y la revisión del parte directo de `app-bomberos/servidor`.
+El servidor es uno solo: el que ya tenía las rutas de la IA. Sus datos pasaron de
+estar en memoria a MySQL. El croquis y la IA de la app no se tocaron.
 
 Base de datos:
 

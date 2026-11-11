@@ -10,19 +10,18 @@
 
 'use strict';
 
-require('dotenv').config({ quiet: true });
+require('../src/entorno');
 
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
-const path = require('node:path');
 
 const { crearBase } = require('./cargar-bd');
 const { darDeAlta, restablecer } = require('./usuario');
 const db = require('../src/db');
-const { crearApp } = require('../src/server');
-const { contenidoParaFirmar, sha256 } = require('../src/de-la-app').validacion;
+const { crearApp } = require('../servidor');
+const { contenidoParaFirmar, sha256 } = require('../src/validacion');
 
-const ejemplos = require(path.join(__dirname, '..', '..', '..', 'app-bomberos', 'servidor', 'src', 'datos')).partes;
+const ejemplos = require('../src/datos-ejemplo').partes;
 
 // Trazos como los serializa la app (LienzoFirma): puntos «x,y» separados por espacios.
 const TRAZO_AUTOR = '10,40 30,12 55,48 80,20';
@@ -376,7 +375,7 @@ async function probar() {
     esOk(await post('/api/acceso/llave', { llave_publica: celular().llavePublica }, r.token));
   });
 
-  // --- IA (las rutas de app-bomberos/servidor, tal cual) -----------------------------
+  // --- IA ---------------------------------------------------------------------------
 
   await paso('las rutas de la IA contestan', async () => {
     const r = await post('/api/ia/resumen', { campos: { tipo_servicio: 'Incendio', lugar_servicio: 'Calle 1' } });

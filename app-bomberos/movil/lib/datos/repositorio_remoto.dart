@@ -219,7 +219,7 @@ class RemotoFalso implements RepositorioRemoto {
   String _azar() => List.generate(16, (_) => _rnd.nextInt(256).toRadixString(16).padLeft(2, '0')).join();
 }
 
-/// Habla con el servidor (4-tercera-version/servidor). Mismas operaciones, en JSON.
+/// Habla con app-bomberos/servidor (Express + MySQL). Mismas operaciones, en JSON.
 class RemotoHttp implements RepositorioRemoto {
   RemotoHttp(this.api);
   final ApiCliente api;

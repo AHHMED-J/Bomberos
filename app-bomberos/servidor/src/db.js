@@ -1,7 +1,8 @@
-// La conexión a MySQL: un solo pool para toda la app. Es el mismo db.js de
-// la v1, más transaccion().
+// La conexión a MySQL: un solo pool para todo el servidor.
 
 'use strict';
+
+require('./entorno');
 
 const mysql = require('mysql2/promise');
 
