@@ -77,47 +77,17 @@ reiniciarlo se perdían las llaves, las sesiones y los partes. Ahora:
 - Los folios nuevos no se repiten aunque dos celulares pidan uno al mismo
   tiempo.
 
-Base de datos:
-
-| Tabla | Qué guarda |
-|---|---|
-| `usuario` | Matrícula (número de empleado), nombre, rango, rol, división, estación, contraseña (bcrypt), la llave pública de su celular y su firma en trazo. |
-| `sesion` | Las sesiones abiertas (solo el hash del token). |
-| `reto` | Cada reto, cuándo se creó y cuándo se usó. |
-| `parte` | El parte completo, tal como lo manda la app, con sus firmas y su sello. |
-| `firma_parte` | Cada firma: quién, con qué reto, cómo la confirmó y la copia de su trazo. |
-| `consecutivo` | El siguiente número de folio. |
+Las tablas y qué guarda cada una están en
+[`servidor/README.md`](../servidor/README.md#base-de-datos).
 
 ## 6. Preparar el servidor y dar de alta usuarios
 
-Preparación, una vez por compu (necesita MySQL instalado):
-
-```bash
-cd 4-tercera-version/servidor
-npm install
-cp .env.example .env     # con el usuario y la contraseña de MySQL de esa compu
-npm run db:crear         # crea la base y sus tablas, sin borrar nada
-npm run datos-prueba     # carga los usuarios y partes de ejemplo
-npm start                # puerto 3100
-```
-
-Usuarios de ejemplo que deja `npm run datos-prueba`:
-
-| Usuario | Contraseña | Quién |
-|---|---|---|
-| `380207` | `prueba380207` | Acevedo Carrillo, Verónica (bombero) |
-| `376285` | `prueba376285` | Jalife Burgueño, Ahhmed (bombero) |
-| `300112` | `prueba300112` | Cap. J. Navarro (capitán, revisor) |
-
-Mientras no exista la página web de Dirección, los usuarios se manejan con
-comandos:
-
-| Comando | Qué hace |
-|---|---|
-| `npm run usuario -- alta <matrícula> "<nombre>"` | Crea al usuario e imprime la contraseña que se le entrega. |
-| `… alta <matrícula> "<nombre>" --capitan` | Lo mismo, habilitado para revisar. |
-| `… alta … --division "<división>"` | Lo pone en otra división (por omisión, División Estructural). |
-| `npm run usuario -- restablecer <matrícula>` | Para quien olvidó su contraseña: le da una nueva y borra la llave de su celular. |
+Mientras no exista la página web de Dirección, los usuarios se dan de alta
+y se restablecen con `npm run usuario`. Los comandos, los usuarios de
+ejemplo y cómo preparar el servidor están en
+[`servidor/README.md`](../servidor/README.md). El paso a paso para
+encender todo está en [`correr-en-windows.md`](correr-en-windows.md) y
+[`correr-en-mac.md`](correr-en-mac.md).
 
 ## 7. Dónde quedó cada cosa
 
@@ -137,31 +107,20 @@ comandos:
 
 ## 8. Estructura y documentos
 
-Todo lo de la tercera versión quedó en `4-tercera-version/`, una carpeta
-por función. Antes estaba en `app-bomberos/`.
-
-| Carpeta | Qué hay | Antes |
-|---|---|---|
-| `docs/` | Requerimientos, avances y el diagrama de la app | sueltos |
-| `app/` | La app Flutter | `app-bomberos/movil` |
-| `servidor/` | El servidor y las tablas | `app-bomberos/servidor` |
-| `ia-local/` | Solo la IA real y su evaluación | `app-bomberos/ia-local` |
-| `arrancar/` | Los comandos que prenden todo | dentro de `ia-local` |
-
+- Todo lo de la tercera versión quedó en `4-tercera-version/`, una carpeta
+  por función. Antes estaba en `app-bomberos/`; la equivalencia de
+  carpetas está en
+  [`antecedentes.md`](antecedentes.md#6-la-bitácora-de-decisiones).
 - **Arranque en Windows:** `arrancar/iniciar.ps1` prepara la base
   (`-PrepararBd`), prende la IA si está en modo local y prende el servidor.
 - **Arranque en Mac:** `arrancar/correr-app.sh` ganó la opción
   `--preparar-bd`.
 - **App en Windows:** se agregó la plataforma de escritorio (`app/windows/`)
   para poder correr la app en una compu con Windows.
-- **Notas de la tercera versión:** quedó escrito que se entra con número de
-  empleado y contraseña, sin código de alta; que cada usuario usa un solo
-  celular y ahí puede entrar con la biometría; y que la firma se confirma
-  con la biometría del celular o con la contraseña.
-- **`4-tercera-version/servidor/README.md`:** cómo prepararlo y correrlo, cómo
-  funciona y la lista de rutas.
-- **`4-tercera-version/docs/estructura-app.html`:** se corrigieron los tres textos
-  que decían que el servidor guardaba en memoria.
+- **`docs/estructura-app.html`:** se corrigieron los tres textos que decían
+  que el servidor guardaba en memoria.
+- La lista de documentos y qué tiene cada uno está en el
+  [README de la tercera versión](../README.md#documentos).
 
 ## 9. Pruebas
 

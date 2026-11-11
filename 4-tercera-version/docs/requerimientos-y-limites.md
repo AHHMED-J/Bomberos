@@ -10,92 +10,99 @@
 > documento pide conservarlos entre entregas, así que los que ya existían
 > mantienen su número y los nuevos siguen la numeración.
 >
+> Las decisiones de la sección 1 llevan ID (D-01 a D-20) para citarlas.
+> Lo que viene de antes (la v1, la v2, los hitos del roadmap y el mapeo de
+> requisitos) está explicado en [`antecedentes.md`](antecedentes.md).
+>
 > Qué cambió en este archivo y cuándo: sección 8.
 
 ## 1. Decisiones del equipo
 
 **Plataforma**
 
-1. **Plataforma.** La app para elementos y revisores es solo para
+- **D-01 · Plataforma.** La app para elementos y revisores es solo para
    celulares y se hace en Flutter. Dirección usa una página web.
 
 **Acceso y usuarios**
 
-2. **Acceso en equipo compartido.** Se elimina. Cada elemento entra desde
+- **D-02 · Acceso en equipo compartido.** Se elimina. Cada elemento entra desde
    su propio celular.
-3. **Alta de usuarios.** Dirección da de alta a cada usuario y le entrega
+- **D-03 · Alta de usuarios.** Dirección da de alta a cada usuario y le entrega
    su usuario y contraseña. El usuario es su número de empleado, para que
    cada persona tenga un identificador único que no se repite. No hay
    código de alta.
-4. **Contraseña.** Cada usuario puede cambiarla o quedarse con la que le
+- **D-04 · Contraseña.** Cada usuario puede cambiarla o quedarse con la que le
    dieron. Si la olvida, va a Dirección a recuperar el acceso.
-5. **Un celular por usuario.** Después de entrar con su contraseña, en ese
+- **D-05 · Un celular por usuario.** Después de entrar con su contraseña, en ese
    celular también puede entrar con la biometría (huella o cara).
-6. **Permisos.** Dirección decide quién puede revisar, firmar como revisor
+- **D-06 · Permisos.** Dirección decide quién puede revisar, firmar como revisor
    y enviar partes a Dirección.
-7. **Nombre.** "Administración" y "Dirección" son lo mismo. En pantallas,
+- **D-07 · Nombre.** "Administración" y "Dirección" son lo mismo. En pantallas,
    base de datos y documentos se usa solo **Dirección**.
 
 **Firma, revisión y sellado**
 
-8. **Firma.** Firma en trazo, una por usuario (relación 1:1). Cada usuario
+- **D-08 · Firma.** Firma en trazo, una por usuario (relación 1:1). Cada usuario
    la sube y la actualiza desde su celular. Antes de ponerla en el parte se
    pide **la biometría del celular o la contraseña del usuario**, igual que
    al confirmar una transferencia en un banco digital. La biometría la
    verifica el celular y la app nunca la guarda. La app no tiene un PIN
    propio.
-9. **Copia de la firma.** Cada parte guarda una copia de las firmas con las
+- **D-09 · Copia de la firma.** Cada parte guarda una copia de las firmas con las
    que se firmó. Si un usuario actualiza su firma, sus partes anteriores no
    cambian.
-10. **Propietario y testigo.** No tienen usuario. Firman en trazo en el
+- **D-10 · Propietario y testigo.** No tienen usuario. Firman en trazo en el
     momento, en el celular del bombero, sin biometría ni contraseña.
-11. **Revisión.** El parte lo firman dos personas, por separado y no al
+- **D-11 · Revisión.** El parte lo firman dos personas, por separado y no al
     mismo tiempo: primero quien lo llena y después el encargado que lo
     revisa. El parte tiene dos opciones: **Guardar borrador** y **Enviar**.
     El autor y el revisor no pueden ser la misma persona: si el encargado
     llena el parte, lo revisa otro revisor de la división. El revisor no
     edita el contenido: lo firma y lo envía, o lo devuelve con nota.
-12. **Envío.** No hay entrega por lote. Cuando el revisor firma, el parte se
+- **D-12 · Envío.** No hay entrega por lote. Cuando el revisor firma, el parte se
     envía directo a Dirección.
-13. **Solo lectura.** Después de enviar el parte firmado, quien lo llenó
+- **D-13 · Solo lectura.** Después de enviar el parte firmado, quien lo llenó
     solo puede verlo en modo lectura, a menos que se lo regresen para
     corregir. Los partes nunca se borran.
-14. **Sellado.** Cuando el revisor valida el parte, se sella: se saca su
+- **D-14 · Sellado.** Cuando el revisor valida el parte, se sella: se saca su
     hash SHA-256 y se guarda junto con él, para poder comprobar que nadie
     lo modificó después. El hash se saca de todo el parte (datos, firmas,
     fotos y croquis), siempre en el mismo orden. Dirección tiene un botón
     **Verificar sello**. Si el revisor lo devuelve para corregirlo, se
     tiene que volver a firmar, y el sello se hace hasta que se valide. No se
     usará el resguardo de 10 años ni la pantalla de Archivo.
-15. **Copia en PDF para la estación.** Al validar el parte, la app genera
+- **D-15 · Copia en PDF para la estación.** Al validar el parte, la app genera
     sola una copia en PDF con el hash del sello impreso, para que la
     estación la descargue e imprima como respaldo físico.
 
 **Croquis**
 
-16. **Croquis.** El lugar se ubica por GPS o escribiendo una dirección o
+- **D-16 · Croquis.** El lugar se ubica por GPS o escribiendo una dirección o
     coordenadas. Desde ahí se puede mover el mapa para afinar el punto,
     guardar la imagen en vista de relieve o solo la base, y dibujar encima
     para marcar los detalles.
 
 **Inteligencia artificial**
 
-17. **Dictado.** Se usan dos modelos de IA: uno transcribe el audio a texto
+- **D-17 · Dictado.** Se usan dos modelos de IA: uno transcribe el audio a texto
     para la descripción, y otro interpreta lo dictado y llena los campos
     del parte, usando delimitadores para separar los datos generales de la
     descripción.
-18. **Resumen.** Un modelo de texto a texto resume el parte. Se comparte
+- **D-18 · Resumen.** Un modelo de texto a texto resume el parte. Se comparte
     copiando el texto: la app tiene un botón **Copiar** y el bombero lo
     pega en WhatsApp. No hay conexión directa con WhatsApp.
-19. **Reglas de la IA:**
+- **D-19 · Reglas de la IA:**
     - La IA llena los campos y el bombero confirma. Nada entra a la hoja
       sin esa confirmación.
     - El audio se borra en cuanto se transcribe.
     - El resumen para WhatsApp no es parte del documento oficial y no se
       guarda.
-20. **Versión de producción.** Incluye el dictado por voz y la firma doble.
+- **D-20 · Versión de producción.** Incluye el dictado por voz y la firma doble.
 
 ## 2. Requerimientos funcionales
+
+"Frente a la v1" compara con las Tablas 3 y 4 del Avance de Proyecto No. 1
+(ver [`antecedentes.md`](antecedentes.md)).
 
 | ID | Requerimiento | Actor | Frente a la v1 |
 |---|---|---|---|
@@ -148,12 +155,12 @@
   Dirección (RF-12).
 - **Papelería** (entrega por lote del turno). Cada parte se envía uno por
   uno cuando lo firma el revisor.
-- **Resguardo de 10 años y pantalla de Archivo.** Solo se guarda el sello
+- **Resguardo de 10 años y pantalla de Archivo** ([requisito #8 del mapeo](antecedentes.md#2-los-10-requisitos-del-mapeo)). Solo se guarda el sello
   SHA-256. Los partes no se borran del sistema; el control de vencimientos
   y la destrucción autorizada por sindicatura quedan fuera.
 - **Croquis generado por IA a partir del texto.** Lo reemplaza el croquis
   sobre mapa (RF-04 y RF-05).
-- **Parte multijugador.** Se quita del hito 4.
+- **Parte multijugador.** Se quita del [hito 4 · Functional Prototype](antecedentes.md#3-los-6-hitos-del-roadmap).
 - **Lista de asistencia, Notas y Revisión mecánica.**
 - **Conexión directa con WhatsApp.** El resumen se copia y se pega.
 - **Siguen fuera, como en la v1:** estadísticas, la conexión con el C-5 o
@@ -169,18 +176,9 @@ decidido dejarlo fuera:
 
 ## 5. Documentos que esta versión deja atrás
 
-No se editan: se quedan como registro de cómo llegamos aquí. Lo que
-contradigan, lo resuelve este archivo.
-
-| Documento | Qué tiene | Qué cambia con la v3 |
-|---|---|---|
-| `1-primera-version/docs/avance-proyecto-1.docx` | RF-01 a RF-10 y RNF-01 a RNF-05 (Tablas 3 y 4) | RF-01, 04, 05, 07 y 09 cambian; se agregan RF-11 a RF-19 y RNF-06 a RNF-10. |
-| `1-primera-version/docs/arquitectura-informacion.pdf` | Alcance (sección 1.3) y rutas por RF (Tabla 3) | Salen `/acceso/estacion`, `/registro` y `/direccion/archivo`. |
-| `1-primera-version/investigacion/Datos-documentos/mapeo-requerimientos.md` | 10 requisitos de la investigación con prioridad | El #8 (resguardo de 10 años) queda fuera del prototipo. El #2 (copia en PDF) sigue (RF-19). |
-| `1-primera-version/manifest.json` y `README.md` | Qué RF cubre cada pantalla | Acceso compartido y alta de credencial ya no existen. |
-| `2-segunda-version/README.md` | Los 6 puntos que faltaban frente a la v1 | Quedan decididos en la sección 1 de este archivo. |
-| `2-segunda-version/consistencia-datos.md` | Papelería fuera de alcance | Papelería se elimina. |
-| `3-actoNo2/4-Roadmap-6-hitos/Roadmap_6_hitos.pdf` | Qué entra en cada hito | El hito 4 ya no lleva el parte multijugador. El hito 5 ya no lleva "firma con credencial" sino trazo + biometría o contraseña. |
+Se movió a [`antecedentes.md`](antecedentes.md#5-documentos-que-la-v3-deja-atrás),
+junto con la línea de tiempo, los 10 requisitos del mapeo y los 6 hitos del
+roadmap.
 
 ## 6. Preguntas abiertas y decisiones
 
@@ -189,18 +187,18 @@ decidió el 10 y 11 de noviembre de 2026. La 6 sigue abierta.
 
 | # | Pregunta | Propuesta | Decisión |
 |---|---|---|---|
-| 1 | ¿Cómo firman el propietario y el testigo? No tienen usuario, así que la regla 1:1 no les aplica. | Firman en trazo en el momento, en el celular del bombero, sin PIN. | **Como se propuso**, sin biometría ni contraseña (decisión 10). |
-| 2 | Si un usuario actualiza su firma, ¿cambian sus partes viejos? | No. Al firmar se guarda una copia del trazo dentro del parte, no un enlace a la firma actual. Si no, el hash dejaría de coincidir. | **Como se propuso** (decisión 9). |
-| 3 | ¿Qué entra exactamente en el hash? | Los datos del parte, las dos firmas, las fotos y el croquis, siempre en el mismo orden. Más un botón "Verificar sello" en Administración. | **Como se propuso**, con el botón en Dirección (decisión 14). |
+| 1 | ¿Cómo firman el propietario y el testigo? No tienen usuario, así que la regla 1:1 no les aplica. | Firman en trazo en el momento, en el celular del bombero, sin PIN. | **Como se propuso**, sin biometría ni contraseña (D-10). |
+| 2 | Si un usuario actualiza su firma, ¿cambian sus partes viejos? | No. Al firmar se guarda una copia del trazo dentro del parte, no un enlace a la firma actual. Si no, el hash dejaría de coincidir. | **Como se propuso** (D-09). |
+| 3 | ¿Qué entra exactamente en el hash? | Los datos del parte, las dos firmas, las fotos y el croquis, siempre en el mismo orden. Más un botón "Verificar sello" en Administración. | **Como se propuso**, con el botón en Dirección (D-14). |
 | 4 | ¿Cómo se guardan y recuperan contraseñas y PIN? | Con bcrypt, no con SHA-256. Cambio obligatorio la primera vez, Administración la restablece, bloqueo tras varios PIN equivocados, y al dar de baja se desactiva al usuario en vez de borrarlo. | **Con bcrypt.** El cambio **no** es obligatorio: el usuario puede quedarse con la que le dieron. Dirección la restablece si la olvida. No hay PIN de la app. El bloqueo por intentos y la baja de usuarios se posponen (sección 4). |
-| 5 | ¿Qué pasa si el encargado llena el parte? ¿Puede el revisor editarlo? | Lo revisa otro revisor de la división; nadie firma como autor y revisor del mismo parte. El revisor no edita: firma y envía, o devuelve con nota. | **Como se propuso** (decisión 11). |
+| 5 | ¿Qué pasa si el encargado llena el parte? ¿Puede el revisor editarlo? | Lo revisa otro revisor de la división; nadie firma como autor y revisor del mismo parte. El revisor no edita: firma y envía, o devuelve con nota. | **Como se propuso** (D-11). |
 | 6 | ¿Qué hace la IA sin señal, y cómo se cumple el RNF-03? | Se graba en el celular y se transcribe al recuperar la señal (el audio vive en el celular solo hasta entonces). Avisar que el audio se procesa fuera y quitar nombres y teléfonos del resumen. | **Sin decidir.** |
-| 7 | ¿Cómo se manda el resumen por WhatsApp? | Con el botón "Compartir" del celular o un enlace wa.me. La API oficial pide cuenta de negocio y tiene costo. | **Botón Copiar**: el bombero pega el texto en WhatsApp. Sin conexión directa (decisión 18). |
-| 8 | ¿Huella o PIN? | PIN obligatorio y huella opcional. La huella en web necesita WebAuthn y HTTPS. | **Biometría del celular (huella o cara) o la contraseña del usuario.** No hay PIN de la app. La web no la usan elementos ni revisores (decisiones 1 y 8). |
-| 9 | ¿Sigue el parte multijugador del hito 4? | | **No.** Se quita del hito 4. |
-| 10 | ¿Siguen Lista de asistencia, Notas y Revisión mecánica? | | **No.** Quedan fuera de esta versión. |
-| 11 | ¿Sigue la copia en PDF para la estación (mapeo #2, hito 5)? | | **Sí**, generada sola al validar, con el hash del sello impreso (decisión 15, RF-19). |
-| 12 | ¿"Administración" es la misma "Dirección" de la v1 y la v2? | Usar un solo nombre en pantallas, base de datos y documentos. | **Sí, son la misma.** Se usa solo **Dirección** (decisión 7). |
+| 7 | ¿Cómo se manda el resumen por WhatsApp? | Con el botón "Compartir" del celular o un enlace wa.me. La API oficial pide cuenta de negocio y tiene costo. | **Botón Copiar**: el bombero pega el texto en WhatsApp. Sin conexión directa (D-18). |
+| 8 | ¿Huella o PIN? | PIN obligatorio y huella opcional. La huella en web necesita WebAuthn y HTTPS. | **Biometría del celular (huella o cara) o la contraseña del usuario.** No hay PIN de la app. La web no la usan elementos ni revisores (D-01 y D-08). |
+| 9 | ¿Sigue el parte multijugador del [hito 4 · Functional Prototype](antecedentes.md#3-los-6-hitos-del-roadmap)? | | **No.** Se quita del hito 4. |
+| 10 | ¿Siguen Lista de asistencia, Notas y Revisión mecánica, del [hito 6 · Final Prototype](antecedentes.md#3-los-6-hitos-del-roadmap)? | | **No.** Quedan fuera de esta versión. |
+| 11 | ¿Sigue la copia en PDF para la estación ([requisito #2 del mapeo](antecedentes.md#2-los-10-requisitos-del-mapeo), [hito 5 · X-is-finished](antecedentes.md#3-los-6-hitos-del-roadmap))? | | **Sí**, generada sola al validar, con el hash del sello impreso (D-15, RF-19). |
+| 12 | ¿"Administración" es la misma "Dirección" de la v1 y la v2? | Usar un solo nombre en pantallas, base de datos y documentos. | **Sí, son la misma.** Se usa solo **Dirección** (D-07). |
 
 ## 7. Estado de la implementación
 
@@ -231,6 +229,15 @@ Al 11 de noviembre de 2026. La app está en `app/` y el servidor en
 | RF-19 | Pendiente | Los botones "Copia PDF" existen pero todavía no hacen nada. |
 
 ## 8. Cambios a este archivo
+
+**11 de noviembre de 2026 · documentación**
+
+- Las decisiones de la sección 1 llevan ID (D-01 a D-20) y el resto del
+  documento las cita así.
+- Las menciones a los hitos y al mapeo enlazan a
+  [`antecedentes.md`](antecedentes.md), que explica de qué documento
+  salen.
+- La sección 5 se movió a `antecedentes.md`.
 
 **11 de noviembre de 2026**
 

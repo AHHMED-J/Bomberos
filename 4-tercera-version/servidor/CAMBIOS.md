@@ -1,5 +1,11 @@
 # Cambios al servidor frente al original
 
+> **Histórico.** Describe el cambio que se hizo el 10 y 11 de noviembre de
+> 2026 en la rama `tercera-version-biometria`, que ya se unió a `main`.
+> Cómo funciona el servidor hoy, con sus rutas y tablas,
+> está en [`README.md`](README.md). La sección "Qué hacer al bajar esta
+> rama" sigue sirviendo a quien tenga un `.env` anterior a MySQL.
+
 Qué cambió en el servidor (hoy `4-tercera-version/servidor`, antes `app-bomberos/servidor`) en la rama `tercera-version-biometria`
 frente al que está en `main`. Son 20 archivos: 9 modificados y 11 nuevos.
 

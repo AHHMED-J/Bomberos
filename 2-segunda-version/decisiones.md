@@ -1,10 +1,10 @@
 # Decisiones para el hito 4 en adelante
 
 Tomadas el 22 de octubre de 2026, antes de empezar el Functional Prototype
-(hito 4 del [roadmap](../3-ACTO%202/4-Roadmap-6-hitos/Roadmap_6_hitos.pdf)).
+(hito 4 del [roadmap](../3-actoNo2/4-Roadmap-6-hitos/Roadmap_6_hitos.pdf)).
 Cierran los pendientes de este mismo [README](README.md) («qué de los 6
 puntos se recupera» y «¿se reutiliza el stack?») y lo que la
-[Ficha de Experimento](../Acto%20III%20-%20Ficha%20de%20Experimento.pdf)
+[Ficha de Experimento](../3-actoNo3/Acto%20III%20-%20Ficha%20de%20Experimento.pdf)
 pide que exista desde el hito 4.
 
 ## Arquitectura

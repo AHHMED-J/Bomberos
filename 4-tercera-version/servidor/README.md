@@ -7,6 +7,9 @@ resumen, ver [`CONTRATOS-IA.md`](CONTRATOS-IA.md)). Node.js y Express 5.
 Los usuarios, las firmas y los partes se guardan en **MySQL**, así que hace
 falta tenerlo instalado y prendido en la compu que corre el servidor.
 
+Antes guardaba todo en memoria; qué cambió al pasar a MySQL está en
+[`CAMBIOS.md`](CAMBIOS.md).
+
 ## Prepararlo (una sola vez)
 
 ```bash
@@ -17,16 +20,19 @@ npm run db:crear          # crea la base bomberos_v3 y sus tablas
 npm run datos-prueba      # carga los usuarios y partes de ejemplo
 ```
 
-En la Mac, `arrancar/configurar.sh` ya crea el `.env` (con la clave de la
-IA); ahí solo falta llenar los datos de MySQL y correr los dos últimos
-comandos. `arrancar/correr-app.sh --preparar-bd` hace `npm install` y esos
-dos comandos antes de encender todo.
+Así se hace a mano. Los scripts de `arrancar/` hacen lo mismo
+(`iniciar.ps1 -PrepararBd` en Windows y `correr-app.sh --preparar-bd` en la
+Mac): ver [`docs/correr-en-windows.md`](../docs/correr-en-windows.md) y
+[`docs/correr-en-mac.md`](../docs/correr-en-mac.md).
 
 Cada quien tiene su propio `.env` (no se sube al repo) y su propia base: lo
 que se crea en una compu no aparece en otra.
 
-`npm run datos-prueba` deja a cada usuario de ejemplo con la contraseña
-`prueba<matrícula>`:
+## Usuarios de ejemplo
+
+Los carga `npm run datos-prueba` (lo mismo que `-PrepararBd` o
+`--preparar-bd`), a partir de `src/datos-ejemplo.js`. Cada uno entra con su
+matrícula y la contraseña `prueba<matrícula>`:
 
 | Usuario | Contraseña | Quién |
 |---|---|---|
@@ -65,6 +71,19 @@ npm run usuario -- restablecer 380999
   para revisar.
 - `restablecer` es para quien olvidó su contraseña: le da una nueva y borra
   la llave de su celular, para que la registre otra vez al entrar.
+
+## Base de datos
+
+La base se llama `bomberos_v3`; las tablas están en `db/schema.sql`.
+
+| Tabla | Qué guarda |
+|---|---|
+| `usuario` | Matrícula (número de empleado), nombre, rango, rol, división, estación, contraseña (bcrypt), la llave pública de su celular y su firma en trazo. |
+| `sesion` | Las sesiones abiertas (solo el hash del token). |
+| `reto` | Cada reto, cuándo se creó y cuándo se usó. |
+| `parte` | El parte completo, tal como lo manda la app, con sus firmas y su sello. |
+| `firma_parte` | Cada firma: quién, con qué reto, cómo la confirmó y la copia de su trazo. |
+| `consecutivo` | El siguiente número de folio. |
 
 ## Cómo funciona
 

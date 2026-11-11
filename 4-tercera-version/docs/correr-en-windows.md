@@ -5,7 +5,7 @@ release, y qué significan las opciones de simulación.
 
 En Windows la app corre como programa de escritorio. No se puede instalar en
 un iPhone desde aquí: eso solo se hace desde la Mac
-(`arrancar/correr-app.sh`).
+([`correr-en-mac.md`](correr-en-mac.md)).
 
 ## Las piezas
 
@@ -111,22 +111,11 @@ cambiarlos hay que volver a compilar.
 
 ## Usuarios de ejemplo
 
-Los carga `-PrepararBd`. El usuario es el número de empleado.
-
-| Usuario | Contraseña | Quién |
-|---|---|---|
-| `380207` | `prueba380207` | Acevedo Carrillo, Verónica (bombero) |
-| `376285` | `prueba376285` | Jalife Burgueño, Ahhmed (bombero) |
-| `300112` | `prueba300112` | Cap. J. Navarro (capitán, revisor) |
-
-Para dar de alta más, desde `4-tercera-version\servidor`:
-
-```powershell
-npm run usuario -- alta 380999 "Apellido, Nombre"
-npm run usuario -- alta 300200 "Cap. Apellido" --capitan
-```
-
-Imprime la contraseña que se le entrega.
+Los carga `-PrepararBd`. El usuario es el número de empleado y la
+contraseña es `prueba<número>`; por ejemplo, `376285` / `prueba376285`
+(bombero) y `300112` / `prueba300112` (capitán). La lista completa y cómo
+dar de alta más usuarios están en
+[`servidor/README.md`](../servidor/README.md#usuarios-de-ejemplo).
 
 ## Las opciones de simulación
 

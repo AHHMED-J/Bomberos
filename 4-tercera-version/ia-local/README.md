@@ -17,89 +17,35 @@ iPhone ──audio──▶ servidor (3100) ──▶ whisper-server (127.0.0.1:
 | ffmpeg | convierte m4a → WAV 16 kHz mono | Homebrew |
 | Código | `servidor/src/ia/*.js`, `servidor/src/rutas/ia.js` | repo |
 
-## Uso
+## Encenderla y apagarla
 
-**Lo más fácil (un solo comando):** con el iPhone conectado por cable, desbloqueado y en la misma Wi-Fi que la Mac:
+Con la Mac y el iPhone, lo normal es `arrancar/correr-app.sh`, que enciende
+las dos IAs, el servidor y además instala la app. El paso a paso, la base de
+datos y cómo correr la app desde el iPhone a mano están en
+[`docs/correr-en-mac.md`](../docs/correr-en-mac.md).
 
-```bash
-cd 4-tercera-version/arrancar
-./correr-app.sh          # enciende IAs + servidor (modo local), detecta la IP e instala la app con la clave
-./detener.sh             # al terminar: apaga servidor, Whisper y saca el modelo de la memoria
-```
-
-`correr-app.sh` instala la versión *release* (se abre desde el inicio del iPhone sin la Mac conectada;
-la IA sí necesita la Mac encendida y en la misma red). `./correr-app.sh --depurar` instala la de depuración.
-
-La app usa la IA real **por defecto**. Si una respuesta viene de ejemplo, el panel muestra «Ejemplo · sin IA».
-
-Paso a paso, si se quiere hacer a mano:
+Solo la IA, a mano:
 
 ```bash
-cd 4-tercera-version/arrancar
-./configurar.sh          # una sola vez: crea servidor/.env (IA_MODO=local + clave al azar, permisos 600)
-../ia-local/iniciar-ia.sh   # arranca whisper-server y precarga el modelo en Ollama
-cd ../servidor && npm start
-# … probar …
-cd ../arrancar && ./detener.sh   # apaga Whisper y saca el modelo de la memoria
+cd 4-tercera-version/ia-local
+./iniciar-ia.sh             # arranca whisper-server y precarga el modelo en Ollama
+../arrancar/detener.sh      # apaga Whisper y saca el modelo de la memoria
 ```
 
 Para volver a respuestas fijas sin modelos: `IA_MODO=fijo` en `servidor/.env` (o borrar el `.env`).
 
-### La base de datos
-
-El servidor guarda usuarios, firmas y partes en MySQL, así que tiene que estar instalado y encendido, y
-`servidor/.env` debe llevar sus datos (`DB_USER`, `DB_PASSWORD`; ver `servidor/README.md`). La primera
-vez, y cada vez que cambien las dependencias del servidor:
-
-```bash
-./correr-app.sh --preparar-bd   # npm install + crea la base + carga los datos de ejemplo, y luego lo de siempre
-```
-
-No borra nada y se puede repetir. Si MySQL no está listo, el servidor arranca y lo avisa: la IA contesta,
-pero entrar, enviar y validar fallan.
-
 ### En Windows
 
-`iniciar.ps1` hace en un solo comando lo que aquí hacen `ia-local/iniciar-ia.sh` + `npm start`. No instala la app en
-el celular: eso sólo se puede desde la Mac.
+Cómo encender el servidor en Windows está en
+[`docs/correr-en-windows.md`](../docs/correr-en-windows.md). Lo propio de la
+IA real ahí:
 
-```powershell
-cd 4-tercera-version\arrancar
-.\iniciar.ps1                # enciende la IA (si IA_MODO=local) y el servidor; Ctrl+C apaga todo
-.\iniciar.ps1 -PrepararBd    # antes: npm install + crea la base + carga los datos de ejemplo
-```
-
-- Si `servidor\.env` no existe, lo crea con una clave al azar y deja `IA_MODO=fijo`; hay que abrirlo y
+- Si `servidor\.env` no existe, `iniciar.ps1` lo crea con una clave al azar y deja `IA_MODO=fijo`; hay que abrirlo y
   poner el usuario y la contraseña de MySQL.
 - Con `IA_MODO=fijo` no hace falta ningún modelo: sirve para probar acceso, firma, revisión y sello.
 - Con `IA_MODO=local` revisa que estén `ffmpeg`, `whisper-server` (whisper.cpp) y Ollama con su modelo, y
   dice cuál falta. El modelo de Whisper va en `%USERPROFILE%\.bomberos-ia\modelos\ggml-large-v3.bin`.
   Esta parte (encender Whisper y Ollama) todavía no se ha probado en una compu con los modelos instalados.
-
-### Desde el iPhone
-
-```bash
-flutter run --dart-define=IA=servidor \
-            --dart-define=SERVIDOR_URL=http://<ip-de-la-mac>:3100 \
-            --dart-define-from-file=../servidor/.env   # toma CLAVE_LOCAL del .env sin mostrarla
-```
-
-- No pases la clave con `$(grep …)`: si la variable sale vacía, la app se instala sin clave y el servidor responde 401.
-  `--dart-define-from-file` la lee directo del `.env`.
-- La clave sólo viaja como `X-Clave-Local` a `/api/ia/*`. Si la app entró con sesión real del servidor,
-  basta el `Bearer` y no hace falta la clave.
-- La app espera hasta 120 s en las rutas de IA (el resto, 20 s).
-- El micrófono es real (`app/lib/servicios/grabadora_real.dart`, paquete `record`): AAC/m4a, 16 kHz, mono.
-  El archivo vive en la carpeta temporal sólo mientras se graba; al detener se lee a memoria y se borra.
-  A los 175 s se detiene solo (el servidor acepta hasta 180 s).
-- Para probar sin micrófono: interruptor «Micrófono simulado» en Depuración, o `--dart-define=MICROFONO_SIMULADO=true`.
-- Prueba en simulador o teléfono (graba 3 s y comprueba que el servidor lo puede leer):
-
-  ```bash
-  xcrun simctl privacy <id-simulador> grant microphone mx.edu.uabc.bomberosParte   # sólo simulador
-  flutter test integration_test/grabadora_real_test.dart -d <id> \
-    --dart-define=SERVIDOR_URL=http://<ip>:3100 --dart-define-from-file=../servidor/.env
-  ```
 
 ## Seguridad (lo que NO entra al repo)
 

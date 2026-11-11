@@ -170,7 +170,9 @@ Salida 200:
 
 ## Preguntas abiertas
 
-- ¿Qué campos acepta el Capitán que llene una IA? (pendiente en `decisiones.md`).
+- ¿Qué campos acepta el Capitán que llene una IA? (pendiente en la bitácora,
+  [`2-segunda-version/decisiones.md`](../../2-segunda-version/decisiones.md#dictado-del-parte-completo-con-ia-nuevo-8-de-noviembre)).
 - ¿Puede el audio salir a Colab (servidor de terceros)? Pendiente con la Dirección. Mientras tanto, modo local.
+  Es la pregunta 6 de [`requerimientos-y-limites.md`](../docs/requerimientos-y-limites.md#6-preguntas-abiertas-y-decisiones) (RNF-03).
 - Medido sólo con voz sintética de la Mac y 10 casos ficticios (ver `ia-local/README.md`).
   Falta medir con audios reales de bomberos (ruido de sirena, radio, acento) antes de la prueba A/B.
