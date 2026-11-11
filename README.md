@@ -19,6 +19,8 @@ el orden en que fueron saliendo:
   [CFP](3-ACTO%202/1-CFP/README.md) (¿se puede capturar el parte en ≤ 60 s?),
   las ideas del Dark Horse y el
   [Funky Prototype](3-ACTO%202/3-Funky-Prototype/README.md) (parte multijugador).
+- **[`3-actoNo3/`](3-actoNo3/)** — material del Acto III (el experimento
+  científico y su ficha) y el paquete de entrega de los Actos II y III.
 - **[`4-tercera-version/`](4-tercera-version/)** — la app de celulares (Flutter),
   su servidor con MySQL, la IA local y los requerimientos definitivos. Ver su
   [README](4-tercera-version/README.md) para la estructura y cómo correrlo.
