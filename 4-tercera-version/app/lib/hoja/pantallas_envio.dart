@@ -129,7 +129,8 @@ class _PantallaFirmasState extends ConsumerState<PantallaFirmas> {
     });
     try {
       final remoto = ref.read(repositorioRemotoProvider);
-      var p = ref.read(hojaProvider)!;
+      // Un parte empezado sin señal recibe aquí su folio real (antes del reto: el folio va en el contenido).
+      var p = await hoja.asegurarFolioReal();
       // 1) Reto con el SHA-256 del contenido  2) biometría del celular o contraseña
       // 3) el servidor comprueba, revisa pendientes y pone en el parte la firma en trazo de la cuenta.
       final reto = await remoto.retoFirma(p);
@@ -158,6 +159,7 @@ class _PantallaFirmasState extends ConsumerState<PantallaFirmas> {
   Widget build(BuildContext context) {
     final p = ref.watch(hojaProvider)!;
     final u = ref.watch(usuarioActualProvider);
+    final sinConexion = ref.watch(sesionProvider.select((s) => s.sinConexion));
     final peritaje = p.firmas.requierePeritaje;
     final hoja = ref.read(hojaProvider.notifier);
     return Scaffold(
@@ -166,7 +168,30 @@ class _PantallaFirmasState extends ConsumerState<PantallaFirmas> {
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
         children: [
           const TituloSeccion('Firma de quien elabora'),
-          if (u.trazo == null)
+          if (sinConexion)
+            Aviso(
+              key: const ValueKey('aviso-sesion-sin-conexion'),
+              tono: TonoAviso.ambar,
+              icono: Icons.cloud_off,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Entraste sin conexión. Para firmar y enviar, sal y vuelve a entrar con señal. '
+                    'Este parte queda guardado en el teléfono.',
+                  ),
+                  TextButton(
+                    key: const ValueKey('salir-para-enviar'),
+                    onPressed: () {
+                      ref.read(sesionProvider.notifier).salir();
+                      context.go('/');
+                    },
+                    child: const Text('Salir y entrar con señal'),
+                  ),
+                ],
+              ),
+            )
+          else if (u.trazo == null)
             Aviso(
               tono: TonoAviso.rojo,
               icono: Icons.draw_outlined,
@@ -231,7 +256,7 @@ class _PantallaFirmasState extends ConsumerState<PantallaFirmas> {
           const SizedBox(height: 20),
           FilledButton.icon(
             key: const ValueKey('firmar-y-enviar'),
-            onPressed: _enviando || peritaje == null || u.trazo == null ? null : _firmarYEnviar,
+            onPressed: _enviando || sinConexion || peritaje == null || u.trazo == null ? null : _firmarYEnviar,
             icon: _enviando
                 ? const SizedBox(
                     width: 18,

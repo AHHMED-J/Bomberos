@@ -20,8 +20,8 @@ class HojaControlador extends Notifier<Parte?> {
   void cerrar() => state = null;
 
   Future<Parte> nuevo(Usuario u) async {
-    final folio = await ref.read(repositorioRemotoProvider).nuevoFolio();
     final ahora = reloj();
+    final folio = await _folioOProvisional(ahora);
     ValorCampo auto(String v) => ValorCampo(valor: v, origen: OrigenCampo.auto);
     final p = Parte(
       id: 'loc-${ahora.microsecondsSinceEpoch}',
@@ -57,6 +57,27 @@ class HojaControlador extends Notifier<Parte?> {
     if (p == null || !editable) return;
     state = f(p).conActividad(reloj());
     _guardar();
+  }
+
+  /// El folio real si hay señal; si no, uno provisional del teléfono para poder empezar sin internet.
+  Future<String> _folioOProvisional(DateTime ahora) async {
+    if (!ref.read(enLineaProvider)) return folioProvisional(ahora);
+    try {
+      return await ref.read(repositorioRemotoProvider).nuevoFolio();
+    } catch (_) {
+      // Se cayó la red a medio camino: igual se puede empezar.
+      return folioProvisional(ahora);
+    }
+  }
+
+  /// Cambia el folio provisional por el real del servidor (antes de firmar y enviar). Devuelve el parte.
+  Future<Parte> asegurarFolioReal() async {
+    final p = state!;
+    if (!esFolioProvisional(p.folio)) return p;
+    final folio = await ref.read(repositorioRemotoProvider).nuevoFolio();
+    state = p.copiar(folio: folio);
+    await _guardar();
+    return state!;
   }
 
   Future<void> _guardar() async {

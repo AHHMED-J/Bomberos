@@ -44,6 +44,9 @@ List<Override> overridesDePrueba({
   RepositorioLocal? local,
   AlmacenCroquis? croquis,
   ServicioUbicacion? ubicacion,
+  Future<bool> Function()? sonda,
+  MemoriaTelefono? memoria,
+  ServicioFirma? firma,
 }) => [
   grabadoraProvider.overrideWithValue(grabadora ?? GrabadoraPrueba()),
   transcripcionProvider.overrideWithValue(FalsoTranscripcion(retardo: Duration.zero)),
@@ -51,11 +54,13 @@ List<Override> overridesDePrueba({
   resumenProvider.overrideWithValue(FalsoResumen(retardo: Duration.zero)),
   repositorioLocalProvider.overrideWithValue(local ?? RepositorioMemoria()),
   repositorioRemotoProvider.overrideWithValue(RemotoFalso(retardo: Duration.zero)),
-  firmaProvider.overrideWithValue(FirmaSimulada(retardo: Duration.zero)),
+  firmaProvider.overrideWithValue(firma ?? FirmaSimulada(retardo: Duration.zero)),
   ubicacionProvider.overrideWithValue(ubicacion ?? UbicacionFija()),
   teselasMapaProvider.overrideWithValue(false),
   almacenCroquisProvider.overrideWithValue(croquis ?? AlmacenCroquisMemoria()),
-  memoriaTelefonoProvider.overrideWithValue(MemoriaTelefonoMemoria()),
+  memoriaTelefonoProvider.overrideWithValue(memoria ?? MemoriaTelefonoMemoria()),
+  // Sin red de verdad en las pruebas: «Sin señal» sólo con la bandera de Depuración o una sonda propia.
+  sondaServidorProvider.overrideWithValue(sonda),
 ];
 
 /// Espera (en el bucle de eventos) a que se cumpla una condición.

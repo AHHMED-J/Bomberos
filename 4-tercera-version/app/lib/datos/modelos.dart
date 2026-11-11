@@ -314,6 +314,7 @@ class Parte {
   ValorCampo campo(String campoId) => campos[campoId] ?? const ValorCampo();
 
   Parte copiar({
+    String? folio,
     EstadoParte? estado,
     Map<String, ValorCampo>? campos,
     int? fotos,
@@ -328,7 +329,7 @@ class Parte {
     String? sello,
   }) => Parte(
     id: id,
-    folio: folio,
+    folio: folio ?? this.folio,
     estado: estado ?? this.estado,
     elaboroId: elaboroId,
     elaboroNombre: elaboroNombre,
@@ -413,3 +414,12 @@ class Parte {
     sello: j['sello'] as String?,
   );
 }
+
+/// Folio que pone el teléfono cuando se empieza un parte sin señal. Se cambia por el real del servidor
+/// justo antes de firmar y enviar (el servidor no conoce los provisionales).
+const prefijoFolioProvisional = 'LOCAL-';
+
+bool esFolioProvisional(String folio) => folio.startsWith(prefijoFolioProvisional);
+
+String folioProvisional(DateTime t) =>
+    '$prefijoFolioProvisional${t.millisecondsSinceEpoch.toRadixString(36).toUpperCase()}';

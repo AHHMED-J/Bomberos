@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,11 +8,15 @@ import '../datos/repositorio_remoto.dart';
 import '../servicios/proveedores.dart';
 
 class EstadoSesion {
-  const EstadoSesion({this.usuario, this.firmaSimulada = false});
+  const EstadoSesion({this.usuario, this.firmaSimulada = false, this.sinConexion = false});
   final Usuario? usuario;
 
   /// La última firma no usó el chip seguro (se avisa en la pantalla de inicio).
   final bool firmaSimulada;
+
+  /// Entró sin señal, sólo con la biometría del teléfono: puede llenar borradores, pero para enviar tiene
+  /// que volver a entrar con el servidor (que es quien sabe su firma en trazo y le da la sesión de verdad).
+  final bool sinConexion;
 }
 
 /// Quién está dentro.
@@ -99,12 +105,37 @@ class SesionNotifier extends Notifier<EstadoSesion> {
     }
   }
 
+  /// Entrada sin señal: sólo para quien ya entró en este teléfono y registró aquí su biometría. El celular
+  /// pide la cara o la huella firmando un reto local (no hay servidor que lo compruebe), así que esta
+  /// sesión sólo sirve para trabajar borradores en el teléfono.
+  Future<String?> entrarSinConexion() async {
+    final u = usuarioDelTelefono;
+    if (u == null) return 'Sin señal sólo puede entrar quien ya entró antes en este teléfono';
+    final firma = ref.read(firmaProvider);
+    try {
+      if (!await firma.tieneLlave()) return 'Sin señal hace falta la biometría de este celular';
+      final azar = List.generate(16, (_) => Random.secure().nextInt(256).toRadixString(16).padLeft(2, '0')).join();
+      final r = await firma.firmar('$azar:sin-conexion', motivo: 'Entra sin conexión');
+      if (r.cancelada) return 'Cancelado';
+      if (!r.ok) return r.error ?? 'No se reconoció la biometría';
+      if (r.simulada && !kDebugMode) return 'Este celular no tiene biometría';
+      state = EstadoSesion(usuario: u, firmaSimulada: r.simulada, sinConexion: true);
+      return null;
+    } catch (e) {
+      return 'No se pudo usar la biometría ($e)';
+    }
+  }
+
   /// Sube la firma en trazo del usuario y la deja en la sesión.
   Future<String?> guardarTrazo(String trazo) async {
     try {
       final u = await ref.read(repositorioRemotoProvider).guardarTrazo(trazo);
       // Se conserva al usuario de la sesión (en depuración no es el que conoce el servidor).
-      state = EstadoSesion(usuario: (state.usuario ?? u).copiar(trazo: trazo), firmaSimulada: state.firmaSimulada);
+      state = EstadoSesion(
+        usuario: (state.usuario ?? u).copiar(trazo: trazo),
+        firmaSimulada: state.firmaSimulada,
+        sinConexion: state.sinConexion,
+      );
       return null;
     } catch (e) {
       return mensajeDeError(e);

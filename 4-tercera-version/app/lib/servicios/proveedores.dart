@@ -1,7 +1,10 @@
 // ÚNICO punto de inyección de dependencias.
 // Para cambiar una pieza falsa por la real se cambia aquí (o la bandera de Config), nada más.
 // En pruebas se sustituye con ProviderScope(overrides: [...]).
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 
 import '../acceso/memoria_telefono.dart';
 import '../croquis/almacen_croquis.dart';
@@ -27,8 +30,51 @@ final configProvider = NotifierProvider<ConfigNotifier, Config>(ConfigNotifier.n
 
 final apiProvider = Provider<ApiCliente>((ref) => ApiCliente(ref.watch(configProvider.select((c) => c.urlServidor))));
 
-/// ¿Hay señal? Hoy sale de la bandera simulada. TODO: detector de red real.
-final enLineaProvider = Provider<bool>((ref) => !ref.watch(configProvider.select((c) => c.sinConexionSimulada)));
+/// Pregunta si el servidor contesta. null = la app no depende del servidor (todo falso): siempre en línea.
+/// En pruebas se sustituye por null o por una función controlada.
+final sondaServidorProvider = Provider<Future<bool> Function()?>((ref) {
+  final c = ref.watch(configProvider);
+  if (c.datos == Fuente.falsa && c.ia == Fuente.falsa) return null;
+  final url = Uri.parse('${c.urlServidor}/api/salud');
+  return () async {
+    try {
+      final r = await http.get(url).timeout(const Duration(seconds: 4));
+      return r.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  };
+});
+
+/// ¿Hay señal con el servidor? Se comprueba al abrir la app y cada [RedNotifier.cada]. Lo que importa
+/// no es tener Wi-Fi sino que nuestro servidor conteste. La bandera de Depuración «Sin señal» lo fuerza.
+class RedNotifier extends Notifier<bool> {
+  static const cada = Duration(seconds: 15);
+  Timer? _timer;
+
+  @override
+  bool build() {
+    final simulada = ref.watch(configProvider.select((c) => c.sinConexionSimulada));
+    final sonda = ref.watch(sondaServidorProvider);
+    ref.onDispose(() => _timer?.cancel());
+    if (simulada) return false;
+    if (sonda == null) return true;
+    _timer = Timer.periodic(cada, (_) => comprobar());
+    scheduleMicrotask(comprobar);
+    return stateOrNull ?? true;
+  }
+
+  /// Pregunta ya (p. ej. al tocar «Reintentar»). Devuelve si hay señal.
+  Future<bool> comprobar() async {
+    if (ref.read(configProvider).sinConexionSimulada) return false;
+    final sonda = ref.read(sondaServidorProvider);
+    final ok = sonda == null ? true : await sonda();
+    if (ref.mounted) state = ok;
+    return ok;
+  }
+}
+
+final enLineaProvider = NotifierProvider<RedNotifier, bool>(RedNotifier.new);
 
 // ---------- Las dos IAs (TODO(IA): hoy son falsas o el servidor responde fijo) ----------
 

@@ -73,8 +73,14 @@ class _PantallaAccesoState extends ConsumerState<PantallaAcceso> {
     _terminar(await ref.read(sesionProvider.notifier).entrarConCredencial());
   }
 
+  Future<void> _entrarSinConexion() async {
+    setState(() => _ocupado = true);
+    _terminar(await ref.read(sesionProvider.notifier).entrarSinConexion());
+  }
+
   @override
   Widget build(BuildContext context) {
+    final enLinea = ref.watch(enLineaProvider);
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -133,6 +139,29 @@ class _PantallaAccesoState extends ConsumerState<PantallaAcceso> {
                 icon: const Icon(Icons.fingerprint),
                 label: const Text('Entrar con mi biometría'),
               ),
+            ],
+            if (!enLinea) ...[
+              const SizedBox(height: 14),
+              Aviso(
+                tono: TonoAviso.ambar,
+                icono: Icons.cloud_off,
+                child: Text(
+                  _conBiometria
+                      ? 'Sin señal con el servidor. Puedes trabajar tus borradores en este teléfono y enviarlos '
+                            'cuando vuelva la señal.'
+                      : 'Sin señal con el servidor. Para trabajar sin conexión, entra una vez con señal en este '
+                            'teléfono.',
+                ),
+              ),
+              if (_conBiometria) ...[
+                const SizedBox(height: 10),
+                OutlinedButton.icon(
+                  key: const ValueKey('entrar-sin-conexion'),
+                  onPressed: _ocupado ? null : _entrarSinConexion,
+                  icon: const Icon(Icons.cloud_off),
+                  label: const Text('Trabajar sin conexión'),
+                ),
+              ],
             ],
             const SizedBox(height: 18),
             const Text(
