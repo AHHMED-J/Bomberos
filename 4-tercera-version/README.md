@@ -30,6 +30,7 @@ Documentos:
     docs/requerimientos-y-limites.md   la lista definitiva: decisiones, RF, RNF, límites y preguntas abiertas
     docs/avances-acceso-y-firma.md     lo implementado de acceso, firma, revisión y sellado
     docs/estructura-app.html           el diagrama de la app
+    docs/correr-en-windows.md          paso a paso en Windows, debug y release, y las opciones de simulación
     servidor/README.md                 cómo funciona el servidor y su lista de rutas
     servidor/CAMBIOS.md                qué cambió en el servidor al pasar a MySQL
     ia-local/README.md                 la IA real en la Mac
