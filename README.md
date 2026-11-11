@@ -19,6 +19,9 @@ el orden en que fueron saliendo:
   [CFP](3-ACTO%202/1-CFP/README.md) (¿se puede capturar el parte en ≤ 60 s?),
   las ideas del Dark Horse y el
   [Funky Prototype](3-ACTO%202/3-Funky-Prototype/README.md) (parte multijugador).
+- **[`4-tercera-version/`](4-tercera-version/)** — la app de celulares (Flutter),
+  su servidor con MySQL, la IA local y los requerimientos definitivos. Ver su
+  [README](4-tercera-version/README.md) para la estructura y cómo correrlo.
 
 ## Cómo se publica el sitio
 
