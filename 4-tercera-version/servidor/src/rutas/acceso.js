@@ -32,7 +32,7 @@ async function responderSesion(res, usuario, extra = {}) {
 // número o la contraseña.
 r.post('/entrar', async (req, res) => {
   const usuario = await db.fila('SELECT * FROM usuario WHERE matricula = ?', [String(req.body.no_empleado ?? '').trim()]);
-  if (!usuario || !(await firma.contrasenaCorrecta(usuario, req.body.contrasena))) {
+  if (!usuario || !(await firma.contrasenaCorrecta(usuario, req.body.contrasena)) || !datos.puedeUsarLaApp(usuario)) {
     return res.status(401).json({ error: 'credenciales_incorrectas' });
   }
   await responderSesion(res, usuario);
@@ -47,6 +47,7 @@ r.post('/verificar', async (req, res) => {
   const { usuario_id: id, reto, firma: f } = req.body;
   const usuario = await datos.usuarioCompleto(id);
   if (!usuario) return res.status(404).json({ error: 'usuario_desconocido' });
+  if (!datos.puedeUsarLaApp(usuario)) return res.status(401).json({ error: 'credenciales_incorrectas' });
   if (!String(reto || '').endsWith(':acceso')) return res.status(401).json({ error: 'reto_desconocido' });
 
   const v = await firma.confirmar({ reto, firma: f, usuario });

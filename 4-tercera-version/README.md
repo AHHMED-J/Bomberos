@@ -16,14 +16,15 @@ Cada carpeta responde una pregunta:
 | [`docs/`](docs/) | Requerimientos y límites, avances y el diagrama de la app | ¿Qué se pidió y qué se hizo? |
 | [`app/`](app/) | La app de celulares, en Flutter | ¿Qué ve y toca el bombero? |
 | [`servidor/`](servidor/) | El servidor (Node.js) y las tablas de MySQL | ¿Quién guarda y decide? |
+| [`administracion/`](administracion/) | La página web de Administración (React + Vite) | ¿Qué ve y decide Administración? |
 | [`ia-local/`](ia-local/) | La IA real: Whisper y Ollama, y su evaluación | ¿Cómo se dicta de verdad? |
 | [`arrancar/`](arrancar/) | Los comandos que prenden todo | ¿Cómo se corre? |
 
 La app nunca habla directo con la base ni con los modelos: siempre pasa por
 el servidor.
 
-    app  ──►  servidor  ──►  MySQL              usuarios, firmas y partes
-                        └─►  Whisper / Ollama   sólo con la IA real
+    app             ──►  servidor  ──►  MySQL              usuarios, firmas y partes
+    administracion  ──┘             └─►  Whisper / Ollama   sólo con la IA real
 
 Documentos:
 
@@ -68,12 +69,17 @@ Sin eso, el servidor contesta textos de ejemplo (`IA_MODO=fijo`) y todo lo
 demás funciona.
 
 Usuarios de ejemplo (los carga `--preparar-bd`): `376285` / `prueba376285`
-(bombero) y `300112` / `prueba300112` (capitán, revisor).
+(bombero), `300112` / `prueba300112` (capitán, revisor) y `900001` /
+`prueba900001` (Administración: sólo entra a la página web).
+
+**Página de Administración** (con el servidor encendido): ver
+[`administracion/README.md`](administracion/README.md).
 
 Pruebas:
 
 ```bash
 cd servidor && npm test && npm run probar    # IA y flujo completo contra MySQL
+cd servidor && npm run probar-admin          # la API de Administración (WebAuthn, sesión, permisos)
 cd app && flutter analyze && flutter test    # la app
 ```
 

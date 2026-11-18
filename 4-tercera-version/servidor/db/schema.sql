@@ -8,7 +8,10 @@
 -- usuario · el id es el que usa la app (u-<matrícula>). La matrícula es el
 -- número de empleado, y con ella y su contraseña entra. Dirección lo da de
 -- alta y le entrega la contraseña; él la puede cambiar.
--- rol: editor (elemento) o capitan (revisor).
+-- rol: editor (elemento), capitan (revisor) o administracion (entra sólo a
+-- la página web de Administración, no a la app).
+-- activo: 0 = dado de baja. Nunca se borra a nadie: sus partes lo siguen citando.
+-- debe_cambiar: 1 = entra con una contraseña que le dieron y debe cambiarla.
 -- llave_publica: la del chip seguro de SU celular (uno por usuario), para
 -- confirmar con la biometría. NULL = confirma con su contraseña.
 -- trazo: su firma, que sube desde la app. Se copia a cada parte que firma.
@@ -17,12 +20,14 @@ CREATE TABLE IF NOT EXISTS usuario (
   nombre          VARCHAR(160) NOT NULL,
   matricula       VARCHAR(20)  NOT NULL,
   rango           VARCHAR(40)  NOT NULL,
-  rol             ENUM('editor','capitan') NOT NULL DEFAULT 'editor',
+  rol             ENUM('editor','capitan','administracion') NOT NULL DEFAULT 'editor',
   division        VARCHAR(80)  NOT NULL,
   estacion        VARCHAR(80)  NOT NULL,
   contrasena_hash VARCHAR(72)  NOT NULL,   -- bcrypt
   llave_publica   TEXT         NULL,
   trazo           MEDIUMTEXT   NULL,
+  activo          TINYINT(1)   NOT NULL DEFAULT 1,
+  debe_cambiar    TINYINT(1)   NOT NULL DEFAULT 0,
   creado_en       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY uq_usuario_matricula (matricula)
@@ -89,3 +94,68 @@ CREATE TABLE IF NOT EXISTS consecutivo (
 
 -- El primer folio nuevo es el 153, como en el servidor de la app.
 INSERT IGNORE INTO consecutivo (nombre, valor) VALUES ('folio', 152);
+
+-- ---------------------------------------------------------------------------
+-- Página web de Administración (4-tercera-version/administracion)
+-- ---------------------------------------------------------------------------
+
+-- credencial_web · las llaves de acceso (WebAuthn / passkeys) de cada cuenta de
+-- Administración. Se guarda sólo la llave PÚBLICA; la privada nunca sale del
+-- dispositivo (Touch ID, Face ID, Windows Hello o una llave USB).
+-- contador: lo sube el dispositivo en cada uso; si baja, la llave fue copiada.
+CREATE TABLE IF NOT EXISTS credencial_web (
+  id          VARCHAR(255)  NOT NULL,          -- id de la credencial (base64url)
+  usuario_id  VARCHAR(40)   NOT NULL,
+  llave       BLOB          NOT NULL,          -- llave pública COSE (las post-cuánticas pasan de 1 KB)
+  contador    INT UNSIGNED  NOT NULL DEFAULT 0,
+  transportes VARCHAR(200)  NULL,
+  nombre      VARCHAR(80)   NOT NULL,
+  creada_en   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  usada_en    DATETIME      NULL,
+  PRIMARY KEY (id),
+  KEY idx_credencial_usuario (usuario_id),
+  CONSTRAINT fk_credencial_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- sesion_web · sesiones del navegador. Como en sesion, sólo el SHA-256 del
+-- token: el token vive en una cookie HttpOnly.
+-- nivel: contrasena = ya dio su contraseña y le falta su llave de acceso;
+--        completa   = ya confirmó con su llave. Sólo esta abre la página.
+-- reto: el reto de WebAuthn que espera esta sesión (uno a la vez).
+CREATE TABLE IF NOT EXISTS sesion_web (
+  token_hash CHAR(64)     NOT NULL,
+  usuario_id VARCHAR(40)  NOT NULL,
+  nivel      ENUM('contrasena','completa') NOT NULL,
+  reto       VARCHAR(128) NULL,
+  ip         VARCHAR(45)  NULL,
+  agente     VARCHAR(255) NULL,
+  creada_en  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ultimo_uso DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (token_hash),
+  KEY idx_sesion_web_usuario (usuario_id),
+  CONSTRAINT fk_sesion_web_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- reto_web · el reto para entrar sólo con la llave de acceso (sin escribir el
+-- número de empleado). El navegador guarda el id en una cookie; aquí su SHA-256.
+CREATE TABLE IF NOT EXISTS reto_web (
+  id_hash   CHAR(64)     NOT NULL,
+  reto      VARCHAR(128) NOT NULL,
+  creado_en DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  usado_en  DATETIME     NULL,
+  PRIMARY KEY (id_hash)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- bitacora · quién hizo qué en Administración: entradas, intentos fallidos,
+-- altas, permisos, bajas, restablecimientos y exportaciones. No se borra.
+CREATE TABLE IF NOT EXISTS bitacora (
+  id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  usuario_id VARCHAR(40)  NULL,
+  accion     VARCHAR(60)  NOT NULL,
+  objetivo   VARCHAR(80)  NULL,
+  detalle    JSON         NULL,
+  ip         VARCHAR(45)  NULL,
+  creada_en  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  KEY idx_bitacora_fecha (creada_en)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

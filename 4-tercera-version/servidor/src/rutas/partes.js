@@ -58,6 +58,7 @@ r.post('/:folio/enviar', async (req, res) => {
   // 3) Quien lo elabora tiene su firma en trazo y confirma que es él.
   const autor = await datos.usuarioCompleto(parte.elaboro_id);
   if (!autor) return res.status(404).json({ error: 'usuario_desconocido' });
+  if (!datos.puedeUsarLaApp(autor)) return res.status(403).json({ error: 'usuario_inactivo' });
   if (!autor.trazo) return res.status(409).json({ error: 'falta_trazo' });
   const v = await firma.confirmar({ reto, firma: f, contrasena, usuario: autor });
   if (!v.ok) return res.status(401).json({ error: v.motivo });

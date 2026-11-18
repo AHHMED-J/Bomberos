@@ -2,13 +2,31 @@
 // Uso: npm install && npm start   (puerto 3100; PORT=xxxx para cambiarlo). Antes, una vez: ver README.md.
 require('./src/entorno');
 
+const fs = require('node:fs');
+const path = require('node:path');
 const express = require('express');
 const db = require('./src/db');
 const firma = require('./src/firma');
+const admin = require('./src/admin');
+
+// La página de Administración ya construida (cd ../administracion && npm run build).
+const PAGINA_ADMIN = path.join(__dirname, '..', 'administracion', 'dist');
 
 function crearApp() {
   const app = express();
   app.disable('x-powered-by');
+
+  // Administración va antes que todo lo demás: trae su propio límite de 100 KB
+  // y sus encabezados de seguridad (ver src/admin/index.js).
+  app.use('/api/admin', admin.crearApi());
+  if (fs.existsSync(path.join(PAGINA_ADMIN, 'index.html'))) {
+    app.use('/administracion', admin.encabezadosPagina, express.static(PAGINA_ADMIN, { index: 'index.html' }));
+    // Cualquier otra dirección de la página (p. ej. /administracion/partes) abre la misma página.
+    app.get('/administracion/{*resto}', admin.encabezadosPagina, (_req, res) =>
+      res.sendFile(path.join(PAGINA_ADMIN, 'index.html')),
+    );
+  }
+
   app.use(express.json({ limit: '25mb' })); // el audio llega en base64 (ver CONTRATOS-IA.md)
   app.use((req, _res, next) => {
     req.body ??= {};

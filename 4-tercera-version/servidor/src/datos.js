@@ -34,6 +34,10 @@ function usuarioPublico(u) {
   };
 }
 
+// La app es para elementos y capitanes activos. Las cuentas de Administración
+// entran sólo a su página web, y quien está dado de baja no entra a nada.
+const puedeUsarLaApp = (u) => Boolean(u && u.activo !== 0 && u.rol !== 'administracion');
+
 async function usuarioPorId(id) {
   const u = await usuarioCompleto(id);
   return u ? usuarioPublico(u) : null;
@@ -52,7 +56,7 @@ async function exigirSesion(req, res, siguiente) {
   const token = (/^Bearer (.+)$/.exec(req.get('authorization') || '') || [])[1];
   const sesion = token ? await db.fila('SELECT usuario_id FROM sesion WHERE token_hash = ?', [sha256(token)]) : null;
   req.usuario = sesion ? await usuarioCompleto(sesion.usuario_id) : null;
-  if (!req.usuario) return res.status(401).json({ error: 'sin_sesion' });
+  if (!puedeUsarLaApp(req.usuario)) return res.status(401).json({ error: 'sin_sesion' });
   siguiente();
 }
 
@@ -107,6 +111,7 @@ module.exports = {
   usuarioCompleto,
   usuarioPublico,
   usuarioPorId,
+  puedeUsarLaApp,
   abrirSesion,
   exigirSesion,
   partePorFolio,

@@ -53,7 +53,7 @@ r.post('/:folio/validar', async (req, res) => {
 
   // Valida un revisor de la división del parte, y nunca quien lo llenó.
   const revisor = await datos.usuarioCompleto(revisorId);
-  if (!revisor || revisor.rol !== 'capitan') return res.status(403).json({ error: 'no_es_revisor' });
+  if (!revisor || revisor.rol !== 'capitan' || !revisor.activo) return res.status(403).json({ error: 'no_es_revisor' });
   if (revisor.id === p.elaboro_id) return res.status(403).json({ error: 'es_su_parte' });
   if (revisor.division !== p.division) return res.status(403).json({ error: 'otra_division' });
   if (!revisor.trazo) return res.status(409).json({ error: 'falta_trazo' });

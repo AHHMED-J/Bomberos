@@ -5,6 +5,8 @@ const usuarios = [
   { id: 'u-380207', nombre: 'Acevedo Carrillo, Verónica', matricula: '380207', rango: 'Bombero', rol: 'editor', division: DIVISION, estacion: 'Central' },
   { id: 'u-376285', nombre: 'Jalife Burgueño, Ahhmed', matricula: '376285', rango: 'Bombero', rol: 'editor', division: DIVISION, estacion: 'Central' },
   { id: 'u-300112', nombre: 'Cap. J. Navarro', matricula: '300112', rango: 'Capitán', rol: 'capitan', division: DIVISION, estacion: 'Central' },
+  // Entra sólo a la página web de Administración (no a la app).
+  { id: 'u-900001', nombre: 'Lic. M. Torres', matricula: '900001', rango: 'Administración', rol: 'administracion', division: DIVISION, estacion: 'Central' },
 ];
 
 const m = (valor) => ({ valor, origen: 'manual', estado_ia: null, confianza: null, valor_anterior: null, confirmado: true });

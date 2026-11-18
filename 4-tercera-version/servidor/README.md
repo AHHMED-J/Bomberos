@@ -51,20 +51,27 @@ npm run probar            # prueba de punta a punta del acceso, la firma y el se
 
 `db:crear` no borra nada: si las tablas ya existen, las deja como están.
 
-## Lo que hace Dirección
+## Lo que hace Administración
 
-Mientras no exista su página web:
+Lo hace desde su página web (`../administracion`, ver su README). Desde la
+terminal sigue funcionando, y así se crea la **primera** cuenta de
+Administración:
 
 ```bash
+npm run usuario -- alta 900002 "Apellido, Nombre" --administracion
 npm run usuario -- alta 380999 "Apellido, Nombre" [--capitan] [--division "División Estructural"]
 npm run usuario -- restablecer 380999
 ```
 
-- `alta` crea al usuario e imprime la contraseña que se le entrega. Su
-  usuario es su número de empleado (la matrícula). `--capitan` lo habilita
-  para revisar.
-- `restablecer` es para quien olvidó su contraseña: le da una nueva y borra
-  la llave de su celular, para que la registre otra vez al entrar.
+- `alta` crea al usuario e imprime la contraseña que se le entrega (12
+  caracteres). Su usuario es su número de empleado. `--capitan` lo habilita
+  para revisar; `--administracion` crea una cuenta que sólo entra a la página.
+- `restablecer` le da una contraseña nueva, borra la llave de su celular y
+  sus llaves de acceso web, y cierra sus sesiones.
+
+Quien está dado de baja (`activo = 0`) no entra a la app ni a la página, y
+sus sesiones abiertas dejan de servir. Las cuentas de Administración no
+entran a la app.
 
 ## Cómo funciona
 
@@ -124,6 +131,28 @@ La sesión va en `Authorization: Bearer <token>`. `usuario` trae `id`,
 Las rutas de partes y de revisión todavía no piden sesión: lo que protege la
 firma es la confirmación de cada envío y cada validación.
 
+### Rutas de Administración (`/api/admin/…`)
+
+Sesión por cookie HttpOnly, no por `Authorization`. Todo lo que cambia algo
+exige el encabezado `Origin` de la página (`ADMIN_ORIGENES`) y cuerpo JSON.
+
+| Ruta | Qué hace |
+|---|---|
+| `POST /acceso/entrar` | número de empleado + contraseña → sesión a medias |
+| `POST /acceso/llave/opciones-registro`, `/llave/registrar` | crear una llave de acceso (WebAuthn) |
+| `POST /acceso/llave/opciones-acceso`, `/llave/verificar` | confirmar con la llave → sesión completa |
+| `POST /acceso/llave-sola/opciones`, `/llave-sola/verificar` | entrar sólo con la llave |
+| `GET /acceso/yo` · `POST /acceso/salir` · `POST /acceso/contrasena` | la sesión |
+| `GET /acceso/llaves` · `DELETE /acceso/llaves/:id` | mis llaves |
+| `GET /partes` · `/partes/opciones` · `/partes/exportar` | lista con filtros, opciones y CSV (RF-10) |
+| `GET /partes/:folio` · `/partes/:folio/sello` | detalle y verificar sello (RF-14) |
+| `GET /usuarios` · `POST /usuarios` | lista y alta (RF-11) |
+| `PATCH /usuarios/:id` · `POST /usuarios/:id/restablecer` | permisos, datos, baja (RF-12) y contraseña |
+| `GET /bitacora` | quién hizo qué |
+
+Prueba de punta a punta: `npm run probar-admin` (30 pruebas, con un
+autenticador WebAuthn de software).
+
 ## Archivos
 
     servidor.js            arma Express y arranca
@@ -138,5 +167,8 @@ firma es la confirmación de cada envío y cada validación.
     src/rutas/partes.js    folio, lista, reto, enviar y verificar sello
     src/rutas/revision.js  bandeja, devolver y validar
     src/rutas/ia.js        las rutas de las dos IAs (y src/ia/, lo que hay detrás)
+    src/admin/             la API de Administración: config, sesión por cookie,
+                           límite de intentos, bitácora y rutas (acceso, partes,
+                           usuarios, bitácora)
     db/schema.sql          las tablas
     scripts/               crear la base, datos de ejemplo, usuarios y la prueba

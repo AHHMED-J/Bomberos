@@ -1,13 +1,17 @@
 // Lo que hace Dirección con los usuarios, mientras no exista su página web.
 //
-//   npm run usuario -- alta <matrícula> "<nombre>" [--capitan] [--rango "<rango>"] [--division "<división>"] [--estacion "<estación>"]
+//   npm run usuario -- alta <matrícula> "<nombre>" [--capitan | --administracion] [--rango "<rango>"] [--division "<división>"] [--estacion "<estación>"]
 //   npm run usuario -- restablecer <matrícula>
 //
 // alta        crea al usuario e imprime la contraseña que se le entrega. Su
 //             usuario es su número de empleado (la matrícula). --capitan lo
-//             habilita para revisar.
+//             habilita para revisar. --administracion crea una cuenta para la
+//             página web de Administración (así se crea la primera).
 // restablecer para quien olvidó su contraseña: le da una nueva y borra la
-//             llave de su celular, para que la registre otra vez al entrar.
+//             llave de su celular y sus llaves de acceso web, para que las
+//             registre otra vez al entrar. Cierra todas sus sesiones.
+//
+// La página de Administración usa estas mismas funciones.
 
 'use strict';
 
@@ -28,20 +32,25 @@ function alAzar(largo) {
   return texto;
 }
 
-async function darDeAlta({ matricula, nombre, capitan = false, rango, division = DIVISION, estacion = 'Central' }) {
+const RANGO_DE_FABRICA = { editor: 'Bombero', capitan: 'Capitán', administracion: 'Administración' };
+
+// La contraseña que se entrega: 12 caracteres al azar. Al entrar a la página
+// de Administración hay que cambiarla (debe_cambiar = 1).
+async function darDeAlta({ matricula, nombre, capitan = false, rol, rango, division, estacion }) {
+  const elRol = rol || (capitan ? 'capitan' : 'editor');
   const id = `u-${matricula}`;
-  const contrasena = alAzar(10);
+  const contrasena = alAzar(12);
   await db.ejecutar(
-    `INSERT INTO usuario (id, nombre, matricula, rango, rol, division, estacion, contrasena_hash)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO usuario (id, nombre, matricula, rango, rol, division, estacion, contrasena_hash, debe_cambiar)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`,
     [
       id,
       nombre,
       matricula,
-      rango || (capitan ? 'Capitán' : 'Bombero'),
-      capitan ? 'capitan' : 'editor',
-      division,
-      estacion,
+      rango || RANGO_DE_FABRICA[elRol],
+      elRol,
+      division || DIVISION,
+      estacion || 'Central',
       await bcrypt.hash(contrasena, 12),
     ],
   );
@@ -51,11 +60,16 @@ async function darDeAlta({ matricula, nombre, capitan = false, rango, division =
 async function restablecer(matricula) {
   const usuario = await db.fila('SELECT id FROM usuario WHERE matricula = ?', [matricula]);
   if (!usuario) throw new Error(`No existe el número de empleado ${matricula}.`);
-  const contrasena = alAzar(10);
-  await db.ejecutar('UPDATE usuario SET contrasena_hash = ?, llave_publica = NULL WHERE id = ?', [
-    await bcrypt.hash(contrasena, 12),
-    usuario.id,
-  ]);
+  const contrasena = alAzar(12);
+  await db.transaccion(async (t) => {
+    await t.ejecutar('UPDATE usuario SET contrasena_hash = ?, llave_publica = NULL, debe_cambiar = 1 WHERE id = ?', [
+      await bcrypt.hash(contrasena, 12),
+      usuario.id,
+    ]);
+    await t.ejecutar('DELETE FROM credencial_web WHERE usuario_id = ?', [usuario.id]);
+    await t.ejecutar('DELETE FROM sesion_web WHERE usuario_id = ?', [usuario.id]);
+    await t.ejecutar('DELETE FROM sesion WHERE usuario_id = ?', [usuario.id]);
+  });
   return { contrasena };
 }
 
@@ -72,6 +86,7 @@ async function main(argumentos) {
       matricula,
       nombre,
       capitan: argumentos.includes('--capitan'),
+      rol: argumentos.includes('--administracion') ? 'administracion' : undefined,
       rango: opcion(argumentos, '--rango'),
       division: opcion(argumentos, '--division'),
       estacion: opcion(argumentos, '--estacion'),
@@ -81,7 +96,7 @@ async function main(argumentos) {
     console.log(`Contraseña nueva de ${matricula}: ${(await restablecer(matricula)).contrasena}`);
   } else {
     console.log('Uso:');
-    console.log('  npm run usuario -- alta <matrícula> "<nombre>" [--capitan] [--rango "…"] [--division "…"] [--estacion "…"]');
+    console.log('  npm run usuario -- alta <matrícula> "<nombre>" [--capitan | --administracion] [--rango "…"] [--division "…"] [--estacion "…"]');
     console.log('  npm run usuario -- restablecer <matrícula>');
     process.exitCode = 1;
   }
