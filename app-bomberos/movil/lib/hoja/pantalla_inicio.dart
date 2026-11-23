@@ -102,28 +102,23 @@ class PantallaInicio extends ConsumerWidget {
                   alTocar: () => context.push('/inicio/documentos'),
                 ),
                 const SizedBox(height: 6),
-                GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: .78,
-                  children: [
-                    _Mosaico(
-                      key: const ValueKey('nuevo-parte'),
-                      texto: 'Hoja de\nincidente',
-                      icono: Icons.assignment_outlined,
-                      activo: true,
-                      alTocar: () => _nuevoParte(context, ref, u),
+                // Un solo mosaico, centrado y del mismo tamaño que tenía en la cuadrícula de 2 columnas.
+                LayoutBuilder(
+                  builder: (context, c) => Center(
+                    child: SizedBox(
+                      width: (c.maxWidth - 12) / 2,
+                      child: AspectRatio(
+                        aspectRatio: .78,
+                        child: _Mosaico(
+                          key: const ValueKey('nuevo-parte'),
+                          texto: 'Hoja de\nincidente',
+                          icono: Icons.assignment_outlined,
+                          alTocar: () => _nuevoParte(context, ref, u),
+                        ),
+                      ),
                     ),
-                    const _Mosaico(texto: 'Lista de\nasistencia', icono: Icons.how_to_reg_outlined),
-                    const _Mosaico(texto: 'Notas', icono: Icons.edit_note),
-                    const _Mosaico(texto: 'Revisión\nmecánica', icono: Icons.build_outlined),
-                  ],
+                  ),
                 ),
-                const SizedBox(height: 10),
-                const Text('Lista de asistencia, Notas y Revisión mecánica llegan en el hito 6.', style: Textos.chico),
               ],
             ),
           ),
@@ -134,29 +129,27 @@ class PantallaInicio extends ConsumerWidget {
 }
 
 class _Mosaico extends StatelessWidget {
-  const _Mosaico({super.key, required this.texto, required this.icono, this.activo = false, this.alTocar});
+  const _Mosaico({super.key, required this.texto, required this.icono, required this.alTocar});
   final String texto;
   final IconData icono;
-  final bool activo;
-  final VoidCallback? alTocar;
+  final VoidCallback alTocar;
   @override
   Widget build(BuildContext context) => Tarjeta(
-    alTocar: activo ? alTocar : null,
+    alTocar: alTocar,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CircleAvatar(
           radius: 34,
-          backgroundColor: activo ? Colores.rojo : const Color(0xFFE5A9A4),
+          backgroundColor: Colores.rojo,
           child: Icon(icono, size: 32, color: Colores.blanco),
         ),
         const SizedBox(height: 10),
         Text(
           texto,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 17, color: activo ? Colores.tinta : Colores.gris, height: 1.15),
+          style: const TextStyle(fontSize: 17, color: Colores.tinta, height: 1.15),
         ),
-        if (!activo) const Padding(padding: EdgeInsets.only(top: 4), child: ChipBomberos('Hito 6')),
       ],
     ),
   );
