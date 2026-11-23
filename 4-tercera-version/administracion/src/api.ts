@@ -103,6 +103,8 @@ export interface Parte {
   campos: Record<string, Campo>
   fotos?: number
   croquis_png?: string | null
+  // Las imágenes que el servidor tiene del parte, por su SHA-256 (tipo = croquis o foto).
+  adjuntos?: { tipo: 'croquis' | 'foto'; sha256: string; bytes?: number }[]
   modo?: 'teclado' | 'dictado'
   sello?: string | null
   nota?: { texto: string; seccion: string; revisor: string; fecha: string } | null

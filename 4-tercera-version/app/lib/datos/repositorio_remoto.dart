@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 
@@ -28,6 +29,15 @@ String mensajeDeError(Object e) {
     'trazo_invalido' => 'La firma no es válida; dibújala de nuevo',
     'ya_tiene_celular' => 'Tu cuenta ya tiene un celular registrado',
     'ya_enviado' => 'Este parte ya se envió',
+    'no_es_su_parte' => 'Ese parte es de otra persona',
+    'no_es_tu_cuenta' => 'Esa petición no es de tu cuenta',
+    'sin_permiso' => 'No tienes permiso para ver eso',
+    'formato_no_valido' => 'La imagen debe ser JPEG o PNG',
+    'imagen_muy_grande' => 'La imagen pesa demasiado (máximo 8 MB)',
+    'demasiados_adjuntos' => 'Demasiadas imágenes en este parte',
+    'adjunto_faltante' => 'Falta subir una imagen; inténtalo de nuevo',
+    'fotos_no_coinciden' => 'El número de fotos no coincide con las imágenes subidas',
+    'hash_no_coincide' => 'La imagen se dañó al subirla; inténtalo de nuevo',
     'contenido_cambio' => 'El parte cambió después de confirmar; inténtalo de nuevo',
     'no_espera_revision' => 'Este parte no está esperando revisión',
     'no_es_revisor' => 'Dirección no te ha habilitado para revisar',
@@ -64,6 +74,13 @@ abstract interface class RepositorioRemoto {
   Future<Usuario> verificarAcceso(String usuarioId, String reto, String firma);
 
   Future<String> nuevoFolio();
+
+  /// Sube una foto o el croquis (JPEG o PNG) antes de enviar el parte. [sha256] es el hash de [bytes]; el
+  /// servidor lo comprueba. Subir lo mismo dos veces no estorba.
+  Future<void> subirAdjunto(String folio, {required String tipo, required String sha256, required Uint8List bytes});
+
+  /// Baja una imagen del parte: la de quien lo elaboró y la de los capitanes de su división.
+  Future<Uint8List> leerAdjunto(String folio, String sha256);
   Future<List<Parte>> misPartes(String usuarioId);
   Future<List<Parte>> bandeja(String division);
 
@@ -175,6 +192,25 @@ class RemotoFalso implements RepositorioRemoto {
   @override
   Future<String> nuevoFolio() async => 'PE-2026-${(_folio++).toString().padLeft(4, '0')}';
 
+  final _imagenes = <String, Uint8List>{};
+
+  @override
+  Future<void> subirAdjunto(
+    String folio, {
+    required String tipo,
+    required String sha256,
+    required Uint8List bytes,
+  }) async {
+    await _espera();
+    _imagenes['$folio/$sha256'] = bytes;
+  }
+
+  @override
+  Future<Uint8List> leerAdjunto(String folio, String sha256) async {
+    await _espera();
+    return _imagenes['$folio/$sha256'] ?? (throw ErrorApi(404, {'error': 'no_existe'}));
+  }
+
   @override
   Future<List<Parte>> misPartes(String usuarioId) async {
     await _espera();
@@ -199,6 +235,12 @@ class RemotoFalso implements RepositorioRemoto {
   Future<Parte> enviar(Parte parte, {required String reto, String? firma, String? contrasena}) async {
     await _espera();
     final confirmacion = firma ?? (contrasena == null ? null : 'contrasena');
+    // Como el servidor real: las imágenes que firmó tienen que haberse subido.
+    for (final a in parte.adjuntos) {
+      if (!_imagenes.containsKey('${parte.folio}/${a.sha256}')) {
+        throw ErrorApi(422, {'error': 'adjunto_faltante'});
+      }
+    }
     // Mismo filtro que el servidor real: nada sin confirmar, nada obligatorio vacío.
     final faltan = pendientesParaEnviar(parte.copiar(firmas: parte.firmas.copiar(elaboro: confirmacion)));
     if (faltan.isNotEmpty) throw EnvioRechazado([for (final f in faltan) f.mensaje]);
@@ -346,6 +388,19 @@ class RemotoHttp implements RepositorioRemoto {
 
   @override
   Future<String> nuevoFolio() async => (await api.post('/api/partes/folio'))['folio'] as String;
+
+  @override
+  Future<void> subirAdjunto(
+    String folio, {
+    required String tipo,
+    required String sha256,
+    required Uint8List bytes,
+  }) async {
+    await api.post('/api/partes/$folio/adjuntos', {'tipo': tipo, 'sha256': sha256, 'datos': base64Encode(bytes)});
+  }
+
+  @override
+  Future<Uint8List> leerAdjunto(String folio, String sha256) => api.getBytes('/api/partes/$folio/adjuntos/$sha256');
 
   @override
   Future<List<Parte>> misPartes(String usuarioId) async => _lista(await api.get('/api/partes?usuario=$usuarioId'));

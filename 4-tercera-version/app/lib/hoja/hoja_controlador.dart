@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../datos/modelos.dart';
@@ -7,6 +10,16 @@ import '../servicios/proveedores.dart';
 String _dosDigitos(int n) => n.toString().padLeft(2, '0');
 String horaDe(DateTime t) => '${_dosDigitos(t.hour)}:${_dosDigitos(t.minute)}';
 String fechaDe(DateTime t) => '${_dosDigitos(t.day)}/${_dosDigitos(t.month)}/${t.year}';
+
+/// Una foto o el croquis que el parte nombra pero ya no está en este teléfono.
+class ImagenFaltante implements Exception {
+  const ImagenFaltante(this.que);
+  final String que;
+  @override
+  String toString() => 'Falta $que en este teléfono. Quítala o vuelve a tomarla.';
+}
+
+String sha256Hex(Uint8List bytes) => sha256.convert(bytes).toString();
 
 /// El parte abierto en la Hoja. Cada cambio se guarda en SQLite si está en progreso o devuelto.
 class HojaControlador extends Notifier<Parte?> {
@@ -80,6 +93,42 @@ class HojaControlador extends Notifier<Parte?> {
     return state!;
   }
 
+  /// Antes de firmar: saca el SHA-256 del croquis y de cada foto y los deja en el parte, para que el reto (y con
+  /// él la firma y el sello) cubra las imágenes. Sin archivos en el teléfono (partes de ejemplo) no hay nada
+  /// que cubrir y el parte queda como estaba. Devuelve el parte.
+  Future<Parte> prepararAdjuntos() async {
+    final p = state!;
+    final adjuntos = <Adjunto>[];
+    final croquis = p.croquisPng;
+    if (croquis != null) {
+      final bytes = await ref.read(almacenCroquisProvider).leer(croquis);
+      if (bytes == null) throw const ImagenFaltante('el croquis');
+      adjuntos.add(Adjunto(tipo: Adjunto.croquis, sha256: sha256Hex(bytes), ruta: croquis));
+    }
+    for (final ruta in p.fotosRutas) {
+      final bytes = await ref.read(almacenFotosProvider).leer(ruta);
+      if (bytes == null) throw const ImagenFaltante('una foto');
+      adjuntos.add(Adjunto(tipo: Adjunto.foto, sha256: sha256Hex(bytes), ruta: ruta));
+    }
+    state = p.copiar(adjuntos: adjuntos, fotos: p.fotosRutas.isEmpty ? p.fotos : p.fotosRutas.length);
+    await _guardar();
+    return state!;
+  }
+
+  /// Sube al servidor las imágenes de [p] (la lista que dejó [prepararAdjuntos]), antes de enviar el parte.
+  Future<void> subirAdjuntos(Parte p) async {
+    final remoto = ref.read(repositorioRemotoProvider);
+    for (final a in p.adjuntos) {
+      final ruta = a.ruta;
+      if (ruta == null) continue;
+      final bytes = a.tipo == Adjunto.croquis
+          ? await ref.read(almacenCroquisProvider).leer(ruta)
+          : await ref.read(almacenFotosProvider).leer(ruta);
+      if (bytes == null) throw ImagenFaltante(a.tipo == Adjunto.croquis ? 'el croquis' : 'una foto');
+      await remoto.subirAdjunto(p.folio, tipo: a.tipo, sha256: a.sha256, bytes: bytes);
+    }
+  }
+
   Future<void> _guardar() async {
     final p = state;
     if (p == null) return;
@@ -100,7 +149,24 @@ class HojaControlador extends Notifier<Parte?> {
 
   void llegada() => escribir('hora_llegada', horaDe(reloj()));
   void regreso() => escribir('hora_regreso', horaDe(reloj()));
-  void agregarFoto() => _actualizar((p) => p.copiar(fotos: p.fotos + 1));
+
+  /// Una foto nueva, ya guardada en el teléfono. Si el parte traía fotos de ejemplo sin archivo, `fotos` pasa
+  /// a ser cuántas hay de verdad.
+  void agregarFoto(String ruta) =>
+      _actualizar((p) => p.copiar(fotosRutas: [...p.fotosRutas, ruta], fotos: p.fotosRutas.length + 1));
+
+  /// Quita una foto del parte y borra su archivo.
+  void quitarFoto(String ruta) {
+    _actualizar((p) {
+      final rutas = [
+        for (final r in p.fotosRutas)
+          if (r != ruta) r,
+      ];
+      return p.copiar(fotosRutas: rutas, fotos: rutas.length);
+    });
+    ref.read(almacenFotosProvider).borrar(ruta);
+  }
+
   void croquis(String rutaPng) => _actualizar((p) => p.copiar(croquisPng: rutaPng));
   void firmas(Firmas Function(Firmas) f) => _actualizar((p) => p.copiar(firmas: f(p.firmas)));
 

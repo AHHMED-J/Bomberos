@@ -23,6 +23,7 @@ dependencies:
   biometric_signature: ^13.3.0
   # SHA-256 del contenido del parte para el reto de firma.
   crypto: ^3.0.8
+  image_picker: ^1.1.2
   flutter_localizations:
     sdk: flutter
   record: ^7.1.2

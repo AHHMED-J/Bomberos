@@ -9,6 +9,8 @@ import '../croquis/seccion_croquis.dart';
 import '../compartido/widgets.dart';
 import '../datos/catalogo_campos.dart';
 import '../datos/modelos.dart';
+import '../servicios/camara.dart';
+import 'imagen_parte.dart';
 import '../dictado/dictado_controlador.dart';
 import '../dictado/panel_dictado.dart';
 import '../servicios/proveedores.dart';
@@ -237,20 +239,11 @@ class _PantallaHojaState extends ConsumerState<PantallaHoja> {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    for (var i = 0; i < parte.fotos; i++)
-                      Container(
-                        width: 72,
-                        height: 72,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: const LinearGradient(colors: [Color(0xFF6B4A35), Color(0xFF2E2420)]),
-                        ),
-                        child: const Icon(Icons.image, color: Colors.white54),
-                      ),
+                    for (var i = 0; i < parte.fotos; i++) _miniatura(context, ref, parte, i, editable),
                     if (editable)
                       InkWell(
-                        // TODO: cámara real (image_picker). Hoy suma una foto de ejemplo.
-                        onTap: hoja.agregarFoto,
+                        key: const ValueKey('agregar-foto'),
+                        onTap: () => _agregarFoto(context, ref, parte),
                         child: Container(
                           width: 72,
                           height: 72,
@@ -310,6 +303,89 @@ class _PantallaHojaState extends ConsumerState<PantallaHoja> {
         ],
       ),
     );
+  }
+
+  /// Las fotos van en el mismo orden en las rutas del teléfono y en los adjuntos que guardó el servidor.
+  Widget _miniatura(BuildContext context, WidgetRef ref, Parte parte, int i, bool editable) {
+    final ruta = i < parte.fotosRutas.length ? parte.fotosRutas[i] : null;
+    final sha = [
+      for (final a in parte.adjuntos)
+        if (a.tipo == Adjunto.foto) a.sha256,
+    ].elementAtOrNull(i);
+    Widget imagen({double? lado = 72, BoxFit ajuste = BoxFit.cover}) =>
+        ImagenParte(folio: parte.folio, ruta: ruta, sha256: sha, ancho: lado, alto: lado, ajuste: ajuste);
+    return SizedBox(
+      width: 72,
+      height: 72,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: InkWell(
+              key: ValueKey('foto-$i'),
+              borderRadius: BorderRadius.circular(10),
+              onTap: () => verImagenCompleta(context, imagen(lado: null, ajuste: BoxFit.contain)),
+              child: imagen(),
+            ),
+          ),
+          if (editable && ruta != null)
+            Positioned(
+              top: 0,
+              right: 0,
+              child: InkWell(
+                key: ValueKey('quitar-foto-$i'),
+                onTap: () => ref.read(hojaProvider.notifier).quitarFoto(ruta),
+                child: const CircleAvatar(
+                  radius: 11,
+                  backgroundColor: Colors.black54,
+                  child: Icon(Icons.close, size: 14, color: Colors.white),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _agregarFoto(BuildContext context, WidgetRef ref, Parte parte) async {
+    if (parte.fotosRutas.length >= 25) return avisar(context, 'Máximo 25 fotos por parte');
+    final origen = await showModalBottomSheet<OrigenFoto>(
+      context: context,
+      builder: (c) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              key: const ValueKey('foto-camara'),
+              leading: const Icon(Icons.photo_camera_outlined),
+              title: const Text('Tomar foto'),
+              onTap: () => Navigator.pop(c, OrigenFoto.camara),
+            ),
+            ListTile(
+              key: const ValueKey('foto-galeria'),
+              leading: const Icon(Icons.photo_library_outlined),
+              title: const Text('Elegir de la fototeca'),
+              onTap: () => Navigator.pop(c, OrigenFoto.galeria),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (origen == null || !context.mounted) return;
+    try {
+      final bytes = await ref.read(camaraProvider).tomar(origen);
+      if (bytes == null) return;
+      final ruta = await ref.read(almacenFotosProvider).guardar(parte.id, bytes);
+      ref.read(hojaProvider.notifier).agregarFoto(ruta);
+    } on CamaraNoDisponible {
+      if (context.mounted) {
+        avisar(
+          context,
+          origen == OrigenFoto.camara
+              ? 'No hay cámara disponible (el simulador no tiene). Elige una de la fototeca.'
+              : 'No se pudo abrir la fototeca. Revisa el permiso en Ajustes.',
+        );
+      }
+    }
   }
 }
 

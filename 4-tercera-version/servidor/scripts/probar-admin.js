@@ -490,6 +490,27 @@ async function main() {
       assert.equal((await pedir('GET', '/api/admin/notificaciones')).sin_leer, 0);
     });
 
+    await paso('Administración ve las imágenes del parte, y sin sesión no', async () => {
+      const png = Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==',
+        'base64',
+      );
+      const hash = require('node:crypto').createHash('sha256').update(png).digest('hex');
+      const dueno = await db.fila('SELECT id FROM usuario WHERE matricula = ?', [matAdmin]);
+      await db.ejecutar(
+        "INSERT IGNORE INTO adjunto (folio, sha256, tipo, mime, bytes, contenido, subido_por) VALUES ('PE-2026-0150', ?, 'croquis', 'image/png', ?, ?, ?)",
+        [hash, png.length, png, dueno.id],
+      );
+      const ruta = `/api/admin/partes/PE-2026-0150/adjuntos/${hash}`;
+      const r = await pedir('GET', ruta);
+      assert.equal(r.http, 200);
+      assert.equal(r.cabeceras.get('content-type'), 'image/png');
+      assert.equal(r.cabeceras.get('x-content-type-options'), 'nosniff');
+      assert.equal((await navegador().pedir('GET', ruta)).http, 401);
+      assert.equal((await pedir('GET', `/api/admin/partes/PE-2026-0150/adjuntos/${'0'.repeat(64)}`)).http, 404);
+      await db.ejecutar("DELETE FROM adjunto WHERE folio = 'PE-2026-0150'");
+    });
+
     await paso('sin sesión no se ve nada', async () => {
       const anonimo = navegador();
       for (const ruta of ['/api/admin/notificaciones', '/api/admin/partes', '/api/admin/usuarios', '/api/admin/bitacora', '/api/admin/partes/PE-2026-0150']) {

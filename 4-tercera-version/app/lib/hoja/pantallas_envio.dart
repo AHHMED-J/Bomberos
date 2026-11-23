@@ -131,6 +131,10 @@ class _PantallaFirmasState extends ConsumerState<PantallaFirmas> {
       final remoto = ref.read(repositorioRemotoProvider);
       // Un parte empezado sin señal recibe aquí su folio real (antes del reto: el folio va en el contenido).
       var p = await hoja.asegurarFolioReal();
+      // Las fotos y el croquis entran por su hash en lo que se firma, y se suben antes del reto: el reto
+      // sólo vale 5 minutos y no debe gastarse esperando imágenes.
+      p = await hoja.prepararAdjuntos();
+      await hoja.subirAdjuntos(p);
       // 1) Reto con el SHA-256 del contenido  2) biometría del celular o contraseña
       // 3) el servidor comprueba, revisa pendientes y pone en el parte la firma en trazo de la cuenta.
       final reto = await remoto.retoFirma(p);

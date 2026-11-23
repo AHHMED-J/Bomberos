@@ -11,6 +11,8 @@ import '../croquis/almacen_croquis.dart';
 import '../datos/api_cliente.dart';
 import '../datos/repositorio_local.dart';
 import '../datos/repositorio_remoto.dart';
+import '../hoja/almacen_fotos.dart';
+import 'camara.dart';
 import 'config.dart';
 import 'firma/servicio_firma.dart';
 import 'grabadora_audio.dart';
@@ -133,6 +135,12 @@ final teselasMapaProvider = Provider<bool>((ref) => true);
 
 /// PNG del croquis en la carpeta de la app. En pruebas: en memoria.
 final almacenCroquisProvider = Provider<AlmacenCroquis>((ref) => AlmacenCroquisArchivos());
+
+/// Cámara y fototeca del iPhone. En pruebas: CamaraFalsa.
+final camaraProvider = Provider<ServicioCamara>((ref) => CamaraReal());
+
+/// JPEG de las fotos de la evidencia en la carpeta de la app. En pruebas: en memoria.
+final almacenFotosProvider = Provider<AlmacenFotos>((ref) => AlmacenFotosArchivos());
 
 // ---------- Acceso ----------
 

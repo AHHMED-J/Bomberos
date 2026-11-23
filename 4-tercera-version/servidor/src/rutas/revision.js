@@ -1,6 +1,7 @@
-// El revisor (capitán).
+// El revisor (capitán). Todas las rutas piden sesión de un capitán: quién revisa
+// lo decide la sesión, no el cuerpo de la petición (`revisor_id`, si llega, debe ser el mismo).
 //
-//   GET  /api/revision/bandeja?division=…   los partes de su división
+//   GET  /api/revision/bandeja              los partes de su división
 //   POST /api/revision/:folio/devolver      lo regresa con una nota
 //   POST /api/revision/:folio/validar       lo firma, lo sella y queda enviado a Dirección
 
@@ -17,9 +18,16 @@ const { contenidoParaFirmar, hashContenido } = require('../validacion');
 
 const r = express.Router();
 
+r.use(datos.exigirSesion, (req, res, siguiente) => {
+  if (req.usuario.rol !== 'capitan') return res.status(403).json({ error: 'no_es_revisor' });
+  const dice = req.body?.revisor_id;
+  if (dice !== undefined && dice !== req.usuario.id) return res.status(403).json({ error: 'no_es_tu_cuenta' });
+  siguiente();
+});
+
+// Sólo la división del capitán.
 r.get('/bandeja', async (req, res) => {
-  const division = String(req.query.division || datos.DIVISION);
-  res.json({ partes: await datos.partesDonde('WHERE division = ?', [division]) });
+  res.json({ partes: await datos.partesDonde('WHERE division = ?', [req.usuario.division]) });
 });
 
 // Un parte devuelto no se sella. Quien lo llenó lo corrige y vuelve a firmar.
@@ -28,15 +36,17 @@ r.post('/:folio/devolver', async (req, res) => {
   if (!p) return res.status(404).json({ error: 'no_existe' });
   if (!String(req.body.nota || '').trim()) return res.status(400).json({ error: 'falta_nota' });
   if (p.estado !== 'enviado') return res.status(409).json({ error: 'no_espera_revision' });
+  const revisor = req.usuario;
+  if (revisor.id === p.elaboro_id) return res.status(403).json({ error: 'es_su_parte' });
+  if (revisor.division !== p.division) return res.status(403).json({ error: 'otra_division' });
 
-  const revisor = await datos.usuarioPorId(req.body.revisor_id);
   const devuelto = {
     ...p,
     estado: 'devuelto',
     nota: {
       texto: req.body.nota,
       seccion: req.body.seccion || 'Datos del servicio',
-      revisor: revisor?.nombre || '?',
+      revisor: revisor.nombre,
       fecha: new Date().toISOString(),
     },
   };
@@ -59,11 +69,10 @@ r.post('/:folio/validar', async (req, res) => {
   const p = await datos.partePorFolio(req.params.folio);
   if (!p) return res.status(404).json({ error: 'no_existe' });
   if (p.estado !== 'enviado') return res.status(409).json({ error: 'no_espera_revision' });
-  const { reto, firma: f, contrasena, revisor_id: revisorId } = req.body;
+  const { reto, firma: f, contrasena } = req.body;
 
   // Valida un revisor de la división del parte, y nunca quien lo llenó.
-  const revisor = await datos.usuarioCompleto(revisorId);
-  if (!revisor || revisor.rol !== 'capitan' || !revisor.activo) return res.status(403).json({ error: 'no_es_revisor' });
+  const revisor = req.usuario;
   if (revisor.id === p.elaboro_id) return res.status(403).json({ error: 'es_su_parte' });
   if (revisor.division !== p.division) return res.status(403).json({ error: 'otra_division' });
   if (!revisor.trazo) return res.status(409).json({ error: 'falta_trazo' });

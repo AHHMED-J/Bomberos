@@ -260,6 +260,27 @@ class Firmas {
   );
 }
 
+/// Una imagen del parte (foto de la evidencia o croquis), identificada por su SHA-256. El hash va dentro del
+/// contenido que firma quien elabora, así que la firma y el sello cubren la imagen.
+class Adjunto {
+  const Adjunto({required this.tipo, required this.sha256, this.ruta});
+
+  /// «foto» o «croquis».
+  final String tipo;
+  final String sha256;
+
+  /// Dónde está en este teléfono («fotos/…jpg» o «croquis/…png»). Sólo existe en el teléfono de quien elaboró.
+  final String? ruta;
+
+  static const foto = 'foto';
+  static const croquis = 'croquis';
+
+  Map<String, dynamic> aJson() => {'tipo': tipo, 'sha256': sha256, if (ruta != null) 'ruta': ruta};
+
+  factory Adjunto.deJson(Map<String, dynamic> j) =>
+      Adjunto(tipo: j['tipo'] as String, sha256: j['sha256'] as String, ruta: j['ruta'] as String?);
+}
+
 /// Un parte (Hoja de incidente). Lo llena UNA persona: no hay multijugador.
 class Parte {
   const Parte({
@@ -272,6 +293,8 @@ class Parte {
     required this.creadoEn,
     this.campos = const {},
     this.fotos = 0,
+    this.fotosRutas = const [],
+    this.adjuntos = const [],
     this.croquisPng,
     this.firmas = const Firmas(),
     this.modo = ModoCaptura.dictado,
@@ -291,6 +314,12 @@ class Parte {
   final DateTime creadoEn;
   final Map<String, ValorCampo> campos;
   final int fotos;
+
+  /// Rutas relativas de las fotos tomadas en este teléfono («fotos/…jpg»). Cuando hay, `fotos` es cuántas son.
+  final List<String> fotosRutas;
+
+  /// Las imágenes con su SHA-256. La app las calcula justo antes de firmar; el servidor devuelve las que verificó.
+  final List<Adjunto> adjuntos;
 
   /// Ruta relativa del PNG del croquis en el teléfono («croquis/…png»), o null si no hay captura.
   final String? croquisPng;
@@ -318,6 +347,8 @@ class Parte {
     EstadoParte? estado,
     Map<String, ValorCampo>? campos,
     int? fotos,
+    List<String>? fotosRutas,
+    List<Adjunto>? adjuntos,
     String? croquisPng,
     Firmas? firmas,
     ModoCaptura? modo,
@@ -337,6 +368,8 @@ class Parte {
     creadoEn: creadoEn,
     campos: campos ?? this.campos,
     fotos: fotos ?? this.fotos,
+    fotosRutas: fotosRutas ?? this.fotosRutas,
+    adjuntos: adjuntos ?? this.adjuntos,
     croquisPng: croquisPng ?? this.croquisPng,
     firmas: firmas ?? this.firmas,
     modo: modo ?? this.modo,
@@ -360,17 +393,29 @@ class Parte {
     return copiar(segActivo: suma, ultimaActividad: ahora);
   }
 
-  /// Contenido canónico que se firma (su SHA-256 va en el reto).
-  Map<String, dynamic> contenidoParaFirmar() => {
-    'folio': folio,
-    'campos': {for (final e in (campos.entries.toList()..sort((a, b) => a.key.compareTo(b.key)))) e.key: e.value.valor},
-    'fotos': fotos,
-    'propietario': firmas.propietarioNombre,
-    'testigo': firmas.testigoNombre,
-    'propietario_trazo': firmas.propietarioTrazo,
-    'testigo_trazo': firmas.testigoTrazo,
-    'requiere_peritaje': firmas.requierePeritaje,
-  };
+  /// Contenido canónico que se firma (su SHA-256 va en el reto). Debe ser idéntico al del servidor
+  /// (servidor/src/validacion.js): mismas llaves, mismo orden. Las imágenes entran por su hash, y la llave
+  /// «adjuntos» sólo existe si hay imágenes: así los partes anteriores conservan su firma y su sello.
+  Map<String, dynamic> contenidoParaFirmar() {
+    final c = <String, dynamic>{
+      'folio': folio,
+      'campos': {
+        for (final e in (campos.entries.toList()..sort((a, b) => a.key.compareTo(b.key)))) e.key: e.value.valor,
+      },
+      'fotos': fotos,
+      'propietario': firmas.propietarioNombre,
+      'testigo': firmas.testigoNombre,
+      'propietario_trazo': firmas.propietarioTrazo,
+      'testigo_trazo': firmas.testigoTrazo,
+      'requiere_peritaje': firmas.requierePeritaje,
+    };
+    if (adjuntos.isNotEmpty) {
+      c['adjuntos'] = [
+        for (final a in adjuntos) {'tipo': a.tipo, 'sha256': a.sha256},
+      ]..sort((a, b) => '${a['tipo']}:${a['sha256']}'.compareTo('${b['tipo']}:${b['sha256']}'));
+    }
+    return c;
+  }
 
   Map<String, dynamic> aJson() => {
     'id': id,
@@ -382,6 +427,8 @@ class Parte {
     'creado_en': creadoEn.toIso8601String(),
     'campos': campos.map((k, v) => MapEntry(k, v.aJson())),
     'fotos': fotos,
+    'fotos_rutas': fotosRutas,
+    'adjuntos': [for (final a in adjuntos) a.aJson()],
     'croquis_png': croquisPng,
     'firmas': firmas.aJson(),
     'modo': modo.name,
@@ -404,6 +451,8 @@ class Parte {
       (k, v) => MapEntry(k, ValorCampo.deJson(v as Map<String, dynamic>)),
     ),
     fotos: j['fotos'] as int? ?? 0,
+    fotosRutas: [for (final r in (j['fotos_rutas'] as List? ?? const [])) '$r'],
+    adjuntos: [for (final a in (j['adjuntos'] as List? ?? const [])) Adjunto.deJson(a as Map<String, dynamic>)],
     croquisPng: j['croquis_png'] as String?, // «croquis_dibujado» (versión anterior) ya no se usa
     firmas: Firmas.deJson(j['firmas'] as Map<String, dynamic>? ?? {}),
     modo: ModoCaptura.values.byName(j['modo'] as String? ?? 'dictado'),

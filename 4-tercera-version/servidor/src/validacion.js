@@ -37,7 +37,7 @@ function contenidoParaFirmar(parte) {
   const f = parte.firmas || {};
   const campos = {};
   for (const id of Object.keys(c).sort()) campos[id] = c[id].valor;
-  return {
+  const contenido = {
     folio: parte.folio,
     campos,
     fotos: parte.fotos || 0,
@@ -47,6 +47,13 @@ function contenidoParaFirmar(parte) {
     testigo_trazo: f.testigo_trazo ?? null,
     requiere_peritaje: f.requiere_peritaje ?? null,
   };
+  // Las imágenes (fotos y croquis) entran por su SHA-256. Sin imágenes la llave no existe,
+  // así que los partes anteriores conservan su contenido, su firma y su sello.
+  const adjuntos = (parte.adjuntos || []).map((a) => ({ tipo: a.tipo, sha256: a.sha256 }));
+  if (adjuntos.length) {
+    contenido.adjuntos = adjuntos.sort((a, b) => (`${a.tipo}:${a.sha256}` < `${b.tipo}:${b.sha256}` ? -1 : 1));
+  }
+  return contenido;
 }
 
 const sha256 = (texto) => crypto.createHash('sha256').update(texto).digest('hex');

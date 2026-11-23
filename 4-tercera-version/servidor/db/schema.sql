@@ -180,3 +180,27 @@ CREATE TABLE IF NOT EXISTS notificacion (
   KEY idx_notificacion_usuario (usuario_id, leida_en, id),
   CONSTRAINT fk_notificacion_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ---------------------------------------------------------------------------
+-- Imágenes de los partes
+-- ---------------------------------------------------------------------------
+
+-- adjunto · las fotos de la evidencia y el croquis de un parte, guardadas en la
+-- base. El SHA-256 va dentro del parte que firma quien lo elabora, así que la
+-- firma y el sello cubren las imágenes. El mismo hash lo puede subir más de una persona
+-- (no se estorban entre sí): al enviar sólo cuenta lo que subió quien firma. No tiene llave foránea a `parte`: se
+-- sube antes de enviar el parte, cuando el folio todavía no tiene renglón.
+CREATE TABLE IF NOT EXISTS adjunto (
+  id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  folio      VARCHAR(20)  NOT NULL,
+  sha256     CHAR(64)     NOT NULL,
+  tipo       ENUM('foto','croquis') NOT NULL,
+  mime       VARCHAR(20)  NOT NULL,
+  bytes      INT UNSIGNED NOT NULL,
+  contenido  LONGBLOB     NOT NULL,
+  subido_por VARCHAR(40)  NOT NULL,
+  subido_en  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_adjunto (folio, sha256, subido_por),
+  CONSTRAINT fk_adjunto_usuario FOREIGN KEY (subido_por) REFERENCES usuario (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

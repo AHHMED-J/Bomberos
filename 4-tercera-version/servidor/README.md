@@ -117,14 +117,16 @@ las imágenes de las fotos ni del croquis; cuando lo haga, entran al sello.
 | `GET /api/notificaciones` | sí | — | `notificaciones`, `sin_leer` |
 | `POST /api/notificaciones/leidas` | sí | — | `ok` |
 | `POST /api/notificaciones/:id/leida` | sí | — | `ok` |
-| `POST /api/partes/folio` | no | — | `folio` |
-| `GET /api/partes?usuario=…` | no | — | `partes` |
-| `POST /api/partes/:folio/reto` | no | `contenido` | `reto`, `hash` |
-| `POST /api/partes/:folio/enviar` | no | `parte`, `reto`, y `firma` o `contrasena` | `parte` |
-| `GET /api/partes/:folio/sello` | no | — | `sello`, `calculado`, `coincide` |
-| `GET /api/revision/bandeja?division=…` | no | — | `partes` |
-| `POST /api/revision/:folio/devolver` | no | `nota`, `seccion`, `revisor_id` | `parte` |
-| `POST /api/revision/:folio/validar` | no | `reto`, `revisor_id`, y `firma` o `contrasena` | `parte` |
+| `POST /api/partes/folio` | sí | — | `folio` |
+| `GET /api/partes` | sí | — | `partes` (sólo los propios) |
+| `POST /api/partes/:folio/reto` | sí | `contenido` | `reto`, `hash` |
+| `POST /api/partes/:folio/adjuntos` | sí | `tipo` (`foto`/`croquis`), `sha256`, `datos` (base64) | `ok` |
+| `GET /api/partes/:folio/adjuntos/:sha256` | sí | — | la imagen (autor o capitán de la división) |
+| `POST /api/partes/:folio/enviar` | sí | `parte`, `reto`, y `firma` o `contrasena` | `parte` |
+| `GET /api/partes/:folio/sello` | sí | — | `sello`, `calculado`, `imagenes_integras`, `coincide` |
+| `GET /api/revision/bandeja` | sí (capitán) | — | `partes` de su división |
+| `POST /api/revision/:folio/devolver` | sí (capitán) | `nota`, `seccion` | `parte` |
+| `POST /api/revision/:folio/validar` | sí (capitán) | `reto`, y `firma` o `contrasena` | `parte` |
 | `POST /api/ia/transcribir`, `/llenar-campos`, `/resumen` | ver [`CONTRATOS-IA.md`](CONTRATOS-IA.md) | | |
 
 La sesión va en `Authorization: Bearer <token>`. `usuario` trae `id`,
@@ -146,8 +148,19 @@ va como dato asociado, así que copiar el cifrado a otra cuenta no sirve. Poner 
 cambiar la firma pide la contraseña, queda en la bitácora y avisa a su dueño.
 `npm run db:crear` cifra las firmas que estaban en texto.
 
-Las rutas de partes y de revisión todavía no piden sesión: lo que protege la
-firma es la confirmación de cada envío y cada validación.
+**Sesión en partes y revisión.** Todas piden `Authorization: Bearer`. Quién eres
+sale de la sesión, no del cuerpo: sólo puedes enviar partes tuyos
+(`no_es_su_parte`), pedir tu propia lista (`no_es_tu_cuenta`) y la revisión es
+sólo para capitanes (`no_es_revisor`) y de su división. Además cada envío y
+validación sigue pidiendo la confirmación (firma o contraseña).
+
+**Fotos y croquis.** Se suben antes de firmar a `POST /api/partes/:folio/adjuntos`
+(JPEG o PNG por sus primeros bytes, máx. 8 MB, 26 por parte) y se guardan en la
+tabla `adjunto`. Lo firmado incluye el SHA-256 de cada imagen, así que cambiar
+una después invalida el sello (`imagenes_integras`). Se sirven sólo al autor, al
+capitán de la división y a Administración, con `nosniff` y sin caché. Los partes
+enviados antes de esto no tienen imágenes en el servidor. Para crear la tabla en
+una base existente: `npm run db:crear`.
 
 ### Rutas de Administración (`/api/admin/…`)
 

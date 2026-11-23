@@ -17,6 +17,7 @@ interface Sello {
   sello: string
   calculado: string
   coincide: boolean
+  imagenes_integras?: boolean
 }
 
 export function ParteDetalle() {
@@ -48,6 +49,9 @@ export function ParteDetalle() {
   const { parte, firmas } = datos
   const f = parte.firmas ?? {}
   const v = (id: string) => parte.campos?.[id]?.valor?.trim() || ''
+  const croquis = parte.adjuntos?.find((a) => a.tipo === 'croquis')
+  const fotos = (parte.adjuntos ?? []).filter((a) => a.tipo === 'foto')
+  const urlImagen = (sha: string) => `/api/admin/partes/${encodeURIComponent(parte.folio)}/adjuntos/${sha}`
 
   return (
     <article className="detalle">
@@ -87,8 +91,11 @@ export function ParteDetalle() {
             )}
             {sello?.coincide === false && (
               <Aviso tono="rojo">
-                <strong>El sello NO coincide.</strong> Algo del parte cambió después de validarse (datos, fotos, croquis
-                o firmas). Sello calculado ahora: <span className="hash">{sello.calculado}</span>
+                <strong>El sello NO coincide.</strong>{' '}
+                {sello.imagenes_integras === false
+                  ? 'Una foto o el croquis guardados ya no son los que se firmaron.'
+                  : 'Algo del parte cambió después de validarse (datos, fotos, croquis o firmas).'}{' '}
+                Sello calculado ahora: <span className="hash">{sello.calculado}</span>
               </Aviso>
             )}
             {errorSello && <Aviso tono="rojo">{errorSello}</Aviso>}
@@ -122,9 +129,27 @@ export function ParteDetalle() {
       <section className="tarjeta">
         <h2 className="titulo-seccion">Fotos y croquis</h2>
         <p>
-          {parte.fotos ?? 0} {parte.fotos === 1 ? 'foto' : 'fotos'} · croquis {parte.croquis_png ? 'capturado' : 'sin capturar'}.
+          {parte.fotos ?? 0} {parte.fotos === 1 ? 'foto' : 'fotos'} · croquis {croquis ? 'capturado' : 'sin capturar'}.
         </p>
-        <p className="nota">Las imágenes todavía se quedan en el celular de quien elaboró el parte; la app aún no las sube.</p>
+        {croquis && (
+          <figure className="imagen-parte">
+            <img src={urlImagen(croquis.sha256)} alt="Croquis del servicio" loading="lazy" />
+            <figcaption>Croquis</figcaption>
+          </figure>
+        )}
+        {fotos.length > 0 && (
+          <div className="galeria">
+            {fotos.map((a, i) => (
+              <a key={a.sha256} href={urlImagen(a.sha256)} target="_blank" rel="noreferrer">
+                <img src={urlImagen(a.sha256)} alt={`Foto ${i + 1} del servicio`} loading="lazy" />
+              </a>
+            ))}
+          </div>
+        )}
+        {!croquis && fotos.length === 0 && (parte.fotos ?? 0) > 0 && (
+          <p className="nota">Este parte no trae las imágenes en el servidor (se envió antes de que la app las subiera).</p>
+        )}
+        <p className="nota">Cada imagen entra al sello por su SHA-256: «Verificar sello» las vuelve a comprobar.</p>
       </section>
 
       <section className="tarjeta">

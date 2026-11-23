@@ -38,7 +38,7 @@ async function pedir(metodo, ruta, cuerpo, token) {
   });
   return { ...(await respuesta.json()), http: respuesta.status };
 }
-const get = (ruta) => pedir('GET', ruta);
+const get = (ruta, token = null) => pedir('GET', ruta, undefined, token);
 const post = (ruta, cuerpo = {}, token = null) => pedir('POST', ruta, cuerpo, token);
 
 async function paso(nombre, prueba) {
@@ -165,12 +165,13 @@ async function probar() {
   // --- El autor llena y envía -----------------------------------------------------
 
   let parte;
-  const retoDe = async (p) => (await post(`/api/partes/${p.folio}/reto`, { contenido: contenidoParaFirmar(p) })).reto;
-  const enviar = (p, confirmacion) => post(`/api/partes/${p.folio}/enviar`, { parte: p, ...confirmacion });
+  const retoDe = async (p, token = tokenAutor) =>
+    (await post(`/api/partes/${p.folio}/reto`, { contenido: contenidoParaFirmar(p) }, token)).reto;
+  const enviar = (p, confirmacion, token = tokenAutor) => post(`/api/partes/${p.folio}/enviar`, { parte: p, ...confirmacion }, token);
 
   await paso('los folios nuevos no se repiten', async () => {
-    const uno = await post('/api/partes/folio');
-    const dos = await post('/api/partes/folio');
+    const uno = await post('/api/partes/folio', {}, tokenAutor);
+    const dos = await post('/api/partes/folio', {}, tokenAutor);
     assert.match(uno.folio, /^PE-\d{4}-\d{4,}$/);
     assert.notEqual(uno.folio, dos.folio);
     // Un parte como los que arma la app, con ese folio y con croquis.
@@ -262,9 +263,9 @@ async function probar() {
   });
 
   await paso('el parte sale en "mis partes" y en la bandeja de su división', async () => {
-    const mios = await get(`/api/partes?usuario=${autor.id}`);
+    const mios = await get(`/api/partes?usuario=${autor.id}`, tokenAutor);
     assert.deepEqual(mios.partes.map((p) => p.folio), [parte.folio]);
-    const bandeja = await get(`/api/revision/bandeja?division=${encodeURIComponent(division)}`);
+    const bandeja = await get(`/api/revision/bandeja?division=${encodeURIComponent(division)}`, tokenCapitan);
     assert.deepEqual(bandeja.partes.map((p) => `${p.folio}:${p.estado}`), [`${parte.folio}:enviado`]);
     assert.deepEqual(bandeja.partes[0].campos, parte.campos);
     assert.equal(bandeja.partes[0].croquis_png, parte.croquis_png);
@@ -300,22 +301,21 @@ async function probar() {
 
   // --- El revisor devuelve y luego valida -----------------------------------------
 
-  const validar = (confirmacion, revisorId = capitan.id) =>
-    post(`/api/revision/${parte.folio}/validar`, { revisor_id: revisorId, ...confirmacion });
+  const validar = (confirmacion, token = tokenCapitan) => post(`/api/revision/${parte.folio}/validar`, { ...confirmacion }, token);
 
   await paso('el revisor lo devuelve con una nota y no queda sellado', async () => {
-    esError(await post(`/api/revision/${parte.folio}/devolver`, { nota: ' ', revisor_id: capitan.id }), 400, 'falta_nota');
-    esError(await post('/api/revision/PE-0000-0000/devolver', { nota: 'x' }), 404, 'no_existe');
-    const r = await post(`/api/revision/${parte.folio}/devolver`, {
-      nota: 'Falta la hora de control.',
-      seccion: 'Datos del servicio',
-      revisor_id: capitan.id,
-    });
+    esError(await post(`/api/revision/${parte.folio}/devolver`, { nota: ' ' }, tokenCapitan), 400, 'falta_nota');
+    esError(await post('/api/revision/PE-0000-0000/devolver', { nota: 'x' }, tokenCapitan), 404, 'no_existe');
+    const r = await post(
+      `/api/revision/${parte.folio}/devolver`,
+      { nota: 'Falta la hora de control.', seccion: 'Datos del servicio', revisor_id: capitan.id },
+      tokenCapitan,
+    );
     esOk(r);
     assert.equal(r.parte.estado, 'devuelto');
     assert.equal(r.parte.nota.revisor, 'Cap. de prueba');
     assert.equal(r.parte.sello ?? null, null);
-    esError(await get(`/api/partes/${parte.folio}/sello`), 409, 'sin_sello');
+    esError(await get(`/api/partes/${parte.folio}/sello`, tokenAutor), 409, 'sin_sello');
   });
 
   await paso('al devolverlo, quien lo elaboró recibe el aviso con la nota', async () => {
@@ -336,7 +336,7 @@ async function probar() {
     const trazoNuevo = '5,5 60,40 95,10';
     esOk(await post('/api/acceso/trazo', { trazo: trazoNuevo, contrasena: autor.contrasena }, tokenAutor));
     // La app manda el parte como lo tiene: con lo que el servidor le agregó.
-    parte = (await get(`/api/partes?usuario=${autor.id}`)).partes[0];
+    parte = (await get(`/api/partes?usuario=${autor.id}`, tokenAutor)).partes[0];
     parte.campos.descripcion.valor += ' Fuego controlado a las 15:10.';
     const reto = await retoDe(parte);
     const r = await enviar(parte, { reto, contrasena: autor.contrasena });
@@ -350,13 +350,14 @@ async function probar() {
   await paso('solo valida un revisor de la división, y nunca quien llenó el parte', async () => {
     const reto = await retoDe(parte);
     const comoAutor = { reto, contrasena: autor.contrasena };
-    esError(await validar(comoAutor, autor.id), 403, 'no_es_revisor');
+    esError(await validar(comoAutor, tokenAutor), 403, 'no_es_revisor');
     await db.ejecutar("UPDATE usuario SET rol = 'capitan' WHERE id = ?", [autor.id]);
-    esError(await validar(comoAutor, autor.id), 403, 'es_su_parte');
+    esError(await validar(comoAutor, tokenAutor), 403, 'es_su_parte');
     await db.ejecutar("UPDATE usuario SET rol = 'editor' WHERE id = ?", [autor.id]);
 
     const ajeno = await darDeAlta({ matricula: `7${sufijo}`, nombre: 'Cap. de otra división', capitan: true, division: 'Otra' });
-    esError(await validar({ reto, contrasena: ajeno.contrasena }, ajeno.id), 403, 'otra_division');
+    const tokenAjeno = (await post('/api/acceso/entrar', { no_empleado: ajeno.matricula ?? `7${sufijo}`, contrasena: ajeno.contrasena })).token;
+    esError(await validar({ reto, contrasena: ajeno.contrasena }, tokenAjeno), 403, 'otra_division');
   });
 
   await paso('el revisor no valida con una contraseña equivocada', async () => {
@@ -408,7 +409,7 @@ async function probar() {
   // --- Verificar sello ------------------------------------------------------------
 
   await paso('verificar sello: coincide', async () => {
-    const r = await get(`/api/partes/${parte.folio}/sello`);
+    const r = await get(`/api/partes/${parte.folio}/sello`, tokenAutor);
     esOk(r);
     assert.equal(r.sello, sello);
     assert.equal(r.coincide, true);
@@ -416,7 +417,7 @@ async function probar() {
 
   await paso('si el usuario cambia su trazo después, el sello sigue coincidiendo', async () => {
     esOk(await post('/api/acceso/trazo', { trazo: '1,1 2,2 3,3', contrasena: claveCapitan }, tokenCapitan));
-    assert.equal((await get(`/api/partes/${parte.folio}/sello`)).coincide, true);
+    assert.equal((await get(`/api/partes/${parte.folio}/sello`, tokenAutor)).coincide, true);
   });
 
   await paso('si alguien cambia un dato, una firma o el croquis, el sello ya no coincide', async () => {
@@ -430,13 +431,158 @@ async function probar() {
     const original = (await db.fila('SELECT CAST(datos AS CHAR) AS texto FROM parte WHERE folio = ?', [parte.folio])).texto;
     for (const cambio of cambios) {
       await db.ejecutar(`UPDATE parte SET datos = ${cambio} WHERE folio = ?`, [parte.folio]);
-      assert.equal((await get(`/api/partes/${parte.folio}/sello`)).coincide, false, cambio);
+      assert.equal((await get(`/api/partes/${parte.folio}/sello`, tokenAutor)).coincide, false, cambio);
       await db.ejecutar('UPDATE parte SET datos = ? WHERE folio = ?', [original, parte.folio]);
     }
-    assert.equal((await get(`/api/partes/${parte.folio}/sello`)).coincide, true);
+    assert.equal((await get(`/api/partes/${parte.folio}/sello`, tokenAutor)).coincide, true);
   });
 
   // --- Dirección restablece el acceso ---------------------------------------------
+
+  // --- Todas las rutas de partes y revisión piden sesión ----------------------------
+
+  await paso('sin sesión no se entra a partes ni a revisión; y cada quien sólo ve lo suyo', async () => {
+    const f = parte.folio;
+    esError(await post('/api/partes/folio'), 401, 'sin_sesion');
+    esError(await get(`/api/partes?usuario=${autor.id}`), 401, 'sin_sesion');
+    esError(await get('/api/partes'), 401, 'sin_sesion');
+    esError(await post(`/api/partes/${f}/reto`, { contenido: {} }), 401, 'sin_sesion');
+    esError(await post(`/api/partes/${f}/enviar`, { parte }), 401, 'sin_sesion');
+    esError(await post(`/api/partes/${f}/adjuntos`, {}), 401, 'sin_sesion');
+    esError(await get(`/api/partes/${f}/adjuntos/${'a'.repeat(64)}`), 401, 'sin_sesion');
+    esError(await get(`/api/partes/${f}/sello`), 401, 'sin_sesion');
+    esError(await get('/api/revision/bandeja'), 401, 'sin_sesion');
+    esError(await post(`/api/revision/${f}/devolver`, { nota: 'x' }), 401, 'sin_sesion');
+    esError(await post(`/api/revision/${f}/validar`, {}), 401, 'sin_sesion');
+    // Un token inventado tampoco.
+    esError(await get('/api/partes', 'inventado'), 401, 'sin_sesion');
+
+    // Un bombero no revisa; un capitán no pide los partes de otro; nadie manda partes a nombre de otro.
+    esError(await get('/api/revision/bandeja', tokenAutor), 403, 'no_es_revisor');
+    esError(await post(`/api/revision/${f}/devolver`, { nota: 'x' }, tokenAutor), 403, 'no_es_revisor');
+    esError(await get(`/api/partes?usuario=${autor.id}`, tokenCapitan), 403, 'no_es_tu_cuenta');
+    esError(await post(`/api/revision/${f}/devolver`, { nota: 'x', revisor_id: autor.id }, tokenCapitan), 403, 'no_es_tu_cuenta');
+    esError(await enviar({ ...parte, elaboro_id: capitan.id }, { reto: 'x:y', contrasena: 'x' }), 403, 'no_es_su_parte');
+    // La bandeja es la de la división de quien pide, aunque pida otra.
+    const otra = await get(`/api/revision/bandeja?division=${encodeURIComponent('Otra')}`, tokenCapitan);
+    assert.ok(otra.partes.every((p) => p.division === division));
+  });
+
+  // --- Fotos y croquis ------------------------------------------------------------
+
+  const PNG = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==',
+    'base64',
+  );
+  const JPG = Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), crypto.randomBytes(64)]);
+  const hashDe = (b) => crypto.createHash('sha256').update(b).digest('hex');
+  const subir = (folio, tipo, bytes, token = tokenAutor, hash = hashDe(bytes)) =>
+    post(`/api/partes/${folio}/adjuntos`, { tipo, sha256: hash, datos: bytes.toString('base64') }, token);
+
+  let conImagenes;
+  let tokenOtroCapitan;
+  let tokenOtroBombero;
+
+  await paso('sube el croquis y una foto: sólo PNG o JPEG, con su hash, y sólo quien elabora', async () => {
+    const { folio } = await post('/api/partes/folio', {}, tokenAutor);
+    conImagenes = {
+      ...structuredClone(ejemplos.get('PE-2026-0150')),
+      id: `loc-img-${sufijo}`,
+      folio,
+      estado: 'enProgreso',
+      elaboro_id: autor.id,
+      division,
+      fotos: 1,
+      enviado_en: null,
+    };
+    esOk(await subir(folio, 'croquis', PNG));
+    esOk(await subir(folio, 'croquis', PNG)); // subir lo mismo otra vez no estorba
+    esOk(await subir(folio, 'foto', JPG));
+    esError(await subir(folio, 'foto', Buffer.from('<script>alert(1)</script>')), 400, 'formato_no_valido');
+    esError(await subir(folio, 'foto', JPG, tokenAutor, hashDe(PNG)), 400, 'hash_no_coincide');
+    esError(await subir(folio, 'foto', JPG, tokenAutor, 'xyz'), 400, 'hash_invalido');
+    esError(await subir(folio, 'video', JPG), 400, 'tipo_invalido');
+    esError(await post(`/api/partes/${folio}/adjuntos`, { tipo: 'foto', sha256: hashDe(JPG), datos: '' }, tokenAutor), 400, 'imagen_vacia');
+    esError(await post(`/api/partes/${folio}/adjuntos`, { tipo: 'foto', sha256: hashDe(JPG), datos: 'A'.repeat(11 * 1024 * 1024) }, tokenAutor), 400, 'imagen_muy_grande');
+  });
+
+  await paso('quién ve las imágenes: quien elabora y los capitanes de su división, nadie más', async () => {
+    const otroCap = await darDeAlta({ matricula: `6${sufijo}`, nombre: 'Cap. de otra división B', capitan: true, division: 'Otra B' });
+    tokenOtroCapitan = (await post('/api/acceso/entrar', { no_empleado: `6${sufijo}`, contrasena: otroCap.contrasena })).token;
+    const otroBombero = await darDeAlta({ matricula: `5${sufijo}`, nombre: 'Otro bombero', division });
+    tokenOtroBombero = (await post('/api/acceso/entrar', { no_empleado: `5${sufijo}`, contrasena: otroBombero.contrasena })).token;
+
+    const ruta = `/api/partes/${conImagenes.folio}/adjuntos/${hashDe(PNG)}`;
+    const mia = await fetch(base + ruta, { headers: { authorization: `Bearer ${tokenAutor}` } });
+    assert.equal(mia.status, 200);
+    assert.equal(mia.headers.get('content-type'), 'image/png');
+    assert.equal(mia.headers.get('x-content-type-options'), 'nosniff');
+    assert.match(mia.headers.get('cache-control'), /no-store/);
+    assert.deepEqual(Buffer.from(await mia.arrayBuffer()), PNG);
+    esError(await get(ruta, tokenOtroBombero), 403, 'sin_permiso');
+    esError(await get(ruta, tokenOtroCapitan), 403, 'sin_permiso');
+    esError(await get(`/api/partes/${conImagenes.folio}/adjuntos/${'0'.repeat(64)}`, tokenAutor), 404, 'no_existe');
+    esError(await get(`/api/partes/${conImagenes.folio}/adjuntos/no-es-hash`, tokenAutor), 404, 'no_existe');
+    // Otro bombero puede subir lo mismo al folio, pero no le sirve a quien firma ni lo estorba.
+    esOk(await subir(conImagenes.folio, 'foto', JPG, tokenOtroBombero));
+  });
+
+  await paso('el parte firma las imágenes: sin ellas o con otras no se envía; con ellas llega a revisión', async () => {
+    const adj = [
+      { tipo: 'croquis', sha256: hashDe(PNG) },
+      { tipo: 'foto', sha256: hashDe(JPG) },
+    ];
+    // Imagen que nadie subió.
+    let p = { ...conImagenes, adjuntos: [...adj, { tipo: 'foto', sha256: hashDe(Buffer.from('otra')) }], fotos: 2 };
+    let reto = await retoDe(p);
+    esError(await enviar(p, { reto, contrasena: autor.contrasena }), 422, 'adjunto_faltante');
+    // Dice 3 fotos y sólo hay una.
+    p = { ...conImagenes, adjuntos: adj, fotos: 3 };
+    reto = await retoDe(p);
+    esError(await enviar(p, { reto, contrasena: autor.contrasena }), 422, 'fotos_no_coinciden');
+    // Las imágenes las subió otra persona: no valen.
+    esError(await enviar({ ...p, fotos: 1 }, { reto: await retoDe({ ...p, fotos: 1 }, tokenOtroBombero), contrasena: 'x' }, tokenOtroBombero), 403, 'no_es_su_parte');
+    // Si cambia una imagen después de firmar, el contenido ya no es el firmado.
+    p = { ...conImagenes, adjuntos: adj, fotos: 1 };
+    reto = await retoDe(p);
+    esError(await enviar({ ...p, adjuntos: [adj[0]] }, { reto, contrasena: autor.contrasena }), 409, 'contenido_cambio');
+
+    reto = await retoDe(p);
+    const r = await enviar(p, { reto, contrasena: autor.contrasena });
+    esOk(r);
+    assert.equal(r.parte.estado, 'enviado');
+    assert.deepEqual(r.parte.adjuntos.map((a) => `${a.tipo}:${a.sha256}:${a.bytes}`).sort(), [`croquis:${hashDe(PNG)}:${PNG.length}`, `foto:${hashDe(JPG)}:${JPG.length}`].sort());
+    conImagenes = r.parte;
+    // Ya enviado: no se agregan más imágenes.
+    esError(await subir(conImagenes.folio, 'foto', crypto.randomBytes(8)), 409, 'ya_enviado');
+  });
+
+  await paso('el capitán de la división ve las imágenes y valida; el sello cubre las imágenes', async () => {
+    const ruta = `/api/partes/${conImagenes.folio}/adjuntos/${hashDe(JPG)}`;
+    const cap = await fetch(base + ruta, { headers: { authorization: `Bearer ${tokenCapitan}` } });
+    assert.equal(cap.status, 200);
+    assert.equal(cap.headers.get('content-type'), 'image/jpeg');
+
+    const reto = await retoDe(conImagenes);
+    const v = await post(`/api/revision/${conImagenes.folio}/validar`, { reto, contrasena: claveCapitan }, tokenCapitan);
+    esOk(v);
+    assert.equal(v.parte.estado, 'validado');
+    const sello = await get(`/api/partes/${conImagenes.folio}/sello`, tokenAutor);
+    assert.equal(sello.coincide, true);
+    assert.equal(sello.imagenes_integras, true);
+  });
+
+  await paso('si alguien cambia una imagen en la base, el sello ya no coincide', async () => {
+    const original = (await db.fila('SELECT contenido FROM adjunto WHERE folio = ? AND tipo = ?', [conImagenes.folio, 'foto'])).contenido;
+    const alterada = Buffer.from(original);
+    alterada[alterada.length - 1] ^= 0xff;
+    await db.ejecutar('UPDATE adjunto SET contenido = ? WHERE folio = ? AND tipo = ?', [alterada, conImagenes.folio, 'foto']);
+    const r = await get(`/api/partes/${conImagenes.folio}/sello`, tokenAutor);
+    assert.equal(r.imagenes_integras, false);
+    assert.equal(r.coincide, false);
+    await db.ejecutar('UPDATE adjunto SET contenido = ? WHERE folio = ? AND tipo = ?', [original, conImagenes.folio, 'foto']);
+    assert.equal((await get(`/api/partes/${conImagenes.folio}/sello`, tokenAutor)).coincide, true);
+  });
 
   await paso('restablecer: contraseña nueva y el celular se puede registrar otra vez', async () => {
     const { contrasena } = await restablecer(matAutor);

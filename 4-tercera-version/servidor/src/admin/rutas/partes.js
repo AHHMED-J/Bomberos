@@ -5,7 +5,8 @@
 //   GET /opciones         los tipos, unidades y divisiones que existen, para los filtros
 //   GET /exportar         la misma lista, en CSV
 //   GET /:folio           el parte completo y la evidencia de sus firmas
-//   GET /:folio/sello     «Verificar sello»: lo vuelve a sacar y lo compara
+//   GET /:folio/adjuntos/:hash   una foto o el croquis del parte
+//   GET /:folio/sello     «Verificar sello»: lo vuelve a sacar y lo compara (y las imágenes)
 
 'use strict';
 
@@ -13,6 +14,7 @@ const express = require('express');
 
 const db = require('../../db');
 const datos = require('../../datos');
+const adjuntos = require('../../adjuntos');
 const { calcularSello } = require('../../sello');
 const { anotar } = require('../bitacora');
 
@@ -185,15 +187,24 @@ r.get('/:folio', async (req, res) => {
   res.json({ parte, firmas: firmas.map((f) => ({ ...f, simulada: Boolean(f.simulada) })) });
 });
 
+r.get('/:folio/adjuntos/:sha256', async (req, res) => {
+  if (!folioValido(req.params.folio)) return res.status(404).json({ error: 'no_existe' });
+  const fila = await adjuntos.buscar(req.params.folio, req.params.sha256);
+  if (!fila) return res.status(404).json({ error: 'no_existe' });
+  adjuntos.servir(res, fila);
+});
+
 r.get('/:folio/sello', async (req, res) => {
   if (!folioValido(req.params.folio)) return res.status(404).json({ error: 'no_existe' });
   const parte = await datos.partePorFolio(req.params.folio);
   if (!parte) return res.status(404).json({ error: 'no_existe' });
   if (!parte.sello) return res.status(409).json({ error: 'sin_sello' });
   const calculado = calcularSello(parte);
-  const coincide = calculado === parte.sello;
-  await anotar(req, 'sello_verificado', { objetivo: parte.folio, detalle: { coincide } });
-  res.json({ folio: parte.folio, sello: parte.sello, calculado, coincide });
+  // Además del contenido, que las imágenes guardadas sigan siendo las que se firmaron.
+  const imagenes = await adjuntos.integras(parte.folio, parte.adjuntos);
+  const coincide = calculado === parte.sello && imagenes;
+  await anotar(req, 'sello_verificado', { objetivo: parte.folio, detalle: { coincide, imagenes_integras: imagenes } });
+  res.json({ folio: parte.folio, sello: parte.sello, calculado, coincide, imagenes_integras: imagenes });
 });
 
 module.exports = r;

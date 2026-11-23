@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
@@ -51,6 +52,13 @@ class ApiCliente {
         .post(Uri.parse('$urlBase$ruta'), headers: _cabeceras(ruta), body: jsonEncode(cuerpo ?? const {}))
         .timeout(_esIa(ruta) ? _esperaIa : _espera);
     return _leer(r);
+  }
+
+  /// Una imagen u otro archivo (con el token de la sesión). Lanza ErrorApi si el servidor la niega.
+  Future<Uint8List> getBytes(String ruta) async {
+    final r = await _http.get(Uri.parse('$urlBase$ruta'), headers: _cabeceras(ruta)).timeout(_espera);
+    if (r.statusCode >= 400) _leer(r);
+    return r.bodyBytes;
   }
 
   Map<String, dynamic> _leer(http.Response r) {

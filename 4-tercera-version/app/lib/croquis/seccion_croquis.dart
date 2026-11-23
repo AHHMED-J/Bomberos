@@ -83,7 +83,14 @@ class _SeccionCroquisState extends ConsumerState<SeccionCroquis> {
           const SizedBox(height: 12),
         ],
         if (muestraGuardado)
-          CroquisGuardado(ruta: ruta)
+          CroquisGuardado(
+            ruta: ruta,
+            folio: widget.parte.folio,
+            sha256: [
+              for (final a in widget.parte.adjuntos)
+                if (a.tipo == Adjunto.croquis) a.sha256,
+            ].firstOrNull,
+          )
         else if (widget.editable)
           MapaEnVivo(key: _mapa)
         else
@@ -113,20 +120,35 @@ class _SeccionCroquisState extends ConsumerState<SeccionCroquis> {
 
 /// El PNG guardado, con la etiqueta «Captura guardada · PNG».
 class CroquisGuardado extends ConsumerStatefulWidget {
-  const CroquisGuardado({super.key, required this.ruta});
+  const CroquisGuardado({super.key, required this.ruta, this.folio, this.sha256});
   final String ruta;
+
+  /// Para bajar el croquis del servidor cuando no está en este teléfono (el parte lo elaboró otra persona).
+  final String? folio;
+  final String? sha256;
 
   @override
   ConsumerState<CroquisGuardado> createState() => _CroquisGuardadoState();
 }
 
 class _CroquisGuardadoState extends ConsumerState<CroquisGuardado> {
-  late Future<Uint8List?> _png = ref.read(almacenCroquisProvider).leer(widget.ruta);
+  late Future<Uint8List?> _png = _cargar();
+
+  /// Primero el archivo de este teléfono; si no está, el del servidor.
+  Future<Uint8List?> _cargar() async {
+    final local = await ref.read(almacenCroquisProvider).leer(widget.ruta);
+    if (local != null || widget.folio == null || widget.sha256 == null) return local;
+    try {
+      return await ref.read(repositorioRemotoProvider).leerAdjunto(widget.folio!, widget.sha256!);
+    } catch (_) {
+      return null;
+    }
+  }
 
   @override
   void didUpdateWidget(CroquisGuardado antes) {
     super.didUpdateWidget(antes);
-    if (antes.ruta != widget.ruta) _png = ref.read(almacenCroquisProvider).leer(widget.ruta);
+    if (antes.ruta != widget.ruta || antes.sha256 != widget.sha256) _png = _cargar();
   }
 
   @override
