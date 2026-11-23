@@ -1,0 +1,111 @@
+import 'package:bomberos_parte/main.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import 'apoyo.dart';
+
+void main() {
+  testWidgets('Acceso → depuración (Editor) → nuevo parte → Hoja con «Dictar» → Enviar muestra lo que falta', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(ProviderScope(overrides: overridesDePrueba(), child: const AppBomberos()));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('entrar')), findsOneWidget);
+
+    await tester.ensureVisible(find.text('Depuración: entrar como…', skipOffstage: false));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Depuración: entrar como…'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Jalife'));
+    await tester.pumpAndSettle();
+    expect(find.text('DIVISIÓN ESTRUCTURAL'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('nuevo-parte')));
+    await tester.pumpAndSettle();
+    expect(find.text('HOJA DE INCIDENTE'), findsOneWidget);
+    expect(find.byKey(const ValueKey('boton-dictar')), findsOneWidget);
+
+    // Dictar: grabar y detener → la hoja queda con marcas y barra Confirmar (D5).
+    await tester.tap(find.byKey(const ValueKey('boton-dictar')));
+    await tester.pump();
+    expect(find.byKey(const ValueKey('detener-y-usar')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('detener-y-usar')));
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(find.byKey(const ValueKey('confirmar-dictado')), findsOneWidget);
+    expect(find.textContaining('ENTENDIDOS'), findsOneWidget);
+    expect(find.textContaining('POR REVISAR'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('confirmar-dictado')));
+    await tester.pumpAndSettle();
+
+    final enviar = find.byKey(const ValueKey('boton-enviar'));
+    await tester.scrollUntilVisible(enviar, 400, scrollable: find.byType(Scrollable).first);
+    await tester.tap(enviar);
+    await tester.pumpAndSettle();
+    expect(find.text('Antes de enviar faltan:'), findsOneWidget);
+  });
+
+  testWidgets('Capitán ve la bandeja con partes por revisar', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(ProviderScope(overrides: overridesDePrueba(), child: const AppBomberos()));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Depuración: entrar como…', skipOffstage: false));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Depuración: entrar como…'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Capitán · encargado de turno'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Bandeja de revisión'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('PE-2026-0150'), findsOneWidget);
+
+    // Se abre la hoja completa (sin resumen) y al final están Devolver y Firmar.
+    await tester.tap(find.textContaining('PE-2026-0150'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('campo-no_incidente_c5')), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('validar')),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('devolver')), findsOneWidget);
+  });
+
+  testWidgets('Entra con número de empleado y contraseña, y llega a Mi cuenta', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(ProviderScope(overrides: overridesDePrueba(), child: const AppBomberos()));
+    await tester.pumpAndSettle();
+
+    // Un número de empleado que no existe no entra.
+    await tester.enterText(find.byKey(const ValueKey('no-empleado')), '000000');
+    await tester.enterText(find.byKey(const ValueKey('contrasena')), 'cualquiera');
+    await tester.tap(find.byKey(const ValueKey('entrar')));
+    await tester.pumpAndSettle();
+    expect(find.text('Número de empleado o contraseña incorrectos'), findsOneWidget);
+
+    // Con el de un usuario de ejemplo, sí.
+    await tester.enterText(find.byKey(const ValueKey('no-empleado')), '376285');
+    await tester.tap(find.byKey(const ValueKey('entrar')));
+    await tester.pumpAndSettle();
+    expect(find.text('DIVISIÓN ESTRUCTURAL'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('mi-cuenta')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('guardar-firma')), findsOneWidget);
+    expect(find.byKey(const ValueKey('cambiar-contrasena'), skipOffstage: false), findsOneWidget);
+  });
+}
