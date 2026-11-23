@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'acceso/pantalla_avisos.dart';
 import 'acceso/pantalla_cuenta.dart';
 import 'acceso/pantallas_acceso.dart';
 import 'acceso/sesion.dart';
@@ -18,6 +19,7 @@ import 'revision/pantallas_revision.dart';
 ///   /depuracion             selector de rol (sólo debug)
 ///   /inicio                 E1 menú (Editor) · R1 (Capitán)
 ///     cuenta                Mi cuenta: mi firma y cambiar contraseña
+///     avisos                Avisos: parte validado, devuelto o por revisar
 ///     documentos            E6 + G4 Mis documentos / en progreso
 ///     hoja                  P2 Hoja + D1–D8 dictado + P7 devuelta
 ///       resumen             G5 Resumen WhatsApp
@@ -47,6 +49,7 @@ final rutasProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const PantallaInicio(),
         routes: [
           GoRoute(path: 'cuenta', builder: (_, _) => const PantallaCuenta()),
+          GoRoute(path: 'avisos', builder: (_, _) => const PantallaAvisos()),
           GoRoute(path: 'documentos', builder: (_, _) => const PantallaDocumentos()),
           GoRoute(
             path: 'hoja',

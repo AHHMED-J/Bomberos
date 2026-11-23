@@ -194,10 +194,31 @@ async function probar() {
 
   await paso('sube su firma en trazo', async () => {
     esError(await post('/api/acceso/trazo', {}, tokenAutor), 400, 'falta_trazo');
-    const r = await post('/api/acceso/trazo', { trazo: TRAZO_AUTOR }, tokenAutor);
+    // Sin la contraseña, con otra o con algo que no es una firma, no se guarda.
+    esError(await post('/api/acceso/trazo', { trazo: TRAZO_AUTOR }, tokenAutor), 401, 'contrasena_incorrecta');
+    esError(await post('/api/acceso/trazo', { trazo: TRAZO_AUTOR, contrasena: 'no-es' }, tokenAutor), 401, 'contrasena_incorrecta');
+    esError(await post('/api/acceso/trazo', { trazo: '<script>alert(1)</script>', contrasena: autor.contrasena }, tokenAutor), 400, 'trazo_invalido');
+    esError(await post('/api/acceso/trazo', { trazo: '1,1 '.repeat(20000), contrasena: autor.contrasena }, tokenAutor), 400, 'trazo_invalido');
+    const r = await post('/api/acceso/trazo', { trazo: TRAZO_AUTOR, contrasena: autor.contrasena }, tokenAutor);
     esOk(r);
     assert.equal(r.usuario.trazo, TRAZO_AUTOR);
-    esOk(await post('/api/acceso/trazo', { trazo: TRAZO_REVISOR }, tokenCapitan));
+    esOk(await post('/api/acceso/trazo', { trazo: TRAZO_REVISOR, contrasena: claveCapitan }, tokenCapitan));
+  });
+
+  await paso('la firma se guarda cifrada, ligada a su dueño, y queda en la bitácora', async () => {
+    const { trazo } = await db.fila('SELECT trazo FROM usuario WHERE id = ?', [autor.id]);
+    assert.match(trazo, /^v1\./);
+    assert.ok(!trazo.includes(TRAZO_AUTOR));
+    // Copiada a otra cuenta no descifra.
+    const boveda = require('../src/boveda');
+    assert.equal(boveda.descifrar(trazo, autor.id), TRAZO_AUTOR);
+    assert.equal(boveda.descifrar(trazo, capitan.id), null);
+    assert.equal(boveda.descifrar(trazo.slice(0, -2) + 'AA', autor.id), null);
+    const b = await db.filas('SELECT accion FROM bitacora WHERE usuario_id = ? AND accion LIKE ?', [autor.id, 'firma_%']);
+    assert.deepEqual(b.map((x) => x.accion), ['firma_creada']);
+    // Entrar de nuevo la devuelve en claro a su dueño.
+    const e = await post('/api/acceso/entrar', { no_empleado: matAutor, contrasena: autor.contrasena });
+    assert.equal(e.usuario.trazo, TRAZO_AUTOR);
   });
 
   await paso('no se envía con pendientes ni con el contenido cambiado', async () => {
@@ -249,6 +270,34 @@ async function probar() {
     assert.equal(bandeja.partes[0].croquis_png, parte.croquis_png);
   });
 
+  // --- Avisos -------------------------------------------------------------------
+
+  const avisos = (token) => pedir('GET', '/api/notificaciones', undefined, token);
+
+  await paso('al enviar, el capitán recibe un aviso y quien lo envió, no', async () => {
+    esError(await get('/api/notificaciones'), 401, 'sin_sesion');
+    const cap = await avisos(tokenCapitan);
+    const por = cap.notificaciones.filter((n) => n.tipo === 'parte_por_revisar');
+    assert.equal(por.length, 1);
+    assert.equal(por[0].folio, parte.folio);
+    assert.equal(por[0].leida, false);
+    const yo = await avisos(tokenAutor);
+    assert.equal(yo.notificaciones.filter((n) => n.tipo === 'parte_por_revisar').length, 0);
+  });
+
+  await paso('cada quien lee y marca sólo los suyos', async () => {
+    const cap = await avisos(tokenCapitan);
+    const mio = cap.notificaciones.find((n) => n.tipo === 'parte_por_revisar');
+    // Un aviso ajeno no se marca.
+    await post(`/api/notificaciones/${mio.id}/leida`, {}, tokenAutor);
+    assert.equal((await avisos(tokenCapitan)).notificaciones.find((n) => n.id === mio.id).leida, false);
+    esError(await post('/api/notificaciones/x/leida', {}, tokenCapitan), 400, 'id_invalido');
+    esOk(await post(`/api/notificaciones/${mio.id}/leida`, {}, tokenCapitan));
+    const despues = await avisos(tokenCapitan);
+    assert.equal(despues.notificaciones.find((n) => n.id === mio.id).leida, true);
+    assert.equal(despues.sin_leer, cap.sin_leer - 1);
+  });
+
   // --- El revisor devuelve y luego valida -----------------------------------------
 
   const validar = (confirmacion, revisorId = capitan.id) =>
@@ -269,6 +318,15 @@ async function probar() {
     esError(await get(`/api/partes/${parte.folio}/sello`), 409, 'sin_sello');
   });
 
+  await paso('al devolverlo, quien lo elaboró recibe el aviso con la nota', async () => {
+    const yo = await avisos(tokenAutor);
+    const d = yo.notificaciones.find((n) => n.tipo === 'parte_devuelto');
+    assert.equal(d.folio, parte.folio);
+    assert.match(d.texto, /Falta la hora de control/);
+    esOk(await post('/api/notificaciones/leidas', {}, tokenAutor));
+    assert.equal((await avisos(tokenAutor)).sin_leer, 0);
+  });
+
   await paso('devuelto no se puede validar', async () => {
     const reto = await retoDe(parte);
     esError(await validar({ reto, contrasena: claveCapitan }), 409, 'no_espera_revision');
@@ -276,7 +334,7 @@ async function probar() {
 
   await paso('el autor actualiza su trazo, corrige y vuelve a firmar, ahora con su contraseña', async () => {
     const trazoNuevo = '5,5 60,40 95,10';
-    esOk(await post('/api/acceso/trazo', { trazo: trazoNuevo }, tokenAutor));
+    esOk(await post('/api/acceso/trazo', { trazo: trazoNuevo, contrasena: autor.contrasena }, tokenAutor));
     // La app manda el parte como lo tiene: con lo que el servidor le agregó.
     parte = (await get(`/api/partes?usuario=${autor.id}`)).partes[0];
     parte.campos.descripcion.valor += ' Fuego controlado a las 15:10.';
@@ -321,6 +379,20 @@ async function probar() {
     esError(await validar({ reto: otraVez, contrasena: claveCapitan }), 409, 'no_espera_revision');
   });
 
+  await paso('al validarlo, quien lo elaboró y Administración reciben el aviso; el corregido le llegó al capitán', async () => {
+    const yo = await avisos(tokenAutor);
+    assert.equal(yo.notificaciones.filter((n) => n.tipo === 'parte_validado' && n.folio === parte.folio).length, 1);
+    // Sin leer: el aviso de la validación y el de haber cambiado su firma.
+    assert.deepEqual(yo.notificaciones.filter((n) => !n.leida).map((n) => n.tipo).sort(), ['firma_cambiada', 'parte_validado']);
+    const cap = await avisos(tokenCapitan);
+    assert.ok(cap.notificaciones.some((n) => n.titulo === 'Parte corregido por revisar' && n.folio === parte.folio));
+    const hay = await db.fila(
+      "SELECT COUNT(*) AS n FROM notificacion n JOIN usuario u ON u.id = n.usuario_id WHERE u.rol = 'administracion' AND n.folio = ?",
+      [parte.folio],
+    );
+    assert.ok(hay.n >= 1);
+  });
+
   await paso('quedan guardadas las firmas, con la copia del trazo de ese momento', async () => {
     const firmas = await db.filas('SELECT rol, usuario_id, metodo, trazo FROM firma_parte WHERE folio = ? ORDER BY id', [parte.folio]);
     assert.deepEqual(
@@ -343,7 +415,7 @@ async function probar() {
   });
 
   await paso('si el usuario cambia su trazo después, el sello sigue coincidiendo', async () => {
-    esOk(await post('/api/acceso/trazo', { trazo: '1,1 2,2' }, tokenCapitan));
+    esOk(await post('/api/acceso/trazo', { trazo: '1,1 2,2 3,3', contrasena: claveCapitan }, tokenCapitan));
     assert.equal((await get(`/api/partes/${parte.folio}/sello`)).coincide, true);
   });
 

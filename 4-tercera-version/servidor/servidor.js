@@ -8,6 +8,8 @@ const express = require('express');
 const db = require('./src/db');
 const firma = require('./src/firma');
 const admin = require('./src/admin');
+const datos = require('./src/datos');
+const notificaciones = require('./src/notificaciones');
 
 // La página de Administración ya construida (cd ../administracion && npm run build).
 const PAGINA_ADMIN = path.join(__dirname, '..', 'administracion', 'dist');
@@ -39,6 +41,7 @@ function crearApp() {
   app.use('/api/acceso', require('./src/rutas/acceso'));
   app.use('/api/partes', require('./src/rutas/partes'));
   app.use('/api/revision', require('./src/rutas/revision'));
+  app.use('/api/notificaciones', notificaciones.rutas(datos.exigirSesion));
   app.use('/api/ia', require('./src/rutas/ia'));
 
   app.use((_req, res) => res.status(404).json({ error: 'no_existe' }));

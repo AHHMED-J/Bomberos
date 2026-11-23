@@ -59,7 +59,10 @@ void main() {
     final autor = usuariosEjemplo.firstWhere((u) => u.id == base.elaboroId);
     final dentro = await remoto.entrar(autor.matricula, 'prueba${autor.matricula}');
     expect(dentro.id, autor.id);
-    expect((await remoto.guardarTrazo('10.0,40.0 30.0,12.0 55.0,48.0')).trazo, isNotNull);
+    expect(
+      (await remoto.guardarTrazo('10.0,40.0 30.0,12.0 55.0,48.0', contrasena: 'prueba${autor.matricula}')).trazo,
+      isNotNull,
+    );
     var p = Parte.deJson({...base.aJson(), 'folio': await remoto.nuevoFolio(), 'estado': 'enProgreso'});
     p = p.copiar(
       campos: {

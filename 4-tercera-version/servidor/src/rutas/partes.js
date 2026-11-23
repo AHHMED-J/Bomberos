@@ -13,6 +13,7 @@ const express = require('express');
 const db = require('../db');
 const datos = require('../datos');
 const firma = require('../firma');
+const notificaciones = require('../notificaciones');
 const { calcularSello } = require('../sello');
 const { pendientes, contenidoParaFirmar, hashContenido } = require('../validacion');
 
@@ -89,6 +90,13 @@ r.post('/:folio/enviar', async (req, res) => {
       confirmacion: v,
       firma: f,
       trazo: autor.trazo,
+    });
+    // A los capitanes de la división les llega un aviso (no a quien lo elaboró).
+    await notificaciones.avisarACapitanes(t, guardado.division || datos.DIVISION, autor.id, {
+      tipo: 'parte_por_revisar',
+      folio: guardado.folio,
+      titulo: anterior?.estado === 'devuelto' ? 'Parte corregido por revisar' : 'Parte por revisar',
+      texto: `${autor.nombre} envió el parte ${guardado.folio}.`,
     });
   });
   res.json({ parte: guardado, firma_simulada: v.simulada });

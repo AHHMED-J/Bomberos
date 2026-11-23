@@ -11,6 +11,7 @@ const express = require('express');
 const db = require('../db');
 const datos = require('../datos');
 const firma = require('../firma');
+const notificaciones = require('../notificaciones');
 const { calcularSello } = require('../sello');
 const { contenidoParaFirmar, hashContenido } = require('../validacion');
 
@@ -39,7 +40,16 @@ r.post('/:folio/devolver', async (req, res) => {
       fecha: new Date().toISOString(),
     },
   };
-  await datos.guardarParte(devuelto);
+  await db.transaccion(async (t) => {
+    await datos.guardarParte(devuelto, t);
+    await notificaciones.avisar(t, {
+      usuarioId: p.elaboro_id,
+      tipo: 'parte_devuelto',
+      folio: p.folio,
+      titulo: 'Parte devuelto',
+      texto: `${devuelto.nota.revisor} devolvió ${p.folio}: ${devuelto.nota.texto}`,
+    });
+  });
   res.json({ parte: devuelto });
 });
 
@@ -89,6 +99,19 @@ r.post('/:folio/validar', async (req, res) => {
       confirmacion: v,
       firma: f,
       trazo: revisor.trazo,
+    });
+    await notificaciones.avisar(t, {
+      usuarioId: p.elaboro_id,
+      tipo: 'parte_validado',
+      folio: validado.folio,
+      titulo: 'Parte validado',
+      texto: `${revisor.nombre} validó ${validado.folio}. Ya está en Administración.`,
+    });
+    await notificaciones.avisarAAdministracion(t, {
+      tipo: 'parte_validado',
+      folio: validado.folio,
+      titulo: 'Parte validado',
+      texto: `${validado.folio} fue validado por ${revisor.nombre} y llegó a Administración.`,
     });
   });
   res.json({ parte: validado });

@@ -435,7 +435,7 @@ async function main() {
       const despues = await fetch(`${base}/api/acceso/trazo`, {
         method: 'POST',
         headers: { 'content-type': 'application/json', authorization: `Bearer ${app.token}` },
-        body: JSON.stringify({ trazo: '1,1 2,2' }),
+        body: JSON.stringify({ trazo: '1,1 2,2 3,3', contrasena: 'x' }),
       });
       assert.equal(despues.status, 401);
       const otraVez = await pedir('POST', '/api/acceso/entrar', { no_empleado: matBombero, contrasena: contrasenaBombero });
@@ -477,9 +477,22 @@ async function main() {
       assert.ok(!JSON.stringify(registros).includes(nueva), 'la bitácora no guarda contraseñas');
     });
 
+    await paso('los avisos de Administración: sólo los suyos, y se marcan leídos', async () => {
+      await db.ejecutar(
+        "INSERT INTO notificacion (usuario_id, tipo, folio, titulo, texto) VALUES (?, 'parte_validado', 'PE-2026-0150', 'Parte validado', 'prueba')",
+        [(await db.fila('SELECT id FROM usuario WHERE matricula = ?', [matAdmin])).id],
+      );
+      const r = await pedir('GET', '/api/admin/notificaciones');
+      assert.equal(r.http, 200);
+      assert.ok(r.notificaciones.some((n) => n.titulo === 'Parte validado' && n.leida === false));
+      assert.ok(r.sin_leer >= 1);
+      assert.equal((await pedir('POST', '/api/admin/notificaciones/leidas')).http, 200);
+      assert.equal((await pedir('GET', '/api/admin/notificaciones')).sin_leer, 0);
+    });
+
     await paso('sin sesión no se ve nada', async () => {
       const anonimo = navegador();
-      for (const ruta of ['/api/admin/partes', '/api/admin/usuarios', '/api/admin/bitacora', '/api/admin/partes/PE-2026-0150']) {
+      for (const ruta of ['/api/admin/notificaciones', '/api/admin/partes', '/api/admin/usuarios', '/api/admin/bitacora', '/api/admin/partes/PE-2026-0150']) {
         assert.equal((await anonimo.pedir('GET', ruta)).http, 401, ruta);
       }
     });

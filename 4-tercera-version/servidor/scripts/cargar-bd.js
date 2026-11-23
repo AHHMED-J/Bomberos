@@ -12,6 +12,8 @@ const mysql = require('mysql2/promise');
 
 // schema.sql no toca las tablas que ya existen. Lo que se agregó después se
 // agrega aquí, sólo si falta: se puede correr las veces que sea.
+const { cifrar } = require('../src/boveda');
+
 async function ponerAlDia(conexion, nombre) {
   const [columnas] = await conexion.query(
     "SELECT COLUMN_NAME, COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'usuario'",
@@ -33,6 +35,10 @@ async function ponerAlDia(conexion, nombre) {
     [nombre],
   );
   if (llave && llave.DATA_TYPE === 'varbinary') await conexion.query('ALTER TABLE credencial_web MODIFY llave BLOB NOT NULL');
+
+  // Las firmas guardadas antes de la bóveda estaban en texto: se cifran.
+  const [firmas] = await conexion.query("SELECT id, trazo FROM usuario WHERE trazo IS NOT NULL AND trazo NOT LIKE 'v1.%'");
+  for (const f of firmas) await conexion.query('UPDATE usuario SET trazo = ? WHERE id = ?', [cifrar(f.trazo, f.id), f.id]);
 }
 
 async function crearBase() {

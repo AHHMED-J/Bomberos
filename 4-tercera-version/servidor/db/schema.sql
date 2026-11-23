@@ -14,7 +14,8 @@
 -- debe_cambiar: 1 = entra con una contraseña que le dieron y debe cambiarla.
 -- llave_publica: la del chip seguro de SU celular (uno por usuario), para
 -- confirmar con la biometría. NULL = confirma con su contraseña.
--- trazo: su firma, que sube desde la app. Se copia a cada parte que firma.
+-- trazo: su firma, que sube desde la app. Se guarda CIFRADA (src/boveda.js) y se
+-- copia a cada parte que firma.
 CREATE TABLE IF NOT EXISTS usuario (
   id              VARCHAR(40)  NOT NULL,
   nombre          VARCHAR(160) NOT NULL,
@@ -158,4 +159,24 @@ CREATE TABLE IF NOT EXISTS bitacora (
   creada_en  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   KEY idx_bitacora_fecha (creada_en)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ---------------------------------------------------------------------------
+-- Avisos (app y página web)
+-- ---------------------------------------------------------------------------
+
+-- notificacion · un renglón por destinatario. tipo: parte_por_revisar,
+-- parte_devuelto, parte_validado o firma_cambiada. Quien los lee sólo ve los suyos.
+CREATE TABLE IF NOT EXISTS notificacion (
+  id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  usuario_id VARCHAR(40)  NOT NULL,
+  tipo       VARCHAR(30)  NOT NULL,
+  folio      VARCHAR(20)  NULL,
+  titulo     VARCHAR(120) NOT NULL,
+  texto      VARCHAR(400) NOT NULL DEFAULT '',
+  creada_en  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  leida_en   DATETIME     NULL,
+  PRIMARY KEY (id),
+  KEY idx_notificacion_usuario (usuario_id, leida_en, id),
+  CONSTRAINT fk_notificacion_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

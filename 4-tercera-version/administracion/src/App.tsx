@@ -7,6 +7,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 
 import { Cargando, Escudo } from './componentes'
 import { Acceso } from './paginas/Acceso'
+import { Avisos } from './paginas/Avisos'
 import { Bitacora } from './paginas/Bitacora'
 import { FormularioContrasena } from './paginas/CambiarContrasena'
 import { Marco } from './paginas/Marco'
@@ -45,6 +46,7 @@ export function App() {
         <Route element={<Marco />}>
           <Route path="partes" element={<Partes />} />
           <Route path="partes/:folio" element={<ParteDetalle />} />
+          <Route path="avisos" element={<Avisos />} />
           <Route path="usuarios" element={<Usuarios />} />
           <Route path="bitacora" element={<Bitacora />} />
           <Route path="cuenta" element={<MiCuenta />} />

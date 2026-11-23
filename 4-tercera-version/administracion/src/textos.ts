@@ -117,6 +117,8 @@ export const ACCIONES: Record<string, string> = {
   llave_registrada: 'Registró una llave de acceso',
   llave_rechazada: 'Llave de acceso rechazada',
   llave_quitada: 'Quitó una llave de acceso',
+  firma_creada: 'Guardó su firma (app)',
+  firma_cambiada: 'Cambió su firma (app)',
   contrasena_cambiada: 'Cambió su contraseña',
   usuario_alta: 'Dio de alta a un usuario',
   usuario_editado: 'Editó un usuario',

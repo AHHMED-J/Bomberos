@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../acceso/avisos.dart';
 import '../acceso/sesion.dart';
 import '../compartido/tema.dart';
 import '../compartido/widgets.dart';
@@ -26,6 +27,15 @@ class PantallaInicio extends ConsumerWidget {
     final u = sesion.usuario;
     if (u == null) return const SizedBox.shrink();
     final esCapitan = u.rol == Rol.capitan;
+    final sinLeer = ref.watch(avisosProvider.select((a) => a.sinLeer));
+    // Un aviso que llega con la app abierta se ve aquí, sin tener que abrir la campana.
+    ref.listen(avisosProvider.select((a) => a.nuevos), (_, nuevos) {
+      if (nuevos.isEmpty) return;
+      avisar(
+        context,
+        nuevos.length == 1 ? '${nuevos.first.titulo}: ${nuevos.first.texto}' : '${nuevos.length} avisos nuevos',
+      );
+    });
     final porRevisar = esCapitan
         ? ref.watch(bandejaProvider).value?.where((p) => p.estado == EstadoParte.enviado).length
         : null;
@@ -59,9 +69,19 @@ class PantallaInicio extends ConsumerWidget {
                       ),
                     ),
                     IconButton(
-                      tooltip: 'Avisos (pendiente)',
-                      icon: const Icon(Icons.notifications_none, color: Colores.blanco),
-                      onPressed: () => avisar(context, 'Avisos: pendiente de diseñar'),
+                      key: const ValueKey('avisos'),
+                      tooltip: sinLeer == 0 ? 'Avisos' : 'Avisos ($sinLeer sin leer)',
+                      icon: Badge(
+                        isLabelVisible: sinLeer > 0,
+                        label: Text(sinLeer > 9 ? '9+' : '$sinLeer'),
+                        backgroundColor: Colores.blanco,
+                        textColor: Colores.rojo,
+                        child: Icon(
+                          sinLeer > 0 ? Icons.notifications : Icons.notifications_none,
+                          color: Colores.blanco,
+                        ),
+                      ),
+                      onPressed: () => context.push('/inicio/avisos'),
                     ),
                     IconButton(
                       key: const ValueKey('mi-cuenta'),
@@ -92,6 +112,23 @@ class PantallaInicio extends ConsumerWidget {
                     child: Aviso(
                       icono: Icons.info_outline,
                       child: Text('Firma simulada: este teléfono no usó el chip seguro.'),
+                    ),
+                  ),
+                if (u.trazo == null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Tarjeta(
+                      key: const ValueKey('falta-firma'),
+                      borde: true,
+                      alTocar: () => context.push('/inicio/cuenta'),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.draw_outlined, color: Colores.rojo),
+                          SizedBox(width: 12),
+                          Expanded(child: Text('Guarda tu firma en Mi cuenta. Sin ella no puedes firmar partes.')),
+                          Icon(Icons.chevron_right),
+                        ],
+                      ),
                     ),
                   ),
                 if (esCapitan) ...[

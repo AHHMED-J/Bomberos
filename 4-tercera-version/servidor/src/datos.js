@@ -6,6 +6,7 @@ const crypto = require('node:crypto');
 
 const db = require('./db');
 const { sha256 } = require('./firma');
+const { descifrar } = require('./boveda');
 
 const DIVISION = 'División Estructural';
 
@@ -14,8 +15,11 @@ const DIVISION = 'División Estructural';
 const sesiones = new Map();
 
 // El renglón completo, con contrasena_hash y llave_publica. No sale del servidor.
-function usuarioCompleto(id) {
-  return db.fila('SELECT * FROM usuario WHERE id = ?', [String(id ?? '')]);
+// El trazo se guarda cifrado (src/boveda.js); aquí ya viene en claro.
+async function usuarioCompleto(id) {
+  const u = await db.fila('SELECT * FROM usuario WHERE id = ?', [String(id ?? '')]);
+  if (u) u.trazo = descifrar(u.trazo, u.id);
+  return u;
 }
 
 // Lo que la app sabe de un usuario: lo de siempre, más su firma en trazo y si
@@ -29,7 +33,7 @@ function usuarioPublico(u) {
     rol: u.rol,
     division: u.division,
     estacion: u.estacion,
-    trazo: u.trazo,
+    trazo: descifrar(u.trazo, u.id), // sólo para su dueño: nadie más recibe este objeto
     tiene_llave: Boolean(u.llave_publica),
   };
 }

@@ -282,15 +282,6 @@ class PantallaValidar extends ConsumerStatefulWidget {
 
 class _PantallaValidarState extends ConsumerState<PantallaValidar> {
   bool _ocupado = false;
-  /// Arranca con la firma de la cuenta del capitán; si dibuja otra, se actualiza al validar.
-  late final ControlFirma _trazo = ControlFirma(ref.read(sesionProvider).usuario?.trazo);
-
-  @override
-  void dispose() {
-    _trazo.dispose();
-    super.dispose();
-  }
-
   Future<void> _autenticar() async {
     setState(() => _ocupado = true);
     final error = await ref.read(revisionProvider.notifier).autenticar();
@@ -310,18 +301,10 @@ class _PantallaValidarState extends ConsumerState<PantallaValidar> {
   }
 
   Future<void> _firmarYValidar() async {
-    if (_trazo.vacio) return avisar(context, 'Dibuja tu firma');
-    final t = _trazo.serializar();
+    // El servidor pone en el parte la firma guardada en la cuenta del capitán.
+    if (ref.read(sesionProvider).usuario?.trazo == null) return avisar(context, 'Primero guarda tu firma en Mi cuenta');
     setState(() => _ocupado = true);
     try {
-      // El servidor pone en el parte la firma de la cuenta: si dibujó otra, primero se guarda ahí.
-      if (t != ref.read(sesionProvider).usuario?.trazo) {
-        final error = await ref.read(sesionProvider.notifier).guardarTrazo(t);
-        if (error != null) {
-          if (mounted) avisar(context, error);
-          return;
-        }
-      }
       await ref.read(revisionProvider.notifier).validar();
       final folio = ref.read(revisionProvider).parte!.folio;
       if (mounted) context.pushReplacement('/inicio/bandeja/parte/$folio/validado');
@@ -429,12 +412,26 @@ class _PantallaValidarState extends ConsumerState<PantallaValidar> {
             FirmaGuardada(p.firmas.elaboroTrazo!),
           ],
           const TituloSeccion('Tu firma'),
-          LienzoFirma(control: _trazo, alto: 150, ayuda: 'Dibuja tu firma; se guarda en tu cuenta'),
+          if (ref.watch(sesionProvider).usuario?.trazo case final mia?)
+            FirmaGuardada(mia)
+          else
+            Tarjeta(
+              borde: true,
+              alTocar: () => context.push('/inicio/cuenta'),
+              child: const Row(
+                children: [
+                  Icon(Icons.draw_outlined, color: Colores.rojo),
+                  SizedBox(width: 12),
+                  Expanded(child: Text('Todavía no tienes firma. Toca para guardarla en Mi cuenta.')),
+                  Icon(Icons.chevron_right),
+                ],
+              ),
+            ),
           const SizedBox(height: 6),
           Text(
             s.simulada
-                ? 'Confirmado (simulado). Es la firma de tu cuenta; si quieres cambiarla, vuelve a dibujarla.'
-                : 'Confirmado. Es la firma de tu cuenta; si quieres cambiarla, vuelve a dibujarla.',
+                ? 'Confirmado (simulado). Se pone la firma de tu cuenta; para cambiarla, ve a Mi cuenta.'
+                : 'Confirmado. Se pone la firma de tu cuenta; para cambiarla, ve a Mi cuenta.',
             style: Textos.chico,
           ),
           const SizedBox(height: 16),
@@ -454,8 +451,8 @@ class _PantallaValidarState extends ConsumerState<PantallaValidar> {
                     foregroundColor: Colores.tinta,
                     minimumSize: const Size.fromHeight(50),
                   ),
-                  onPressed: _trazo.limpiar,
-                  child: const Text('Volver a dibujar'),
+                  onPressed: () => context.push('/inicio/cuenta'),
+                  child: const Text('Mi firma'),
                 ),
               ),
               const SizedBox(width: 10),

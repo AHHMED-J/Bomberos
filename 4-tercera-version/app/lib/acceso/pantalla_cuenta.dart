@@ -16,6 +16,7 @@ class PantallaCuenta extends ConsumerStatefulWidget {
 
 class _PantallaCuentaState extends ConsumerState<PantallaCuenta> {
   late final ControlFirma _trazo = ControlFirma(ref.read(sesionProvider).usuario?.trazo);
+  final _contrasenaFirma = TextEditingController();
   final _actual = TextEditingController();
   final _nueva = TextEditingController();
   final _repetir = TextEditingController();
@@ -24,7 +25,7 @@ class _PantallaCuentaState extends ConsumerState<PantallaCuenta> {
   @override
   void dispose() {
     _trazo.dispose();
-    for (final c in [_actual, _nueva, _repetir]) {
+    for (final c in [_contrasenaFirma, _actual, _nueva, _repetir]) {
       c.dispose();
     }
     super.dispose();
@@ -32,10 +33,14 @@ class _PantallaCuentaState extends ConsumerState<PantallaCuenta> {
 
   Future<void> _guardarFirma() async {
     if (_trazo.vacio) return avisar(context, 'Dibuja tu firma');
+    if (_contrasenaFirma.text.isEmpty) return avisar(context, 'Escribe tu contraseña para guardar la firma');
     setState(() => _ocupado = true);
-    final error = await ref.read(sesionProvider.notifier).guardarTrazo(_trazo.serializar());
+    final error = await ref
+        .read(sesionProvider.notifier)
+        .guardarTrazo(_trazo.serializar(), contrasena: _contrasenaFirma.text);
     if (!mounted) return;
     setState(() => _ocupado = false);
+    if (error == null) _contrasenaFirma.clear();
     avisar(context, error ?? 'Firma guardada');
   }
 
@@ -44,9 +49,7 @@ class _PantallaCuentaState extends ConsumerState<PantallaCuenta> {
     if (_nueva.text.length < 8) return avisar(context, 'La contraseña nueva debe tener al menos 8 caracteres');
     if (_nueva.text != _repetir.text) return avisar(context, 'Las dos contraseñas nuevas no coinciden');
     setState(() => _ocupado = true);
-    final error = await ref
-        .read(sesionProvider.notifier)
-        .cambiarContrasena(actual: _actual.text, nueva: _nueva.text);
+    final error = await ref.read(sesionProvider.notifier).cambiarContrasena(actual: _actual.text, nueva: _nueva.text);
     if (!mounted) return;
     setState(() => _ocupado = false);
     if (error != null) return avisar(context, error);
@@ -70,8 +73,16 @@ class _PantallaCuentaState extends ConsumerState<PantallaCuenta> {
           Text(
             u.trazo == null
                 ? 'Todavía no tienes firma. Sin ella no puedes firmar partes.'
-                : 'Esta firma se pone en los partes que firmes. Los que ya firmaste no cambian.',
+                : 'Esta firma se pone en los partes que firmes. Los que ya firmaste no cambian. '
+                      'Se guarda cifrada en el servidor y para cambiarla se pide tu contraseña.',
             style: Textos.chico,
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            key: const ValueKey('contrasena-firma'),
+            controller: _contrasenaFirma,
+            obscureText: true,
+            decoration: const InputDecoration(labelText: 'Tu contraseña (para guardar la firma)'),
           ),
           const SizedBox(height: 12),
           FilledButton.icon(

@@ -126,10 +126,10 @@ class SesionNotifier extends Notifier<EstadoSesion> {
     }
   }
 
-  /// Sube la firma en trazo del usuario y la deja en la sesión.
-  Future<String?> guardarTrazo(String trazo) async {
+  /// Sube la firma en trazo del usuario (con su contraseña) y la deja en la sesión.
+  Future<String?> guardarTrazo(String trazo, {required String contrasena}) async {
     try {
-      final u = await ref.read(repositorioRemotoProvider).guardarTrazo(trazo);
+      final u = await ref.read(repositorioRemotoProvider).guardarTrazo(trazo, contrasena: contrasena);
       // Se conserva al usuario de la sesión (en depuración no es el que conoce el servidor).
       state = EstadoSesion(
         usuario: (state.usuario ?? u).copiar(trazo: trazo),

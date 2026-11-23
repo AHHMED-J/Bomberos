@@ -113,7 +113,10 @@ las imágenes de las fotos ni del croquis; cuando lo haga, entran al sello.
 | `POST /api/acceso/verificar` | no | `usuario_id`, `reto`, `firma` | `token`, `usuario` |
 | `POST /api/acceso/llave` | sí | `llave_publica` | `ok` |
 | `POST /api/acceso/contrasena` | sí | `actual`, `nueva` | `ok` |
-| `POST /api/acceso/trazo` | sí | `trazo` | `usuario` |
+| `POST /api/acceso/trazo` | sí | `trazo`, `contrasena` | `usuario` |
+| `GET /api/notificaciones` | sí | — | `notificaciones`, `sin_leer` |
+| `POST /api/notificaciones/leidas` | sí | — | `ok` |
+| `POST /api/notificaciones/:id/leida` | sí | — | `ok` |
 | `POST /api/partes/folio` | no | — | `folio` |
 | `GET /api/partes?usuario=…` | no | — | `partes` |
 | `POST /api/partes/:folio/reto` | no | `contenido` | `reto`, `hash` |
@@ -127,6 +130,21 @@ las imágenes de las fotos ni del croquis; cuando lo haga, entran al sello.
 La sesión va en `Authorization: Bearer <token>`. `usuario` trae `id`,
 `nombre`, `matricula`, `rango`, `rol`, `division`, `estacion`, `trazo` y
 `tiene_llave`. Los errores llegan como `{ "error": "codigo" }`.
+
+**Avisos.** Cada cambio de un parte deja un aviso en la tabla `notificacion`
+(en la misma transacción que el cambio): al enviar, llega `parte_por_revisar` a
+los capitanes de la división; al devolver, `parte_devuelto` a quien lo elaboró
+(con la nota); al validar, `parte_validado` a quien lo elaboró y a
+Administración (se ven en la campana de la app y en «Avisos» de la página web).
+Cambiar la firma deja `firma_cambiada` a su dueño. Cada quien sólo ve los suyos.
+No hay notificaciones push (APNs): la app los pide cada 20 s con ella abierta.
+
+**Firmas en trazo.** Se guardan cifradas con AES-256-GCM (`src/boveda.js`), con
+una clave de `FIRMAS_CLAVE` en `.env` o, si falta, de `servidor/firmas.key`
+(se crea sola, fuera de git; **respáldala aparte de la base**). El id del dueño
+va como dato asociado, así que copiar el cifrado a otra cuenta no sirve. Poner o
+cambiar la firma pide la contraseña, queda en la bitácora y avisa a su dueño.
+`npm run db:crear` cifra las firmas que estaban en texto.
 
 Las rutas de partes y de revisión todavía no piden sesión: lo que protege la
 firma es la confirmación de cada envío y cada validación.
@@ -161,6 +179,8 @@ autenticador WebAuthn de software).
     src/datos.js           usuarios, sesiones, partes, firmas y folios en MySQL
     src/datos-ejemplo.js   los usuarios y partes de ejemplo que carga datos-prueba
     src/firma.js           retos y confirmación (biometría o contraseña)
+    src/boveda.js          cifra y descifra las firmas en trazo (AES-256-GCM)
+    src/notificaciones.js  crea los avisos y sus rutas (app y página web)
     src/sello.js           el sello SHA-256 del parte
     src/validacion.js      la revisión del parte y el contenido que se firma (igual que en la app)
     src/rutas/acceso.js    entrar, biometría, llave, contraseña y trazo

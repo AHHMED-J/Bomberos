@@ -11,7 +11,8 @@ export default defineConfig({
     host: 'localhost', // WebAuthn necesita un dominio: «localhost» sí, una IP no
     port: 5180,
     strictPort: true,
-    proxy: { '/api': 'http://localhost:3100' },
+    // API_SERVIDOR cambia el destino si otro programa ocupa localhost:3100 (p. ej. el simulador de Orca).
+    proxy: { '/api': process.env.API_SERVIDOR || 'http://localhost:3100' },
   },
   build: {
     // Nada incrustado como data:, para que la política de contenido del

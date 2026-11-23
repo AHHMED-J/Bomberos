@@ -8,7 +8,7 @@
 //
 //   POST /api/acceso/llave        registra la llave pública de su celular
 //   POST /api/acceso/contrasena   cambia su contraseña
-//   POST /api/acceso/trazo        sube o actualiza su firma en trazo
+//   POST /api/acceso/trazo        sube o actualiza su firma en trazo (con su contraseña)
 
 'use strict';
 
@@ -18,6 +18,8 @@ const bcrypt = require('bcryptjs');
 const db = require('../db');
 const datos = require('../datos');
 const firma = require('../firma');
+const boveda = require('../boveda');
+const notificaciones = require('../notificaciones');
 
 const r = express.Router();
 
@@ -80,12 +82,40 @@ r.post('/contrasena', datos.exigirSesion, async (req, res) => {
   res.json({ ok: true });
 });
 
-// Los partes ya firmados guardan su propia copia del trazo, así que
-// actualizarlo aquí no los cambia.
+// La firma en trazo del perfil. Se guarda cifrada (src/boveda.js) y se copia a
+// cada parte que su dueño firma; los partes ya firmados conservan su copia, así
+// que cambiarla aquí no los toca.
+//
+// Poner o cambiar la firma pide la contraseña: con una sesión robada o un
+// teléfono prestado no se puede poner una firma ajena para firmar partes.
+// Cada cambio queda en la bitácora y le llega un aviso a la propia persona.
+const FORMATO_TRAZO = /^[0-9.,| -]+$/;
+const MAXIMO_TRAZO = 60000;
+
 r.post('/trazo', datos.exigirSesion, async (req, res) => {
-  const trazo = req.body.trazo;
+  const { trazo, contrasena } = req.body;
   if (!trazo || typeof trazo !== 'string') return res.status(400).json({ error: 'falta_trazo' });
-  await db.ejecutar('UPDATE usuario SET trazo = ? WHERE id = ?', [trazo, req.usuario.id]);
+  if (trazo.length > MAXIMO_TRAZO || !FORMATO_TRAZO.test(trazo) || trazo.split(/[ |]/).length < 3) {
+    return res.status(400).json({ error: 'trazo_invalido' });
+  }
+  if (!(await firma.contrasenaCorrecta(req.usuario, contrasena))) return res.status(401).json({ error: 'contrasena_incorrecta' });
+
+  const tenia = Boolean(req.usuario.trazo);
+  await db.transaccion(async (t) => {
+    await t.ejecutar('UPDATE usuario SET trazo = ? WHERE id = ?', [boveda.cifrar(trazo, req.usuario.id), req.usuario.id]);
+    await t.ejecutar('INSERT INTO bitacora (usuario_id, accion, objetivo, ip) VALUES (?, ?, ?, ?)', [
+      req.usuario.id,
+      tenia ? 'firma_cambiada' : 'firma_creada',
+      req.usuario.matricula,
+      String(req.ip || '').slice(0, 45),
+    ]);
+    await notificaciones.avisar(t, {
+      usuarioId: req.usuario.id,
+      tipo: 'firma_cambiada',
+      titulo: tenia ? 'Cambiaste tu firma' : 'Guardaste tu firma',
+      texto: 'Si no fuiste tú, avisa a Dirección y cambia tu contraseña.',
+    });
+  });
   res.json({ ok: true, usuario: await datos.usuarioPorId(req.usuario.id) });
 });
 

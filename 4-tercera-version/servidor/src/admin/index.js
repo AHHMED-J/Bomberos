@@ -16,6 +16,7 @@ const helmet = require('helmet');
 
 const config = require('./config');
 const sesion = require('./sesion');
+const notificaciones = require('../notificaciones');
 
 const CAMBIAN = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
@@ -45,6 +46,7 @@ function crearApi() {
   api.use(mismoOrigen);
 
   api.use('/acceso', require('./rutas/acceso'));
+  api.use('/notificaciones', notificaciones.rutas(sesion.exigir()));
   api.use('/partes', sesion.exigir(), require('./rutas/partes'));
   api.use('/usuarios', sesion.exigir(), require('./rutas/usuarios'));
   api.use('/bitacora', sesion.exigir(), require('./rutas/bitacora'));

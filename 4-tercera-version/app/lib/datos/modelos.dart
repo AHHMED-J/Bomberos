@@ -423,3 +423,66 @@ bool esFolioProvisional(String folio) => folio.startsWith(prefijoFolioProvisiona
 
 String folioProvisional(DateTime t) =>
     '$prefijoFolioProvisional${t.millisecondsSinceEpoch.toRadixString(36).toUpperCase()}';
+
+/// Qué pasó, para el aviso.
+enum TipoAviso {
+  /// Un capitán validó el parte: ya está en Administración.
+  parteValidado,
+
+  /// Un capitán lo devolvió con una nota.
+  parteDevuelto,
+
+  /// Llegó un parte (o uno corregido) a la bandeja del capitán.
+  partePorRevisar,
+
+  /// Se puso o cambió la firma de la cuenta.
+  firmaCambiada,
+}
+
+/// Un aviso del servidor para quien tiene la sesión abierta. Sólo ve los suyos.
+class Notificacion {
+  const Notificacion({
+    required this.id,
+    required this.tipo,
+    required this.titulo,
+    required this.texto,
+    required this.creadaEn,
+    this.folio,
+    this.leida = false,
+  });
+  final int id;
+  final TipoAviso tipo;
+  final String titulo;
+  final String texto;
+  final DateTime creadaEn;
+  final String? folio;
+  final bool leida;
+
+  Notificacion copiar({bool? leida}) => Notificacion(
+    id: id,
+    tipo: tipo,
+    titulo: titulo,
+    texto: texto,
+    creadaEn: creadaEn,
+    folio: folio,
+    leida: leida ?? this.leida,
+  );
+
+  static const _tipos = {
+    'parte_validado': TipoAviso.parteValidado,
+    'parte_devuelto': TipoAviso.parteDevuelto,
+    'parte_por_revisar': TipoAviso.partePorRevisar,
+    'firma_cambiada': TipoAviso.firmaCambiada,
+  };
+
+  factory Notificacion.deJson(Map<String, dynamic> j) => Notificacion(
+    id: j['id'] as int,
+    // Un tipo que esta versión de la app no conoce se muestra como aviso de firma (sin acción).
+    tipo: _tipos[j['tipo']] ?? TipoAviso.firmaCambiada,
+    titulo: j['titulo'] as String,
+    texto: j['texto'] as String? ?? '',
+    creadaEn: DateTime.tryParse('${j['creada_en']}') ?? DateTime.now(),
+    folio: j['folio'] as String?,
+    leida: j['leida'] as bool? ?? false,
+  );
+}

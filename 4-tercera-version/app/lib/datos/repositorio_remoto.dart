@@ -24,7 +24,8 @@ String mensajeDeError(Object e) {
     'credenciales_incorrectas' => 'Número de empleado o contraseña incorrectos',
     'contrasena_incorrecta' => 'Contraseña incorrecta',
     'contrasena_corta' => 'La contraseña nueva debe tener al menos 8 caracteres',
-    'falta_trazo' => 'Primero sube tu firma en Mi cuenta',
+    'falta_trazo' => 'Primero guarda tu firma en Mi cuenta',
+    'trazo_invalido' => 'La firma no es válida; dibújala de nuevo',
     'ya_tiene_celular' => 'Tu cuenta ya tiene un celular registrado',
     'ya_enviado' => 'Este parte ya se envió',
     'contenido_cambio' => 'El parte cambió después de confirmar; inténtalo de nuevo',
@@ -48,8 +49,15 @@ abstract interface class RepositorioRemoto {
   Future<void> registrarLlave(String llavePublica);
   Future<void> cambiarContrasena({required String actual, required String nueva});
 
-  /// Sube o actualiza la firma en trazo del usuario. Devuelve al usuario ya con ella.
-  Future<Usuario> guardarTrazo(String trazo);
+  /// Sube o actualiza la firma en trazo del usuario. Pide su contraseña: así una sesión ajena no puede
+  /// poner otra firma. Devuelve al usuario ya con ella.
+  Future<Usuario> guardarTrazo(String trazo, {required String contrasena});
+
+  /// Los avisos de quien tiene la sesión (los últimos 50, de nuevos a viejos). [usuarioId] sólo lo usa el
+  /// servidor falso: el real sabe quién es por la sesión.
+  Future<List<Notificacion>> notificaciones(String usuarioId);
+  Future<void> marcarAvisoLeido(int id, {required String usuarioId});
+  Future<void> marcarAvisosLeidos({required String usuarioId});
 
   /// Entrada con la biometría: el servidor manda un reto y el celular lo firma con su llave.
   Future<String> retoAcceso(String usuarioId);
@@ -114,11 +122,41 @@ class RemotoFalso implements RepositorioRemoto {
   }
 
   @override
-  Future<Usuario> guardarTrazo(String trazo) async {
+  Future<Usuario> guardarTrazo(String trazo, {required String contrasena}) async {
     await _espera();
+    if (contrasena.isEmpty) throw ErrorApi(401, {'error': 'contrasena_incorrecta'});
     final u = _actual ?? usuarioEditorPrincipal;
     _trazos[u.id] = trazo;
+    _avisar(u.id, TipoAviso.firmaCambiada, 'Guardaste tu firma', 'Si no fuiste tú, avisa a Dirección.');
     return _actual = u.copiar(trazo: trazo);
+  }
+
+  // ---- Avisos (el servidor falso los reparte igual que el real) ----
+  final _avisos = <String, List<Notificacion>>{};
+  int _idAviso = 0;
+
+  void _avisar(String usuarioId, TipoAviso tipo, String titulo, String texto, {String? folio}) =>
+      (_avisos[usuarioId] ??= []).insert(
+        0,
+        Notificacion(id: ++_idAviso, tipo: tipo, titulo: titulo, texto: texto, creadaEn: DateTime.now(), folio: folio),
+      );
+
+  @override
+  Future<List<Notificacion>> notificaciones(String usuarioId) async {
+    await _espera();
+    return List.of(_avisos[usuarioId] ?? const []);
+  }
+
+  @override
+  Future<void> marcarAvisoLeido(int id, {required String usuarioId}) async {
+    final l = _avisos[usuarioId];
+    if (l == null) return;
+    _avisos[usuarioId] = [for (final n in l) n.id == id ? n.copiar(leida: true) : n];
+  }
+
+  @override
+  Future<void> marcarAvisosLeidos({required String usuarioId}) async {
+    _avisos[usuarioId] = [for (final n in _avisos[usuarioId] ?? const <Notificacion>[]) n.copiar(leida: true)];
   }
 
   @override
@@ -169,6 +207,15 @@ class RemotoFalso implements RepositorioRemoto {
     }
     final enviado = parte.copiar(estado: EstadoParte.enviado, enviadoEn: DateTime.now(), quitarNota: true);
     _partes[parte.folio] = enviado;
+    for (final c in usuariosEjemplo.where((u) => u.rol == Rol.capitan && u.division == parte.division)) {
+      _avisar(
+        c.id,
+        TipoAviso.partePorRevisar,
+        'Parte por revisar',
+        '${parte.elaboroNombre} envió el parte ${parte.folio}.',
+        folio: parte.folio,
+      );
+    }
     return enviado;
   }
 
@@ -186,6 +233,13 @@ class RemotoFalso implements RepositorioRemoto {
       nota: NotaDevolucion(texto: nota, seccion: seccion, revisor: revisor.nombre, fecha: DateTime.now()),
     );
     _partes[folio] = r;
+    _avisar(
+      p.elaboroId,
+      TipoAviso.parteDevuelto,
+      'Parte devuelto',
+      '${revisor.nombre} devolvió $folio: $nota',
+      folio: folio,
+    );
     return r;
   }
 
@@ -213,6 +267,13 @@ class RemotoFalso implements RepositorioRemoto {
         .toString();
     final r = p.copiar(estado: EstadoParte.validado, sello: sello);
     _partes[folio] = r;
+    _avisar(
+      p.elaboroId,
+      TipoAviso.parteValidado,
+      'Parte validado',
+      '${revisor.nombre} validó $folio. Ya está en Administración.',
+      folio: folio,
+    );
     return r;
   }
 
@@ -253,7 +314,24 @@ class RemotoHttp implements RepositorioRemoto {
   }
 
   @override
-  Future<Usuario> guardarTrazo(String trazo) async => _usuario(await api.post('/api/acceso/trazo', {'trazo': trazo}));
+  Future<Usuario> guardarTrazo(String trazo, {required String contrasena}) async =>
+      _usuario(await api.post('/api/acceso/trazo', {'trazo': trazo, 'contrasena': contrasena}));
+
+  @override
+  Future<List<Notificacion>> notificaciones(String usuarioId) async => [
+    for (final n in (await api.get('/api/notificaciones'))['notificaciones'] as List)
+      Notificacion.deJson(n as Map<String, dynamic>),
+  ];
+
+  @override
+  Future<void> marcarAvisoLeido(int id, {required String usuarioId}) async {
+    await api.post('/api/notificaciones/$id/leida');
+  }
+
+  @override
+  Future<void> marcarAvisosLeidos({required String usuarioId}) async {
+    await api.post('/api/notificaciones/leidas');
+  }
 
   @override
   Future<String> retoAcceso(String usuarioId) async =>
