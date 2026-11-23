@@ -102,22 +102,12 @@ class PantallaInicio extends ConsumerWidget {
                   alTocar: () => context.push('/inicio/documentos'),
                 ),
                 const SizedBox(height: 6),
-                // Un solo mosaico, centrado y del mismo tamaño que tenía en la cuadrícula de 2 columnas.
-                LayoutBuilder(
-                  builder: (context, c) => Center(
-                    child: SizedBox(
-                      width: (c.maxWidth - 12) / 2,
-                      child: AspectRatio(
-                        aspectRatio: .78,
-                        child: _Mosaico(
-                          key: const ValueKey('nuevo-parte'),
-                          texto: 'Hoja de\nincidente',
-                          icono: Icons.assignment_outlined,
-                          alTocar: () => _nuevoParte(context, ref, u),
-                        ),
-                      ),
-                    ),
-                  ),
+                const SizedBox(height: 24),
+                _Mosaico(
+                  key: const ValueKey('nuevo-parte'),
+                  texto: 'Hoja de incidente',
+                  icono: Icons.assignment_outlined,
+                  alTocar: () => _nuevoParte(context, ref, u),
                 ),
               ],
             ),
@@ -134,23 +124,33 @@ class _Mosaico extends StatelessWidget {
   final IconData icono;
   final VoidCallback alTocar;
   @override
-  Widget build(BuildContext context) => Tarjeta(
-    alTocar: alTocar,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CircleAvatar(
-          radius: 34,
-          backgroundColor: Colores.rojo,
-          child: Icon(icono, size: 32, color: Colores.blanco),
+  // Botón grande sin tarjeta de fondo: el círculo ocupa ~60 % del ancho (máx. 320).
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, c) {
+      final diametro = (c.maxWidth * .6).clamp(160.0, 320.0);
+      return InkWell(
+        onTap: alTocar,
+        borderRadius: BorderRadius.circular(24),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            children: [
+              Container(
+                width: diametro,
+                height: diametro,
+                decoration: const BoxDecoration(color: Colores.rojo, shape: BoxShape.circle),
+                child: Icon(icono, size: diametro * .45, color: Colores.blanco),
+              ),
+              const SizedBox(height: 18),
+              Text(
+                texto,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w600, color: Colores.tinta),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 10),
-        Text(
-          texto,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 17, color: Colores.tinta, height: 1.15),
-        ),
-      ],
-    ),
+      );
+    },
   );
 }
