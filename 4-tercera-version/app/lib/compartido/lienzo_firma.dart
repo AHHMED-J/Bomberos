@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'tema.dart';
@@ -66,14 +67,29 @@ class LienzoFirma extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: ListenableBuilder(
           listenable: control,
-          builder: (context, _) => GestureDetector(
-            onPanStart: soloLectura ? null : (d) => control.empezar(d.localPosition),
-            onPanUpdate: soloLectura ? null : (d) => control.seguir(d.localPosition),
-            child: CustomPaint(
+          builder: (context, _) {
+            final lienzo = CustomPaint(
               painter: _PintorFirma(control.trazos),
               child: control.vacio ? Center(child: Text(ayuda, style: Textos.chico)) : const SizedBox.expand(),
-            ),
-          ),
+            );
+            if (soloLectura) return lienzo;
+            // Dentro de una lista, un arrastre vertical lo gana el desplazamiento y la firma no se dibuja.
+            // El reconocedor «eager» gana en cuanto el dedo toca el lienzo; los trazos salen de los eventos.
+            return RawGestureDetector(
+              gestures: {
+                EagerGestureRecognizer: GestureRecognizerFactoryWithHandlers<EagerGestureRecognizer>(
+                  EagerGestureRecognizer.new,
+                  (_) {},
+                ),
+              },
+              child: Listener(
+                behavior: HitTestBehavior.opaque,
+                onPointerDown: (e) => control.empezar(e.localPosition),
+                onPointerMove: (e) => control.seguir(e.localPosition),
+                child: lienzo,
+              ),
+            );
+          },
         ),
       ),
     );
@@ -133,6 +149,5 @@ class _FirmaGuardadaState extends State<FirmaGuardada> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      LienzoFirma(control: _control, alto: widget.alto, ayuda: '', soloLectura: true);
+  Widget build(BuildContext context) => LienzoFirma(control: _control, alto: widget.alto, ayuda: '', soloLectura: true);
 }
