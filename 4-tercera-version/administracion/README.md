@@ -8,7 +8,7 @@ a MySQL.
 |---|---|---|
 | Acceso | Número de empleado + contraseña, y después la llave de acceso. O sólo la llave. | RF-01 |
 | Partes | Filtrar por estado, fechas, tipo, unidad, división o texto. Exportar a CSV. | RF-10 |
-| Detalle | El parte completo en sólo lectura, sus firmas en trazo, cómo se confirmó cada una, imprimir, y **Verificar sello**. | RF-10, RF-14 |
+| Detalle | El parte completo en sólo lectura, sus firmas en trazo, cómo se confirmó cada una, imprimir en el formato «Reporte de salida de incidente» de la Dirección (botón «Ver formato»), y **Verificar sello**. | RF-10, RF-14 |
 | Usuarios | Alta (la contraseña se muestra una sola vez), hacer o quitar revisor, editar, restablecer contraseña, dar de baja o reactivar. | RF-11, RF-12 |
 | Bitácora | Quién entró, quién falló al entrar y todo lo que se hizo. | — |
 | Mi cuenta | Mis llaves de acceso y mi contraseña. | — |
