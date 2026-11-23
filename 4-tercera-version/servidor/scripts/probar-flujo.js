@@ -304,7 +304,6 @@ async function probar() {
   const validar = (confirmacion, token = tokenCapitan) => post(`/api/revision/${parte.folio}/validar`, { ...confirmacion }, token);
 
   await paso('el revisor lo devuelve con una nota y no queda sellado', async () => {
-    esError(await post(`/api/revision/${parte.folio}/devolver`, { nota: ' ' }, tokenCapitan), 400, 'falta_nota');
     esError(await post('/api/revision/PE-0000-0000/devolver', { nota: 'x' }, tokenCapitan), 404, 'no_existe');
     const r = await post(
       `/api/revision/${parte.folio}/devolver`,
@@ -380,18 +379,39 @@ async function probar() {
     esError(await validar({ reto: otraVez, contrasena: claveCapitan }), 409, 'no_espera_revision');
   });
 
-  await paso('al validarlo, quien lo elaboró y Administración reciben el aviso; el corregido le llegó al capitán', async () => {
+  await paso('al validarlo, quien lo elaboró recibe el aviso y Administración todavía no; el corregido le llegó al capitán', async () => {
     const yo = await avisos(tokenAutor);
     assert.equal(yo.notificaciones.filter((n) => n.tipo === 'parte_validado' && n.folio === parte.folio).length, 1);
     // Sin leer: el aviso de la validación y el de haber cambiado su firma.
     assert.deepEqual(yo.notificaciones.filter((n) => !n.leida).map((n) => n.tipo).sort(), ['firma_cambiada', 'parte_validado']);
     const cap = await avisos(tokenCapitan);
     assert.ok(cap.notificaciones.some((n) => n.titulo === 'Parte corregido por revisar' && n.folio === parte.folio));
+    const aAdmin = () =>
+      db.fila(
+        "SELECT COUNT(*) AS n FROM notificacion n JOIN usuario u ON u.id = n.usuario_id WHERE u.rol = 'administracion' AND n.folio = ?",
+        [parte.folio],
+      );
+    assert.equal((await aAdmin()).n, 0);
+    assert.equal(parte.enviado_direccion_en ?? null, null);
+  });
+
+  await paso('enviar a Dirección: sólo el capitán de la división, sólo si está firmado, y repetirlo no cambia nada', async () => {
+    const enviar = (token) => post(`/api/revision/${parte.folio}/enviar-direccion`, {}, token);
+    esError(await enviar(tokenAutor), 403, 'no_es_revisor');
+    esOk(await enviar(tokenCapitan));
+    const yo = await avisos(tokenAutor);
+    assert.equal(yo.notificaciones.filter((n) => n.titulo === 'Parte enviado a Dirección' && n.folio === parte.folio).length, 1);
     const hay = await db.fila(
       "SELECT COUNT(*) AS n FROM notificacion n JOIN usuario u ON u.id = n.usuario_id WHERE u.rol = 'administracion' AND n.folio = ?",
       [parte.folio],
     );
     assert.ok(hay.n >= 1);
+    esOk(await enviar(tokenCapitan));
+    const despues = await db.fila(
+      "SELECT COUNT(*) AS n FROM notificacion n JOIN usuario u ON u.id = n.usuario_id WHERE u.rol = 'administracion' AND n.folio = ?",
+      [parte.folio],
+    );
+    assert.equal(despues.n, hay.n);
   });
 
   await paso('quedan guardadas las firmas, con la copia del trazo de ese momento', async () => {

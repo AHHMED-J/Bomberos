@@ -24,7 +24,12 @@ const completo = (o) => ({
   zona: m('Urbana'),
   lugar_servicio: m(o.lugar),
   descripcion: m(o.desc),
+  propietario: m('Ninguno'),
+  telefono_propietario: m('Ninguno'),
   personal_turno: m('Jalife Burgueño, Ahhmed; Acevedo Carrillo, Verónica'),
+  voluntarios: m('Ninguno'),
+  unidades_apoyo: m('Ninguno'),
+  instituciones_apoyo: m('Ninguno'),
 });
 const firmasEjemplo = { elaboro: 'SIMULADA:ejemplo', elaboro_simulada: true, propietario_nombre: '', propietario_trazo: null, testigo_nombre: '', testigo_trazo: null, requiere_peritaje: false };
 

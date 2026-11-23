@@ -1,5 +1,4 @@
 import 'package:bomberos_parte/compartido/campo_con_estado.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Escribe [teclas] una por una, como en el teclado del teléfono.
