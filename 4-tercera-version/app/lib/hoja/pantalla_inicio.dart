@@ -145,28 +145,13 @@ class PantallaInicio extends ConsumerWidget {
                   alTocar: () => context.push('/inicio/documentos'),
                 ),
                 const SizedBox(height: 6),
-                GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: .78,
-                  children: [
-                    _Mosaico(
-                      key: const ValueKey('nuevo-parte'),
-                      texto: 'Hoja de\nincidente',
-                      icono: Icons.assignment_outlined,
-                      activo: true,
-                      alTocar: () => _nuevoParte(context, ref, u),
-                    ),
-                    const _Mosaico(texto: 'Lista de\nasistencia', icono: Icons.how_to_reg_outlined),
-                    const _Mosaico(texto: 'Notas', icono: Icons.edit_note),
-                    const _Mosaico(texto: 'Revisión\nmecánica', icono: Icons.build_outlined),
-                  ],
+                const SizedBox(height: 24),
+                _Mosaico(
+                  key: const ValueKey('nuevo-parte'),
+                  texto: 'Hoja de incidente',
+                  icono: Icons.assignment_outlined,
+                  alTocar: () => _nuevoParte(context, ref, u),
                 ),
-                const SizedBox(height: 10),
-                const Text('Lista de asistencia, Notas y Revisión mecánica llegan en el hito 6.', style: Textos.chico),
               ],
             ),
           ),
@@ -177,30 +162,38 @@ class PantallaInicio extends ConsumerWidget {
 }
 
 class _Mosaico extends StatelessWidget {
-  const _Mosaico({super.key, required this.texto, required this.icono, this.activo = false, this.alTocar});
+  const _Mosaico({super.key, required this.texto, required this.icono, required this.alTocar});
   final String texto;
   final IconData icono;
-  final bool activo;
-  final VoidCallback? alTocar;
+  final VoidCallback alTocar;
   @override
-  Widget build(BuildContext context) => Tarjeta(
-    alTocar: activo ? alTocar : null,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CircleAvatar(
-          radius: 34,
-          backgroundColor: activo ? Colores.rojo : const Color(0xFFE5A9A4),
-          child: Icon(icono, size: 32, color: Colores.blanco),
+  // Botón grande sin tarjeta de fondo: el círculo ocupa ~60 % del ancho (máx. 320).
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, c) {
+      final diametro = (c.maxWidth * .6).clamp(160.0, 320.0);
+      return InkWell(
+        onTap: alTocar,
+        borderRadius: BorderRadius.circular(24),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            children: [
+              Container(
+                width: diametro,
+                height: diametro,
+                decoration: const BoxDecoration(color: Colores.rojo, shape: BoxShape.circle),
+                child: Icon(icono, size: diametro * .45, color: Colores.blanco),
+              ),
+              const SizedBox(height: 18),
+              Text(
+                texto,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w600, color: Colores.tinta),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 10),
-        Text(
-          texto,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 17, color: activo ? Colores.tinta : Colores.gris, height: 1.15),
-        ),
-        if (!activo) const Padding(padding: EdgeInsets.only(top: 4), child: ChipBomberos('Hito 6')),
-      ],
-    ),
+      );
+    },
   );
 }
