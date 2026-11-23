@@ -1,7 +1,7 @@
 import '../datos/catalogo_campos.dart';
 import '../datos/modelos.dart';
 
-enum TipoPendiente { obligatorio, regreso, foto, sinConfirmar, firma, peritaje }
+enum TipoPendiente { obligatorio, sinConfirmar, firma, peritaje }
 
 class Pendiente {
   const Pendiente(this.tipo, this.mensaje, {this.campoId, this.seccion});
@@ -18,23 +18,15 @@ class Pendiente {
 /// El servidor repite la misma revisión: nunca se confía sólo en la pantalla.
 List<Pendiente> pendientesDeLaHoja(Parte p) {
   final r = <Pendiente>[];
-  if (p.valor('hora_regreso').trim().isEmpty) {
-    r.add(
-      const Pendiente(
-        TipoPendiente.regreso,
-        'Hora de regreso · presiona Regreso',
-        campoId: 'hora_regreso',
-        seccion: SeccionHoja.datosServicio,
-      ),
-    );
-  }
   for (final c in catalogoCampos.where((c) => c.obligatorio)) {
-    if (p.campo(c.id).vacio) {
+    final v = p.valor(c.id).trim();
+    if (v.isEmpty) {
       r.add(Pendiente(TipoPendiente.obligatorio, c.etiqueta, campoId: c.id, seccion: c.seccion));
+    } else if (c.digitos != null && !RegExp('^[0-9]{${c.digitos}}\$').hasMatch(v)) {
+      r.add(
+        Pendiente(TipoPendiente.obligatorio, '${c.etiqueta}: ${c.digitos} números', campoId: c.id, seccion: c.seccion),
+      );
     }
-  }
-  if (p.fotos < 1) {
-    r.add(const Pendiente(TipoPendiente.foto, 'Al menos 1 foto', seccion: SeccionHoja.descripcion));
   }
   for (final e in p.campos.entries.where((e) => e.value.pendienteDeConfirmar)) {
     final def = campoPorId[e.key];

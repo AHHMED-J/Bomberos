@@ -23,17 +23,21 @@ class CampoDef {
     required this.etiqueta,
     required this.seccion,
     this.tipo = TipoCampo.texto,
-    this.obligatorio = false,
+    this.obligatorio = true,
     this.auto = false,
     this.sugerencia,
     this.opciones = const [],
     this.soloAutor = false,
+    this.agregar,
+    this.digitos,
   });
 
   final String id;
   final String etiqueta;
   final SeccionHoja seccion;
   final TipoCampo tipo;
+
+  /// Todos los campos de la hoja son obligatorios.
   final bool obligatorio;
 
   /// Se llena solo (fecha, unidad, turno, estación).
@@ -43,8 +47,17 @@ class CampoDef {
   final String? sugerencia;
   final List<String> opciones;
 
-  /// Llegada y Regreso los presiona sólo quien elabora el parte.
+  /// Llegada y Regreso los escribe sólo quien elabora el parte.
   final bool soloAutor;
+
+  /// Campo de varios elementos (personas o unidades): se llena uno por uno con este botón («Agregar…»).
+  /// El valor guardado es la lista unida con «; ».
+  final String? agregar;
+
+  bool get esLista => agregar != null;
+
+  /// Sólo números, exactamente esta cantidad (el No. de incidente de C-5 son 6).
+  final int? digitos;
 
   Map<String, dynamic> aJson() => {
     'id': id,
@@ -71,8 +84,8 @@ const catalogoCampos = <CampoDef>[
     id: 'no_incidente_c5',
     etiqueta: 'No. de incidente de C-5',
     seccion: SeccionHoja.datosServicio,
-    obligatorio: true,
-    sugerencia: 'Di: «incidente C-5 ENS-26-118843»',
+    digitos: 6,
+    sugerencia: 'Di: «incidente 118843»',
   ),
   CampoDef(id: 'fecha', etiqueta: 'Fecha', seccion: SeccionHoja.datosServicio, tipo: TipoCampo.fecha, auto: true),
   CampoDef(
@@ -85,7 +98,7 @@ const catalogoCampos = <CampoDef>[
   CampoDef(id: 'hora_salida', etiqueta: 'Salida', seccion: SeccionHoja.datosServicio, tipo: TipoCampo.hora),
   CampoDef(
     id: 'hora_llegada',
-    etiqueta: 'Hora de llegada',
+    etiqueta: 'Llegada',
     seccion: SeccionHoja.datosServicio,
     tipo: TipoCampo.hora,
     soloAutor: true,
@@ -106,13 +119,18 @@ const catalogoCampos = <CampoDef>[
     auto: true,
     opciones: ['A', 'B', 'C', 'D'],
   ),
-  CampoDef(id: 'estacion', etiqueta: 'Estación', seccion: SeccionHoja.datosServicio, auto: true),
+  CampoDef(
+    id: 'estacion',
+    etiqueta: 'Estación',
+    seccion: SeccionHoja.datosServicio,
+    tipo: TipoCampo.opcion,
+    opciones: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+  ),
   CampoDef(
     id: 'tipo_servicio',
     etiqueta: 'Tipo de servicio',
     seccion: SeccionHoja.datosServicio,
     tipo: TipoCampo.opcion,
-    obligatorio: true,
     opciones: tiposServicioEjemplo,
     sugerencia: 'Di: «incendio de pastizal»',
   ),
@@ -124,17 +142,9 @@ const catalogoCampos = <CampoDef>[
     opciones: ['Rural', 'Urbana'],
   ),
   CampoDef(
-    id: 'hora_control_fuego',
-    etiqueta: 'Hora de control del fuego',
-    seccion: SeccionHoja.datosServicio,
-    tipo: TipoCampo.hora,
-    sugerencia: 'Di: «el fuego se controló a las 14:50»',
-  ),
-  CampoDef(
     id: 'lugar_servicio',
     etiqueta: 'Lugar del servicio',
     seccion: SeccionHoja.lugarPropietario,
-    obligatorio: true,
     sugerencia: 'Di: la calle y la colonia',
   ),
   CampoDef(
@@ -154,7 +164,6 @@ const catalogoCampos = <CampoDef>[
     etiqueta: 'Descripción del incidente',
     seccion: SeccionHoja.descripcion,
     tipo: TipoCampo.multilinea,
-    obligatorio: true,
     sugerencia: 'Di: qué pasó y qué hicieron',
   ),
   CampoDef(
@@ -162,15 +171,22 @@ const catalogoCampos = <CampoDef>[
     etiqueta: 'Personal de turno',
     seccion: SeccionHoja.personal,
     sugerencia: 'Di: quiénes iban en la unidad',
+    agregar: 'Agregar persona',
   ),
-  CampoDef(id: 'voluntarios', etiqueta: 'Voluntarios', seccion: SeccionHoja.personal),
+  CampoDef(id: 'voluntarios', etiqueta: 'Voluntarios', seccion: SeccionHoja.personal, agregar: 'Agregar voluntario'),
   CampoDef(
     id: 'unidades_apoyo',
     etiqueta: 'Unidades de bomberos en apoyo',
     seccion: SeccionHoja.apoyo,
     sugerencia: 'Di: «apoyó la pipa 07»',
+    agregar: 'Agregar unidad',
   ),
-  CampoDef(id: 'instituciones_apoyo', etiqueta: 'Instituciones de apoyo', seccion: SeccionHoja.apoyo),
+  CampoDef(
+    id: 'instituciones_apoyo',
+    etiqueta: 'Instituciones de apoyo',
+    seccion: SeccionHoja.apoyo,
+    agregar: 'Agregar institución',
+  ),
 ];
 
 final Map<String, CampoDef> campoPorId = {for (final c in catalogoCampos) c.id: c};

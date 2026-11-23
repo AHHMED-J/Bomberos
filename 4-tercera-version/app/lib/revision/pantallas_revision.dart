@@ -4,15 +4,21 @@ import 'package:go_router/go_router.dart';
 
 import '../acceso/confirmar_identidad.dart';
 import '../acceso/sesion.dart';
-import '../compartido/lienzo_firma.dart';
+import '../compartido/campo_con_estado.dart';
 import '../compartido/tema.dart';
 import '../compartido/widgets.dart';
 import '../datos/catalogo_campos.dart';
 import '../datos/modelos.dart';
 import '../datos/repositorio_remoto.dart';
 import '../hoja/hoja_controlador.dart';
-import '../hoja/validacion_envio.dart';
+import '../hoja/pantalla_hoja.dart';
 import 'revision_controlador.dart';
+
+/// Título de una hoja por revisar: su número de incidente de C-5 (o el folio si todavía no lo tiene).
+String tituloIncidente(Parte p) {
+  final n = p.valor('no_incidente_c5').trim();
+  return n.isEmpty ? p.folio : n;
+}
 
 /// R2 · Bandeja de revisión, filtrada por la división del capitán.
 class PantallaBandeja extends ConsumerWidget {
@@ -47,7 +53,7 @@ class PantallaBandeja extends ConsumerWidget {
                       tabs: [
                         Tab(text: 'Por revisar · ${pestanas[0].length}'),
                         Tab(text: 'Devueltos · ${pestanas[1].length}'),
-                        const Tab(text: 'Validados'),
+                        Tab(text: 'Firmados · ${pestanas[2].length}'),
                       ],
                     ),
                   ),
@@ -74,16 +80,23 @@ class PantallaBandeja extends ConsumerWidget {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              p.folio,
+                                              tituloIncidente(p),
                                               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                                             ),
                                           ),
                                           if (p.estado == EstadoParte.enviado)
                                             const ChipBomberos('Nuevo', tono: TonoChip.rojo),
+                                          if (p.estado == EstadoParte.validado)
+                                            p.enviadoDireccionEn != null
+                                                ? const ChipBomberos('Enviado a Dirección', tono: TonoChip.verde)
+                                                : const ChipBomberos('Sin enviar', tono: TonoChip.ambar),
                                         ],
                                       ),
                                       Text('${p.valor('tipo_servicio')} · ${p.valor('unidad')}'),
-                                      Text('${p.elaboroNombre} · ${p.valor('fecha')}', style: Textos.chico),
+                                      Text(
+                                        '${p.folio} · ${p.elaboroNombre} · ${p.valor('fecha')}',
+                                        style: Textos.chico,
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -106,174 +119,166 @@ class PantallaBandeja extends ConsumerWidget {
   }
 }
 
-/// R3 · Revisar hoja: qué, cuándo, dónde, quién + revisión automática. R4 · devolver con nota.
-class PantallaRevisar extends ConsumerWidget {
+/// R3 · Revisar hoja: la misma hoja que llenó el bombero y, al final, Devolver o Firmar.
+class PantallaRevisar extends ConsumerStatefulWidget {
   const PantallaRevisar({super.key});
+  @override
+  ConsumerState<PantallaRevisar> createState() => _PantallaRevisarState();
+}
 
-  Future<void> _devolver(BuildContext context, WidgetRef ref) async {
+class _PantallaRevisarState extends ConsumerState<PantallaRevisar> {
+  bool _ocupado = false;
+
+  /// R4 · Devolver. La nota de qué falta por corregir es opcional.
+  Future<void> _devolver() async {
     final nota = TextEditingController();
-    var seccion = SeccionHoja.datosServicio.titulo;
     final ok = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      builder: (c) => StatefulBuilder(
-        builder: (c, setS) => Padding(
-          padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.viewInsetsOf(c).bottom),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text('DEVOLVER CON NOTA', style: Textos.tituloSeccion),
-              const SizedBox(height: 10),
-              const Row(
-                children: [
-                  Text('Qué hay que corregir', style: Textos.etiqueta),
-                  SizedBox(width: 6),
-                  ChipBomberos('Obligatorio', tono: TonoChip.rojo),
-                ],
-              ),
-              const SizedBox(height: 6),
-              TextField(key: const ValueKey('nota-devolucion'), controller: nota, minLines: 3, maxLines: 5),
-              const SizedBox(height: 12),
-              const Text('Sección a corregir', style: Textos.etiqueta),
-              const SizedBox(height: 6),
-              DropdownButtonFormField<String>(
-                initialValue: seccion,
-                items: [for (final s in SeccionHoja.values) DropdownMenuItem(value: s.titulo, child: Text(s.titulo))],
-                onChanged: (v) => setS(() => seccion = v ?? seccion),
-              ),
-              const SizedBox(height: 8),
-              const Text('La hoja vuelve a quien la elaboró y abre directo en esa sección.', style: Textos.chico),
-              const SizedBox(height: 14),
-              FilledButton.icon(
-                onPressed: () => nota.text.trim().isEmpty ? null : Navigator.pop(c, true),
-                icon: const Icon(Icons.undo),
-                label: const Text('Devolver a quien elaboró'),
-              ),
-              const SizedBox(height: 8),
-              OutlinedButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancelar')),
-            ],
-          ),
-        ),
-      ),
-    );
-    if (ok == true) {
-      await ref.read(revisionProvider.notifier).devolver(nota.text.trim(), seccion);
-      if (context.mounted) {
-        avisar(context, 'Devuelto a quien elaboró');
-        context.pop();
-      }
-    }
-    nota.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final p = ref.watch(revisionProvider).parte;
-    if (p == null) return const Scaffold();
-    final faltan = pendientesParaEnviar(p);
-    final vacios = catalogoCampos.where((c) => !c.obligatorio && p.campo(c.id).vacio).map((c) => c.etiqueta).take(4);
-    Widget dato(String k, String v) => Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(color: Colores.crema, borderRadius: BorderRadius.circular(10)),
+      builder: (c) => Padding(
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 20 + MediaQuery.viewInsetsOf(c).bottom),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              k.toUpperCase(),
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Colores.gris),
+            const Text('DEVOLVER HOJA', style: Textos.tituloSeccion),
+            const SizedBox(height: 10),
+            const Text('Qué falta por corregir (opcional)', style: Textos.etiqueta),
+            const SizedBox(height: 6),
+            TextField(
+              key: const ValueKey('nota-devolucion'),
+              controller: nota,
+              autofocus: true,
+              minLines: 3,
+              maxLines: 5,
+              textCapitalization: TextCapitalization.sentences,
             ),
-            Text(v.isEmpty ? '—' : v, style: const TextStyle(fontWeight: FontWeight.w600)),
+            const SizedBox(height: 8),
+            const Text('La hoja vuelve a quien la elaboró para que la corrija.', style: Textos.chico),
+            const SizedBox(height: 14),
+            FilledButton.icon(
+              key: const ValueKey('confirmar-devolver'),
+              onPressed: () => Navigator.pop(c, true),
+              icon: const Icon(Icons.undo),
+              label: const Text('Devolver a quien elaboró'),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancelar')),
           ],
         ),
       ),
     );
+    final texto = nota.text.trim();
+    nota.dispose();
+    if (ok != true || !mounted) return;
+    setState(() => _ocupado = true);
+    try {
+      await ref.read(revisionProvider.notifier).devolver(texto, '');
+      if (!mounted) return;
+      avisar(context, 'Devuelta a quien la elaboró');
+      context.pop();
+    } catch (e) {
+      if (mounted) avisar(context, 'No se pudo devolver: ${mensajeDeError(e)}');
+    } finally {
+      if (mounted) setState(() => _ocupado = false);
+    }
+  }
+
+  void _firmar(Parte p) {
+    // El servidor pone en el parte la firma guardada en la cuenta del capitán.
+    if (ref.read(sesionProvider).usuario?.trazo == null) {
+      avisar(context, 'Primero guarda tu firma en Mi cuenta');
+      context.push('/inicio/cuenta');
+      return;
+    }
+    context.push('/inicio/bandeja/parte/${p.folio}/validar');
+  }
+
+  Future<void> _enviarADireccion() async {
+    setState(() => _ocupado = true);
+    try {
+      await ref.read(revisionProvider.notifier).enviarADireccion();
+      if (mounted) avisar(context, 'Enviado a Dirección');
+    } catch (e) {
+      if (mounted) avisar(context, 'No se pudo enviar: ${mensajeDeError(e)}');
+    } finally {
+      if (mounted) setState(() => _ocupado = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final p = ref.watch(revisionProvider).parte;
+    if (p == null) return const Scaffold();
     final pendiente = p.estado == EstadoParte.enviado;
+    Widget campo(String id) =>
+        CampoConEstado(def: campoDef(id), valor: p.campo(id), editable: false, alCambiar: (_) {});
     return Scaffold(
-      appBar: Encabezado(titulo: 'Revisar hoja', subtitulo: '${p.folio} · ${p.elaboroNombre}'),
+      appBar: Encabezado(titulo: tituloIncidente(p), subtitulo: '${p.folio} · ${p.elaboroNombre}'),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
         children: [
-          Row(
-            children: [
-              dato('Fecha', p.valor('fecha')),
-              const SizedBox(width: 8),
-              dato('Horario', '${p.valor('hora_salida')} – ${p.valor('hora_regreso')}'),
+          if (p.estado == EstadoParte.validado) ...[
+            AvisoFirmado(p),
+            if (p.enviadoDireccionEn == null) ...[
+              const SizedBox(height: 8),
+              FilledButton.icon(
+                key: const ValueKey('enviar-direccion'),
+                onPressed: _ocupado ? null : _enviarADireccion,
+                icon: const Icon(Icons.send),
+                label: const Text('Enviar a Dirección'),
+              ),
             ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              dato('Unidad', p.valor('unidad')),
-              const SizedBox(width: 8),
-              dato('Servicio', p.valor('tipo_servicio')),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(children: [dato('Lugar del servicio', p.valor('lugar_servicio'))]),
-          const SizedBox(height: 10),
-          Aviso(
-            tono: faltan.isEmpty ? TonoAviso.verde : TonoAviso.rojo,
-            icono: faltan.isEmpty ? Icons.check : Icons.warning_amber_rounded,
-            child: Text(
-              faltan.isEmpty
-                  ? 'Obligatorios completos\nVacíos opcionales: ${vacios.join(', ')}.\nFirmado con credencial${p.firmas.elaboroSimulada ? ' (simulada)' : ''}.'
-                  : 'Revisión automática: ${faltan.join(', ')}',
+            const SizedBox(height: 12),
+          ],
+          if (p.estado == EstadoParte.devuelto) ...[
+            Aviso(
+              tono: TonoAviso.ambar,
+              icono: Icons.undo,
+              child: Text(
+                (p.nota?.texto ?? '').trim().isEmpty ? 'Devuelta para corregir' : 'Devuelta: «${p.nota!.texto}»',
+              ),
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              ref.read(hojaProvider.notifier).abrir(p);
-              context.push('/inicio/hoja');
-            },
-            child: const Text(
-              'Ver hoja completa',
-              style: TextStyle(color: Colores.rojo, decoration: TextDecoration.underline),
+            const SizedBox(height: 12),
+          ],
+          ...casillasDeLaHoja(parte: p, campo: campo, editable: false),
+          if (pendiente) ...[
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    key: const ValueKey('devolver'),
+                    style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(56)),
+                    onPressed: _ocupado ? null : _devolver,
+                    icon: const Icon(Icons.undo),
+                    label: const Text('Devolver'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: FilledButton.icon(
+                    key: const ValueKey('validar'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFF1F7A3A),
+                      minimumSize: const Size.fromHeight(56),
+                    ),
+                    onPressed: _ocupado ? null : () => _firmar(p),
+                    icon: const Icon(Icons.draw_outlined),
+                    label: const Text('Firmar'),
+                  ),
+                ),
+              ],
             ),
-          ),
-          if (p.estado == EstadoParte.validado)
-            Aviso(tono: TonoAviso.verde, child: Text('Validado y sellado · ${p.sello?.substring(0, 8)}…')),
-          if (p.estado == EstadoParte.devuelto)
-            Aviso(tono: TonoAviso.ambar, child: Text('Devuelto: «${p.nota?.texto}»')),
+          ],
         ],
       ),
-      bottomNavigationBar: pendiente
-          ? SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: FilledButton.icon(
-                        onPressed: () => _devolver(context, ref),
-                        icon: const Icon(Icons.undo),
-                        label: const Text('Devolver'),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: FilledButton.icon(
-                        key: const ValueKey('validar'),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: const Color(0xFF1F7A3A),
-                          minimumSize: const Size.fromHeight(56),
-                        ),
-                        onPressed: () => context.push('/inicio/bandeja/parte/${p.folio}/validar'),
-                        icon: const Icon(Icons.check),
-                        label: const Text('Validar'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          : null,
     );
   }
 }
 
-/// C1 (Confirma que eres tú) → C2 (resumen + firma de trazo del perfil) → C3.
+/// C1 · Al presionar Firmar se pide de una vez la huella o la cara; abajo está la opción de contraseña.
+/// En cuanto confirma, el parte queda firmado (C3).
 class PantallaValidar extends ConsumerStatefulWidget {
   const PantallaValidar({super.key});
   @override
@@ -282,191 +287,106 @@ class PantallaValidar extends ConsumerStatefulWidget {
 
 class _PantallaValidarState extends ConsumerState<PantallaValidar> {
   bool _ocupado = false;
-  Future<void> _autenticar() async {
+
+  @override
+  void initState() {
+    super.initState();
+    // La huella o la cara se piden solas al abrir.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _conBiometria();
+    });
+  }
+
+  Future<void> _conBiometria() async {
     setState(() => _ocupado = true);
     final error = await ref.read(revisionProvider.notifier).autenticar();
     if (!mounted) return;
-    setState(() => _ocupado = false);
-    if (error != null) avisar(context, error);
+    if (error != null) {
+      setState(() => _ocupado = false);
+      if (error != 'Cancelado') avisar(context, error);
+      return;
+    }
+    await _firmar();
   }
 
   Future<void> _conContrasena() async {
-    final c = await pedirContrasena(context, motivo: 'Escribe tu contraseña para validar el parte.');
+    final c = await pedirContrasena(context, motivo: 'Escribe tu contraseña para firmar el parte.');
     if (c == null || !mounted) return;
     setState(() => _ocupado = true);
     final error = await ref.read(revisionProvider.notifier).autenticarConContrasena(c);
     if (!mounted) return;
-    setState(() => _ocupado = false);
-    if (error != null) avisar(context, error);
+    if (error != null) {
+      setState(() => _ocupado = false);
+      avisar(context, error);
+      return;
+    }
+    await _firmar();
   }
 
-  Future<void> _firmarYValidar() async {
-    // El servidor pone en el parte la firma guardada en la cuenta del capitán.
-    if (ref.read(sesionProvider).usuario?.trazo == null) return avisar(context, 'Primero guarda tu firma en Mi cuenta');
-    setState(() => _ocupado = true);
+  Future<void> _firmar() async {
     try {
       await ref.read(revisionProvider.notifier).validar();
       final folio = ref.read(revisionProvider).parte!.folio;
       if (mounted) context.pushReplacement('/inicio/bandeja/parte/$folio/validado');
     } catch (e) {
-      if (mounted) avisar(context, 'No se pudo validar: ${mensajeDeError(e)}');
-    } finally {
-      if (mounted) setState(() => _ocupado = false);
+      if (mounted) {
+        setState(() => _ocupado = false);
+        avisar(context, 'No se pudo firmar: ${mensajeDeError(e)}');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final s = ref.watch(revisionProvider);
-    final p = s.parte!;
-    final titulo = Encabezado(titulo: 'Validar parte', subtitulo: 'Parte C-5 ${p.valor('no_incidente_c5')}');
-
-    if (!s.confirmado) {
-      // C1 · se pide en CADA revisión.
-      return Scaffold(
-        appBar: titulo,
-        body: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            Tarjeta(
-              borde: true,
-              padding: const EdgeInsets.all(20),
-              child: const Column(
-                children: [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colores.crema,
-                    child: Icon(Icons.fingerprint, size: 40, color: Colores.rojo),
-                  ),
-                  SizedBox(height: 12),
-                  Text('Confirma que eres tú', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600)),
-                  SizedBox(height: 6),
-                  Text(
-                    'Para poner tu firma, usa la biometría de tu celular o tu contraseña. Se pide en cada revisión.',
-                    style: Textos.chico,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            FilledButton.icon(
-              key: const ValueKey('usar-face-id'),
-              onPressed: _ocupado ? null : _autenticar,
-              icon: const Icon(Icons.face),
-              label: const Text('Usar mi biometría'),
-            ),
-            const SizedBox(height: 10),
-            OutlinedButton(
-              key: const ValueKey('usar-contrasena'),
-              onPressed: _ocupado ? null : _conContrasena,
-              child: const Text('Usar mi contraseña'),
-            ),
-            const SizedBox(height: 10),
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colores.gris,
-                side: const BorderSide(color: Colores.borde),
-              ),
-              onPressed: () => context.pop(),
-              child: const Text('Cancelar'),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // C2 · resumen + firma de trazo.
+    final p = ref.watch(revisionProvider).parte!;
     return Scaffold(
-      appBar: titulo,
+      appBar: Encabezado(titulo: 'Firmar', subtitulo: tituloIncidente(p)),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const TituloSeccion('Resumen del parte'),
           Tarjeta(
             borde: true,
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                for (final (k, v) in [
-                  ('Tipo', p.valor('tipo_servicio')),
-                  ('Fecha', '${p.valor('fecha')} · ${p.valor('hora_llegada')}'),
-                  ('Unidad', p.valor('unidad')),
-                  ('Elaboró', p.elaboroNombre),
-                ])
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 3),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 92,
-                          child: Text(k, style: const TextStyle(fontWeight: FontWeight.w700)),
-                        ),
-                        Expanded(child: Text(v)),
-                      ],
-                    ),
-                  ),
+                const CircleAvatar(
+                  radius: 40,
+                  backgroundColor: Colores.crema,
+                  child: Icon(Icons.fingerprint, size: 40, color: Colores.rojo),
+                ),
+                const SizedBox(height: 12),
+                const Text('Confirma que eres tú', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 6),
+                const Text(
+                  'Usa tu huella o tu cara. Se pone la firma guardada en tu cuenta.',
+                  style: Textos.chico,
+                  textAlign: TextAlign.center,
+                ),
+                if (_ocupado) ...[const SizedBox(height: 16), const CircularProgressIndicator()],
               ],
             ),
           ),
-          if (p.firmas.elaboroTrazo != null) ...[
-            const TituloSeccion('Firma de quien elaboró'),
-            FirmaGuardada(p.firmas.elaboroTrazo!),
-          ],
-          const TituloSeccion('Tu firma'),
-          if (ref.watch(sesionProvider).usuario?.trazo case final mia?)
-            FirmaGuardada(mia)
-          else
-            Tarjeta(
-              borde: true,
-              alTocar: () => context.push('/inicio/cuenta'),
-              child: const Row(
-                children: [
-                  Icon(Icons.draw_outlined, color: Colores.rojo),
-                  SizedBox(width: 12),
-                  Expanded(child: Text('Todavía no tienes firma. Toca para guardarla en Mi cuenta.')),
-                  Icon(Icons.chevron_right),
-                ],
-              ),
-            ),
-          const SizedBox(height: 6),
-          Text(
-            s.simulada
-                ? 'Confirmado (simulado). Se pone la firma de tu cuenta; para cambiarla, ve a Mi cuenta.'
-                : 'Confirmado. Se pone la firma de tu cuenta; para cambiarla, ve a Mi cuenta.',
-            style: Textos.chico,
-          ),
           const SizedBox(height: 16),
           FilledButton.icon(
-            key: const ValueKey('firmar-y-validar'),
-            onPressed: _ocupado ? null : _firmarYValidar,
-            icon: const Icon(Icons.check),
-            label: const Text('Firmar y validar'),
+            key: const ValueKey('usar-face-id'),
+            onPressed: _ocupado ? null : _conBiometria,
+            icon: const Icon(Icons.face),
+            label: const Text('Usar mi huella o cara'),
           ),
           const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colores.crema,
-                    foregroundColor: Colores.tinta,
-                    minimumSize: const Size.fromHeight(50),
-                  ),
-                  onPressed: () => context.push('/inicio/cuenta'),
-                  child: const Text('Mi firma'),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colores.gris,
-                    side: const BorderSide(color: Colores.borde),
-                  ),
-                  onPressed: () => context.pop(),
-                  child: const Text('Devolver con nota'),
-                ),
-              ),
-            ],
+          OutlinedButton(
+            key: const ValueKey('usar-contrasena'),
+            onPressed: _ocupado ? null : _conContrasena,
+            child: const Text('Usar mi contraseña'),
+          ),
+          const SizedBox(height: 10),
+          OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colores.gris,
+              side: const BorderSide(color: Colores.borde),
+            ),
+            onPressed: _ocupado ? null : () => context.pop(),
+            child: const Text('Cancelar'),
           ),
         ],
       ),
@@ -474,24 +394,46 @@ class _PantallaValidarState extends ConsumerState<PantallaValidar> {
   }
 }
 
-/// C3 · Parte validado y sellado.
-class PantallaValidado extends ConsumerWidget {
+/// C3 · Parte firmado: regresar al menú o enviarlo a Dirección.
+class PantallaValidado extends ConsumerStatefulWidget {
   const PantallaValidado({super.key});
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PantallaValidado> createState() => _PantallaValidadoState();
+}
+
+class _PantallaValidadoState extends ConsumerState<PantallaValidado> {
+  bool _ocupado = false;
+
+  Future<void> _enviarADireccion() async {
+    setState(() => _ocupado = true);
+    try {
+      await ref.read(revisionProvider.notifier).enviarADireccion();
+    } catch (e) {
+      if (mounted) avisar(context, 'No se pudo enviar: ${mensajeDeError(e)}');
+    } finally {
+      if (mounted) setState(() => _ocupado = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final p = ref.watch(revisionProvider).parte!;
     final u = ref.watch(usuarioActualProvider);
     final hoy = DateTime.now();
     final sello = p.sello ?? '';
+    final enviado = p.enviadoDireccionEn != null;
     return Scaffold(
-      appBar: Encabezado(titulo: 'Parte validado', subtitulo: 'Parte C-5 ${p.valor('no_incidente_c5')}', atras: false),
+      appBar: Encabezado(titulo: 'Parte firmado', subtitulo: tituloIncidente(p), atras: false),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const Center(child: IconoExito()),
+          Center(child: IconoExito(icono: enviado ? Icons.send : Icons.check)),
           const SizedBox(height: 12),
-          const Center(
-            child: Text('Validado y sellado', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+          Center(
+            child: Text(
+              enviado ? 'Firmado y enviado a Dirección' : 'Firmado',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
           ),
           const SizedBox(height: 16),
           Tarjeta(
@@ -499,13 +441,13 @@ class PantallaValidado extends ConsumerWidget {
             child: Column(
               children: [
                 for (final (k, v) in [
-                  ('Validó', u.nombre),
+                  ('Firmó', u.nombre),
                   ('Fecha', '${fechaDe(hoy)} · ${horaDe(hoy)}'),
                   (
                     'Sello',
                     sello.length > 12 ? '${sello.substring(0, 4)}…${sello.substring(sello.length - 4)}' : sello,
                   ),
-                  ('Resguardo', 'Hasta ${fechaDe(DateTime(hoy.year + 10, hoy.month, hoy.day))}'),
+                  ('Dirección', enviado ? 'Enviado' : 'Sin enviar'),
                 ])
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 3),
@@ -522,14 +464,22 @@ class PantallaValidado extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
+          if (!enviado) ...[
+            FilledButton.icon(
+              key: const ValueKey('enviar-direccion'),
+              onPressed: _ocupado ? null : _enviarADireccion,
+              icon: const Icon(Icons.send),
+              label: const Text('Enviar a Dirección'),
+            ),
+            const SizedBox(height: 10),
+          ],
           OutlinedButton.icon(
-            onPressed: () => avisar(context, 'Descargar PDF: pendiente'),
-            icon: const Icon(Icons.download),
-            label: const Text('Descargar PDF'),
+            key: const ValueKey('regresar-menu'),
+            onPressed: _ocupado ? null : () => context.go('/inicio'),
+            icon: const Icon(Icons.home_outlined),
+            label: const Text('Regresar al menú'),
           ),
-          const SizedBox(height: 10),
-          FilledButton(onPressed: () => context.go('/inicio/bandeja'), child: const Text('Volver a la bandeja')),
         ],
       ),
     );

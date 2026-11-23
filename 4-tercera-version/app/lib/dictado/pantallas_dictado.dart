@@ -36,7 +36,7 @@ class _PantallaResumenState extends ConsumerState<PantallaResumen> {
   Widget build(BuildContext context) {
     final texto = ref.watch(dictadoProvider).resumen;
     return Scaffold(
-      appBar: const Encabezado(titulo: 'Resumen', subtitulo: 'Para compartir en WhatsApp'),
+      appBar: const Encabezado(titulo: 'Ficha para WhatsApp', subtitulo: 'Para compartir en el grupo'),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [

@@ -224,7 +224,7 @@ Widget? panelDictado(BuildContext context, WidgetRef ref, EstadoDictado e, Parte
                 ),
                 TextButton(
                   onPressed: () => context.push('/inicio/hoja/resumen'),
-                  child: const Text('Resumen WhatsApp'),
+                  child: const Text('Ficha para WhatsApp'),
                 ),
               ],
             ),

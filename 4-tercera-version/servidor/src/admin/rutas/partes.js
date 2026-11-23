@@ -44,6 +44,11 @@ function filtros(q) {
     condiciones.push(`estado IN (${ESTADOS.map(() => '?').join(', ')})`);
     valores.push(...ESTADOS);
   }
+  // Un parte firmado llega a Dirección cuando el capitán lo envía (`enviado_direccion_en`). Los firmados
+  // antes de este paso no traen la llave y se cuentan como enviados.
+  condiciones.push(
+    `(estado <> 'validado' OR COALESCE(JSON_TYPE(JSON_EXTRACT(datos, '$.enviado_direccion_en')), '') <> 'NULL')`,
+  );
   if (fechaValida(q.desde)) {
     condiciones.push(`${FECHA} >= ?`);
     valores.push(q.desde);

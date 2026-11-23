@@ -42,6 +42,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/img/escudo-bomberos.png
   fonts:
     - family: Barlow
       fonts:

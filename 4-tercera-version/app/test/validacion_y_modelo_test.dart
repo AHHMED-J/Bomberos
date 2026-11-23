@@ -1,4 +1,5 @@
 import 'package:bomberos_parte/datos/datos_ejemplo.dart';
+import 'package:bomberos_parte/datos/catalogo_campos.dart';
 import 'package:bomberos_parte/datos/modelos.dart';
 import 'package:bomberos_parte/datos/repositorio_remoto.dart';
 import 'package:bomberos_parte/hoja/validacion_envio.dart';
@@ -17,10 +18,21 @@ Parte _vacio() => Parte(
 
 void main() {
   group('Validación de Enviar', () {
-    test('un parte vacío pide regreso, obligatorios y foto', () {
+    test('un parte vacío pide todos los campos (todos son obligatorios)', () {
       final tipos = pendientesDeLaHoja(_vacio()).map((p) => p.tipo).toSet();
-      expect(tipos, containsAll([TipoPendiente.regreso, TipoPendiente.obligatorio, TipoPendiente.foto]));
-      expect(pendientesDeLaHoja(_vacio()).where((p) => p.tipo == TipoPendiente.obligatorio), hasLength(4));
+      expect(tipos, {TipoPendiente.obligatorio});
+      expect(
+        pendientesDeLaHoja(_vacio()).where((p) => p.tipo == TipoPendiente.obligatorio),
+        hasLength(catalogoCampos.length),
+      );
+    });
+
+    test('el No. de incidente de C-5 tienen que ser 6 números', () {
+      final base = partesServidorEjemplo().firstWhere((p) => p.folio == 'PE-2026-0150');
+      Parte con(String n) => base.copiar(campos: {...base.campos, 'no_incidente_c5': ValorCampo(valor: n)});
+      expect(pendientesDeLaHoja(con('118842')), isEmpty);
+      expect(pendientesDeLaHoja(con('11884')).single.campoId, 'no_incidente_c5');
+      expect(pendientesDeLaHoja(con('ENS-26-118842')).single.campoId, 'no_incidente_c5');
     });
 
     test('un parte completo y firmado no tiene pendientes', () {
@@ -42,9 +54,9 @@ void main() {
           'voluntarios': const ValorCampo(origen: OrigenCampo.dictado, estadoIa: EstadoIa.falta, confirmado: false),
         },
       );
-      final pend = pendientesParaEnviar(p);
+      // «Falta» deja el campo vacío: cuenta como obligatorio vacío, no como sin confirmar.
+      final pend = pendientesParaEnviar(p).where((x) => x.tipo == TipoPendiente.sinConfirmar);
       expect(pend, hasLength(1));
-      expect(pend.single.tipo, TipoPendiente.sinConfirmar);
       expect(pend.single.campoId, 'propietario');
     });
 

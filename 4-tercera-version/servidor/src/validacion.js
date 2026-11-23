@@ -1,12 +1,26 @@
 // Misma revisión que la app (lib/hoja/validacion_envio.dart). El servidor NUNCA confía sólo en la pantalla.
 const crypto = require('crypto');
 
-// Campos obligatorios de la Hoja de incidente (lib/datos/catalogo_campos.dart).
+// Campos de la Hoja de incidente (lib/datos/catalogo_campos.dart). Todos son obligatorios.
 const OBLIGATORIOS = {
   no_incidente_c5: 'No. de incidente de C-5',
+  fecha: 'Fecha',
+  unidad: 'Unidad',
+  hora_salida: 'Salida',
+  hora_llegada: 'Llegada',
+  hora_regreso: 'Regreso',
+  turno: 'Turno',
+  estacion: 'Estación',
   tipo_servicio: 'Tipo de servicio',
+  zona: 'Zona',
   lugar_servicio: 'Lugar del servicio',
+  propietario: 'Propietario / arrendatario',
+  telefono_propietario: 'Teléfono de contacto',
   descripcion: 'Descripción del incidente',
+  personal_turno: 'Personal de turno',
+  voluntarios: 'Voluntarios',
+  unidades_apoyo: 'Unidades de bomberos en apoyo',
+  instituciones_apoyo: 'Instituciones de apoyo',
 };
 
 const vacio = (v) => !v || !String(v.valor || '').trim();
@@ -18,9 +32,11 @@ const sinConfirmar = (v) => v && v.origen === 'dictado' && v.confirmado === fals
 function pendientes(parte) {
   const c = parte.campos || {};
   const r = [];
-  if (vacio(c.hora_regreso)) r.push('Hora de regreso · presiona Regreso');
   for (const [id, etiqueta] of Object.entries(OBLIGATORIOS)) if (vacio(c[id])) r.push(etiqueta);
-  if (!(parte.fotos >= 1)) r.push('Al menos 1 foto');
+  // El No. de incidente de C-5 son 6 números.
+  if (!vacio(c.no_incidente_c5) && !/^\d{6}$/.test(String(c.no_incidente_c5.valor).trim())) {
+    r.push('No. de incidente de C-5: 6 números');
+  }
   for (const [id, v] of Object.entries(c)) if (sinConfirmar(v)) r.push(`Sin confirmar: ${id}`);
   const f = parte.firmas || {};
   if (!f.elaboro) r.push('Firma de quien elabora, con credencial');

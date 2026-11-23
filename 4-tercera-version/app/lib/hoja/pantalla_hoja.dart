@@ -9,8 +9,6 @@ import '../croquis/seccion_croquis.dart';
 import '../compartido/widgets.dart';
 import '../datos/catalogo_campos.dart';
 import '../datos/modelos.dart';
-import '../servicios/camara.dart';
-import 'imagen_parte.dart';
 import '../dictado/dictado_controlador.dart';
 import '../dictado/panel_dictado.dart';
 import '../servicios/proveedores.dart';
@@ -21,7 +19,7 @@ String nombreEstado(EstadoParte e) => switch (e) {
   EstadoParte.enProgreso => 'en curso',
   EstadoParte.enviado => 'enviado',
   EstadoParte.devuelto => 'devuelta',
-  EstadoParte.validado => 'validado',
+  EstadoParte.validado => 'firmado',
 };
 
 /// P2 · Hoja de incidente completa + botón flotante «Dictar» (D1–D8) + P7 (devuelta).
@@ -88,20 +86,8 @@ class _PantallaHojaState extends ConsumerState<PantallaHoja> {
       editable: editable && !(campoDef(id).soloAutor && !esAutor),
       alCambiar: (v) => hoja.escribir(id, v),
       alConfirmar: () => hoja.confirmarCampo(id),
-      // Rojo: obligatorio todavía vacío (y, si la hoja fue devuelta, lo que pidió el Capitán).
-      resaltarError:
-          editable &&
-          parte.campo(id).vacio &&
-          (campoDef(id).obligatorio ||
-              (parte.nota != null &&
-                  parte.estado == EstadoParte.devuelto &&
-                  campoDef(id).seccion.titulo == parte.nota!.seccion)),
-    );
-    Widget fila(List<String> ids) => Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (final (i, id) in ids.indexed) ...[if (i > 0) const SizedBox(width: 8), Expanded(child: campo(id))],
-      ],
+      // Rojo: lo que sigue vacío en una hoja devuelta (todos los campos son obligatorios).
+      resaltarError: editable && parte.campo(id).vacio && parte.estado == EstadoParte.devuelto,
     );
 
     final muestraDictar =
@@ -148,136 +134,34 @@ class _PantallaHojaState extends ConsumerState<PantallaHoja> {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Nota de ${parte.nota!.revisor}\n',
+                            text: 'Devuelta por ${parte.nota!.revisor}',
                             style: const TextStyle(fontWeight: FontWeight.w700),
                           ),
-                          TextSpan(
-                            text: '«${parte.nota!.texto}»\n',
-                            style: const TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                          TextSpan(text: 'Sección: ${parte.nota!.seccion}', style: const TextStyle(fontSize: 12)),
+                          if (parte.nota!.texto.trim().isNotEmpty)
+                            TextSpan(
+                              text: '\n«${parte.nota!.texto}»',
+                              style: const TextStyle(fontWeight: FontWeight.w700),
+                            ),
                         ],
                       ),
                     ),
                   ),
+                if (parte.estado == EstadoParte.validado) AvisoFirmado(parte),
                 if (parte.modo == ModoCaptura.teclado && editable)
                   const Padding(
                     padding: EdgeInsets.only(top: 8),
                     child: ChipBomberos('Experimento A/B · grupo teclado', tono: TonoChip.azul, grande: true),
                   ),
-
-                // ---------- Datos del servicio ----------
-                TituloSeccion(SeccionHoja.datosServicio.titulo),
-                if (esAutor) ...[
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _BotonHora(
-                          texto: 'Llegada',
-                          detalle: parte.valor('hora_llegada'),
-                          alTocar: hoja.llegada,
-                          ayuda: 'Hora y lugar',
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _BotonHora(
-                          key: const ValueKey('boton-regreso'),
-                          texto: 'Regreso',
-                          detalle: parte.valor('hora_regreso'),
-                          alTocar: hoja.regreso,
-                          ayuda: 'Hora',
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                ] else if (editable)
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 12),
-                    child: Aviso(tono: TonoAviso.gris, child: Text('Llegada y Regreso: sólo quien elabora el parte')),
-                  ),
-                campo('no_incidente_c5'),
-                fila(['fecha', 'unidad']),
-                fila(['hora_salida', 'hora_regreso']),
-                fila(['turno', 'estacion']),
-                campo('tipo_servicio'),
-                campo('zona'),
-                campo('hora_control_fuego'),
-
-                // ---------- Lugar y propietario ----------
-                TituloSeccion(SeccionHoja.lugarPropietario.titulo),
-                campo('lugar_servicio'),
-                if (editable)
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: TextButton.icon(
-                      // TODO: geolocalización real (geolocator). Hoy pone un texto de ejemplo.
-                      onPressed: () => hoja.escribir('lugar_servicio', 'Ubicación actual (ejemplo) 31.866, -116.596'),
-                      icon: const Icon(Icons.place_outlined, color: Colores.rojo),
-                      label: const Text(
-                        'Usar mi ubicación actual',
-                        style: TextStyle(color: Colores.rojo, decoration: TextDecoration.underline),
-                      ),
-                    ),
-                  ),
-                campo('propietario'),
-                campo('telefono_propietario'),
-
-                // ---------- Descripción + evidencia ----------
-                TituloSeccion(SeccionHoja.descripcion.titulo),
-                campo('descripcion'),
-                const Row(
-                  children: [
-                    Flexible(child: Text('Evidencia fotográfica', style: Textos.etiqueta)),
-                    SizedBox(width: 6),
-                    ChipBomberos('Al menos 1', tono: TonoChip.rojo),
-                  ],
+                const SizedBox(height: 12),
+                ...casillasDeLaHoja(
+                  parte: parte,
+                  campo: campo,
+                  editable: editable,
+                  // TODO: geolocalización real (geolocator). Hoy pone un texto de ejemplo.
+                  usarUbicacion: editable
+                      ? () => hoja.escribir('lugar_servicio', 'Ubicación actual (ejemplo) 31.866, -116.596')
+                      : null,
                 ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    for (var i = 0; i < parte.fotos; i++) _miniatura(context, ref, parte, i, editable),
-                    if (editable)
-                      InkWell(
-                        key: const ValueKey('agregar-foto'),
-                        onTap: () => _agregarFoto(context, ref, parte),
-                        child: Container(
-                          width: 72,
-                          height: 72,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colores.borde),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.photo_camera_outlined),
-                              Text('Agregar', style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-
-                // ---------- Personal y apoyo ----------
-                TituloSeccion(SeccionHoja.personal.titulo),
-                campo('personal_turno'),
-                campo('voluntarios'),
-                TituloSeccion(SeccionHoja.apoyo.titulo),
-                campo('unidades_apoyo'),
-                campo('instituciones_apoyo'),
-
-                // ---------- Croquis ----------
-                TituloSeccion(SeccionHoja.croquis.titulo),
-                SeccionCroquis(parte: parte, editable: editable),
-
-                // ---------- Firmas y envío ----------
-                const TituloSeccion('Firmas'),
-                const Text('Se firman al presionar Enviar.', style: Textos.chico),
                 const SizedBox(height: 16),
                 if (esAutor)
                   FilledButton(
@@ -289,7 +173,7 @@ class _PantallaHojaState extends ConsumerState<PantallaHoja> {
                 OutlinedButton.icon(
                   onPressed: () => context.push('/inicio/hoja/resumen'),
                   icon: const Icon(Icons.chat_outlined),
-                  label: const Text('Resumen para WhatsApp'),
+                  label: const Text('Ficha para WhatsApp'),
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -304,128 +188,72 @@ class _PantallaHojaState extends ConsumerState<PantallaHoja> {
       ),
     );
   }
-
-  /// Las fotos van en el mismo orden en las rutas del teléfono y en los adjuntos que guardó el servidor.
-  Widget _miniatura(BuildContext context, WidgetRef ref, Parte parte, int i, bool editable) {
-    final ruta = i < parte.fotosRutas.length ? parte.fotosRutas[i] : null;
-    final sha = [
-      for (final a in parte.adjuntos)
-        if (a.tipo == Adjunto.foto) a.sha256,
-    ].elementAtOrNull(i);
-    Widget imagen({double? lado = 72, BoxFit ajuste = BoxFit.cover}) =>
-        ImagenParte(folio: parte.folio, ruta: ruta, sha256: sha, ancho: lado, alto: lado, ajuste: ajuste);
-    return SizedBox(
-      width: 72,
-      height: 72,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: InkWell(
-              key: ValueKey('foto-$i'),
-              borderRadius: BorderRadius.circular(10),
-              onTap: () => verImagenCompleta(context, imagen(lado: null, ajuste: BoxFit.contain)),
-              child: imagen(),
-            ),
-          ),
-          if (editable && ruta != null)
-            Positioned(
-              top: 0,
-              right: 0,
-              child: InkWell(
-                key: ValueKey('quitar-foto-$i'),
-                onTap: () => ref.read(hojaProvider.notifier).quitarFoto(ruta),
-                child: const CircleAvatar(
-                  radius: 11,
-                  backgroundColor: Colors.black54,
-                  child: Icon(Icons.close, size: 14, color: Colors.white),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _agregarFoto(BuildContext context, WidgetRef ref, Parte parte) async {
-    if (parte.fotosRutas.length >= 25) return avisar(context, 'Máximo 25 fotos por parte');
-    final origen = await showModalBottomSheet<OrigenFoto>(
-      context: context,
-      builder: (c) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              key: const ValueKey('foto-camara'),
-              leading: const Icon(Icons.photo_camera_outlined),
-              title: const Text('Tomar foto'),
-              onTap: () => Navigator.pop(c, OrigenFoto.camara),
-            ),
-            ListTile(
-              key: const ValueKey('foto-galeria'),
-              leading: const Icon(Icons.photo_library_outlined),
-              title: const Text('Elegir de la fototeca'),
-              onTap: () => Navigator.pop(c, OrigenFoto.galeria),
-            ),
-          ],
-        ),
-      ),
-    );
-    if (origen == null || !context.mounted) return;
-    try {
-      final bytes = await ref.read(camaraProvider).tomar(origen);
-      if (bytes == null) return;
-      final ruta = await ref.read(almacenFotosProvider).guardar(parte.id, bytes);
-      ref.read(hojaProvider.notifier).agregarFoto(ruta);
-    } on CamaraNoDisponible {
-      if (context.mounted) {
-        avisar(
-          context,
-          origen == OrigenFoto.camara
-              ? 'No hay cámara disponible (el simulador no tiene). Elige una de la fototeca.'
-              : 'No se pudo abrir la fototeca. Revisa el permiso en Ajustes.',
-        );
-      }
-    }
-  }
 }
 
-class _BotonHora extends StatelessWidget {
-  const _BotonHora({super.key, required this.texto, required this.detalle, required this.alTocar, required this.ayuda});
-  final String texto;
-  final String detalle;
-  final VoidCallback alTocar;
-  final String ayuda;
-  @override
-  Widget build(BuildContext context) {
-    final hecho = detalle.isNotEmpty;
-    return Material(
-      color: hecho ? Colores.rojo : Colores.blanco,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: const BorderSide(color: Colores.rojo, width: 1.5),
-      ),
-      child: InkWell(
-        onTap: alTocar,
-        borderRadius: BorderRadius.circular(10),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Column(
-            children: [
-              Text(
-                texto,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: hecho ? Colores.blanco : Colores.rojo,
-                ),
-              ),
-              Text(
-                hecho ? detalle : ayuda,
-                style: TextStyle(fontSize: 12, color: hecho ? Colores.blanco : Colores.gris),
-              ),
-            ],
+/// Las casillas de la hoja, en orden y sin títulos de sección. Las usan la Hoja (P2) y la revisión del
+/// Capitán (R3), para que el Capitán vea la misma hoja que llenó el bombero.
+List<Widget> casillasDeLaHoja({
+  required Parte parte,
+  required Widget Function(String id) campo,
+  required bool editable,
+  VoidCallback? usarUbicacion,
+}) {
+  Widget fila(List<String> ids) => Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      for (final (i, id) in ids.indexed) ...[if (i > 0) const SizedBox(width: 8), Expanded(child: campo(id))],
+    ],
+  );
+  return [
+    campo('no_incidente_c5'),
+    fila(['fecha', 'unidad']),
+    fila(['hora_salida', 'hora_llegada']),
+    fila(['hora_regreso', 'turno']),
+    fila(['estacion', 'zona']),
+    campo('tipo_servicio'),
+    campo('lugar_servicio'),
+    if (usarUbicacion != null)
+      Align(
+        alignment: Alignment.centerLeft,
+        child: TextButton.icon(
+          onPressed: usarUbicacion,
+          icon: const Icon(Icons.place_outlined, color: Colores.rojo),
+          label: const Text(
+            'Usar mi ubicación actual',
+            style: TextStyle(color: Colores.rojo, decoration: TextDecoration.underline),
           ),
         ),
+      ),
+    campo('propietario'),
+    campo('telefono_propietario'),
+    campo('descripcion'),
+    campo('personal_turno'),
+    campo('voluntarios'),
+    campo('unidades_apoyo'),
+    campo('instituciones_apoyo'),
+    const Text('Croquis', style: Textos.etiqueta),
+    const SizedBox(height: 6),
+    SeccionCroquis(parte: parte, editable: editable),
+  ];
+}
+
+/// En un parte firmado por el Capitán: si ya se envió a Dirección o todavía no.
+class AvisoFirmado extends StatelessWidget {
+  const AvisoFirmado(this.parte, {super.key});
+  final Parte parte;
+  @override
+  Widget build(BuildContext context) {
+    final enviado = parte.enviadoDireccionEn;
+    final quien = parte.firmas.revisorNombre;
+    final firmo = quien == null || quien.isEmpty ? 'Firmado' : 'Firmado por $quien';
+    return Aviso(
+      key: const ValueKey('aviso-firmado'),
+      tono: enviado != null ? TonoAviso.verde : TonoAviso.ambar,
+      icono: enviado != null ? Icons.send : Icons.schedule,
+      child: Text(
+        enviado != null
+            ? '$firmo · enviado a Dirección el ${fechaDe(enviado.toLocal())} a las ${horaDe(enviado.toLocal())}'
+            : '$firmo · todavía no se envía a Dirección',
       ),
     );
   }

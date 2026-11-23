@@ -12,7 +12,7 @@ const usuarios = [
 const m = (valor) => ({ valor, origen: 'manual', estado_ia: null, confianza: null, valor_anterior: null, confirmado: true });
 const a = (valor) => ({ ...m(valor), origen: 'auto' });
 const completo = (o) => ({
-  no_incidente_c5: m(o.c5 || 'ENS-26-118843'),
+  no_incidente_c5: m(o.c5 || '118843'),
   fecha: a(o.fecha || '24/10/2026'),
   unidad: a('Pipa 04'),
   turno: a('A'),
@@ -41,7 +41,7 @@ const [vero, ahhmed, capitan] = usuarios;
 const partes = new Map(
   [
     parte({ id: 'srv-0150', folio: 'PE-2026-0150', estado: 'enviado', elaboro: ahhmed, creado: '2026-11-08T14:20:00', enviado: '2026-11-08T16:02:00', fotos: 2, seg: 112,
-      campos: completo({ tipo: 'Incendio de pastizal', lugar: 'Calle López Mateos, El Sauzal', desc: '(Ejemplo) Se sofocó el fuego con pitón de niebla. No hubo lesionados.', c5: 'ENS-26-118842', fecha: '08/11/2026', salida: '14:05', llegada: '14:20', regreso: '15:40' }) }),
+      campos: completo({ tipo: 'Incendio de pastizal', lugar: 'Calle López Mateos, El Sauzal', desc: '(Ejemplo) Se sofocó el fuego con pitón de niebla. No hubo lesionados.', c5: '118842', fecha: '08/11/2026', salida: '14:05', llegada: '14:20', regreso: '15:40' }) }),
     parte({ id: 'srv-0143', folio: 'PE-2026-0143', estado: 'enviado', elaboro: vero, creado: '2026-09-06T21:30:00', enviado: '2026-09-06T23:05:00', modo: 'teclado', seg: 240,
       campos: completo({ tipo: 'Fuga de gas', lugar: 'Calle Novena 88, Col. Bustamante', desc: '(Ejemplo) Fuga en conexión de tanque estacionario.', fecha: '06/09/2026' }) }),
     parte({ id: 'srv-0147', folio: 'PE-2026-0147', estado: 'validado', elaboro: ahhmed, creado: '2026-10-20T09:00:00', fotos: 3,

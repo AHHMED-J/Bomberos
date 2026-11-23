@@ -105,8 +105,8 @@ class _EnProgreso extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final faltan = pendientesDeLaHoja(parte);
-    // Obligatorios + regreso + al menos una foto.
-    final total = catalogoCampos.where((c) => c.obligatorio).length + 2;
+    // Todos los campos son obligatorios.
+    final total = catalogoCampos.where((c) => c.obligatorio).length;
     final avance = (1 - faltan.length / total).clamp(0.05, 1.0);
     final tipo = parte.valor('tipo_servicio');
     return Tarjeta(
@@ -137,13 +137,6 @@ class _EnProgreso extends StatelessWidget {
               backgroundColor: Colores.crema,
             ),
           ),
-          const SizedBox(height: 10),
-          const ChipBomberos(
-            'Guardado en este teléfono',
-            tono: TonoChip.ambar,
-            icono: Icons.warning_amber_rounded,
-            grande: true,
-          ),
           const SizedBox(height: 12),
           FilledButton(onPressed: alContinuar, child: const Text('Continuar ahora')),
           const SizedBox(height: 8),
@@ -170,7 +163,10 @@ class _Fila extends StatelessWidget {
   Widget build(BuildContext context) {
     final (IconData icono, Color color, String texto, TonoChip tono) = switch (parte.estado) {
       EstadoParte.enviado => (Icons.schedule_send, Colores.azul, 'Enviado · por revisar', TonoChip.azul),
-      EstadoParte.validado => (Icons.verified_user, Colores.verde, 'Validado · sellado', TonoChip.verde),
+      EstadoParte.validado =>
+        parte.enviadoDireccionEn != null
+            ? (Icons.verified_user, Colores.verde, 'Firmado · enviado a Dirección', TonoChip.verde)
+            : (Icons.verified_user, Colores.verde, 'Firmado · sin enviar a Dirección', TonoChip.ambar),
       EstadoParte.devuelto => (Icons.undo, Colores.rojo, 'Corregir', TonoChip.rojo),
       EstadoParte.enProgreso => (Icons.edit, Colores.ambar, 'En progreso', TonoChip.ambar),
     };
@@ -190,7 +186,7 @@ class _Fila extends StatelessWidget {
               children: [
                 const Text('Hoja de incidente', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                 Text('${parte.folio} · ${parte.valor('tipo_servicio')}', style: Textos.chico),
-                if (parte.nota != null)
+                if (parte.nota != null && parte.nota!.texto.trim().isNotEmpty)
                   Text(
                     '«${parte.nota!.texto}»',
                     style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic, color: Colores.rojo),

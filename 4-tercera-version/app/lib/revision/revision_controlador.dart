@@ -78,7 +78,15 @@ class RevisionControlador extends Notifier<EstadoRevision> {
     }
   }
 
-  /// R4 · devolver con nota y sección.
+  /// Ya firmado: lo manda a Dirección.
+  Future<void> enviarADireccion() async {
+    final s = state;
+    final r = await ref.read(repositorioRemotoProvider).enviarADireccion(s.parte!.folio);
+    state = EstadoRevision(parte: r);
+    ref.invalidate(bandejaProvider);
+  }
+
+  /// R4 · devolver, con una nota opcional de qué falta por corregir.
   Future<void> devolver(String nota, String seccion) async {
     final u = ref.read(usuarioActualProvider);
     final r = await ref

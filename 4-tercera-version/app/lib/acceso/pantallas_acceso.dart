@@ -189,15 +189,11 @@ class _Escudo extends StatelessWidget {
   const _Escudo();
   @override
   Widget build(BuildContext context) => Center(
-    child: Container(
-      width: 140,
-      height: 140,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colores.blanco,
-        border: Border.all(color: Colores.rojo, width: 10),
-      ),
-      child: const Icon(Icons.local_fire_department, size: 70, color: Colores.rojo),
+    child: Image.asset(
+      'assets/img/escudo-bomberos.png',
+      width: 170,
+      height: 170,
+      semanticLabel: 'Escudo de Bomberos de Ensenada',
     ),
   );
 }

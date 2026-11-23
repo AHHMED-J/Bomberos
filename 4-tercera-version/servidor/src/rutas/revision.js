@@ -3,7 +3,8 @@
 //
 //   GET  /api/revision/bandeja              los partes de su división
 //   POST /api/revision/:folio/devolver      lo regresa con una nota
-//   POST /api/revision/:folio/validar       lo firma, lo sella y queda enviado a Dirección
+//   POST /api/revision/:folio/validar       lo firma y lo sella (queda «firmado», todavía sin enviar)
+//   POST /api/revision/:folio/enviar-direccion  ya firmado, lo manda a Dirección (Administración)
 
 'use strict';
 
@@ -34,7 +35,6 @@ r.get('/bandeja', async (req, res) => {
 r.post('/:folio/devolver', async (req, res) => {
   const p = await datos.partePorFolio(req.params.folio);
   if (!p) return res.status(404).json({ error: 'no_existe' });
-  if (!String(req.body.nota || '').trim()) return res.status(400).json({ error: 'falta_nota' });
   if (p.estado !== 'enviado') return res.status(409).json({ error: 'no_espera_revision' });
   const revisor = req.usuario;
   if (revisor.id === p.elaboro_id) return res.status(403).json({ error: 'es_su_parte' });
@@ -44,7 +44,8 @@ r.post('/:folio/devolver', async (req, res) => {
     ...p,
     estado: 'devuelto',
     nota: {
-      texto: req.body.nota,
+      // La nota es opcional: puede devolverse sin decir qué falta.
+      texto: String(req.body.nota || '').trim(),
       seccion: req.body.seccion || 'Datos del servicio',
       revisor: revisor.nombre,
       fecha: new Date().toISOString(),
@@ -57,7 +58,9 @@ r.post('/:folio/devolver', async (req, res) => {
       tipo: 'parte_devuelto',
       folio: p.folio,
       titulo: 'Parte devuelto',
-      texto: `${devuelto.nota.revisor} devolvió ${p.folio}: ${devuelto.nota.texto}`,
+      texto: devuelto.nota.texto
+        ? `${devuelto.nota.revisor} devolvió ${p.folio}: ${devuelto.nota.texto}`
+        : `${devuelto.nota.revisor} devolvió ${p.folio} para corregir.`,
     });
   });
   res.json({ parte: devuelto });
@@ -87,6 +90,7 @@ r.post('/:folio/validar', async (req, res) => {
     ...p,
     estado: 'validado',
     validado_en: new Date().toISOString(),
+    enviado_direccion_en: null, // lo pone /enviar-direccion
     firmas: {
       ...p.firmas,
       revisor_id: revisor.id,
@@ -113,17 +117,40 @@ r.post('/:folio/validar', async (req, res) => {
       usuarioId: p.elaboro_id,
       tipo: 'parte_validado',
       folio: validado.folio,
-      titulo: 'Parte validado',
-      texto: `${revisor.nombre} validó ${validado.folio}. Ya está en Administración.`,
-    });
-    await notificaciones.avisarAAdministracion(t, {
-      tipo: 'parte_validado',
-      folio: validado.folio,
-      titulo: 'Parte validado',
-      texto: `${validado.folio} fue validado por ${revisor.nombre} y llegó a Administración.`,
+      titulo: 'Parte firmado',
+      texto: `${revisor.nombre} firmó ${validado.folio}.`,
     });
   });
   res.json({ parte: validado });
+});
+
+// Ya firmado, el capitán decide cuándo mandarlo a Dirección. Mandarlo dos veces no cambia nada.
+r.post('/:folio/enviar-direccion', async (req, res) => {
+  const p = await datos.partePorFolio(req.params.folio);
+  if (!p) return res.status(404).json({ error: 'no_existe' });
+  if (p.estado !== 'validado') return res.status(409).json({ error: 'no_esta_firmado' });
+  const revisor = req.usuario;
+  if (revisor.division !== p.division) return res.status(403).json({ error: 'otra_division' });
+  if (p.enviado_direccion_en) return res.json({ parte: p });
+
+  const enviado = { ...p, enviado_direccion_en: new Date().toISOString() };
+  await db.transaccion(async (t) => {
+    await datos.guardarParte(enviado, t);
+    await notificaciones.avisar(t, {
+      usuarioId: p.elaboro_id,
+      tipo: 'parte_validado',
+      folio: p.folio,
+      titulo: 'Parte enviado a Dirección',
+      texto: `${revisor.nombre} envió ${p.folio} a Dirección.`,
+    });
+    await notificaciones.avisarAAdministracion(t, {
+      tipo: 'parte_validado',
+      folio: p.folio,
+      titulo: 'Parte firmado',
+      texto: `${p.folio} fue firmado por ${p.firmas?.revisor_nombre || revisor.nombre} y llegó a Administración.`,
+    });
+  });
+  res.json({ parte: enviado });
 });
 
 module.exports = r;

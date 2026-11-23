@@ -303,6 +303,7 @@ class Parte {
     this.nota,
     this.enviadoEn,
     this.sello,
+    this.enviadoDireccionEn,
   });
 
   final String id;
@@ -337,6 +338,9 @@ class Parte {
   /// SHA-256 del sello del revisor (sólo validados).
   final String? sello;
 
+  /// Cuándo el capitán lo mandó a Dirección después de firmarlo. Null = firmado pero todavía sin enviar.
+  final DateTime? enviadoDireccionEn;
+
   static const huecoMaximo = Duration(seconds: 30);
 
   String valor(String campoId) => campos[campoId]?.valor ?? '';
@@ -358,6 +362,7 @@ class Parte {
     bool quitarNota = false,
     DateTime? enviadoEn,
     String? sello,
+    DateTime? enviadoDireccionEn,
   }) => Parte(
     id: id,
     folio: folio ?? this.folio,
@@ -378,6 +383,7 @@ class Parte {
     nota: quitarNota ? null : (nota ?? this.nota),
     enviadoEn: enviadoEn ?? this.enviadoEn,
     sello: sello ?? this.sello,
+    enviadoDireccionEn: enviadoDireccionEn ?? this.enviadoDireccionEn,
   );
 
   /// Suma tiempo activo con tope de 30 s por hueco.
@@ -437,6 +443,7 @@ class Parte {
     'nota': nota?.aJson(),
     'enviado_en': enviadoEn?.toIso8601String(),
     'sello': sello,
+    'enviado_direccion_en': enviadoDireccionEn?.toIso8601String(),
   };
 
   factory Parte.deJson(Map<String, dynamic> j) => Parte(
@@ -461,6 +468,7 @@ class Parte {
     nota: j['nota'] == null ? null : NotaDevolucion.deJson(j['nota'] as Map<String, dynamic>),
     enviadoEn: j['enviado_en'] == null ? null : DateTime.parse(j['enviado_en'] as String),
     sello: j['sello'] as String?,
+    enviadoDireccionEn: DateTime.tryParse(j['enviado_direccion_en'] as String? ?? ''),
   );
 }
 

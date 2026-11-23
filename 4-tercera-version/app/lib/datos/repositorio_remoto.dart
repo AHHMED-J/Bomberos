@@ -98,6 +98,9 @@ abstract interface class RepositorioRemoto {
     String? contrasena,
     required Usuario revisor,
   });
+
+  /// Después de firmar, el capitán lo manda a Dirección (Administración).
+  Future<Parte> enviarADireccion(String folio);
 }
 
 /// Servidor de mentira dentro de la app. Comparte estado entre roles para la demo.
@@ -309,13 +312,17 @@ class RemotoFalso implements RepositorioRemoto {
         .toString();
     final r = p.copiar(estado: EstadoParte.validado, sello: sello);
     _partes[folio] = r;
-    _avisar(
-      p.elaboroId,
-      TipoAviso.parteValidado,
-      'Parte validado',
-      '${revisor.nombre} validó $folio. Ya está en Administración.',
-      folio: folio,
-    );
+    _avisar(p.elaboroId, TipoAviso.parteValidado, 'Parte validado', '${revisor.nombre} firmó $folio.', folio: folio);
+    return r;
+  }
+
+  @override
+  Future<Parte> enviarADireccion(String folio) async {
+    await _espera();
+    final p = _partes[folio]!;
+    if (p.estado != EstadoParte.validado) throw ErrorApi(409, {'error': 'no_esta_firmado'});
+    final r = p.enviadoDireccionEn != null ? p : p.copiar(enviadoDireccionEn: DateTime.now());
+    _partes[folio] = r;
     return r;
   }
 
@@ -457,5 +464,10 @@ class RemotoHttp implements RepositorioRemoto {
           ..._confirmacion(firma, contrasena),
         }))['parte']
         as Map<String, dynamic>,
+  );
+
+  @override
+  Future<Parte> enviarADireccion(String folio) async => Parte.deJson(
+    (await api.post('/api/revision/$folio/enviar-direccion', const {}))['parte'] as Map<String, dynamic>,
   );
 }

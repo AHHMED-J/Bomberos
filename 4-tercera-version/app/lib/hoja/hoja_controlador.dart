@@ -50,9 +50,7 @@ class HojaControlador extends Notifier<Parte?> {
         'fecha': auto(fechaDe(ahora)),
         'unidad': auto('Pipa 04'),
         'turno': auto('A'),
-        'estacion': auto(u.estacion),
         'hora_salida': ValorCampo(valor: horaDe(ahora)),
-        'personal_turno': ValorCampo(valor: u.nombre),
       },
     );
     state = p;
@@ -146,9 +144,6 @@ class HojaControlador extends Notifier<Parte?> {
       },
     ),
   );
-
-  void llegada() => escribir('hora_llegada', horaDe(reloj()));
-  void regreso() => escribir('hora_regreso', horaDe(reloj()));
 
   /// Una foto nueva, ya guardada en el teléfono. Si el parte traía fotos de ejemplo sin archivo, `fotos` pasa
   /// a ser cuántas hay de verdad.

@@ -67,15 +67,19 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Bandeja de revisión'));
     await tester.pumpAndSettle();
-    expect(find.text('PE-2026-0150'), findsOneWidget);
+    expect(find.textContaining('PE-2026-0150'), findsOneWidget);
 
-    await tester.tap(find.text('PE-2026-0150'));
+    // Se abre la hoja completa (sin resumen) y al final están Devolver y Firmar.
+    await tester.tap(find.textContaining('PE-2026-0150'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('validar')));
+    expect(find.byKey(const ValueKey('campo-no_incidente_c5')), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('validar')),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('usar-face-id')));
-    await tester.pumpAndSettle();
-    expect(find.byKey(const ValueKey('firmar-y-validar')), findsOneWidget);
+    expect(find.byKey(const ValueKey('devolver')), findsOneWidget);
   });
 
   testWidgets('Entra con número de empleado y contraseña, y llega a Mi cuenta', (tester) async {
